@@ -1,0 +1,6 @@
+{
+  "entities": ["Method", "Task", "Disease", "Biomarker", "Material", "Metric"],
+  "relations": ["improves", "reduces", "predicts", "conflicts_with", "evolves_to"],
+  "controversy_types": ["method_conflict", "assumption_transfer_failure", "conclusion_conflict"],
+  "task_labels": ["cross_document_association", "controversy_detection", "blue_ocean_discovery"]
+}

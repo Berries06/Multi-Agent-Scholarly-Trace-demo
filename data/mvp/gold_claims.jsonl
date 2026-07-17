@@ -1,0 +1,3 @@
+{"source":"graph neural model","relation":"improves","target":"drug response prediction"}
+{"source":"biomarker panel","relation":"reduces","target":"false positive diagnosis"}
+{"source":"transformer model","relation":"predicts","target":"molecular interaction"}
