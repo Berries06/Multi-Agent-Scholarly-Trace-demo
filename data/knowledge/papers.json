@@ -1,0 +1,90 @@
+[
+  {
+    "paper_id": "2303.17760",
+    "title": "CAMEL: Communicative Agents for \"Mind\" Exploration of Large Language Model Society",
+    "authors": ["Guohao Li", "Hasan Abed Al Kader Hammoud", "Hani Itani", "Dmitrii Khizbullin", "Bernard Ghanem"],
+    "year": 2023,
+    "published": "2023-03-31",
+    "categories": ["cs.AI", "cs.CL", "cs.MA"],
+    "summary": "提出角色扮演式沟通智能体框架，以 inception prompting 维持任务意图并研究多智能体协作行为。",
+    "concepts": ["multi-agent", "role-playing", "collaboration", "多智能体", "角色协作", "角色扮演协作"],
+    "source_url": "https://arxiv.org/abs/2303.17760"
+  },
+  {
+    "paper_id": "2305.14325",
+    "title": "Improving Factuality and Reasoning in Language Models through Multiagent Debate",
+    "authors": ["Yilun Du", "Shuang Li", "Antonio Torralba", "Joshua B. Tenenbaum", "Igor Mordatch"],
+    "year": 2023,
+    "published": "2023-05-23",
+    "categories": ["cs.CL", "cs.AI", "cs.LG"],
+    "summary": "通过多个模型实例多轮提出与辩论，改善推理和事实有效性，并减少谬误答案与幻觉。",
+    "concepts": ["multi-agent", "debate", "factuality", "hallucination", "多智能体", "幻觉"],
+    "source_url": "https://arxiv.org/abs/2305.14325"
+  },
+  {
+    "paper_id": "2308.08155",
+    "title": "AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation",
+    "authors": ["Qingyun Wu", "Gagan Bansal", "Jieyu Zhang", "Yiran Wu", "Beibin Li", "Erkang Zhu", "Li Jiang", "Xiaoyun Zhang", "Shaokun Zhang", "Jiale Liu", "Ahmed Hassan Awadallah", "Ryen W White", "Doug Burger", "Chi Wang"],
+    "year": 2023,
+    "published": "2023-08-16",
+    "categories": ["cs.AI", "cs.CL"],
+    "summary": "给出可定制、可对话且可组合模型、人和工具的多智能体应用框架。",
+    "concepts": ["multi-agent", "conversation", "orchestration", "多智能体", "协同调度"],
+    "source_url": "https://arxiv.org/abs/2308.08155"
+  },
+  {
+    "paper_id": "2210.03629",
+    "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+    "authors": ["Shunyu Yao", "Jeffrey Zhao", "Dian Yu", "Nan Du", "Izhak Shafran", "Karthik Narasimhan", "Yuan Cao"],
+    "year": 2022,
+    "published": "2022-10-06",
+    "categories": ["cs.CL", "cs.AI", "cs.LG"],
+    "summary": "将推理轨迹与外部行动交错执行，通过知识库或环境获取信息，缓解纯推理中的幻觉和错误传播。",
+    "concepts": ["reasoning", "acting", "grounding", "hallucination", "证据检索", "幻觉"],
+    "source_url": "https://arxiv.org/abs/2210.03629"
+  },
+  {
+    "paper_id": "2303.11366",
+    "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+    "authors": ["Noah Shinn", "Federico Cassano", "Edward Berman", "Ashwin Gopinath", "Karthik Narasimhan", "Shunyu Yao"],
+    "year": 2023,
+    "published": "2023-03-20",
+    "categories": ["cs.AI", "cs.CL", "cs.LG"],
+    "summary": "使用语言反馈和情景记忆改进后续决策，无需更新模型权重。",
+    "concepts": ["feedback", "reflection", "adaptive decision", "动态反馈", "决策更新"],
+    "source_url": "https://arxiv.org/abs/2303.11366"
+  },
+  {
+    "paper_id": "2402.14207",
+    "title": "Assisting in Writing Wikipedia-like Articles From Scratch with Large Language Models",
+    "authors": ["Yijia Shao", "Yucheng Jiang", "Theodore A. Kanell", "Peter Xu", "Omar Khattab", "Monica S. Lam"],
+    "year": 2024,
+    "published": "2024-02-22",
+    "categories": ["cs.CL", "cs.AI"],
+    "summary": "STORM 通过多视角提问、来源约束的对话和信息整理生成结构化长文提纲。",
+    "concepts": ["multi-perspective", "retrieval", "coverage", "多视角", "多视角追问", "知识覆盖"],
+    "source_url": "https://arxiv.org/abs/2402.14207"
+  },
+  {
+    "paper_id": "2505.15047",
+    "title": "PiFlow: Principle-Aware Scientific Discovery with Multi-Agent Collaboration",
+    "authors": ["Yingming Pu", "Tao Lin", "Hongyu Chen"],
+    "year": 2025,
+    "published": "2025-05-21",
+    "categories": ["cs.LG", "cs.AI"],
+    "summary": "将科研发现建模为受科学原则约束的不确定性降低过程，以多智能体协作提升发现效率和质量。",
+    "concepts": ["scientific discovery", "uncertainty", "principle-aware", "科研发现", "蓝海"],
+    "source_url": "https://arxiv.org/abs/2505.15047"
+  },
+  {
+    "paper_id": "2510.15682",
+    "title": "SQuAI: Scientific Question-Answering with Multi-Agent Retrieval-Augmented Generation",
+    "authors": ["Ines Besrour", "Jingbo He", "Tobias Schreieder", "Michael Färber"],
+    "year": 2025,
+    "published": "2025-10-17",
+    "categories": ["cs.IR", "cs.CL"],
+    "summary": "使用四个协作智能体分解科研问题、混合检索和过滤证据，并为每个结论提供行内引用与支持句。",
+    "concepts": ["scientific QA", "multi-agent", "RAG", "citation", "科研问答", "溯源"],
+    "source_url": "https://arxiv.org/abs/2510.15682"
+  }
+]

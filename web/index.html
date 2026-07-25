@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="研海寻踪：基于多智能体博弈推理的科研知识图谱发现与个性化科研训练系统"
+    />
+    <title>研海寻踪 · 多智能体科研知识发现</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="研海寻踪首页">
+        <span class="brand-mark" aria-hidden="true">研</span>
+        <span>
+          <strong>研海寻踪</strong>
+          <small>Scholarly Trace</small>
+        </span>
+      </a>
+      <div class="topbar-meta">
+        <span class="status-dot"></span>
+        <span>离线演示底座</span>
+        <span class="challenge-id">XH-202630</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow">多智能体博弈推理 × 动态科研知识图谱</div>
+        <h1>让每一条科研关联<br />都经得起追问。</h1>
+        <p>
+          从差异化学情画像出发，让提出者、批判者与裁判围绕真实文献证据协同决策，
+          再生成因人而异的导读、实操与测评。
+        </p>
+        <div class="hero-proof">
+          <span><b>6</b> 类协同 Agent</span>
+          <span><b>8</b> 篇可追溯文献</span>
+          <span><b>3</b> 类个性化资源</span>
+        </div>
+      </section>
+
+      <section class="workbench" aria-label="多智能体推理工作台">
+        <aside class="control-panel">
+          <div class="section-label">01 · 学习者画像</div>
+          <div id="profile-list" class="profile-list" aria-live="polite"></div>
+
+          <label class="query-label" for="research-query">本轮研究任务</label>
+          <textarea id="research-query" rows="4">多智能体科研推理如何通过证据溯源降低幻觉并发现研究蓝海？</textarea>
+
+          <button id="run-button" class="primary-button" type="button">
+            <span>启动协同推理</span>
+            <span aria-hidden="true">→</span>
+          </button>
+
+          <div class="privacy-note">
+            <span aria-hidden="true">◇</span>
+            当前画像均为脱敏合成数据，不含真实个人信息。
+          </div>
+        </aside>
+
+        <div class="results-panel">
+          <div id="empty-state" class="empty-state">
+            <div class="empty-visual" aria-hidden="true">
+              <span class="orbit orbit-a"></span>
+              <span class="orbit orbit-b"></span>
+              <span class="orbit-core">证据</span>
+            </div>
+            <h2>选择一位学习者，观察完整决策闭环</h2>
+            <p>画像诊断、证据检索、博弈裁决、资源生成和反馈更新将按顺序展开。</p>
+          </div>
+
+          <div id="result-content" class="result-content" hidden>
+            <section class="metric-strip" aria-label="核心评测指标">
+              <article>
+                <span>幻觉代理率</span>
+                <strong id="metric-hallucination">—</strong>
+                <small>目标 &lt; 5%</small>
+              </article>
+              <article>
+                <span>画像适配准确率</span>
+                <strong id="metric-adaptation">—</strong>
+                <small>目标 ≥ 85%</small>
+              </article>
+              <article>
+                <span>知识点覆盖率</span>
+                <strong id="metric-coverage">—</strong>
+                <small>目标 ≥ 90%</small>
+              </article>
+              <article class="metric-note">
+                <span>当前口径</span>
+                <p>工程代理指标<br />待专家盲审</p>
+              </article>
+            </section>
+
+            <section class="panel-block">
+              <div class="block-heading">
+                <div>
+                  <span class="section-label">02 · 协同轨迹</span>
+                  <h2>不是黑盒调用，而是可回放的决策链</h2>
+                </div>
+                <span id="trace-summary" class="quiet-badge"></span>
+              </div>
+              <div id="agent-trace" class="agent-trace"></div>
+            </section>
+
+            <div class="analysis-grid">
+              <section class="panel-block graph-block">
+                <div class="block-heading compact">
+                  <div>
+                    <span class="section-label">03 · 证据图谱</span>
+                    <h2>命题、来源与置信边</h2>
+                  </div>
+                  <div class="legend">
+                    <span><i class="legend-paper"></i>文献</span>
+                    <span><i class="legend-concept"></i>概念</span>
+                    <span><i class="legend-outcome"></i>结论</span>
+                  </div>
+                </div>
+                <div class="graph-scroll">
+                  <svg
+                    id="knowledge-graph"
+                    class="knowledge-graph"
+                    viewBox="0 0 900 430"
+                    role="img"
+                    aria-label="本轮知识图谱"
+                  ></svg>
+                </div>
+              </section>
+
+              <section class="panel-block report-block">
+                <div class="block-heading compact">
+                  <div>
+                    <span class="section-label">04 · 学情报告</span>
+                    <h2 id="report-persona">个性化匹配</h2>
+                  </div>
+                  <strong id="match-score" class="match-score">—</strong>
+                </div>
+                <div id="knowledge-bars" class="knowledge-bars"></div>
+                <h3>难度匹配曲线</h3>
+                <div id="difficulty-curve" class="difficulty-curve"></div>
+                <h3>推荐学习路径</h3>
+                <ol id="learning-path" class="learning-path"></ol>
+              </section>
+            </div>
+
+            <section class="panel-block">
+              <div class="block-heading">
+                <div>
+                  <span class="section-label">05 · 裁决结果</span>
+                  <h2>高置信关联进入资源，强断言被拦截</h2>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>候选命题</th>
+                      <th>证据</th>
+                      <th>批判意见</th>
+                      <th>裁决</th>
+                    </tr>
+                  </thead>
+                  <tbody id="claim-table"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="panel-block resource-block">
+              <div class="block-heading">
+                <div>
+                  <span class="section-label">06 · 个性化资源</span>
+                  <h2>同一知识底座，不同学习路径</h2>
+                </div>
+                <div class="resource-tabs" role="tablist" aria-label="资源类型">
+                  <button class="tab-button active" data-tab="briefing" type="button">定制导读</button>
+                  <button class="tab-button" data-tab="guide" type="button">复现实操</button>
+                  <button class="tab-button" data-tab="quiz" type="button">分阶测评</button>
+                </div>
+              </div>
+              <div id="resource-content" class="resource-content"></div>
+              <div class="blue-ocean">
+                <span>待验证蓝海假设</span>
+                <strong id="blue-ocean-hypothesis"></strong>
+                <p id="blue-ocean-caveat"></p>
+              </div>
+            </section>
+
+            <section class="feedback-panel">
+              <div>
+                <span class="section-label">07 · 动态反馈</span>
+                <h2>这组资源对你来说怎么样？</h2>
+                <p id="feedback-decision">反馈会触发下一轮难度与解释策略更新。</p>
+              </div>
+              <div class="feedback-actions">
+                <button data-feedback="too_hard" type="button">太难，降维解释</button>
+                <button data-feedback="suitable" type="button">合适，继续推进</button>
+                <button data-feedback="too_easy" type="button">太简单，进阶挑战</button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>研海寻踪 · 挑战杯基础演示版</span>
+      <span>所有结论均保留来源，蓝海假设明确标注为待验证。</span>
+    </footer>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
