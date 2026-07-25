@@ -1,0 +1,66 @@
+[
+  {
+    "source": "多智能体辩论",
+    "relation": "improves",
+    "target": "事实性与幻觉控制",
+    "relation_type": "effect",
+    "confidence": 0.92,
+    "evidence_ids": ["2305.14325", "2210.03629"]
+  },
+  {
+    "source": "证据约束检索",
+    "relation": "supports",
+    "target": "可追溯科研回答",
+    "relation_type": "mechanism",
+    "confidence": 0.95,
+    "evidence_ids": ["2210.03629", "2510.15682"]
+  },
+  {
+    "source": "角色扮演协作",
+    "relation": "enables",
+    "target": "多智能体任务分工",
+    "relation_type": "mechanism",
+    "confidence": 0.88,
+    "evidence_ids": ["2303.17760", "2308.08155"]
+  },
+  {
+    "source": "语言反馈记忆",
+    "relation": "enables",
+    "target": "动态决策更新",
+    "relation_type": "feedback",
+    "confidence": 0.89,
+    "evidence_ids": ["2303.11366"]
+  },
+  {
+    "source": "多视角追问",
+    "relation": "improves",
+    "target": "知识覆盖广度",
+    "relation_type": "effect",
+    "confidence": 0.86,
+    "evidence_ids": ["2402.14207"]
+  },
+  {
+    "source": "原则约束协作",
+    "relation": "guides",
+    "target": "科研发现与不确定性降低",
+    "relation_type": "discovery",
+    "confidence": 0.91,
+    "evidence_ids": ["2505.15047"]
+  },
+  {
+    "source": "多智能体科研 RAG",
+    "relation": "improves",
+    "target": "答案相关性与忠实度",
+    "relation_type": "effect",
+    "confidence": 0.90,
+    "evidence_ids": ["2510.15682"]
+  },
+  {
+    "source": "可编程对话编排",
+    "relation": "supports",
+    "target": "异构智能体协同",
+    "relation_type": "infrastructure",
+    "confidence": 0.84,
+    "evidence_ids": ["2308.08155"]
+  }
+]
