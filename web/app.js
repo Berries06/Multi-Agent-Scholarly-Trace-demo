@@ -3,6 +3,8 @@ const state = {
   selectedProfileId: "undergraduate_ai",
   result: null,
   activeTab: "briefing",
+  presets: [],
+  selectedPreset: "full",
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -58,6 +60,24 @@ function percent(value) {
   return `${Number(value).toFixed(value % 1 ? 1 : 0)}%`;
 }
 
+function renderPresets() {
+  const select = $("#preset-select");
+  select.innerHTML = state.presets
+    .map(
+      (preset) =>
+        `<option value="${escapeHtml(preset.name)}">${escapeHtml(preset.label)}</option>`,
+    )
+    .join("");
+  select.value = state.selectedPreset;
+  const updateDescription = () => {
+    state.selectedPreset = select.value;
+    const preset = state.presets.find((item) => item.name === select.value);
+    $("#preset-description").textContent = preset?.description || "";
+  };
+  select.addEventListener("change", updateDescription);
+  updateDescription();
+}
+
 function renderMetrics(result) {
   $("#metric-hallucination").textContent = percent(
     result.metrics.hallucination_proxy_rate,
@@ -68,6 +88,53 @@ function renderMetrics(result) {
   $("#metric-coverage").textContent = percent(
     result.metrics.knowledge_coverage_rate,
   );
+}
+
+function renderInnovations(result) {
+  const innovations = result.innovations || {};
+  const falsification = innovations.falsification || {};
+  const completed = Math.max(
+    0,
+    Number(falsification.rounds || 0) -
+      Number(falsification.failed || 0) -
+      Number(falsification.unresolved || 0),
+  );
+  $("#active-preset").textContent = result.system_config?.label || "基础链路";
+  $("#falsification-summary").textContent = falsification.rounds
+    ? `${completed} / ${falsification.failed} / ${falsification.unresolved}`
+    : "未启用";
+  $("#debate-summary").textContent = innovations.debate_view_count
+    ? `${innovations.debate_view_count} 次`
+    : "未启用";
+  $("#gap-summary").textContent = innovations.discovery?.research_gaps
+    ? `${innovations.discovery.research_gaps.length} 个`
+    : "未启用";
+  $("#probe-summary").textContent =
+    result.performance?.total_ms == null
+      ? "已关闭"
+      : `${Number(result.performance.total_ms).toFixed(2)} ms`;
+
+  const hypotheses = innovations.hypotheses || [];
+  $("#hypothesis-ranking").innerHTML = hypotheses.length
+    ? hypotheses
+        .map(
+          (item) =>
+            `<li><b>#${item.rank} · ${Math.round(item.score * 100)}分</b>${escapeHtml(item.hypothesis)}</li>`,
+        )
+        .join("")
+    : "<li>当前方案未启用假设锦标赛。</li>";
+
+  const stages = [...(result.performance?.stages || [])]
+    .sort((a, b) => b.duration_ms - a.duration_ms)
+    .slice(0, 4);
+  $("#probe-ranking").innerHTML = stages.length
+    ? stages
+        .map(
+          (stage) =>
+            `<li><b>${escapeHtml(stage.name)}</b>${Number(stage.duration_ms).toFixed(3)} ms</li>`,
+        )
+        .join("")
+    : "<li>当前没有探针数据。</li>";
 }
 
 function renderTrace(result) {
@@ -96,12 +163,14 @@ function renderGraph(graph) {
   const svg = $("#knowledge-graph");
   const groups = {
     paper: graph.nodes.filter((node) => node.kind === "paper"),
+    evidence_span: graph.nodes.filter((node) => node.kind === "evidence_span"),
     concept: graph.nodes.filter((node) => node.kind === "concept"),
     outcome: graph.nodes.filter((node) => node.kind === "outcome"),
   };
   const positions = new Map();
   const rowConfig = {
     paper: { y: 70, start: 65, end: 835 },
+    evidence_span: { y: 150, start: 65, end: 835 },
     concept: { y: 225, start: 90, end: 810 },
     outcome: { y: 365, start: 90, end: 810 },
   };
@@ -137,17 +206,22 @@ function renderGraph(graph) {
     })
     .join("");
 
-  const colors = { paper: "#3d6c8f", concept: "#087f78", outcome: "#d79232" };
+  const colors = {
+    paper: "#3d6c8f",
+    evidence_span: "#7f8f67",
+    concept: "#087f78",
+    outcome: "#d79232",
+  };
   const nodes = graph.nodes
     .filter((node) => positions.has(node.id))
     .map((node) => {
       const position = positions.get(node.id);
-      const radius = node.kind === "paper" ? 11 : 15;
+      const radius = node.kind === "paper" || node.kind === "evidence_span" ? 9 : 15;
       return `
         <g class="graph-node">
           <circle cx="${position.x}" cy="${position.y}" r="${radius}" fill="${colors[node.kind]}" />
           <text x="${position.x}" y="${position.y + 31}">
-            ${escapeHtml(truncate(node.label, node.kind === "paper" ? 15 : 18))}
+            ${escapeHtml(truncate(node.label, ["paper", "evidence_span"].includes(node.kind) ? 15 : 18))}
           </text>
         </g>
       `;
@@ -201,6 +275,7 @@ function renderClaims(result) {
         accepted: "通过",
         review: "复核",
         rejected: "拒绝",
+        abstained: "拒答",
       }[claim.status];
       return `
         <tr>
@@ -304,6 +379,7 @@ function renderResult(result) {
   $("#empty-state").hidden = true;
   $("#result-content").hidden = false;
   renderMetrics(result);
+  renderInnovations(result);
   renderTrace(result);
   renderGraph(result.graph);
   renderReport(result);
@@ -324,6 +400,7 @@ async function runFlow() {
       body: JSON.stringify({
         profile_id: state.selectedProfileId,
         query: $("#research-query").value.trim(),
+        preset: state.selectedPreset,
       }),
     });
     renderResult(result);
@@ -345,6 +422,7 @@ async function sendFeedback(feedback) {
         profile_id: state.selectedProfileId,
         query: $("#research-query").value.trim(),
         feedback,
+        preset: state.selectedPreset,
       }),
     });
     renderResult(result);
@@ -355,9 +433,15 @@ async function sendFeedback(feedback) {
 
 async function initialize() {
   try {
-    const payload = await requestJson("/api/profiles");
-    state.profiles = payload.profiles;
+    const [profilePayload, configPayload] = await Promise.all([
+      requestJson("/api/profiles"),
+      requestJson("/api/configs"),
+    ]);
+    state.profiles = profilePayload.profiles;
+    state.presets = configPayload.presets;
+    state.selectedPreset = configPayload.default_demo_preset;
     renderProfiles();
+    renderPresets();
   } catch (error) {
     $("#profile-list").innerHTML =
       `<p class="privacy-note">画像加载失败：${escapeHtml(error.message)}</p>`;

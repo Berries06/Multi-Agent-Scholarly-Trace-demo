@@ -8,6 +8,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
 
+from .config import list_presets
 from .orchestrator import DEFAULT_QUERY, ScholarlyTraceOrchestrator
 
 
@@ -45,6 +46,11 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
             return
         body = candidate.read_bytes()
         content_type, _ = mimetypes.guess_type(candidate.name)
+        if content_type and (
+            content_type.startswith("text/")
+            or content_type in {"application/javascript", "application/json"}
+        ):
+            content_type = f"{content_type}; charset=utf-8"
         self.send_response(HTTPStatus.OK)
         self.send_header("Content-Type", content_type or "application/octet-stream")
         self.send_header("Content-Length", str(len(body)))
@@ -60,7 +66,13 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
                     "project": "研海寻踪",
                     "profiles": len(self.orchestrator.profiles),
                     "papers": len(self.orchestrator.kb.papers),
+                    "default_demo_preset": "full",
                 }
+            )
+            return
+        if route == "/api/configs":
+            self._send_json(
+                {"presets": list_presets(), "default_demo_preset": "full"}
             )
             return
         if route == "/api/profiles":
@@ -84,13 +96,18 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
             payload = self._read_json()
             profile_id = payload.get("profile_id", "undergraduate_ai")
             query = payload.get("query") or DEFAULT_QUERY
+            preset = payload.get("preset", "full")
             if route == "/api/run":
-                self._send_json(self.orchestrator.run(profile_id, query))
+                self._send_json(
+                    self.orchestrator.run(profile_id, query, config=preset)
+                )
                 return
             if route == "/api/feedback":
                 feedback = payload.get("feedback", "suitable")
                 self._send_json(
-                    self.orchestrator.run_with_feedback(profile_id, feedback, query)
+                    self.orchestrator.run_with_feedback(
+                        profile_id, feedback, query, config=preset
+                    )
                 )
                 return
             self._send_json({"error": "Unknown API route."}, HTTPStatus.NOT_FOUND)

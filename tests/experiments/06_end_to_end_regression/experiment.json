@@ -1,0 +1,8 @@
+{
+  "slug": "06_end_to_end_regression",
+  "title": "全角色全案例回归",
+  "purpose": "对全部 mock case 运行完整创新预设，确认数据扩张前的端到端基线可重复。",
+  "presets": ["full"],
+  "repetitions": 3,
+  "primary_metrics": ["全部 case 可运行", "证据完整性", "反证输出", "蓝海假设输出"]
+}

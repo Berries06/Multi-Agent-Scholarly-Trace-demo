@@ -49,6 +49,10 @@
           <label class="query-label" for="research-query">本轮研究任务</label>
           <textarea id="research-query" rows="4">多智能体科研推理如何通过证据溯源降低幻觉并发现研究蓝海？</textarea>
 
+          <label class="query-label preset-label" for="preset-select">运行方案</label>
+          <select id="preset-select" aria-describedby="preset-description"></select>
+          <p id="preset-description" class="preset-description"></p>
+
           <button id="run-button" class="primary-button" type="button">
             <span>启动协同推理</span>
             <span aria-hidden="true">→</span>
@@ -94,10 +98,52 @@
               </article>
             </section>
 
+            <section class="panel-block innovation-block">
+              <div class="block-heading">
+                <div>
+                  <span class="section-label">02 · 创新机制观测</span>
+                  <h2>每项机制都有开关，也留下可复核输出</h2>
+                </div>
+                <span id="active-preset" class="quiet-badge"></span>
+              </div>
+              <div class="innovation-grid">
+                <article>
+                  <span>序贯反证</span>
+                  <strong id="falsification-summary">—</strong>
+                  <small>通过 / 失败 / 证据不足</small>
+                </article>
+                <article>
+                  <span>多视角质询</span>
+                  <strong id="debate-summary">—</strong>
+                  <small>证据、方法、外部有效性</small>
+                </article>
+                <article>
+                  <span>研究空白</span>
+                  <strong id="gap-summary">—</strong>
+                  <small>时序与低交叉验证提示</small>
+                </article>
+                <article>
+                  <span>本地总耗时</span>
+                  <strong id="probe-summary">—</strong>
+                  <small>真实墙钟探针，不是模型耗时</small>
+                </article>
+              </div>
+              <div class="innovation-detail-grid">
+                <div>
+                  <h3>蓝海假设锦标赛</h3>
+                  <ol id="hypothesis-ranking" class="compact-list"></ol>
+                </div>
+                <div>
+                  <h3>最慢阶段</h3>
+                  <ol id="probe-ranking" class="compact-list"></ol>
+                </div>
+              </div>
+            </section>
+
             <section class="panel-block">
               <div class="block-heading">
                 <div>
-                  <span class="section-label">02 · 协同轨迹</span>
+                  <span class="section-label">03 · 协同轨迹</span>
                   <h2>不是黑盒调用，而是可回放的决策链</h2>
                 </div>
                 <span id="trace-summary" class="quiet-badge"></span>
@@ -109,7 +155,7 @@
               <section class="panel-block graph-block">
                 <div class="block-heading compact">
                   <div>
-                    <span class="section-label">03 · 证据图谱</span>
+                    <span class="section-label">04 · 证据图谱</span>
                     <h2>命题、来源与置信边</h2>
                   </div>
                   <div class="legend">
@@ -132,7 +178,7 @@
               <section class="panel-block report-block">
                 <div class="block-heading compact">
                   <div>
-                    <span class="section-label">04 · 学情报告</span>
+                    <span class="section-label">05 · 学情报告</span>
                     <h2 id="report-persona">个性化匹配</h2>
                   </div>
                   <strong id="match-score" class="match-score">—</strong>
@@ -148,7 +194,7 @@
             <section class="panel-block">
               <div class="block-heading">
                 <div>
-                  <span class="section-label">05 · 裁决结果</span>
+                  <span class="section-label">06 · 裁决结果</span>
                   <h2>高置信关联进入资源，强断言被拦截</h2>
                 </div>
               </div>
@@ -170,7 +216,7 @@
             <section class="panel-block resource-block">
               <div class="block-heading">
                 <div>
-                  <span class="section-label">06 · 个性化资源</span>
+                  <span class="section-label">07 · 个性化资源</span>
                   <h2>同一知识底座，不同学习路径</h2>
                 </div>
                 <div class="resource-tabs" role="tablist" aria-label="资源类型">
@@ -189,7 +235,7 @@
 
             <section class="feedback-panel">
               <div>
-                <span class="section-label">07 · 动态反馈</span>
+                <span class="section-label">08 · 动态反馈</span>
                 <h2>这组资源对你来说怎么样？</h2>
                 <p id="feedback-decision">反馈会触发下一轮难度与解释策略更新。</p>
               </div>

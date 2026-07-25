@@ -1,0 +1,9 @@
+{
+  "slug": "02_provenance_falsification",
+  "title": "句级溯源与序贯反证耦合测试",
+  "purpose": "检查支持句缺失时反证状态、拒答和溯源覆盖是否按预期变化。",
+  "presets": ["full", "no_provenance", "no_falsification"],
+  "case_ids": ["M001", "M002", "M005", "M007"],
+  "repetitions": 3,
+  "primary_metrics": ["句级溯源覆盖", "反证轮数", "拒答数", "压力命题拦截率"]
+}

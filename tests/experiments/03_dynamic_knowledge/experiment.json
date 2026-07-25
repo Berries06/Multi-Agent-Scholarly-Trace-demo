@@ -1,0 +1,10 @@
+{
+  "slug": "03_dynamic_knowledge",
+  "title": "动态学情反馈测试",
+  "purpose": "比较三种难度反馈下概念掌握状态和目标难度是否产生可解释更新。",
+  "presets": ["full", "no_knowledge_tracing"],
+  "case_ids": ["M001", "M004"],
+  "feedbacks": ["too_hard", "suitable", "too_easy"],
+  "repetitions": 2,
+  "primary_metrics": ["目标难度", "掌握度更新开关", "适配指标", "资源稳定性"]
+}

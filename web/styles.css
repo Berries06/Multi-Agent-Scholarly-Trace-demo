@@ -40,7 +40,8 @@ body {
 }
 
 button,
-textarea {
+textarea,
+select {
   font: inherit;
 }
 
@@ -285,6 +286,26 @@ textarea {
   outline: none;
 }
 
+select {
+  width: 100%;
+  padding: 11px 12px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid #c8d0cb;
+}
+
+.preset-label {
+  margin-top: 16px;
+}
+
+.preset-description {
+  min-height: 34px;
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
 textarea:focus {
   border-color: var(--teal);
   box-shadow: 0 0 0 3px rgba(8, 127, 120, 0.1);
@@ -474,8 +495,67 @@ textarea:focus {
 
 .agent-trace {
   display: grid;
-  grid-template-columns: repeat(6, minmax(130px, 1fr));
+  grid-auto-columns: minmax(140px, 1fr);
+  grid-auto-flow: column;
   overflow-x: auto;
+}
+
+.innovation-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+}
+
+.innovation-grid article {
+  padding: 16px;
+  background: #f4f5ef;
+}
+
+.innovation-grid span,
+.innovation-grid strong,
+.innovation-grid small {
+  display: block;
+}
+
+.innovation-grid span,
+.innovation-grid small {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.innovation-grid strong {
+  margin: 7px 0 4px;
+  color: var(--teal-dark);
+  font-family: Georgia, serif;
+  font-size: 24px;
+}
+
+.innovation-detail-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 28px;
+  margin-top: 20px;
+}
+
+.innovation-detail-grid h3 {
+  margin: 0 0 9px;
+  font-size: 12px;
+}
+
+.compact-list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.compact-list b {
+  margin-right: 6px;
+  color: var(--ink);
 }
 
 .trace-step {
@@ -774,6 +854,11 @@ td {
   background: #f6e1db;
 }
 
+.verdict.abstained {
+  color: #5f5678;
+  background: #e9e3f4;
+}
+
 .resource-tabs {
   display: flex;
   border-bottom: 1px solid var(--line);
@@ -963,6 +1048,10 @@ footer {
   .analysis-grid {
     grid-template-columns: 1fr;
   }
+
+  .innovation-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 780px) {
@@ -1025,6 +1114,11 @@ footer {
   }
 
   .quiz-options {
+    grid-template-columns: 1fr;
+  }
+
+  .innovation-grid,
+  .innovation-detail-grid {
     grid-template-columns: 1fr;
   }
 

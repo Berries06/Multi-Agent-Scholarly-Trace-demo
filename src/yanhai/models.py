@@ -86,6 +86,18 @@ class LearnerProfile:
         }
 
 
+@dataclass(slots=True, frozen=True)
+class EvidenceSpan:
+    paper_id: str
+    section: str
+    sentence_id: str
+    text: str
+    stance: str = "support"
+
+    def to_dict(self) -> dict[str, str]:
+        return asdict(self)
+
+
 @dataclass(slots=True)
 class Claim:
     claim_id: str
@@ -95,7 +107,11 @@ class Claim:
     relation_type: str
     base_confidence: float
     evidence_ids: list[str] = field(default_factory=list)
+    evidence_spans: list[EvidenceSpan] = field(default_factory=list)
+    counter_evidence_ids: list[str] = field(default_factory=list)
     criticisms: list[str] = field(default_factory=list)
+    debate_views: list[dict[str, Any]] = field(default_factory=list)
+    falsification_steps: list[dict[str, Any]] = field(default_factory=list)
     judge_score: float = 0.0
     status: str = "proposed"
 
@@ -108,7 +124,11 @@ class Claim:
             "relation_type": self.relation_type,
             "base_confidence": round(self.base_confidence, 3),
             "evidence_ids": list(self.evidence_ids),
+            "evidence_spans": [span.to_dict() for span in self.evidence_spans],
+            "counter_evidence_ids": list(self.counter_evidence_ids),
             "criticisms": list(self.criticisms),
+            "debate_views": list(self.debate_views),
+            "falsification_steps": list(self.falsification_steps),
             "judge_score": round(self.judge_score, 3),
             "status": self.status,
         }
@@ -120,7 +140,9 @@ class AgentTrace:
     role: str
     status: str
     summary: str
-    duration_ms: int
+    duration_ms: float
+    input_count: int = 0
+    output_count: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
