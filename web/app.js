@@ -73,7 +73,7 @@ function renderMetrics(result) {
 function renderTrace(result) {
   const trace = result.agent_trace;
   $("#trace-summary").textContent =
-    `${trace.length} 个角色 · ${trace.reduce((sum, item) => sum + item.duration_ms, 0)} ms`;
+    `${trace.length} 个固定 Agent · ${trace.reduce((sum, item) => sum + item.duration_ms, 0)} ms`;
   $("#agent-trace").innerHTML = trace
     .map(
       (item, index) => `

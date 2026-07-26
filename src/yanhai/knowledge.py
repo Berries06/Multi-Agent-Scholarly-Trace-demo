@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+from .extraction import SchemaGuidedExtractor
 from .models import LearnerProfile, Paper
 
 
@@ -130,3 +131,8 @@ class KnowledgeBase:
                     }
                 )
         return {"nodes": list(nodes.values()), "edges": edges}
+
+    def extracted_paper_graph(self) -> dict[str, Any]:
+        """Build the evidence-first graph produced from paper text, not curated triples."""
+        extractor = SchemaGuidedExtractor.from_path(self.root / "extraction_schema.json")
+        return extractor.extract_papers(self.papers).to_dict()

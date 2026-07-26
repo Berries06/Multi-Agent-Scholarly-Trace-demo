@@ -25,6 +25,8 @@ class OrchestratorTests(unittest.TestCase):
     def test_complete_six_agent_trace_is_returned(self) -> None:
         result = self.orchestrator.run("undergraduate_ai")
         roles = {step["role"] for step in result["agent_trace"]}
+        self.assertEqual(6, len(result["agent_trace"]))
+        self.assertEqual(9, len(result["claims"]))
         self.assertEqual(
             {
                 "画像分析",

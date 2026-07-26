@@ -82,7 +82,10 @@ class ScholarlyTraceOrchestrator:
                 agent=self.proposer.name,
                 role="关联提出",
                 status="completed",
-                summary=f"提出 {len(claims)} 条候选关联，其中包含 1 条压力测试命题。",
+                summary=(
+                    f"生成 {len(claims)} 条候选命题（8 条知识库关联 + "
+                    "1 条压力测试）；Agent 总数仍为 6。"
+                ),
                 duration_ms=203,
             )
         )

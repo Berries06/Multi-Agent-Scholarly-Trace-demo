@@ -76,6 +76,9 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
                 }
             )
             return
+        if route == "/api/extracted-graph":
+            self._send_json(self.orchestrator.kb.extracted_paper_graph())
+            return
         self._send_static(route)
 
     def do_POST(self) -> None:  # noqa: N802
