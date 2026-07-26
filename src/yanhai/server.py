@@ -5,14 +5,20 @@ import json
 import mimetypes
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from pathlib import Path
 from urllib.parse import urlparse
 
 from .config import list_presets
 from .orchestrator import DEFAULT_QUERY, ScholarlyTraceOrchestrator
+from .providers import (
+    ProviderConfig,
+    ProviderError,
+    create_provider,
+    list_providers,
+)
+from .resources import project_root
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = project_root()
 WEB_ROOT = PROJECT_ROOT / "web"
 
 
@@ -67,6 +73,15 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
                     "profiles": len(self.orchestrator.profiles),
                     "papers": len(self.orchestrator.kb.papers),
                     "default_demo_preset": "full",
+                    "providers": len(list_providers()),
+                }
+            )
+            return
+        if route == "/api/providers":
+            self._send_json(
+                {
+                    "providers": list_providers(),
+                    "default_provider": "mock",
                 }
             )
             return
@@ -97,25 +112,72 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
             profile_id = payload.get("profile_id", "undergraduate_ai")
             query = payload.get("query") or DEFAULT_QUERY
             preset = payload.get("preset", "full")
+            provider_config = ProviderConfig.from_payload(payload.get("llm"))
+            if route == "/api/provider/test":
+                if provider_config.provider == "mock":
+                    self._send_json(
+                        {
+                            "ok": True,
+                            "message": "离线 Mock 无需 API Key，可以直接运行。",
+                            "provider": provider_config.public_dict(),
+                        }
+                    )
+                    return
+                response = create_provider(provider_config).test_connection()
+                self._send_json(
+                    {
+                        "ok": True,
+                        "message": "连接成功。",
+                        "provider": provider_config.public_dict(),
+                        "response": response.public_dict(),
+                    }
+                )
+                return
             if route == "/api/run":
                 self._send_json(
-                    self.orchestrator.run(profile_id, query, config=preset)
+                    self.orchestrator.run_with_provider(
+                        profile_id,
+                        query,
+                        provider_config,
+                        config=preset,
+                    )
                 )
                 return
             if route == "/api/feedback":
                 feedback = payload.get("feedback", "suitable")
-                self._send_json(
-                    self.orchestrator.run_with_feedback(
-                        profile_id, feedback, query, config=preset
-                    )
+                adjustments = {"too_hard": -1, "suitable": 0, "too_easy": 1}
+                if feedback not in adjustments:
+                    raise ValueError(f"Unknown feedback: {feedback}")
+                result = self.orchestrator.run_with_provider(
+                    profile_id,
+                    query,
+                    provider_config,
+                    config=preset,
+                    difficulty_adjustment=adjustments[feedback],
+                    feedback=feedback,
                 )
+                result["feedback"] = {
+                    "signal": feedback,
+                    "decision": {
+                        "too_hard": "降低解释维度，补充概念示例。",
+                        "suitable": "保持当前路径，继续证据追踪。",
+                        "too_easy": "提升难度，加入消融与蓝海挑战。",
+                    }[feedback],
+                }
+                self._send_json(result)
                 return
             self._send_json({"error": "Unknown API route."}, HTTPStatus.NOT_FOUND)
         except (KeyError, ValueError, json.JSONDecodeError) as exc:
             self._send_json({"error": str(exc)}, HTTPStatus.BAD_REQUEST)
-        except Exception as exc:  # pragma: no cover - final HTTP boundary
+        except ProviderError as exc:
             self._send_json(
-                {"error": "Internal server error.", "detail": str(exc)},
+                {"error": str(exc)},
+                HTTPStatus.BAD_GATEWAY,
+            )
+        except Exception as exc:  # pragma: no cover - final HTTP boundary
+            print(f"[yanhai] internal error: {type(exc).__name__}: {exc}")
+            self._send_json(
+                {"error": "Internal server error."},
                 HTTPStatus.INTERNAL_SERVER_ERROR,
             )
 

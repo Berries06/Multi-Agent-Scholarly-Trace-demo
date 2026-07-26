@@ -10,8 +10,12 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
 
+[project.optional-dependencies]
+qt = ["PyQt6>=6.5"]
+
 [project.scripts]
 yanhai = "yanhai.server:main"
+yanhai-qt = "yanhai.qt_app:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

@@ -294,6 +294,15 @@ select {
   border: 1px solid #c8d0cb;
 }
 
+input {
+  width: 100%;
+  padding: 11px 12px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid #c8d0cb;
+  outline: none;
+}
+
 .preset-label {
   margin-top: 16px;
 }
@@ -306,9 +315,67 @@ select {
   line-height: 1.55;
 }
 
+input:focus,
+select:focus,
 textarea:focus {
   border-color: var(--teal);
   box-shadow: 0 0 0 3px rgba(8, 127, 120, 0.1);
+}
+
+.provider-controls {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid #ccd4ce;
+}
+
+.provider-controls .query-label {
+  margin-top: 13px;
+}
+
+.secret-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.secret-input-row button {
+  padding: 0 12px;
+  color: var(--teal-dark);
+  background: #e4eee9;
+  border: 1px solid #c8d0cb;
+  border-left: 0;
+  cursor: pointer;
+}
+
+.secondary-button {
+  width: 100%;
+  margin-top: 11px;
+  padding: 10px 12px;
+  color: var(--teal-dark);
+  font-weight: 750;
+  background: transparent;
+  border: 1px solid var(--teal);
+  cursor: pointer;
+}
+
+.secondary-button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.provider-test-status {
+  min-height: 18px;
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.provider-test-status.success {
+  color: #08705f;
+}
+
+.provider-test-status.error {
+  color: #a54737;
 }
 
 .primary-button {
@@ -491,6 +558,54 @@ textarea:focus {
   color: var(--teal-dark);
   font-size: 11px;
   background: #e5f1ed;
+}
+
+.provider-run-block {
+  border-left: 4px solid var(--teal);
+}
+
+.provider-run-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.provider-run-meta span {
+  padding: 6px 8px;
+  color: #486266;
+  font-family: Consolas, monospace;
+  font-size: 10px;
+  background: #edf2ee;
+}
+
+.provider-warnings {
+  margin-top: 14px;
+  padding: 10px 12px;
+  color: #91611d;
+  font-size: 11px;
+  line-height: 1.6;
+  background: #f7ead3;
+}
+
+.live-answer-card {
+  margin-top: 18px;
+  padding: 18px;
+  background: #f4f5ef;
+  border: 1px solid #d8ddd5;
+}
+
+.live-answer-card span {
+  color: var(--teal-dark);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.live-answer-card p {
+  margin: 9px 0 0;
+  color: #385055;
+  line-height: 1.8;
+  white-space: pre-wrap;
 }
 
 .agent-trace {

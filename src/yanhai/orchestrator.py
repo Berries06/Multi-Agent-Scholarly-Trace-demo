@@ -19,8 +19,10 @@ from .agents import (
 )
 from .config import LEGACY, SystemConfig, get_preset
 from .knowledge import KnowledgeBase
+from .live_research import LiveResearchService
 from .models import AgentTrace, Claim, LearnerProfile
 from .probes import PerformanceProbe
+from .providers import ProviderConfig, create_provider
 
 
 DEFAULT_QUERY = "多智能体科研推理如何通过证据溯源降低幻觉并发现研究蓝海？"
@@ -435,6 +437,268 @@ class ScholarlyTraceOrchestrator:
             }[feedback],
         }
         return result
+
+    def run_with_provider(
+        self,
+        profile_id: str,
+        query: str,
+        provider_config: ProviderConfig,
+        config: SystemConfig | str | None = None,
+        *,
+        difficulty_adjustment: int = 0,
+        feedback: str | None = None,
+    ) -> dict[str, Any]:
+        """Run the preserved offline baseline or an evidence-grounded live LLM path.
+
+        API keys remain inside ``provider_config`` for the duration of this call.
+        They are never attached to the returned result or stored on the orchestrator.
+        """
+
+        result = self.run(
+            profile_id,
+            query,
+            difficulty_adjustment,
+            config,
+            feedback=feedback,
+        )
+        if provider_config.provider == "mock":
+            result["provider_run"] = {
+                **provider_config.public_dict(),
+                "mode": "offline_mock",
+                "source_mode": "local_mock",
+                "calls": [],
+                "usage": {
+                    "input_tokens": 0,
+                    "output_tokens": 0,
+                    "total_tokens": 0,
+                },
+                "llm_duration_ms": 0.0,
+                "retrieval_duration_ms": next(
+                    (
+                        stage["duration_ms"]
+                        for stage in result["performance"]["stages"]
+                        if stage["name"] == "retrieval"
+                    ),
+                    0.0,
+                ),
+                "warnings": [],
+                "api_key_persisted": False,
+            }
+            return result
+
+        provider = create_provider(provider_config)
+        service = LiveResearchService(
+            provider,
+            provider_config,
+            self.kb,
+        )
+        live = service.run(
+            query,
+            self.profiles[profile_id],
+            result["diagnosis"],
+        )
+        baseline_summary = {
+            "preset": result["system_config"]["name"],
+            "paper_count": len(result["papers"]),
+            "claim_count": len(result["claims"]),
+            "preserved_as_provider": "mock",
+        }
+        result.update(
+            {
+                "answer": live["answer"],
+                "answer_sections": live["answer_sections"],
+                "papers": live["papers"],
+                "claims": live["claims"],
+                "resources": live["resources"],
+                "graph": live["graph"],
+                "provider_run": live["provider_run"],
+                "mock_baseline": baseline_summary,
+            }
+        )
+        result["agent_trace"] = self._live_trace(
+            result["agent_trace"],
+            live["provider_run"],
+            len(live["papers"]),
+            len(live["claims"]),
+        )
+        result["metrics"] = self._live_metrics(result)
+        result["performance"]["live_llm_ms"] = live["provider_run"]["llm_duration_ms"]
+        result["performance"]["live_retrieval_ms"] = live["provider_run"][
+            "retrieval_duration_ms"
+        ]
+        result["innovations"] = self._live_innovations(result)
+        return result
+
+    @staticmethod
+    def _live_trace(
+        baseline_trace: list[dict[str, Any]],
+        provider_run: dict[str, Any],
+        paper_count: int,
+        claim_count: int,
+    ) -> list[dict[str, Any]]:
+        diagnosis = [
+            item
+            for item in baseline_trace
+            if item["role"] in {"画像分析", "掌握度更新"}
+        ]
+        calls = provider_run.get("calls", [])
+        trace = list(diagnosis)
+        if calls:
+            trace.append(
+                {
+                    "agent": "LLM 检索规划 Agent",
+                    "role": "检索规划",
+                    "status": "completed",
+                    "summary": (
+                        f"生成 {len(provider_run.get('search_queries', []))} 条 "
+                        "arXiv 英文检索式。"
+                    ),
+                    "duration_ms": calls[0]["duration_ms"],
+                    "input_count": 1,
+                    "output_count": len(provider_run.get("search_queries", [])),
+                }
+            )
+        trace.append(
+            {
+                "agent": "arXiv 实时检索 Agent",
+                "role": "外部证据召回",
+                "status": (
+                    "degraded"
+                    if provider_run.get("source_mode") == "local_fallback"
+                    else "completed"
+                ),
+                "summary": (
+                    f"召回 {paper_count} 篇来源；模式为 "
+                    f"{provider_run.get('source_mode')}。"
+                ),
+                "duration_ms": provider_run.get("retrieval_duration_ms", 0.0),
+                "input_count": len(provider_run.get("search_queries", [])),
+                "output_count": paper_count,
+            }
+        )
+        if len(calls) > 1:
+            trace.append(
+                {
+                    "agent": "LLM 证据提出 Agent",
+                    "role": "证据约束提出",
+                    "status": "completed",
+                    "summary": f"基于实际召回摘要提出 {claim_count} 条命题。",
+                    "duration_ms": calls[1]["duration_ms"],
+                    "input_count": paper_count,
+                    "output_count": claim_count,
+                }
+            )
+        if len(calls) > 2:
+            trace.append(
+                {
+                    "agent": "LLM 批判与资源 Agent",
+                    "role": "批判裁决与资源生成",
+                    "status": "completed",
+                    "summary": "完成来源约束复核，并生成导读、实操、测评与待验证假设。",
+                    "duration_ms": calls[2]["duration_ms"],
+                    "input_count": claim_count,
+                    "output_count": 3,
+                }
+            )
+        return trace
+
+    @staticmethod
+    def _live_metrics(result: dict[str, Any]) -> dict[str, Any]:
+        claims = result["claims"]
+        accepted = [claim for claim in claims if claim["status"] == "accepted"]
+        supported = [
+            claim
+            for claim in claims
+            if claim["evidence_ids"] and claim["evidence_spans"]
+        ]
+        unsupported_accepted = [
+            claim for claim in accepted if not claim["evidence_ids"]
+        ]
+        hallucination_proxy = (
+            100 * len(unsupported_accepted) / len(accepted) if accepted else 0.0
+        )
+        evidence_coverage = 100 * len(supported) / len(claims) if claims else 0.0
+        baseline = dict(result["metrics"])
+        baseline.update(
+            {
+                "hallucination_proxy_rate": round(hallucination_proxy, 1),
+                "accepted_claims": len(accepted),
+                "review_claims": sum(
+                    claim["status"] == "review" for claim in claims
+                ),
+                "rejected_claims": sum(
+                    claim["status"] == "rejected" for claim in claims
+                ),
+                "abstained_claims": 0,
+                "evidence_id_coverage": round(evidence_coverage, 1),
+                "sentence_provenance_coverage": round(evidence_coverage, 1),
+                "metric_scope": (
+                    "实时召回摘要的工程证据约束指标；不等同于专家核验后的事实准确率。"
+                ),
+            }
+        )
+        return baseline
+
+    @staticmethod
+    def _live_innovations(result: dict[str, Any]) -> dict[str, Any]:
+        papers = result["papers"]
+        claims = result["claims"]
+        blue_ocean = result["resources"]["blue_ocean"]
+        return {
+            "knowledge_state": result["report"].get("knowledge_state", {}),
+            "discovery": {
+                "timeline": [
+                    {
+                        "year": paper["year"],
+                        "paper_id": paper["paper_id"],
+                        "milestone": paper["summary"],
+                    }
+                    for paper in sorted(papers, key=lambda item: item["year"])
+                ],
+                "controversies": [
+                    {
+                        "topic": claim["target"],
+                        "reason": "模型批判者要求进一步复核。",
+                        "claim_id": claim["claim_id"],
+                        "evidence_ids": claim["evidence_ids"],
+                    }
+                    for claim in claims
+                    if claim["status"] == "review"
+                ],
+                "research_gaps": [
+                    {
+                        "topic": blue_ocean["hypothesis"],
+                        "gap_type": "llm_hypothesis_not_fact",
+                        "priority": None,
+                        "evidence_ids": blue_ocean["evidence_ids"],
+                    }
+                ],
+                "method": "LLM 基于实时召回摘要提出，确定性代码验证来源 ID。",
+            },
+            "hypotheses": [
+                {
+                    "candidate_id": "LH01",
+                    "hypothesis": blue_ocean["hypothesis"],
+                    "score": None,
+                    "evidence_ids": blue_ocean["evidence_ids"],
+                    "status": "hypothesis_not_fact",
+                    "rank": 1,
+                    "pairwise_wins": 0,
+                }
+            ],
+            "falsification": {
+                "rounds": len(claims),
+                "failed": sum(
+                    claim["status"] == "rejected" for claim in claims
+                ),
+                "unresolved": sum(
+                    claim["status"] == "review" for claim in claims
+                ),
+            },
+            "debate_view_count": sum(
+                len(claim["criticisms"]) for claim in claims
+            ),
+        }
 
     def _metrics(
         self,

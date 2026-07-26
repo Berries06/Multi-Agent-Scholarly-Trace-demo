@@ -8,11 +8,11 @@
       content="研海寻踪：基于多智能体博弈推理的科研知识图谱发现与个性化科研训练系统"
     />
     <title>研海寻踪 · 多智能体科研知识发现</title>
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="/" aria-label="研海寻踪首页">
+      <a class="brand" href="./" aria-label="研海寻踪首页">
         <span class="brand-mark" aria-hidden="true">研</span>
         <span>
           <strong>研海寻踪</strong>
@@ -52,6 +52,41 @@
           <label class="query-label preset-label" for="preset-select">运行方案</label>
           <select id="preset-select" aria-describedby="preset-description"></select>
           <p id="preset-description" class="preset-description"></p>
+
+          <div class="provider-controls">
+            <div class="section-label">01B · AI 供应商</div>
+            <label class="query-label" for="provider-select">推理引擎</label>
+            <select id="provider-select" aria-describedby="provider-description"></select>
+            <p id="provider-description" class="preset-description"></p>
+
+            <label class="query-label" for="model-input">模型 ID</label>
+            <input id="model-input" list="model-options" autocomplete="off" />
+            <datalist id="model-options"></datalist>
+
+            <div id="api-key-field">
+              <label class="query-label" for="api-key-input">API Key</label>
+              <div class="secret-input-row">
+                <input
+                  id="api-key-input"
+                  type="password"
+                  autocomplete="off"
+                  spellcheck="false"
+                  placeholder="仅随本次请求发送，不落盘"
+                />
+                <button id="toggle-key-button" type="button" aria-label="显示或隐藏 API Key">
+                  显示
+                </button>
+              </div>
+            </div>
+            <button id="test-provider-button" class="secondary-button" type="button">
+              测试连接
+            </button>
+            <p id="provider-test-status" class="provider-test-status" aria-live="polite"></p>
+            <p class="privacy-note">
+              密钥仅经当前 HTTPS 请求转发给所选供应商，不保存到本站、浏览器存储或日志。
+              公共设备使用后请关闭页面。
+            </p>
+          </div>
 
           <button id="run-button" class="primary-button" type="button">
             <span>启动协同推理</span>
@@ -95,6 +130,22 @@
               <article class="metric-note">
                 <span>当前口径</span>
                 <p>工程代理指标<br />待专家盲审</p>
+              </article>
+            </section>
+
+            <section class="panel-block provider-run-block">
+              <div class="block-heading compact">
+                <div>
+                  <span class="section-label">AI 运行状态</span>
+                  <h2 id="provider-run-title">离线 Mock</h2>
+                </div>
+                <span id="provider-source-badge" class="quiet-badge"></span>
+              </div>
+              <div id="provider-run-meta" class="provider-run-meta"></div>
+              <div id="provider-warnings" class="provider-warnings" hidden></div>
+              <article id="live-answer-card" class="live-answer-card" hidden>
+                <span>基于本轮来源的研究回答</span>
+                <p id="live-answer"></p>
               </article>
             </section>
 
@@ -255,6 +306,6 @@
       <span>所有结论均保留来源，蓝海假设明确标注为待验证。</span>
     </footer>
 
-    <script src="/app.js" defer></script>
+    <script src="app.js" defer></script>
   </body>
 </html>

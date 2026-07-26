@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="研海寻踪：基于证据溯源与多智能体协作的科研知识发现和个性化训练验证系统。"
+    />
+    <title>研海寻踪 · AgentDemo</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      :root {
+        --paper: #fff;
+        --ink: #2d2d2d;
+        --black: #000;
+        --gray: #777;
+        --line: #d9d9d9;
+        --blue: #057dbc;
+        --mono: "Courier New", Courier, monospace;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--mono);
+        line-height: 1.7;
+      }
+      .top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 10px 28px;
+        background: var(--black);
+      }
+      .top-bar a {
+        color: var(--paper);
+        font-size: 11px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        text-decoration: none;
+      }
+      .top-bar a:hover { color: var(--blue); }
+      .top-links { display: flex; flex-wrap: wrap; gap: 20px; }
+      main { width: min(860px, calc(100% - 40px)); margin: 0 auto; }
+      .hero { padding: 72px 0 54px; border-bottom: 4px solid var(--black); }
+      .kicker, .section-label {
+        font-size: 11px;
+        font-weight: bold;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+      }
+      h1 {
+        max-width: 760px;
+        margin: 12px 0 20px;
+        color: var(--ink);
+        font-size: clamp(42px, 9vw, 78px);
+        line-height: 1;
+        letter-spacing: -3px;
+      }
+      .deck { max-width: 650px; color: var(--gray); font-size: 14px; }
+      .status {
+        display: inline-block;
+        margin-top: 24px;
+        padding: 5px 9px;
+        border: 1px solid var(--black);
+        font-size: 10px;
+        font-weight: bold;
+        letter-spacing: 1px;
+      }
+      .links { padding: 42px 0 58px; }
+      .link-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 16px;
+        border-top: 1px solid var(--black);
+        border-left: 1px solid var(--black);
+      }
+      .link-card {
+        min-height: 174px;
+        padding: 22px;
+        border-right: 1px solid var(--black);
+        border-bottom: 1px solid var(--black);
+        color: inherit;
+        text-decoration: none;
+      }
+      .link-card:hover { background: var(--black); color: var(--paper); }
+      .link-number { color: var(--blue); font-size: 10px; font-weight: bold; }
+      .link-card h2 { margin: 18px 0 8px; font-size: 22px; line-height: 1.2; }
+      .link-card p { color: var(--gray); font-size: 12px; }
+      .link-card:hover p { color: #ccc; }
+      .about {
+        display: grid;
+        grid-template-columns: 170px 1fr;
+        gap: 30px;
+        padding: 44px 0;
+        border-top: 1px solid var(--line);
+      }
+      .about p { color: var(--gray); font-size: 13px; }
+      footer {
+        margin-top: 20px;
+        padding: 28px;
+        border-top: 1px solid var(--black);
+        color: var(--gray);
+        font-size: 10px;
+        text-align: center;
+      }
+      footer a { color: var(--ink); }
+      @media (max-width: 620px) {
+        .top-bar { align-items: flex-start; padding: 10px 16px; }
+        .top-links { gap: 12px; }
+        main { width: min(100% - 32px, 860px); }
+        .hero { padding-top: 50px; }
+        h1 { letter-spacing: -2px; }
+        .link-grid { grid-template-columns: 1fr; }
+        .about { grid-template-columns: 1fr; gap: 12px; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="top-bar" aria-label="主导航">
+      <a href="/">SNOWSONG.TOP</a>
+      <div class="top-links">
+        <a href="/AgentDemo/start/">START</a>
+        <a href="/AgentDemo/install/">INSTALL</a>
+        <a href="https://github.com/Berries06/Multi-Agent-Scholarly-Trace-demo">GITHUB</a>
+      </div>
+    </nav>
+
+    <main>
+      <header class="hero">
+        <p class="kicker">MULTI-AGENT · SCHOLARLY TRACE</p>
+        <h1>研海寻踪<br />AgentDemo</h1>
+        <p class="deck">
+          面向科研知识发现与个性化训练的功能验证系统。以学习者画像为起点，
+          通过诊断、检索、提出、批判、裁判和资源生成构成证据可追溯的多智能体闭环。
+          默认 Mock 可离线使用，也支持用户临时接入 DeepSeek、GPT、Claude 与 Kimi。
+        </p>
+        <span class="status">PUBLIC VALIDATION · 0.1.0</span>
+      </header>
+
+      <section class="links" aria-labelledby="entry-title">
+        <p id="entry-title" class="section-label">项目入口 · LINKS</p>
+        <div class="link-grid">
+          <a class="link-card" href="/AgentDemo/start/">
+            <span class="link-number">01 / WEB</span>
+            <h2>直接使用网页版 →</h2>
+            <p>无需安装。离线 Mock 开箱即用，实时模型由用户提供自己的 API Key。</p>
+          </a>
+          <a class="link-card" href="/AgentDemo/install/">
+            <span class="link-number">02 / WINDOWS</span>
+            <h2>下载 Qt 验证版 →</h2>
+            <p>Windows 10/11 x64，完整解压后运行；当前版本尚未代码签名。</p>
+          </a>
+          <a
+            class="link-card"
+            href="https://github.com/Berries06/Multi-Agent-Scholarly-Trace-demo"
+          >
+            <span class="link-number">03 / SOURCE</span>
+            <h2>查看 GitHub →</h2>
+            <p>阅读源代码、项目文档、测试与发行构建脚本。</p>
+          </a>
+          <a class="link-card" href="/">
+            <span class="link-number">04 / HOME</span>
+            <h2>返回 Snowsong.top →</h2>
+            <p>回到宋明浩的个人主页和学习档案。</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="about">
+        <p class="section-label">使用边界 · NOTICE</p>
+        <p>
+          这是公开功能验证版，不代管 API Key。密钥仅随当前 HTTPS 请求进入服务进程内存，
+          不写入网站、浏览器存储或日志。实时检索结果仍需阅读全文和人工复核。
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      HOSTED BY <a href="/">SNOWSONG.TOP</a> ·
+      SOURCE ON
+      <a href="https://github.com/Berries06/Multi-Agent-Scholarly-Trace-demo">GITHUB</a>
+    </footer>
+  </body>
+</html>

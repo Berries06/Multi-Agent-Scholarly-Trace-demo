@@ -1,3 +1,8 @@
+const appScriptPath = new URL(document.currentScript.src).pathname;
+const APP_BASE = appScriptPath.endsWith("/app.js")
+  ? appScriptPath.slice(0, -"/app.js".length)
+  : "";
+
 const state = {
   profiles: [],
   selectedProfileId: "undergraduate_ai",
@@ -5,6 +10,8 @@ const state = {
   activeTab: "briefing",
   presets: [],
   selectedPreset: "full",
+  providers: [],
+  selectedProvider: "mock",
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -20,7 +27,8 @@ function escapeHtml(value) {
 }
 
 async function requestJson(path, options = {}) {
-  const response = await fetch(path, {
+  const normalizedPath = `/${String(path).replace(/^\/+/, "")}`;
+  const response = await fetch(`${APP_BASE}${normalizedPath}`, {
     headers: { "Content-Type": "application/json" },
     ...options,
   });
@@ -78,6 +86,76 @@ function renderPresets() {
   updateDescription();
 }
 
+function selectedProviderMetadata() {
+  return state.providers.find((item) => item.id === state.selectedProvider);
+}
+
+function renderProviders() {
+  const select = $("#provider-select");
+  select.innerHTML = state.providers
+    .map(
+      (provider) =>
+        `<option value="${escapeHtml(provider.id)}">${escapeHtml(provider.label)}</option>`,
+    )
+    .join("");
+  select.value = state.selectedProvider;
+
+  const updateProvider = (resetModel = false) => {
+    state.selectedProvider = select.value;
+    const provider = selectedProviderMetadata();
+    $("#provider-description").textContent = provider?.description || "";
+    $("#model-options").innerHTML = (provider?.models || [])
+      .map((model) => `<option value="${escapeHtml(model)}"></option>`)
+      .join("");
+    if (resetModel || !$("#model-input").value) {
+      $("#model-input").value = provider?.default_model || "";
+    }
+    const isMock = provider?.id === "mock";
+    $("#api-key-field").hidden = isMock;
+    $("#model-input").disabled = isMock;
+    if (!isMock && resetModel) {
+      $("#api-key-input").value = "";
+    }
+    const status = $("#provider-test-status");
+    status.textContent = isMock
+      ? "离线模式无需密钥；原有 mock 能力保持不变。"
+      : "实时运行约 3 次模型调用；提交反馈会重新运行并产生新的用量。";
+    status.className = "provider-test-status";
+  };
+
+  select.addEventListener("change", () => updateProvider(true));
+  updateProvider(true);
+}
+
+function llmPayload() {
+  return {
+    provider: state.selectedProvider,
+    model: $("#model-input").value.trim(),
+    api_key: state.selectedProvider === "mock" ? "" : $("#api-key-input").value.trim(),
+  };
+}
+
+async function testProvider() {
+  const button = $("#test-provider-button");
+  const status = $("#provider-test-status");
+  button.disabled = true;
+  status.className = "provider-test-status";
+  status.textContent = "正在验证连接…";
+  try {
+    const payload = await requestJson("/api/provider/test", {
+      method: "POST",
+      body: JSON.stringify({ llm: llmPayload() }),
+    });
+    status.textContent = payload.message;
+    status.classList.add("success");
+  } catch (error) {
+    status.textContent = `连接失败：${error.message}`;
+    status.classList.add("error");
+  } finally {
+    button.disabled = false;
+  }
+}
+
 function renderMetrics(result) {
   $("#metric-hallucination").textContent = percent(
     result.metrics.hallucination_proxy_rate,
@@ -110,7 +188,9 @@ function renderInnovations(result) {
     ? `${innovations.discovery.research_gaps.length} 个`
     : "未启用";
   $("#probe-summary").textContent =
-    result.performance?.total_ms == null
+    result.provider_run?.mode === "live_llm"
+      ? `${Number(result.provider_run.llm_duration_ms).toFixed(0)} ms`
+      : result.performance?.total_ms == null
       ? "已关闭"
       : `${Number(result.performance.total_ms).toFixed(2)} ms`;
 
@@ -118,8 +198,11 @@ function renderInnovations(result) {
   $("#hypothesis-ranking").innerHTML = hypotheses.length
     ? hypotheses
         .map(
-          (item) =>
-            `<li><b>#${item.rank} · ${Math.round(item.score * 100)}分</b>${escapeHtml(item.hypothesis)}</li>`,
+          (item) => {
+            const score =
+              item.score == null ? "待验证" : `${Math.round(item.score * 100)}分`;
+            return `<li><b>#${item.rank} · ${score}</b>${escapeHtml(item.hypothesis)}</li>`;
+          },
         )
         .join("")
     : "<li>当前方案未启用假设锦标赛。</li>";
@@ -135,6 +218,41 @@ function renderInnovations(result) {
         )
         .join("")
     : "<li>当前没有探针数据。</li>";
+}
+
+function renderProviderRun(result) {
+  const run = result.provider_run || {};
+  $("#provider-run-title").textContent =
+    `${run.provider_label || "离线 Mock"} · ${run.model || "offline-rules"}`;
+  const sourceLabels = {
+    local_mock: "本地 mock",
+    local_fallback: "本地降级",
+    arxiv_live: "arXiv 实时来源",
+  };
+  $("#provider-source-badge").textContent =
+    sourceLabels[run.source_mode] || run.source_mode || "本地";
+  const usage = run.usage || {};
+  $("#provider-run-meta").innerHTML = [
+    `模式 ${run.mode || "offline_mock"}`,
+    `输入 ${Number(usage.input_tokens || 0)} tokens`,
+    `输出 ${Number(usage.output_tokens || 0)} tokens`,
+    `模型 ${Number(run.llm_duration_ms || 0).toFixed(0)} ms`,
+    `检索 ${Number(run.retrieval_duration_ms || 0).toFixed(0)} ms`,
+    run.api_key_persisted === false ? "API Key 未持久化" : "",
+  ]
+    .filter(Boolean)
+    .map((item) => `<span>${escapeHtml(item)}</span>`)
+    .join("");
+
+  const warnings = run.warnings || [];
+  const warningBox = $("#provider-warnings");
+  warningBox.hidden = warnings.length === 0;
+  warningBox.textContent = warnings.join("；");
+
+  const answerCard = $("#live-answer-card");
+  const answer = result.answer || "";
+  answerCard.hidden = !answer;
+  $("#live-answer").textContent = answer;
 }
 
 function renderTrace(result) {
@@ -379,6 +497,7 @@ function renderResult(result) {
   $("#empty-state").hidden = true;
   $("#result-content").hidden = false;
   renderMetrics(result);
+  renderProviderRun(result);
   renderInnovations(result);
   renderTrace(result);
   renderGraph(result.graph);
@@ -401,6 +520,7 @@ async function runFlow() {
         profile_id: state.selectedProfileId,
         query: $("#research-query").value.trim(),
         preset: state.selectedPreset,
+        llm: llmPayload(),
       }),
     });
     renderResult(result);
@@ -423,6 +543,7 @@ async function sendFeedback(feedback) {
         query: $("#research-query").value.trim(),
         feedback,
         preset: state.selectedPreset,
+        llm: llmPayload(),
       }),
     });
     renderResult(result);
@@ -433,21 +554,32 @@ async function sendFeedback(feedback) {
 
 async function initialize() {
   try {
-    const [profilePayload, configPayload] = await Promise.all([
+    const [profilePayload, configPayload, providerPayload] = await Promise.all([
       requestJson("/api/profiles"),
       requestJson("/api/configs"),
+      requestJson("/api/providers"),
     ]);
     state.profiles = profilePayload.profiles;
     state.presets = configPayload.presets;
     state.selectedPreset = configPayload.default_demo_preset;
+    state.providers = providerPayload.providers;
+    state.selectedProvider = providerPayload.default_provider;
     renderProfiles();
     renderPresets();
+    renderProviders();
   } catch (error) {
     $("#profile-list").innerHTML =
       `<p class="privacy-note">画像加载失败：${escapeHtml(error.message)}</p>`;
   }
 
   $("#run-button").addEventListener("click", runFlow);
+  $("#test-provider-button").addEventListener("click", testProvider);
+  $("#toggle-key-button").addEventListener("click", () => {
+    const input = $("#api-key-input");
+    const reveal = input.type === "password";
+    input.type = reveal ? "text" : "password";
+    $("#toggle-key-button").textContent = reveal ? "隐藏" : "显示";
+  });
   $$(".tab-button").forEach((button) => {
     button.addEventListener("click", () => {
       state.activeTab = button.dataset.tab;
