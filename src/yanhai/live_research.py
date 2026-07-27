@@ -220,6 +220,7 @@ class LiveResearchService:
         provider_config: ProviderConfig,
         knowledge_base: KnowledgeBase,
         retriever: SourceAdapter | None = None,
+        local_library: SourceAdapter | None = None,
     ) -> None:
         self.provider = provider
         self.provider_config = provider_config
@@ -227,6 +228,7 @@ class LiveResearchService:
         self.retriever = retriever or MultiSourceRetriever(
             self.kb.root / "official_sources.json"
         )
+        self.local_library = local_library
 
     @staticmethod
     def _record_call(
@@ -283,6 +285,32 @@ class LiveResearchService:
             attempted_sources = list(report.attempted_sources)
             successful_sources = list(report.successful_sources)
             warnings.extend(str(item) for item in report.warnings)
+        if self.local_library is not None:
+            attempted_sources.append(
+                getattr(self.local_library, "source_id", "local_sqlite")
+            )
+            try:
+                local_papers = self.local_library.search(
+                    [query, *search_queries],
+                    limit=8,
+                )
+            except Exception as exc:
+                local_papers = []
+                warnings.append(f"本地论文数据库检索失败：{type(exc).__name__}")
+            if local_papers:
+                successful_sources.append(
+                    getattr(self.local_library, "source_id", "local_sqlite")
+                )
+                known_ids = {paper.paper_id for paper in papers}
+                papers.extend(
+                    paper for paper in local_papers if paper.paper_id not in known_ids
+                )
+                papers = papers[:8]
+                source_mode = (
+                    "multi_source_live_with_local_cache"
+                    if known_ids
+                    else "local_sqlite"
+                )
         if not papers:
             local_candidates = self.kb.search(
                 query,

@@ -12,6 +12,8 @@ const state = {
   selectedPreset: "full",
   providers: [],
   selectedProvider: "mock",
+  user: null,
+  experimentSessionId: null,
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -41,7 +43,11 @@ async function requestJson(path, options = {}) {
 
 function renderProfiles() {
   const container = $("#profile-list");
-  container.innerHTML = state.profiles
+  const visibleProfiles = state.user ? [state.user.profile] : state.profiles;
+  if (state.user) {
+    state.selectedProfileId = state.user.profile.profile_id;
+  }
+  container.innerHTML = visibleProfiles
     .map(
       (profile) => `
         <button
@@ -62,6 +68,127 @@ function renderProfiles() {
       renderProfiles();
     });
   });
+}
+
+function renderAccount() {
+  const authenticated = Boolean(state.user);
+  $("#auth-forms").hidden = authenticated;
+  $("#logout-button").hidden = !authenticated;
+  $("#experiment-button").disabled =
+    !authenticated || state.selectedProvider !== "mock";
+  if (authenticated) {
+    $("#account-status").textContent =
+      `${state.user.profile.name} · ${state.user.email} · 画像 v${state.user.profile_version}`;
+    $("#profile-mode-note").textContent =
+      "当前询问自动使用你的长期画像；后续修改会形成新版本，不覆盖历史实验。";
+    $("#auth-gate").hidden = true;
+    $("#workbench-gated").hidden = false;
+    $("#api-key-note").textContent =
+      "已登录用户可直接选择「免费 DeepSeek (Flash)」，无需自备 Key。也可选择其他供应商并自填 Key。";
+  } else {
+    $("#account-status").textContent = "请注册或登录后使用研海寻踪。";
+    $("#profile-mode-note").textContent = "";
+    $("#auth-gate").hidden = false;
+    $("#workbench-gated").hidden = true;
+    $("#empty-state").hidden = true;
+    $("#result-content").hidden = true;
+    $("#api-key-note").textContent =
+      "密钥仅经当前请求转发给所选供应商，不保存到本站、浏览器存储或日志。";
+  }
+  renderProfiles();
+}
+
+function splitProfileTerms(value) {
+  return String(value)
+    .split(/[,，;；]/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function registrationProfilePayload() {
+  const interests = splitProfileTerms($("#profile-interests").value);
+  return {
+    name: $("#profile-name").value.trim(),
+    persona: "通过网站注册并持续完善的真实学习者画像",
+    education: $("#profile-education").value.trim(),
+    role: $("#profile-role").value.trim(),
+    goal: $("#profile-goal").value.trim(),
+    interests,
+    knowledge_scores: {
+      领域基础: 40,
+      证据检索: 35,
+      研究方法: 35,
+    },
+    preferred_style: $("#profile-style").value.trim(),
+    expected_difficulty: Number($("#profile-difficulty").value),
+    required_concepts: interests.length ? interests : ["证据判断"],
+  };
+}
+
+function setAccountMessage(message, isError = false) {
+  const target = $("#account-message");
+  target.textContent = message;
+  target.className = "provider-test-status";
+  target.classList.add(isError ? "error" : "success");
+}
+
+async function registerAccount() {
+  const button = $("#register-button");
+  button.disabled = true;
+  try {
+    const payload = await requestJson("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify({
+        email: $("#auth-email").value.trim(),
+        password: $("#auth-password").value,
+        profile: registrationProfilePayload(),
+      }),
+    });
+    state.user = payload.user;
+    setAccountMessage("注册成功，个性化画像已建立。");
+    renderAccount();
+  } catch (error) {
+    setAccountMessage(`注册失败：${error.message}`, true);
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function loginAccount() {
+  const button = $("#login-button");
+  button.disabled = true;
+  try {
+    const payload = await requestJson("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({
+        email: $("#auth-email").value.trim(),
+        password: $("#auth-password").value,
+      }),
+    });
+    state.user = payload.user;
+    setAccountMessage("登录成功，已切换到你的长期画像。");
+    renderAccount();
+  } catch (error) {
+    setAccountMessage(`登录失败：${error.message}`, true);
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function logoutAccount() {
+  try {
+    await requestJson("/api/auth/logout", {
+      method: "POST",
+      body: "{}",
+    });
+    state.user = null;
+    state.experimentSessionId = null;
+    $("#study-survey").hidden = true;
+    setAccountMessage("已退出登录。");
+    renderAccount();
+  } catch (error) {
+    setAccountMessage(`退出失败：${error.message}`, true);
+  }
 }
 
 function percent(value) {
@@ -111,9 +238,13 @@ function renderProviders() {
       $("#model-input").value = provider?.default_model || "";
     }
     const isMock = provider?.id === "mock";
-    $("#api-key-field").hidden = isMock;
+    const isFreeDS = provider?.id === "free-deepseek";
+    $("#api-key-field").hidden = isMock || isFreeDS;
+    $("#model-input").hidden = isFreeDS;
     $("#model-input").disabled = isMock;
-    if (!isMock && resetModel) {
+    const modelLabel = document.querySelector('label[for="model-input"]');
+    if (modelLabel) modelLabel.hidden = isFreeDS;
+    if (!isMock && !isFreeDS && resetModel) {
       $("#api-key-input").value = "";
     }
     const status = $("#provider-test-status");
@@ -121,6 +252,7 @@ function renderProviders() {
       ? "离线模式无需密钥；原有 mock 能力保持不变。"
       : "实时运行约 3 次模型调用；提交反馈会重新运行并产生新的用量。";
     status.className = "provider-test-status";
+    $("#experiment-button").disabled = !state.user || !isMock;
   };
 
   select.addEventListener("change", () => updateProvider(true));
@@ -229,6 +361,8 @@ function renderProviderRun(result) {
     local_fallback: "本地降级",
     arxiv_live: "arXiv 实时来源",
     multi_source_live: "开放论文 + 官方文档",
+    multi_source_live_with_local_cache: "开放来源 + 本地论文库",
+    local_sqlite: "本地垂直领域论文库",
     no_relevant_sources: "未找到相关来源",
   };
   $("#provider-source-badge").textContent =
@@ -263,7 +397,7 @@ function renderProviderRun(result) {
 function renderTrace(result) {
   const trace = result.agent_trace;
   $("#trace-summary").textContent =
-    `${trace.length} 个固定 Agent · ${trace.reduce((sum, item) => sum + item.duration_ms, 0)} ms`;
+    `${trace.length} 个执行轨迹步骤 · ${trace.reduce((sum, item) => sum + item.duration_ms, 0)} ms`;
   $("#agent-trace").innerHTML = trace
     .map(
       (item, index) => `
@@ -511,9 +645,24 @@ function renderResult(result) {
   renderResource();
   $("#feedback-decision").textContent =
     result.feedback?.decision || "反馈会触发下一轮难度与解释策略更新。";
+  const experiment = result.experiment;
+  if (experiment) {
+    state.experimentSessionId = experiment.research_session_id;
+    $("#study-survey").hidden = false;
+    $("#experiment-label").textContent =
+      `请评价本轮随机展示的回答（${experiment.displayed_label}）`;
+    $("#survey-status").textContent = "";
+  } else {
+    state.experimentSessionId = null;
+    $("#study-survey").hidden = true;
+  }
 }
 
 async function runFlow() {
+  if (!state.user) {
+    window.alert("请先注册或登录后使用。");
+    return;
+  }
   const button = $("#run-button");
   const original = button.innerHTML;
   button.disabled = true;
@@ -522,7 +671,6 @@ async function runFlow() {
     const result = await requestJson("/api/run", {
       method: "POST",
       body: JSON.stringify({
-        profile_id: state.selectedProfileId,
         query: $("#research-query").value.trim(),
         preset: state.selectedPreset,
         llm: llmPayload(),
@@ -538,13 +686,81 @@ async function runFlow() {
   }
 }
 
+async function runExperiment() {
+  if (!state.user) {
+    window.alert("请先注册或登录，并建立自己的学习画像。");
+    return;
+  }
+  if (state.selectedProvider !== "mock") {
+    window.alert("本地消融采集 MVP 暂只支持离线 Mock。");
+    return;
+  }
+  const button = $("#experiment-button");
+  const original = button.textContent;
+  button.disabled = true;
+  button.textContent = "正在生成并保存四个版本…";
+  try {
+    const result = await requestJson("/api/experiments/run", {
+      method: "POST",
+      body: JSON.stringify({
+        query: $("#research-query").value.trim(),
+        llm: llmPayload(),
+      }),
+    });
+    renderResult(result);
+    $("#result-content").scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (error) {
+    window.alert(`对照实验失败：${error.message}`);
+  } finally {
+    button.disabled = !state.user || state.selectedProvider !== "mock";
+    button.textContent = original;
+  }
+}
+
+function initializeSurveyInputs() {
+  const options = [1, 2, 3, 4, 5]
+    .map(
+      (score) =>
+        `<option value="${score}" ${score === 4 ? "selected" : ""}>${score} 分</option>`,
+    )
+    .join("");
+  $$("[data-survey]").forEach((select) => {
+    select.innerHTML = options;
+  });
+}
+
+async function submitSurvey() {
+  if (!state.experimentSessionId) return;
+  const button = $("#submit-survey-button");
+  button.disabled = true;
+  const answers = {};
+  $$("[data-survey]").forEach((select) => {
+    answers[select.dataset.survey] = Number(select.value);
+  });
+  answers.comment = $("#survey-comment").value.trim();
+  try {
+    await requestJson("/api/surveys", {
+      method: "POST",
+      body: JSON.stringify({
+        research_session_id: state.experimentSessionId,
+        answers,
+      }),
+    });
+    $("#survey-status").textContent = "问卷已保存，感谢参与本轮对照实验。";
+    $("#survey-status").className = "provider-test-status success";
+  } catch (error) {
+    $("#survey-status").textContent = `提交失败：${error.message}`;
+    $("#survey-status").className = "provider-test-status error";
+    button.disabled = false;
+  }
+}
+
 async function sendFeedback(feedback) {
   if (!state.result) return;
   try {
     const result = await requestJson("/api/feedback", {
       method: "POST",
       body: JSON.stringify({
-        profile_id: state.selectedProfileId,
         query: $("#research-query").value.trim(),
         feedback,
         preset: state.selectedPreset,
@@ -559,17 +775,35 @@ async function sendFeedback(feedback) {
 
 async function initialize() {
   try {
-    const [profilePayload, configPayload, providerPayload] = await Promise.all([
+    const [
+      profilePayload,
+      configPayload,
+      providerPayload,
+      authPayload,
+      libraryPayload,
+    ] = await Promise.all([
       requestJson("/api/profiles"),
       requestJson("/api/configs"),
       requestJson("/api/providers"),
+      requestJson("/api/auth/me"),
+      requestJson("/api/library/slices"),
     ]);
     state.profiles = profilePayload.profiles;
     state.presets = configPayload.presets;
     state.selectedPreset = configPayload.default_demo_preset;
     state.providers = providerPayload.providers;
     state.selectedProvider = providerPayload.default_provider;
-    renderProfiles();
+    state.user = authPayload.user;
+    const nonEmptySlices = libraryPayload.slices.filter(
+      (item) => Number(item.paper_count) > 0,
+    );
+    const totalPapers = nonEmptySlices.reduce(
+      (sum, item) => sum + Number(item.paper_count),
+      0,
+    );
+    $("#library-status").textContent =
+      `本地论文库：${nonEmptySlices.length} 个有效垂直切片，${totalPapers} 条切片关联。`;
+    renderAccount();
     renderPresets();
     renderProviders();
   } catch (error) {
@@ -578,6 +812,11 @@ async function initialize() {
   }
 
   $("#run-button").addEventListener("click", runFlow);
+  $("#experiment-button").addEventListener("click", runExperiment);
+  $("#register-button").addEventListener("click", registerAccount);
+  $("#login-button").addEventListener("click", loginAccount);
+  $("#logout-button").addEventListener("click", logoutAccount);
+  $("#submit-survey-button").addEventListener("click", submitSurvey);
   $("#test-provider-button").addEventListener("click", testProvider);
   $("#toggle-key-button").addEventListener("click", () => {
     const input = $("#api-key-input");
@@ -594,6 +833,7 @@ async function initialize() {
   $$(".feedback-actions button").forEach((button) => {
     button.addEventListener("click", () => sendFeedback(button.dataset.feedback));
   });
+  initializeSurveyInputs();
 }
 
 initialize();

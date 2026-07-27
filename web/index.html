@@ -35,16 +35,82 @@
           再生成因人而异的导读、实操与测评。
         </p>
         <div class="hero-proof">
-          <span><b>6</b> 类固定 Agent</span>
-          <span><b>8</b> 篇可追溯文献</span>
+          <span><b>6</b> 类基础 Agent</span>
+          <span><b>SQL</b> 垂直领域论文切片</span>
           <span><b>3</b> 类个性化资源</span>
         </div>
       </section>
 
       <section class="workbench" aria-label="多智能体推理工作台">
         <aside class="control-panel">
+          <div class="account-panel">
+            <div class="section-label">00 · 账号与长期画像</div>
+            <p id="account-status" class="account-status">请注册或登录后使用研海寻踪。</p>
+            <div id="auth-forms">
+              <label class="query-label" for="auth-email">邮箱</label>
+              <input id="auth-email" type="email" autocomplete="email" />
+              <label class="query-label" for="auth-password">密码</label>
+              <input
+                id="auth-password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="至少 8 个字符"
+              />
+              <details id="registration-profile">
+                <summary>首次注册：填写个性化画像</summary>
+                <label class="query-label" for="profile-name">昵称</label>
+                <input id="profile-name" maxlength="80" />
+                <div class="compact-grid">
+                  <div>
+                    <label class="query-label" for="profile-education">教育阶段</label>
+                    <input id="profile-education" value="本科" maxlength="80" />
+                  </div>
+                  <div>
+                    <label class="query-label" for="profile-role">当前角色</label>
+                    <input id="profile-role" value="学生" maxlength="80" />
+                  </div>
+                </div>
+                <label class="query-label" for="profile-goal">学习目标</label>
+                <textarea id="profile-goal" rows="3"></textarea>
+                <label class="query-label" for="profile-interests">兴趣领域（逗号分隔）</label>
+                <input id="profile-interests" placeholder="多智能体，嵌入式系统" />
+                <label class="query-label" for="profile-style">偏好方式</label>
+                <input id="profile-style" value="结构化、循序渐进、包含实操" />
+                <label class="query-label" for="profile-difficulty">目标难度</label>
+                <select id="profile-difficulty">
+                  <option value="1">L1 · 入门</option>
+                  <option value="2">L2 · 基础</option>
+                  <option value="3" selected>L3 · 中等</option>
+                  <option value="4">L4 · 进阶</option>
+                  <option value="5">L5 · 研究</option>
+                </select>
+              </details>
+              <div class="account-actions">
+                <button id="login-button" class="secondary-button" type="button">登录</button>
+                <button id="register-button" class="secondary-button" type="button">
+                  注册并建立画像
+                </button>
+              </div>
+            </div>
+            <button id="logout-button" class="secondary-button" type="button" hidden>
+              退出登录
+            </button>
+            <p id="account-message" class="provider-test-status" aria-live="polite"></p>
+          </div>
+
+          <div id="auth-gate">
+            <div class="empty-state">
+              <h2>🔐 请注册或登录</h2>
+              <p>研海寻踪需要账号才能使用。请在上方输入邮箱和密码注册或登录。</p>
+            </div>
+          </div>
+
+          <div id="workbench-gated" hidden>
           <div class="section-label">01 · 学习者画像</div>
           <div id="profile-list" class="profile-list" aria-live="polite"></div>
+          <p id="profile-mode-note" class="preset-description">
+            未登录时使用合成画像；登录后自动使用自己的版本化画像。
+          </p>
 
           <label class="query-label" for="research-query">本轮研究任务</label>
           <textarea id="research-query" rows="4">多智能体科研推理如何通过证据溯源降低幻觉并发现研究蓝海？</textarea>
@@ -82,9 +148,8 @@
               测试连接
             </button>
             <p id="provider-test-status" class="provider-test-status" aria-live="polite"></p>
-            <p class="privacy-note">
-              密钥仅经当前 HTTPS 请求转发给所选供应商，不保存到本站、浏览器存储或日志。
-              公共设备使用后请关闭页面。
+            <p id="api-key-note" class="privacy-note">
+              密钥仅经当前请求转发给所选供应商，不保存到本站、浏览器存储或日志。
             </p>
           </div>
 
@@ -92,11 +157,18 @@
             <span>启动协同推理</span>
             <span aria-hidden="true">→</span>
           </button>
+          <button id="experiment-button" class="secondary-button" type="button" disabled>
+            运行 A/B/C/Full 随机对照
+          </button>
+          <p id="library-status" class="preset-description">
+            正在读取本地垂直领域论文切片…
+          </p>
 
           <div class="privacy-note">
             <span aria-hidden="true">◇</span>
-            当前画像均为脱敏合成数据，不含真实个人信息。
+            注册画像会保存在本机 SQLite；本地验证环境不向第三方发送问卷数据。
           </div>
+          </div><!-- end workbench-gated -->
         </aside>
 
         <div class="results-panel">
@@ -295,6 +367,29 @@
                 <button data-feedback="suitable" type="button">合适，继续推进</button>
                 <button data-feedback="too_easy" type="button">太简单，进阶挑战</button>
               </div>
+            </section>
+
+            <section id="study-survey" class="study-survey" hidden>
+              <div>
+                <span class="section-label">09 · 对照实验问卷</span>
+                <h2 id="experiment-label">请评价本轮随机展示的回答</h2>
+                <p>其余三个版本仅保存在服务器，不向你展示，避免互相影响。</p>
+              </div>
+              <div class="survey-grid">
+                <label>整体满意度<select data-survey="satisfaction"></select></label>
+                <label>个性化程度<select data-survey="personalization"></select></label>
+                <label>主观学习收获<select data-survey="perceived_learning"></select></label>
+                <label>回答可信度<select data-survey="trust"></select></label>
+                <label>引用帮助程度<select data-survey="citation_helpfulness"></select></label>
+                <label>是否愿意再用<select data-survey="would_reuse"></select></label>
+              </div>
+              <label class="query-label" for="survey-comment">补充意见（选填）</label>
+              <textarea id="survey-comment" rows="3"></textarea>
+              <button id="submit-survey-button" class="primary-button" type="button">
+                <span>提交本轮问卷</span>
+                <span aria-hidden="true">→</span>
+              </button>
+              <p id="survey-status" class="provider-test-status" aria-live="polite"></p>
             </section>
           </div>
         </div>

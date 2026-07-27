@@ -211,6 +211,48 @@ main {
   border-right: 1px solid var(--line);
 }
 
+.account-panel {
+  margin: -8px -2px 26px;
+  padding: 18px;
+  background: rgba(255, 253, 247, 0.72);
+  border: 1px solid #cfd5cf;
+}
+
+.account-status {
+  margin: 8px 0 14px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.account-panel .query-label {
+  margin-top: 10px;
+}
+
+.account-panel details {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #d4d9d3;
+}
+
+.account-panel summary {
+  color: var(--teal-dark);
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.compact-grid,
+.account-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.account-actions .secondary-button {
+  min-height: 46px;
+}
+
 .profile-list {
   display: grid;
   gap: 10px;
@@ -1133,6 +1175,43 @@ td {
   border-color: var(--teal);
 }
 
+.study-survey {
+  margin-top: 18px;
+  padding: 28px;
+  background: #fffaf0;
+  border: 1px solid #dfd5c0;
+  border-left: 4px solid var(--amber);
+}
+
+.study-survey h2 {
+  margin: 7px 0;
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 22px;
+}
+
+.study-survey p {
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.survey-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.survey-grid label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.survey-grid select {
+  margin-top: 7px;
+}
+
 footer {
   display: flex;
   justify-content: space-between;
@@ -1233,7 +1312,10 @@ footer {
   }
 
   .innovation-grid,
-  .innovation-detail-grid {
+  .innovation-detail-grid,
+  .survey-grid,
+  .compact-grid,
+  .account-actions {
     grid-template-columns: 1fr;
   }
 

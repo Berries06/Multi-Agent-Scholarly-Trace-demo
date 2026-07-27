@@ -18,10 +18,17 @@ from yanhai.providers import (  # noqa: E402
 
 
 class ProviderTests(unittest.TestCase):
-    def test_four_remote_providers_and_mock_are_available(self) -> None:
+    def test_supported_providers_and_mock_are_available(self) -> None:
         provider_ids = {item["id"] for item in list_providers()}
         self.assertEqual(
-            {"mock", "deepseek", "openai", "anthropic", "kimi"},
+            {
+                "mock",
+                "deepseek",
+                "free-deepseek",
+                "openai",
+                "anthropic",
+                "kimi",
+            },
             provider_ids,
         )
 

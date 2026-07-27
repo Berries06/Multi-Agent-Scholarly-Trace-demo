@@ -23,6 +23,7 @@ from .live_research import LiveResearchService
 from .models import AgentTrace, Claim, LearnerProfile
 from .probes import PerformanceProbe
 from .providers import ProviderConfig, create_provider
+from .storage import LocalPaperLibrary
 
 
 DEFAULT_QUERY = "多智能体科研推理如何通过证据溯源降低幻觉并发现研究蓝海？"
@@ -35,9 +36,11 @@ class ScholarlyTraceOrchestrator:
         self,
         project_root: Path | None = None,
         config: SystemConfig | str | None = None,
+        repository: Any | None = None,
     ) -> None:
         self.project_root = project_root or Path(__file__).resolve().parents[2]
         self.config = self._resolve_config(config) if config is not None else LEGACY
+        self.repository = repository
         self.kb = KnowledgeBase(self.project_root / "data" / "knowledge")
         profile_path = self.project_root / "data" / "profiles" / "profiles.json"
         raw_profiles = json.loads(profile_path.read_text(encoding="utf-8"))
@@ -99,12 +102,13 @@ class ScholarlyTraceOrchestrator:
         config: SystemConfig | str | None = None,
         *,
         feedback: str | None = None,
+        profile_override: LearnerProfile | None = None,
     ) -> dict[str, Any]:
-        if profile_id not in self.profiles:
+        if profile_override is None and profile_id not in self.profiles:
             raise KeyError(f"Unknown profile: {profile_id}")
         active = self._resolve_config(config) if config is not None else self.config
         flags = active.flags
-        profile = self.profiles[profile_id]
+        profile = profile_override or self.profiles[profile_id]
         probe = PerformanceProbe(flags.performance_probes)
         traces: list[AgentTrace] = []
 
@@ -447,6 +451,7 @@ class ScholarlyTraceOrchestrator:
         *,
         difficulty_adjustment: int = 0,
         feedback: str | None = None,
+        profile_override: LearnerProfile | None = None,
     ) -> dict[str, Any]:
         """Run the preserved offline baseline or an evidence-grounded live LLM path.
 
@@ -460,6 +465,7 @@ class ScholarlyTraceOrchestrator:
             difficulty_adjustment,
             config,
             feedback=feedback,
+            profile_override=profile_override,
         )
         if provider_config.provider == "mock":
             result["provider_run"] = {
@@ -491,10 +497,16 @@ class ScholarlyTraceOrchestrator:
             provider,
             provider_config,
             self.kb,
+            local_library=(
+                LocalPaperLibrary(self.repository)
+                if self.repository is not None
+                else None
+            ),
         )
+        active_profile = profile_override or self.profiles[profile_id]
         live = service.run(
             query,
-            self.profiles[profile_id],
+            active_profile,
             result["diagnosis"],
         )
         baseline_summary = {

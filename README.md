@@ -73,7 +73,7 @@ DeepSeek、GPT、Claude 与 Kimi 实时路径。实时路径会并行检索开�
 |---|---|---|
 | 前端 | 原生 HTML、CSS、JavaScript、SVG | 可演示 |
 | Web 服务 | Python 标准库 `ThreadingHTTPServer` | 可演示 |
-| 文献数据 | 8 篇 arXiv 种子文献；实时接入官方资料、OpenAlex、Crossref 与 arXiv | 工程切片 |
+| 文献数据 | SQLite 垂直领域切片；8 篇种子文献；实时接入官方资料、OpenAlex、Crossref 与 arXiv | 工程切片 |
 | 文档解析 | PlainText/Markdown；可选 Docling 适配器 | 基线 |
 | 实体抽取 | 中英文 schema 词典、字符跨度匹配 | 规则基线 |
 | 关系抽取 | 触发词与同句共现候选 | 规则基线 |
@@ -115,13 +115,16 @@ DeepSeek、GPT、Claude 与 Kimi 实时路径。实时路径会并行检索开�
 
 ### 3.1 首页与用户画像
 
-![研海寻踪首页](docs/assets/readme/demo-home.png)
+![研海寻踪首页](docs/项目说明/配图/演示首页.png)
 
 ### 3.2 六 Agent 协同轨迹、证据图谱与学情报告
 
-![六 Agent 协同结果](docs/assets/readme/demo-results.png)
+![六 Agent 协同结果](docs/项目说明/配图/演示结果.png)
 
-界面目前展示 3 组脱敏合成画像、研究问题输入、6 Agent 可回放轨迹、命题裁决、证据图谱、个性化资源和难度反馈。全文上传、原文高亮、人工三元组审核和动态图谱版本界面尚未接入。
+Web 界面目前展示账号与长期画像、研究问题输入、6 Agent 可回放轨迹、命题裁决、
+证据图谱、个性化资源、难度反馈、A/B/C/Full 对照和问卷。Qt 端继续提供 3 组
+脱敏合成画像的本地桌面推理。全文上传、原文高亮、人工三元组审核和动态图谱版本
+界面尚未接入。
 
 ## （四）项目特点
 
@@ -164,8 +167,10 @@ data/
   knowledge/        种子论文、关系与 extraction schema
   profiles/         脱敏合成用户画像
 docs/
-  assets/readme/    README 实际运行截图
-  01-10_*.md        赛题、架构、路线、申报格式与团队计划
+  项目说明/         产品边界、架构、检索、论文库与技术路线
+    配图/            README 实际运行截图
+  研发记录/         实验、学习记录与开源方案调研
+  协作与运维/       部署、网站维护、团队计划与申报规范
 outputs/            可复现实验输出（默认不提交生成物）
 references/         竞赛样例与内部参考材料
 scripts/            Demo、抽取与评测入口
@@ -174,12 +179,16 @@ src/yanhai/
   extraction.py     文档对象、证据跨度、抽取、批判、裁决和图融合
   knowledge.py      种子知识库和检索
   orchestrator.py   六 Agent 编排
-  server.py         本地 HTTP 服务和 API
+  storage.py        SQLite 账号、画像、论文与实验持久化
+  experiments.py    A/B/C/Full 对照与证据边界检测
+  server.py         HTTP 服务、会话、注册开关和 API
 tests/              工程回归测试
 web/                原生 Web 前端
 ```
 
-详细研究架构见 [`docs/08_scientific_ie_kg_technical_route.md`](docs/08_scientific_ie_kg_technical_route.md)，四人工作包见 [`docs/10_team_research_workplan.md`](docs/10_team_research_workplan.md)。
+详细研究架构见
+[`科学信息抽取与知识图谱技术路线`](docs/项目说明/科学信息抽取与知识图谱技术路线.md)，
+四人工作包见 [`团队研究工作计划`](docs/协作与运维/团队研究工作计划.md)。
 
 ## （六）集成方式
 
@@ -188,11 +197,19 @@ web/                原生 Web 前端
 | 方法 | 路径 | 用途 |
 |---|---|---|
 | GET | `/api/health` | 服务健康、画像和论文数量 |
-| GET | `/api/profiles` | 获取脱敏合成画像 |
+| GET | `/api/auth/status` | 获取公开注册开关 |
+| GET | `/api/profiles` | 获取当前登录用户画像 |
 | GET | `/api/knowledge-base` | 获取当前种子论文与人工关系 |
 | GET | `/api/extracted-graph` | 获取规则抽取实体、关系、证据和审计图 |
+| GET | `/api/auth/me` | 获取当前登录状态和版本化画像 |
+| GET | `/api/library/slices` | 获取本地垂直领域论文切片统计 |
+| GET | `/api/history` | 获取当前用户的研究与问卷历史 |
+| POST | `/api/auth/register`、`/api/auth/login` | 注册画像或登录 |
 | POST | `/api/run` | 运行六 Agent 闭环 |
 | POST | `/api/feedback` | 根据难度反馈重新运行 |
+| POST | `/api/experiments/run` | 生成并保存 A/B/C/Full 四个共享证据版本 |
+| POST | `/api/surveys` | 保存随机展示版本的学习体验问卷 |
+| PUT | `/api/profile` | 生成新的用户画像版本 |
 
 ### 6.2 模型与基础设施适配
 
@@ -218,13 +235,20 @@ $env:PYTHONPATH="src"
 python -m yanhai --host 127.0.0.1 --port 8765
 ```
 
-浏览器打开 `http://127.0.0.1:8765/`，选择画像、输入研究问题并点击“启动协同推理”。
+公开注册默认关闭；本地首次注册前设置
+`$env:YANHAI_REGISTRATION_OPEN="1"` 并重启服务。浏览器打开
+`http://127.0.0.1:8765/`，注册或登录后输入研究问题并点击“启动协同推理”。
+系统使用用户自己的长期画像，并把问题、冻结论文快照、回答和
+问卷保存到 SQLite。数据库默认位于 `outputs/runtime/yanhai.sqlite3`；部署时
+使用 `YANHAI_DATA_DIR` 指向独立持久目录。
 
 ### 7.2 选择 AI 供应商
 
-左侧“AI 供应商”默认选择离线 Mock，无需 API Key。选择 DeepSeek、GPT、
-Claude 或 Kimi 后填写自己的 API Key；Key 不写入文件、浏览器存储、日志或
-返回结果。实时运行会产生模型调用费用，并依赖外部论文索引的可用性。
+“AI 供应商”默认选择离线 Mock，无需 API Key。登录用户也可选择服务器托管的
+“免费 DeepSeek (Flash)”；选择 DeepSeek、GPT、Claude 或 Kimi 时填写自己的
+API Key。用户 Key 不写入文件、浏览器存储、日志或返回结果。服务器 DeepSeek Key
+从未纳入版本控制的 `secret/DeepSeekAPI.txt` 读取。实时运行会产生模型调用费用，
+并依赖外部论文索引的可用性。
 
 ### 7.3 生成证据抽取图
 
@@ -234,6 +258,13 @@ python scripts/extract_knowledge.py
 ```
 
 输出位于 `outputs/extracted_graph.json`。
+
+初始化两组满足竞赛演示要求的完整学习者输入输出示例：
+
+```powershell
+$env:PYTHONPATH="src"
+python scripts/seed_local_database.py
+```
 
 ### 7.4 运行评测与测试
 
@@ -263,6 +294,8 @@ Qt 与 Web 发布物分别通过 `scripts/build_qt_release.ps1` 和
 Nginx、systemd、验收与回滚流程见 [`deploy/README.md`](deploy/README.md)，
 证据来源策略见
 [`docs/项目说明/证据来源与检索.md`](docs/项目说明/证据来源与检索.md)。
+账号画像、论文切片和对照实验数据结构见
+[`docs/项目说明/本地论文数据库与实验采集.md`](docs/项目说明/本地论文数据库与实验采集.md)。
 
 ## （八）混淆
 
@@ -303,7 +336,8 @@ Nginx、systemd、验收与回滚流程见 [`deploy/README.md`](deploy/README.md
 | 成员 C（待填姓名） | 图谱与发现负责人 | 实体链接、图融合、演化/争议/空白分析 |
 | 成员 D（待填姓名） | 多智能体与系统负责人 | Agent 校验、实验平台、API、前端和 APP 集成 |
 
-具体职责、交付物、里程碑和互审关系见 [`docs/10_team_research_workplan.md`](docs/10_team_research_workplan.md)。
+具体职责、交付物、里程碑和互审关系见
+[`团队研究工作计划`](docs/协作与运维/团队研究工作计划.md)。
 
 贡献组织：`TODO`
 
@@ -320,7 +354,9 @@ Nginx、systemd、验收与回滚流程见 [`deploy/README.md`](deploy/README.md
 - [Hello-Agents](https://github.com/datawhalechina/hello-agents) 与 [CAMEL](https://github.com/camel-ai/camel)：Agent 教学、角色协作和可观测性。
 - 用户提供的两份竞赛成果文档仅用于内部结构学习，不复制其文字、图表和成果。
 
-完整文献和许可证记录见 [`docs/09_open_source_adoption.md`](docs/09_open_source_adoption.md) 与 [`docs/10_team_research_workplan.md`](docs/10_team_research_workplan.md)。
+完整文献和许可证记录见
+[`开源方案调研与采用记录`](docs/研发记录/开源方案调研与采用记录.md) 与
+[`团队研究工作计划`](docs/协作与运维/团队研究工作计划.md)。
 
 ## （十二）版权信息
 
@@ -332,7 +368,7 @@ Nginx、systemd、验收与回滚流程见 [`deploy/README.md`](deploy/README.md
 - 实时路径目前主要使用官方资料、论文元数据和摘要，不等同于全文系统综述；
   重要结论仍需打开原始来源并人工复核。
 
-申报书和论文格式见 [`docs/07_submission_and_paper_format.md`](docs/07_submission_and_paper_format.md)。
+申报书和论文格式见 [`申报与论文格式`](docs/协作与运维/申报与论文格式.md)。
 Web 版或 Qt 版更新后，请按
 [`docs/协作与运维/网站发布与维护.md`](docs/协作与运维/网站发布与维护.md)
 准备发布信息并联系宋明浩：`06245011@cumt.edu.cn`。`snowsong.top` 使用其
