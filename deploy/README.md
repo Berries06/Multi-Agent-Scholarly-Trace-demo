@@ -14,8 +14,8 @@
   `/AgentDemo/install/` 均返回 200；
 - 云服务器当前约使用 419 MiB 内存和 2.6 GB 磁盘。
 
-当前线上应用版本为 `/opt/yanhai-agent-demo/releases/0.2.0-9ad5926-r2`，
-上一版本 `/opt/yanhai-agent-demo/releases/0.1.0-20260726` 保留用于回滚。
+当前线上应用版本为 `/opt/yanhai-agent-demo/releases/0.2.1-c32c748`，
+上一版本 `/opt/yanhai-agent-demo/releases/0.2.0-9ad5926-r2` 保留用于回滚。
 SQLite 数据位于 `/var/lib/yanhai-agent-demo/yanhai.sqlite3`，不随代码版本切换。
 
 ## 目标结构
@@ -37,20 +37,20 @@ Web 服务直接运行在腾讯云，不经过宿舍 M920q 和 FRP。这样不�
 在 Windows PowerShell 中：
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build_qt_release.ps1 -Version 0.2.0
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build_web_release.ps1 -Version 0.2.0
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build_qt_release.ps1 -Version 0.2.1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build_web_release.ps1 -Version 0.2.1
 ```
 
 产物：
 
-- `release/YanhaiTrace-Windows-x64-0.2.0.zip`
-- `release/yanhai-web-0.2.0.tar.gz`
+- `release/YanhaiTrace-Windows-x64-0.2.1.zip`
+- `release/yanhai-web-0.2.1.tar.gz`
 
 当前验证构建校验：
 
 ```text
-Qt ZIP:  06067974be78a7d50399eaef0205bdacec770066c6d7b7b72176eda341253984
-Web TGZ: c6f56b0ef8704e15ca91cba843dc3486431b05f6bb5aa8f6d2c78921ce80e826
+Qt ZIP:  e0abb3f68bc38f0aa40029424a6db6a80b438ee8f08ecd33c949c105d96b659a
+Web TGZ: 5b28f7a7d0c4c102f04d92795e4402c1a6fb45cb7ea0de46afb6476b140f1048
 ```
 
 Qt 构建会先运行单元测试。发布前还应使用下面的环境变量执行冻结版冒烟：
@@ -81,8 +81,8 @@ Start-Process release/qt-dist/YanhaiTrace/YanhaiTrace.exe -Wait
 
 ```bash
 cd /mnt/d/project/IndependentProjects/Multi-Agent-Scholarly-Trace-demo
-scp release/yanhai-web-0.2.0.tar.gz TencentCloud:/tmp/
-scp release/YanhaiTrace-Windows-x64-0.2.0.zip TencentCloud:/tmp/
+scp release/yanhai-web-0.2.1.tar.gz TencentCloud:/tmp/
+scp release/YanhaiTrace-Windows-x64-0.2.1.zip TencentCloud:/tmp/
 scp -r deploy TencentCloud:/tmp/yanhai-deploy
 ```
 
@@ -95,7 +95,7 @@ id yanhai-agent >/dev/null 2>&1 ||
   useradd --system --home /nonexistent --shell /usr/sbin/nologin yanhai-agent
 
 install -d -o root -g root /opt/yanhai-agent-demo/releases/<release-id>
-tar -xzf /tmp/yanhai-web-0.2.0.tar.gz \
+tar -xzf /tmp/yanhai-web-0.2.1.tar.gz \
   -C /opt/yanhai-agent-demo/releases/<release-id>
 chown -R root:root /opt/yanhai-agent-demo/releases/<release-id>
 ln -sfn /opt/yanhai-agent-demo/releases/<release-id> /opt/yanhai-agent-demo/current
@@ -122,14 +122,14 @@ install -m 0644 /tmp/yanhai-deploy/install/index.html \
   /var/www/mysite/AgentDemo/install/index.html
 install -m 0644 /tmp/yanhai-deploy/install/styles.css \
   /var/www/mysite/AgentDemo/install/styles.css
-install -m 0644 /tmp/YanhaiTrace-Windows-x64-0.2.0.zip \
-  /var/www/mysite/AgentDemo/install/YanhaiTrace-Windows-x64-0.2.0.zip
+install -m 0644 /tmp/YanhaiTrace-Windows-x64-0.2.1.zip \
+  /var/www/mysite/AgentDemo/install/YanhaiTrace-Windows-x64-0.2.1.zip
 ```
 
 上传前后的 SHA-256 必须相同：
 
 ```text
-06067974be78a7d50399eaef0205bdacec770066c6d7b7b72176eda341253984
+e0abb3f68bc38f0aa40029424a6db6a80b438ee8f08ecd33c949c105d96b659a
 ```
 
 ### 4. 增量接入 Nginx
@@ -164,10 +164,10 @@ systemctl reload nginx
 curl --fail https://snowsong.top/AgentDemo/start/api/health
 curl --fail --head https://snowsong.top/
 curl --fail --head https://snowsong.top/AgentDemo/
-curl --fail --head https://snowsong.top/AgentDemo/start/
+curl --fail --output /dev/null https://snowsong.top/AgentDemo/start/
 curl --fail --head https://snowsong.top/AgentDemo/install/
 curl --fail --head \
-  https://snowsong.top/AgentDemo/install/YanhaiTrace-Windows-x64-0.2.0.zip
+  https://snowsong.top/AgentDemo/install/YanhaiTrace-Windows-x64-0.2.1.zip
 journalctl -u yanhai-agent-demo --since "10 minutes ago" --no-pager
 ```
 
