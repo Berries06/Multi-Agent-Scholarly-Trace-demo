@@ -250,7 +250,7 @@ function renderProviders() {
     const status = $("#provider-test-status");
     status.textContent = isMock
       ? "离线模式无需密钥；原有 mock 能力保持不变。"
-      : "实时运行约 3 次模型调用；提交反馈会重新运行并产生新的用量。";
+      : "实时运行约 4 次模型调用；提交反馈会重新运行并产生新的用量。";
     status.className = "provider-test-status";
     $("#experiment-button").disabled = !state.user || !isMock;
   };
@@ -300,6 +300,18 @@ function renderMetrics(result) {
   );
 }
 
+function renderQuality(result) {
+  const assessment = result.quality_assessment || {};
+  const scores = assessment.scores || {};
+  $("#quality-gate-status").textContent = assessment.enforced
+    ? `已准入 · ${assessment.counts?.accepted || 0} 条`
+    : "消融模式 · 未执行准入";
+  $("#quality-evidence").textContent = percent(scores.evidence_grounding || 0);
+  $("#quality-profile").textContent = percent(scores.profile_fit || 0);
+  $("#quality-feedback").textContent =
+    scores.user_feedback == null ? "待填写" : percent(scores.user_feedback);
+  $("#quality-overall").textContent = percent(scores.overall_quality || 0);
+}
 function renderInnovations(result) {
   const innovations = result.innovations || {};
   const falsification = innovations.falsification || {};
@@ -397,7 +409,7 @@ function renderProviderRun(result) {
 function renderTrace(result) {
   const trace = result.agent_trace;
   $("#trace-summary").textContent =
-    `${trace.length} 个执行轨迹步骤 · ${trace.reduce((sum, item) => sum + item.duration_ms, 0)} ms`;
+    `${trace.length} 个基础 Agent · ${trace.reduce((sum, item) => sum + item.duration_ms, 0)} ms`;
   $("#agent-trace").innerHTML = trace
     .map(
       (item, index) => `
@@ -631,11 +643,65 @@ function renderResource() {
   $("#blue-ocean-caveat").textContent = resources.blue_ocean.caveat;
 }
 
+function renderQuestionnaire(result) {
+  const form = result.resources?.feedback_form;
+  const container = $("#feedback-questionnaire");
+  if (!form) {
+    container.innerHTML = "<p>当前结果没有反馈问卷。</p>";
+    return;
+  }
+  const fields = (form.items || [])
+    .map(
+      (item) => `
+        <label>
+          <span>${escapeHtml(item.label)}</span>
+          <select data-questionnaire="${escapeHtml(item.id)}">
+            ${[1, 2, 3, 4, 5]
+              .map((score) => `<option value="${score}" ${score === 3 ? "selected" : ""}>${score}</option>`)
+              .join("")}
+          </select>
+        </label>
+      `,
+    )
+    .join("");
+  const concept = form.concept_feedback?.concept;
+  const conceptField = concept
+    ? `
+      <label>
+        <span>${escapeHtml(concept)} · 掌握程度自评</span>
+        <select id="concept-self-rating" data-concept="${escapeHtml(concept)}">
+          ${[1, 2, 3, 4, 5]
+            .map((score) => `<option value="${score}" ${score === 3 ? "selected" : ""}>${score}</option>`)
+            .join("")}
+        </select>
+      </label>
+    `
+    : "";
+  container.innerHTML = `${fields}${conceptField}<small>${escapeHtml(form.note || "")}</small>`;
+}
+
+function collectQuestionnaire() {
+  return Object.fromEntries(
+    $$('[data-questionnaire]').map((field) => [
+      field.dataset.questionnaire,
+      Number(field.value),
+    ]),
+  );
+}
+
+function collectConceptFeedback() {
+  const field = $("#concept-self-rating");
+  if (!field?.dataset.concept) return {};
+  return {
+    [field.dataset.concept]: { self_rating: Number(field.value) },
+  };
+}
 function renderResult(result) {
   state.result = result;
   $("#empty-state").hidden = true;
   $("#result-content").hidden = false;
   renderMetrics(result);
+  renderQuality(result);
   renderProviderRun(result);
   renderInnovations(result);
   renderTrace(result);
@@ -643,6 +709,7 @@ function renderResult(result) {
   renderReport(result);
   renderClaims(result);
   renderResource();
+  renderQuestionnaire(result);
   $("#feedback-decision").textContent =
     result.feedback?.decision || "反馈会触发下一轮难度与解释策略更新。";
   const experiment = result.experiment;
@@ -765,6 +832,9 @@ async function sendFeedback(feedback) {
         feedback,
         preset: state.selectedPreset,
         llm: llmPayload(),
+        prior_knowledge_state: state.result.report?.knowledge_state || {},
+        questionnaire: collectQuestionnaire(),
+        concept_feedback: collectConceptFeedback(),
       }),
     });
     renderResult(result);

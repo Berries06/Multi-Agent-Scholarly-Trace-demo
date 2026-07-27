@@ -122,6 +122,7 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
         self.send_response(HTTPStatus.OK)
         self.send_header("Content-Type", content_type or "application/octet-stream")
         self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
         self.end_headers()
         self.wfile.write(body)
 
@@ -246,12 +247,12 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"profiles": [profile.public_dict()]})
             return
         if route == "/api/knowledge-base":
+            zones = self.orchestrator.kb.knowledge_zones()
             self._send_json(
                 {
-                    "papers": [
-                        paper.to_dict() for paper in self.orchestrator.kb.papers
-                    ],
+                    "papers": zones["verified"],
                     "relations": self.orchestrator.kb.relations,
+                    "zones": zones,
                 }
             )
             return
@@ -327,6 +328,34 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
                     }
                 )
                 return
+            if route == "/api/knowledge-candidates":
+                raw_papers = payload.get("papers", [])
+                if not isinstance(raw_papers, list) or len(raw_papers) > 20:
+                    raise ValueError("papers must be a list with at most 20 items")
+                candidates = []
+                for raw in raw_papers:
+                    if not isinstance(raw, dict):
+                        raise ValueError("each candidate paper must be an object")
+                    candidate_data = dict(raw)
+                    candidate_data["knowledge_status"] = "candidate"
+                    candidates.append(Paper.from_dict(candidate_data))
+                self._send_json(
+                    {
+                        "staged": self.orchestrator.kb.stage_candidates(candidates),
+                        "zones": self.orchestrator.kb.knowledge_zones(),
+                    },
+                    HTTPStatus.CREATED,
+                )
+                return
+            if route == "/api/knowledge-candidates/promote":
+                paper_id = str(payload.get("paper_id", "")).strip()
+                validation_note = str(payload.get("validation_note", "")).strip()
+                verified = self.orchestrator.kb.promote_candidate(
+                    paper_id,
+                    validation_note,
+                )
+                self._send_json({"paper": verified.to_dict()})
+                return
             if route == "/api/run":
                 if user is None:
                     raise PermissionError("请先注册或登录。")
@@ -337,6 +366,9 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
                     provider_config,
                     config=preset,
                     profile_override=profile,
+                    prior_knowledge_state=payload.get("prior_knowledge_state"),
+                    concept_feedback=payload.get("concept_feedback"),
+                    questionnaire=payload.get("questionnaire"),
                 )
                 record = self.repository.record_single_result(
                     user_id=str(user["user_id"]),
@@ -364,6 +396,9 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
                     difficulty_adjustment=adjustments[feedback],
                     feedback=feedback,
                     profile_override=profile,
+                    prior_knowledge_state=payload.get("prior_knowledge_state"),
+                    concept_feedback=payload.get("concept_feedback"),
+                    questionnaire=payload.get("questionnaire"),
                 )
                 result["feedback"] = {
                     "signal": feedback,

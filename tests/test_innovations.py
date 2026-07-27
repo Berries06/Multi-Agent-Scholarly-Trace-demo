@@ -19,7 +19,7 @@ class InnovationPipelineTests(unittest.TestCase):
     def test_default_api_remains_legacy(self) -> None:
         result = self.orchestrator.run("undergraduate_ai")
         self.assertEqual("legacy", result["system_config"]["name"])
-        self.assertEqual(6, len(result["agent_trace"]))
+        self.assertEqual(3, len(result["agent_trace"]))
         self.assertFalse(result["system_config"]["flags"]["sentence_provenance"])
 
     def test_full_preset_exposes_research_mechanisms(self) -> None:

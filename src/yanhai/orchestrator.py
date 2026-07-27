@@ -5,17 +5,9 @@ from pathlib import Path
 from typing import Any
 
 from .agents import (
-    CriticAgent,
-    DiagnosisAgent,
-    DiverseDebateAgent,
-    HypothesisTournamentAgent,
-    JudgeAgent,
-    KnowledgeTracingAgent,
-    ProposerAgent,
-    ResourceAgent,
-    RetrievalAgent,
-    SequentialFalsificationAgent,
-    TemporalDiscoveryAgent,
+    EvidenceGraphAgent,
+    LearnerPlanningAgent,
+    PersonalizedTeachingAgent,
 )
 from .config import LEGACY, SystemConfig, get_preset
 from .knowledge import KnowledgeBase
@@ -23,6 +15,7 @@ from .live_research import LiveResearchService
 from .models import AgentTrace, Claim, LearnerProfile
 from .probes import PerformanceProbe
 from .providers import ProviderConfig, create_provider
+from .quality import QualityGate
 from .storage import LocalPaperLibrary
 
 
@@ -48,17 +41,10 @@ class ScholarlyTraceOrchestrator:
             profile.profile_id: profile
             for profile in (LearnerProfile.from_dict(item) for item in raw_profiles)
         }
-        self.diagnoser = DiagnosisAgent()
-        self.knowledge_tracer = KnowledgeTracingAgent()
-        self.retriever = RetrievalAgent()
-        self.proposer = ProposerAgent()
-        self.critic = CriticAgent()
-        self.debate_agent = DiverseDebateAgent()
-        self.falsifier = SequentialFalsificationAgent()
-        self.judge = JudgeAgent()
-        self.discovery_agent = TemporalDiscoveryAgent()
-        self.tournament_agent = HypothesisTournamentAgent()
-        self.resource_agent = ResourceAgent()
+        self.learner_agent = LearnerPlanningAgent()
+        self.evidence_agent = EvidenceGraphAgent()
+        self.teaching_agent = PersonalizedTeachingAgent()
+        self.quality_gate = QualityGate()
 
     @staticmethod
     def _resolve_config(config: SystemConfig | str | None) -> SystemConfig:
@@ -103,6 +89,9 @@ class ScholarlyTraceOrchestrator:
         *,
         feedback: str | None = None,
         profile_override: LearnerProfile | None = None,
+        prior_knowledge_state: dict[str, Any] | None = None,
+        concept_feedback: dict[str, Any] | None = None,
+        questionnaire: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         if profile_override is None and profile_id not in self.profiles:
             raise KeyError(f"Unknown profile: {profile_id}")
@@ -112,233 +101,114 @@ class ScholarlyTraceOrchestrator:
         probe = PerformanceProbe(flags.performance_probes)
         traces: list[AgentTrace] = []
 
-        with probe.measure("diagnosis"):
-            diagnosis = self.diagnoser.diagnose(profile, difficulty_adjustment)
-        self._trace(
-            traces,
-            probe,
-            "diagnosis",
-            self.diagnoser.name,
-            "画像分析",
-            (
-                f"准备度 {diagnosis['readiness_score']}，定位 "
-                f"{len(diagnosis['blind_spots'])} 个知识盲区，"
-                f"目标难度 L{diagnosis['target_difficulty']}。"
-            ),
-            input_count=len(profile.knowledge_scores),
-            output_count=len(diagnosis["blind_spots"]),
+        with probe.measure("learner_planning"):
+            learner_output = self.learner_agent.plan(
+                profile,
+                difficulty_adjustment,
+                feedback=feedback,
+                enable_knowledge_tracing=(
+                    flags.knowledge_tracing
+                    or feedback is not None
+                    or bool(concept_feedback)
+                    or bool(questionnaire)
+                ),
+                prior_state=prior_knowledge_state,
+                concept_feedback=concept_feedback,
+                questionnaire=questionnaire,
+            )
+        diagnosis = learner_output["diagnosis"]
+        knowledge_state = learner_output["knowledge_state"]
+        traces.append(
+            AgentTrace(
+                agent=self.learner_agent.name,
+                role="学情诊断与学习规划",
+                status="completed",
+                summary=(
+                    f"定位 {len(diagnosis['blind_spots'])} 个知识盲区，"
+                    f"目标难度 L{diagnosis['target_difficulty']}，"
+                    f"形成 {len(diagnosis['learning_path'])} 步学习路径。"
+                ),
+                duration_ms=probe.duration("learner_planning"),
+                input_count=len(profile.knowledge_scores),
+                output_count=len(diagnosis["learning_path"]),
+            )
         )
 
-        knowledge_state: dict[str, Any] = {}
-        if flags.knowledge_tracing:
-            with probe.measure("knowledge_tracing"):
-                knowledge_state = self.knowledge_tracer.trace(
-                    profile, diagnosis, feedback
-                )
-            self._trace(
-                traces,
-                probe,
-                "knowledge_tracing",
-                self.knowledge_tracer.name,
-                "掌握度更新",
-                (
-                    f"更新 {len(knowledge_state['concepts'])} 个概念掌握度，"
-                    f"下一焦点为“{knowledge_state['next_focus']}”。"
-                ),
-                input_count=len(profile.knowledge_scores),
-                output_count=len(knowledge_state["concepts"]),
-            )
-
-        with probe.measure("retrieval"):
-            papers = self.retriever.retrieve(
+        with probe.measure("evidence_collection"):
+            evidence_output = self.evidence_agent.collect(
                 self.kb,
                 query,
                 profile,
                 diagnosis,
-                limit=active.retrieval_limit,
-                information_gain=flags.information_gain_retrieval,
+                active,
             )
-        self._trace(
-            traces,
-            probe,
-            "retrieval",
-            self.retriever.name,
-            "证据召回",
-            f"从知识库切片召回 {len(papers)} 篇可追溯文献。",
-            input_count=len(self.kb.papers),
-            output_count=len(papers),
-        )
+        papers = evidence_output["papers"]
+        claims = evidence_output["claims"]
 
-        with probe.measure("proposal"):
-            claims = self.proposer.propose(
+        with probe.measure("quality_gate"):
+            quality_assessment = self.quality_gate.assess_and_admit(
+                claims,
                 self.kb,
+                acceptance_threshold=active.acceptance_threshold,
+                review_threshold=active.review_threshold,
+                calibrated=flags.calibrated_judge,
+                abstention=flags.abstention,
+                enforce=flags.judge,
+            )
+
+        with probe.measure("evidence_discovery"):
+            discovery_output = self.evidence_agent.discover(
                 papers,
-                sentence_provenance=flags.sentence_provenance,
+                claims,
+                active,
             )
-        self._trace(
-            traces,
-            probe,
-            "proposal",
-            self.proposer.name,
-            "关联提出",
-            f"提出 {len(claims)} 条原子命题，其中包含 1 条压力测试命题。",
-            input_count=len(papers),
-            output_count=len(claims),
-        )
-
-        if flags.critic:
-            with probe.measure("critique"):
-                claims = self.critic.critique(claims, self.kb)
-            flagged = sum(
-                1
-                for claim in claims
-                if any(
-                    "缺少" in note or "绝对化" in note
-                    for note in claim.criticisms
-                )
-            )
-            self._trace(
-                traces,
-                probe,
-                "critique",
-                self.critic.name,
-                "反证与约束",
-                f"完成证据交叉检查，标记 {flagged} 条高风险命题。",
-                input_count=len(claims),
-                output_count=flagged,
-            )
-
-        if flags.diverse_debate:
-            with probe.measure("diverse_debate"):
-                claims = self.debate_agent.debate(claims, self.kb)
-            challenge_count = sum(
-                view["stance"] == "challenge"
-                for claim in claims
-                for view in claim.debate_views
-            )
-            self._trace(
-                traces,
-                probe,
-                "diverse_debate",
-                self.debate_agent.name,
-                "多视角博弈",
-                f"从证据、方法与外部有效性三种视角提出 {challenge_count} 次质询。",
-                input_count=len(claims),
-                output_count=3 * len(claims),
-            )
-
-        if flags.sequential_falsification:
-            with probe.measure("falsification"):
-                claims = self.falsifier.falsify(
-                    claims, self.kb, active.max_falsification_rounds
-                )
-            failed = sum(
-                step["outcome"] == "failed"
-                for claim in claims
-                for step in claim.falsification_steps
-            )
-            unresolved = sum(
-                step["outcome"] == "unresolved"
-                for claim in claims
-                for step in claim.falsification_steps
-            )
-            self._trace(
-                traces,
-                probe,
-                "falsification",
-                self.falsifier.name,
-                "序贯可证伪检查",
-                f"执行 {sum(len(c.falsification_steps) for c in claims)} 轮检查，"
-                f"失败 {failed}、证据不足 {unresolved}。",
-                input_count=len(claims),
-                output_count=failed + unresolved,
-            )
-
-        if flags.judge:
-            with probe.measure("judgement"):
-                claims = self.judge.adjudicate(
-                    claims,
-                    self.kb,
-                    acceptance_threshold=active.acceptance_threshold,
-                    review_threshold=active.review_threshold,
-                    calibrated=flags.calibrated_judge,
-                    abstention=flags.abstention,
-                )
-        else:
-            with probe.measure("judgement_bypass"):
-                for claim in claims:
-                    claim.judge_score = claim.base_confidence
-                    claim.status = "accepted"
+        discovery = discovery_output["discovery"]
+        hypotheses = discovery_output["hypotheses"]
         accepted = sum(claim.status == "accepted" for claim in claims)
         rejected = sum(claim.status == "rejected" for claim in claims)
         abstained = sum(claim.status == "abstained" for claim in claims)
-        if flags.judge:
-            self._trace(
-                traces,
-                probe,
-                "judgement",
-                self.judge.name,
-                "置信裁决",
-                (
-                    f"通过 {accepted} 条，拒绝 {rejected} 条，拒答 {abstained} 条；"
-                    "无证据强断言未进入资源。"
+        traces.append(
+            AgentTrace(
+                agent=self.evidence_agent.name,
+                role="证据检索与知识图谱构建",
+                status="completed",
+                summary=(
+                    f"召回 {len(papers)} 篇来源并提出 {len(claims)} 条命题；"
+                    f"内部启用 {len(evidence_output['strategies'])} 项策略，"
+                    f"质量门控放行 {accepted} 条。"
                 ),
-                input_count=len(claims),
-                output_count=accepted,
-            )
-
-        discovery: dict[str, Any] = {}
-        if flags.temporal_analysis:
-            with probe.measure("temporal_discovery"):
-                discovery = self.discovery_agent.analyse(papers, claims)
-            self._trace(
-                traces,
-                probe,
-                "temporal_discovery",
-                self.discovery_agent.name,
-                "演化、争议与空白",
-                (
-                    f"形成 {len(discovery['timeline'])} 个时序里程碑、"
-                    f"{len(discovery['controversies'])} 个争议点和 "
-                    f"{len(discovery['research_gaps'])} 个研究空白。"
+                duration_ms=(
+                    probe.duration("evidence_collection")
+                    + probe.duration("evidence_discovery")
                 ),
-                input_count=len(papers) + len(claims),
-                output_count=len(discovery["research_gaps"]),
+                input_count=len(self.kb.papers),
+                output_count=len(claims),
             )
+        )
 
-        hypotheses: list[dict[str, Any]] = []
-        if flags.hypothesis_tournament:
-            with probe.measure("hypothesis_tournament"):
-                hypotheses = self.tournament_agent.rank(discovery, claims)
-            self._trace(
-                traces,
-                probe,
-                "hypothesis_tournament",
-                self.tournament_agent.name,
-                "假设锦标赛",
-                f"对 {len(hypotheses)} 条待验证假设进行可检验性与证据强度排序。",
-                input_count=len(claims),
-                output_count=len(hypotheses),
-            )
-
-        with probe.measure("resource_generation"):
-            resources = self.resource_agent.generate(
+        with probe.measure("personalized_teaching"):
+            resources = self.teaching_agent.teach(
                 profile,
                 diagnosis,
                 claims,
                 self.kb,
-                tournament=hypotheses,
+                knowledge_state=knowledge_state,
+                hypotheses=hypotheses,
                 discovery=discovery,
             )
-        self._trace(
-            traces,
-            probe,
-            "resource_generation",
-            self.resource_agent.name,
-            "资源编排",
-            "生成定制导读、复现实操指南与分阶测评三类资源。",
-            input_count=accepted,
-            output_count=3,
+        traces.append(
+            AgentTrace(
+                agent=self.teaching_agent.name,
+                role="个性化教学与反馈",
+                status="completed",
+                summary=(
+                    "使用通过质量门控的知识生成导读、实操、测评，"
+                    "并附带 Demo 反馈问卷。"
+                ),
+                duration_ms=probe.duration("personalized_teaching"),
+                input_count=accepted,
+                output_count=3,
+            )
         )
 
         with probe.measure("graph_construction"):
@@ -348,6 +218,14 @@ class ScholarlyTraceOrchestrator:
                 include_provenance=flags.sentence_provenance,
             )
         metrics = self._metrics(profile, diagnosis, claims, resources)
+        quality_assessment = self.quality_gate.evaluate_result(
+            quality_assessment,
+            profile,
+            diagnosis,
+            claims,
+            resources,
+            questionnaire,
+        )
         report = {
             "blind_spots": diagnosis["blind_spots"],
             "strengths": diagnosis["strengths"],
@@ -397,6 +275,7 @@ class ScholarlyTraceOrchestrator:
             "debate_view_count": sum(
                 len(claim.debate_views) for claim in claims
             ),
+            "internal_strategies": evidence_output["strategies"],
         }
         return {
             "project": "研海寻踪",
@@ -410,6 +289,7 @@ class ScholarlyTraceOrchestrator:
             "graph": graph,
             "resources": resources,
             "innovations": innovations,
+            "quality_assessment": quality_assessment,
             "report": report,
             "metrics": metrics,
             "performance": probe.snapshot(),
@@ -421,6 +301,10 @@ class ScholarlyTraceOrchestrator:
         feedback: str,
         query: str = DEFAULT_QUERY,
         config: SystemConfig | str | None = None,
+        *,
+        prior_knowledge_state: dict[str, Any] | None = None,
+        concept_feedback: dict[str, Any] | None = None,
+        questionnaire: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         adjustments = {"too_hard": -1, "suitable": 0, "too_easy": 1}
         if feedback not in adjustments:
@@ -431,6 +315,9 @@ class ScholarlyTraceOrchestrator:
             adjustments[feedback],
             config,
             feedback=feedback,
+            prior_knowledge_state=prior_knowledge_state,
+            concept_feedback=concept_feedback,
+            questionnaire=questionnaire,
         )
         result["feedback"] = {
             "signal": feedback,
@@ -452,6 +339,9 @@ class ScholarlyTraceOrchestrator:
         difficulty_adjustment: int = 0,
         feedback: str | None = None,
         profile_override: LearnerProfile | None = None,
+        prior_knowledge_state: dict[str, Any] | None = None,
+        concept_feedback: dict[str, Any] | None = None,
+        questionnaire: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Run the preserved offline baseline or an evidence-grounded live LLM path.
 
@@ -466,6 +356,9 @@ class ScholarlyTraceOrchestrator:
             config,
             feedback=feedback,
             profile_override=profile_override,
+            prior_knowledge_state=prior_knowledge_state,
+            concept_feedback=concept_feedback,
+            questionnaire=questionnaire,
         )
         if provider_config.provider == "mock":
             result["provider_run"] = {
@@ -483,7 +376,7 @@ class ScholarlyTraceOrchestrator:
                     (
                         stage["duration_ms"]
                         for stage in result["performance"]["stages"]
-                        if stage["name"] == "retrieval"
+                        if stage["name"] == "evidence_collection"
                     ),
                     0.0,
                 ),
@@ -525,8 +418,30 @@ class ScholarlyTraceOrchestrator:
                 "graph": live["graph"],
                 "provider_run": live["provider_run"],
                 "mock_baseline": baseline_summary,
+                "quality_assessment": live.get("quality_assessment", result["quality_assessment"]),
             }
         )
+        ratings = [
+            float(value)
+            for value in (questionnaire or {}).values()
+            if isinstance(value, (int, float)) and 1 <= float(value) <= 5
+        ]
+        if ratings:
+            feedback_score = round(20 * sum(ratings) / len(ratings), 1)
+            quality = result["quality_assessment"]
+            quality["scores"]["user_feedback"] = feedback_score
+            quality["scores"]["overall_quality"] = round(
+                0.35 * quality["scores"].get("evidence_grounding", 0.0)
+                + 0.25 * quality["scores"].get("profile_fit", 0.0)
+                + 0.20 * quality["scores"].get("knowledge_coverage", 0.0)
+                + 0.20 * feedback_score,
+                1,
+            )
+            quality["questionnaire"] = {
+                "received": True,
+                "response_count": len(ratings),
+                "scope": "demo_in_memory",
+            }
         result["agent_trace"] = self._live_trace(
             result["agent_trace"],
             live["provider_run"],
@@ -548,76 +463,58 @@ class ScholarlyTraceOrchestrator:
         paper_count: int,
         claim_count: int,
     ) -> list[dict[str, Any]]:
-        diagnosis = [
-            item
-            for item in baseline_trace
-            if item["role"] in {"画像分析", "掌握度更新"}
-        ]
+        learner = dict(baseline_trace[0]) if baseline_trace else {
+            "agent": "学情诊断与学习规划 Agent",
+            "role": "学情诊断与学习规划",
+            "status": "completed",
+            "summary": "已形成结构化学习计划。",
+            "duration_ms": 0.0,
+            "input_count": 1,
+            "output_count": 1,
+        }
         calls = provider_run.get("calls", [])
-        trace = list(diagnosis)
-        if calls:
-            trace.append(
-                {
-                    "agent": "LLM 检索规划 Agent",
-                    "role": "检索规划",
-                    "status": "completed",
-                    "summary": (
-                        f"生成 {len(provider_run.get('search_queries', []))} 条 "
-                        "开放论文与官方文档检索式。"
-                    ),
-                    "duration_ms": calls[0]["duration_ms"],
-                    "input_count": 1,
-                    "output_count": len(provider_run.get("search_queries", [])),
-                }
+        call_by_role = {str(call.get("role")): call for call in calls}
+        evidence_duration = provider_run.get("retrieval_duration_ms", 0.0)
+        for role in ("检索规划", "证据提出"):
+            evidence_duration += float(call_by_role.get(role, {}).get("duration_ms", 0.0))
+        evidence_status = (
+            "abstained"
+            if provider_run.get("evidence_status") == "insufficient"
+            else (
+                "degraded"
+                if provider_run.get("source_mode") == "local_fallback"
+                else "completed"
             )
-        trace.append(
-            {
-                "agent": "多源证据检索 Agent",
-                "role": "外部证据召回",
-                "status": (
-                    "abstained"
-                    if provider_run.get("evidence_status") == "insufficient"
-                    else (
-                        "degraded"
-                        if provider_run.get("source_mode") == "local_fallback"
-                        else "completed"
-                    )
-                ),
-                "summary": (
-                    f"召回 {paper_count} 篇来源；模式为 "
-                    f"{provider_run.get('source_mode')}；成功来源 "
-                    f"{', '.join(provider_run.get('successful_sources', [])) or '无'}。"
-                ),
-                "duration_ms": provider_run.get("retrieval_duration_ms", 0.0),
-                "input_count": len(provider_run.get("search_queries", [])),
-                "output_count": paper_count,
-            }
         )
-        if len(calls) > 1:
-            trace.append(
-                {
-                    "agent": "LLM 证据提出 Agent",
-                    "role": "证据约束提出",
-                    "status": "completed",
-                    "summary": f"基于实际召回摘要提出 {claim_count} 条命题。",
-                    "duration_ms": calls[1]["duration_ms"],
-                    "input_count": paper_count,
-                    "output_count": claim_count,
-                }
-            )
-        if len(calls) > 2:
-            trace.append(
-                {
-                    "agent": "LLM 批判与资源 Agent",
-                    "role": "批判裁决与资源生成",
-                    "status": "completed",
-                    "summary": "完成来源约束复核，并生成导读、实操、测评与待验证假设。",
-                    "duration_ms": calls[2]["duration_ms"],
-                    "input_count": claim_count,
-                    "output_count": 3,
-                }
-            )
-        return trace
+        teaching_call = call_by_role.get("个性化教学与反馈", {})
+        return [
+            learner,
+            {
+                "agent": "证据检索与知识图谱 Agent",
+                "role": "证据检索与知识图谱构建",
+                "status": evidence_status,
+                "summary": (
+                    f"检索 {paper_count} 篇来源并形成 {claim_count} 条候选命题；"
+                    "批判、反证和来源核验作为内部策略执行。"
+                ),
+                "duration_ms": round(float(evidence_duration), 3),
+                "input_count": len(provider_run.get("search_queries", [])),
+                "output_count": claim_count,
+            },
+            {
+                "agent": "个性化教学与反馈 Agent",
+                "role": "个性化教学与反馈",
+                "status": "completed" if teaching_call else "abstained",
+                "summary": (
+                    "使用通过质量准入的知识生成导读、实操、测评和反馈问卷。"
+                    if teaching_call
+                    else "当前证据不足，未生成未经支持的教学资源。"
+                ),
+                "duration_ms": float(teaching_call.get("duration_ms", 0.0)),
+                "input_count": claim_count,
+                "output_count": 3 if teaching_call else 0,
+            },
+        ]
 
     @staticmethod
     def _live_metrics(result: dict[str, Any]) -> dict[str, Any]:

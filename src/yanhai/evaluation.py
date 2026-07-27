@@ -30,12 +30,9 @@ def evaluate_orchestrator(orchestrator: ScholarlyTraceOrchestrator) -> dict[str,
                     "evidence_complete": evidence_complete,
                     "trace_complete": trace_roles
                     == {
-                        "画像分析",
-                        "证据召回",
-                        "关联提出",
-                        "反证与约束",
-                        "置信裁决",
-                        "资源编排",
+                        "学情诊断与学习规划",
+                        "证据检索与知识图谱构建",
+                        "个性化教学与反馈",
                     },
                 }
             )

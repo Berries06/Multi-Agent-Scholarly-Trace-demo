@@ -22,6 +22,8 @@ class Paper:
     retrieved_at: str = ""
     content_hash: str = ""
     external_ids: dict[str, str] = field(default_factory=dict)
+    knowledge_status: str = "candidate"
+    validation_note: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Paper":
@@ -45,6 +47,8 @@ class Paper:
                 str(key): str(value)
                 for key, value in (data.get("external_ids") or {}).items()
             },
+            knowledge_status=str(data.get("knowledge_status", "verified")),
+            validation_note=str(data.get("validation_note", "")),
         )
 
     def to_dict(self) -> dict[str, Any]:

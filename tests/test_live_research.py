@@ -87,6 +87,9 @@ class StubProvider:
             },
         ]
 
+        combined = self.responses.pop()
+        reviews = combined.pop("reviews")
+        self.responses.extend([{"reviews": reviews}, combined])
     def complete_json(
         self,
         system: str,
@@ -185,7 +188,8 @@ class LiveResearchTests(unittest.TestCase):
         )
         self.assertNotIn("never-return-this-key", str(result))
         self.assertFalse(result["provider_run"]["api_key_persisted"])
-        self.assertEqual(45, result["provider_run"]["usage"]["total_tokens"])
+        self.assertEqual("non_agent_quality_gate", result["quality_assessment"]["kind"])
+        self.assertEqual(60, result["provider_run"]["usage"]["total_tokens"])
 
     def test_zero_proposals_returns_structured_abstention(self) -> None:
         provider = StubProvider()
