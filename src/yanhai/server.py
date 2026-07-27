@@ -274,8 +274,8 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
                     return
                 user = self.repository.register_user(
                     str(payload.get("email", "")),
+                    str(payload.get("nickname", "")),
                     str(payload.get("password", "")),
-                    payload.get("profile") or {},
                 )
                 token = self.repository.create_auth_session(str(user["user_id"]))
                 self._send_json(
@@ -286,7 +286,11 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
                 return
             if route == "/api/auth/login":
                 user = self.repository.verify_login(
-                    str(payload.get("email", "")),
+                    str(
+                        payload.get("identifier")
+                        or payload.get("email")
+                        or ""
+                    ),
                     str(payload.get("password", "")),
                 )
                 token = self.repository.create_auth_session(str(user["user_id"]))

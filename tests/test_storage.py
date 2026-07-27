@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 import sys
 import tempfile
 import unittest
+from contextlib import closing
 from pathlib import Path
 
 
@@ -66,15 +68,28 @@ class StorageTests(unittest.TestCase):
     def test_account_profile_versions_and_sessions(self) -> None:
         user = self.repository.register_user(
             "learner@example.com",
+            "本地学习者",
             "correct-horse-battery",
             profile_payload(),
         )
+        self.assertEqual("本地学习者", user["nickname"])
         self.assertFalse(user["profile"]["synthetic"])
         logged_in = self.repository.verify_login(
             "LEARNER@example.com",
             "correct-horse-battery",
         )
         self.assertEqual(user["user_id"], logged_in["user_id"])
+        nickname_login = self.repository.verify_login(
+            "本地学习者",
+            "correct-horse-battery",
+        )
+        self.assertEqual(user["user_id"], nickname_login["user_id"])
+        with self.assertRaisesRegex(ValueError, "昵称已被使用"):
+            self.repository.register_user(
+                "another@example.com",
+                "本地学习者",
+                "another-strong-password",
+            )
 
         token = self.repository.create_auth_session(user["user_id"])
         self.assertEqual(
@@ -89,6 +104,61 @@ class StorageTests(unittest.TestCase):
 
         self.repository.revoke_auth_session(token)
         self.assertIsNone(self.repository.user_for_token(token))
+
+    def test_v1_database_backfills_unique_nickname(self) -> None:
+        legacy_path = Path(self.temporary.name) / "legacy-v1.sqlite3"
+        profile = profile_payload()
+        profile["name"] = "旧版学习者"
+        with closing(sqlite3.connect(legacy_path)) as connection:
+            connection.executescript(
+                """
+                CREATE TABLE users (
+                    user_id TEXT PRIMARY KEY,
+                    email TEXT NOT NULL UNIQUE COLLATE NOCASE,
+                    password_hash TEXT NOT NULL,
+                    password_salt TEXT NOT NULL,
+                    status TEXT NOT NULL DEFAULT 'active',
+                    created_at TEXT NOT NULL,
+                    last_login_at TEXT
+                );
+                CREATE TABLE user_profiles (
+                    profile_id TEXT PRIMARY KEY,
+                    user_id TEXT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                    version INTEGER NOT NULL,
+                    profile_json TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    is_current INTEGER NOT NULL DEFAULT 1,
+                    UNIQUE(user_id, version)
+                );
+                """
+            )
+            connection.execute(
+                """
+                INSERT INTO users(
+                    user_id, email, password_hash, password_salt, created_at
+                ) VALUES ('usr_legacy', 'legacy@example.com', 'unused', 'unused', '2026-01-01')
+                """
+            )
+            connection.execute(
+                """
+                INSERT INTO user_profiles(
+                    profile_id, user_id, version, profile_json, created_at
+                ) VALUES (?, 'usr_legacy', 1, ?, '2026-01-01')
+                """,
+                ("user:usr_legacy:v1", json.dumps(profile, ensure_ascii=False)),
+            )
+            connection.execute("PRAGMA user_version = 1")
+            connection.commit()
+
+        migrated = AppRepository(legacy_path)
+        self.assertEqual("旧版学习者", migrated.get_user("usr_legacy")["nickname"])
+        with closing(sqlite3.connect(legacy_path)) as connection:
+            self.assertEqual(2, connection.execute("PRAGMA user_version").fetchone()[0])
+            indexes = {
+                row[1]
+                for row in connection.execute("PRAGMA index_list(users)").fetchall()
+            }
+        self.assertIn("users_nickname_unique", indexes)
 
     def test_domain_slices_bootstrap_and_local_search(self) -> None:
         domain, confidence, matched = DomainRouter.classify(
@@ -119,6 +189,7 @@ class StorageTests(unittest.TestCase):
     def test_four_variant_experiment_uses_one_snapshot_and_accepts_survey(self) -> None:
         user = self.repository.register_user(
             "study@example.com",
+            "实验学习者",
             "a-strong-test-password",
             profile_payload(),
         )

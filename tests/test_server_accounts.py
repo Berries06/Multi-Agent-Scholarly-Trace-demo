@@ -111,21 +111,26 @@ class AccountApiTests(unittest.TestCase):
             "/api/auth/register",
             {
                 "email": "api-study@example.com",
+                "nickname": "接口学习者",
                 "password": "strong-local-password",
-                "profile": {
-                    "name": "接口测试学习者",
-                    "education": "本科",
-                    "role": "学生",
-                    "goal": "学习多智能体证据约束",
-                    "interests": ["多智能体", "幻觉"],
-                    "preferred_style": "结构化",
-                    "expected_difficulty": 3,
-                },
             },
         )
         self.assertEqual(201, status)
         self.assertTrue(registered["authenticated"])
+        self.assertEqual("接口学习者", registered["user"]["nickname"])
         self.assertTrue(self.cookie.startswith("yanhai_session="))
+
+        self.request("POST", "/api/auth/logout", {})
+        status, logged_in, _ = self.request(
+            "POST",
+            "/api/auth/login",
+            {
+                "identifier": "接口学习者",
+                "password": "strong-local-password",
+            },
+        )
+        self.assertEqual(200, status)
+        self.assertEqual(registered["user"]["user_id"], logged_in["user"]["user_id"])
 
         status, me, _ = self.request("GET", "/api/auth/me")
         self.assertEqual(200, status)

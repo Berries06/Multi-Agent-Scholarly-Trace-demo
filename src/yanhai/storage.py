@@ -234,7 +234,7 @@ class AppRepository:
     existing threaded request model. WAL mode permits readers during writes.
     """
 
-    SCHEMA_VERSION = 1
+    SCHEMA_VERSION = 2
 
     def __init__(self, database_path: Path) -> None:
         self.database_path = database_path.resolve()
@@ -265,6 +265,7 @@ class AppRepository:
                 CREATE TABLE IF NOT EXISTS users (
                     user_id TEXT PRIMARY KEY,
                     email TEXT NOT NULL UNIQUE COLLATE NOCASE,
+                    nickname TEXT NOT NULL COLLATE NOCASE,
                     password_hash TEXT NOT NULL,
                     password_salt TEXT NOT NULL,
                     status TEXT NOT NULL DEFAULT 'active',
@@ -419,8 +420,67 @@ class AppRepository:
                 ON answer_variants(research_session_id);
                 """
             )
+            self._ensure_user_nickname_schema(connection)
             connection.execute(f"PRAGMA user_version = {self.SCHEMA_VERSION}")
             self._ensure_domains(connection)
+
+    @staticmethod
+    def _ensure_user_nickname_schema(connection: sqlite3.Connection) -> None:
+        columns = {
+            str(row["name"])
+            for row in connection.execute("PRAGMA table_info(users)").fetchall()
+        }
+        if "nickname" not in columns:
+            connection.execute(
+                "ALTER TABLE users ADD COLUMN nickname TEXT COLLATE NOCASE"
+            )
+
+        rows = connection.execute(
+            """
+            SELECT users.user_id, users.email, users.nickname,
+                   user_profiles.profile_json
+            FROM users
+            LEFT JOIN user_profiles
+              ON user_profiles.user_id = users.user_id
+             AND user_profiles.is_current = 1
+            ORDER BY users.created_at, users.user_id
+            """
+        ).fetchall()
+        occupied: set[str] = set()
+        for row in rows:
+            existing = str(row["nickname"] or "").strip()
+            if existing:
+                occupied.add(existing.casefold())
+                continue
+            profile_data = json.loads(row["profile_json"]) if row["profile_json"] else {}
+            raw_name = str(profile_data.get("name") or "").strip()
+            base = re.sub(r"[^\w\u4e00-\u9fff.-]+", "_", raw_name)[:32].strip("_.-")
+            if len(base) < 2:
+                base = re.sub(
+                    r"[^\w\u4e00-\u9fff.-]+",
+                    "_",
+                    str(row["email"]).split("@", 1)[0],
+                )[:32].strip("_.-")
+            if len(base) < 2:
+                base = "用户"
+            nickname = base
+            suffix = 2
+            while nickname.casefold() in occupied:
+                tail = f"_{suffix}"
+                nickname = f"{base[: 32 - len(tail)]}{tail}"
+                suffix += 1
+            connection.execute(
+                "UPDATE users SET nickname = ? WHERE user_id = ?",
+                (nickname, row["user_id"]),
+            )
+            occupied.add(nickname.casefold())
+
+        connection.execute(
+            """
+            CREATE UNIQUE INDEX IF NOT EXISTS users_nickname_unique
+            ON users(nickname COLLATE NOCASE)
+            """
+        )
 
     @staticmethod
     def _ensure_domains(connection: sqlite3.Connection) -> None:
@@ -458,13 +518,26 @@ class AppRepository:
         return base64.b64encode(digest).decode("ascii")
 
     @staticmethod
-    def _validate_credentials(email: str, password: str) -> tuple[str, str]:
+    def _validate_email(email: str) -> str:
         normalised_email = email.strip().casefold()
         if not re.fullmatch(r"[^@\s]{1,120}@[^@\s]{1,120}\.[^@\s]{2,40}", normalised_email):
             raise ValueError("邮箱格式不正确。")
+        return normalised_email
+
+    @staticmethod
+    def _validate_nickname(nickname: str) -> str:
+        normalised = nickname.strip()
+        if not re.fullmatch(r"[\w\u4e00-\u9fff.-]{2,32}", normalised):
+            raise ValueError("昵称须为 2—32 位中文、字母、数字、下划线、点或短横线。")
+        if "@" in normalised:
+            raise ValueError("昵称不能包含 @。")
+        return normalised
+
+    @staticmethod
+    def _validate_password(password: str) -> str:
         if not 8 <= len(password) <= 256:
             raise ValueError("密码长度必须介于 8 到 256 个字符。")
-        return normalised_email, password
+        return password
 
     @staticmethod
     def _normalise_profile(
@@ -519,13 +592,35 @@ class AppRepository:
     def register_user(
         self,
         email: str,
+        nickname: str,
         password: str,
-        profile_data: dict[str, Any],
+        profile_data: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        normalised_email, password = self._validate_credentials(email, password)
+        normalised_email = self._validate_email(email)
+        normalised_nickname = self._validate_nickname(nickname)
+        password = self._validate_password(password)
         user_id = _identifier("usr")
+        initial_profile = {
+            "name": normalised_nickname,
+            "persona": "刚加入研海寻踪、待继续完善画像的注册学习者",
+            "education": "未填写",
+            "role": "学习者",
+            "goal": "建立个性化学习画像并开始循证学习",
+            "interests": ["跨学科学习"],
+            "knowledge_scores": {
+                "领域基础": 40,
+                "证据检索": 35,
+                "研究方法": 35,
+            },
+            "preferred_style": "结构化、循序渐进",
+            "expected_difficulty": 3,
+            "required_concepts": ["证据判断"],
+        }
+        if profile_data:
+            initial_profile.update(profile_data)
+            initial_profile["name"] = normalised_nickname
         profile = self._normalise_profile(
-            profile_data,
+            initial_profile,
             profile_id=f"user:{user_id}:v1",
         )
         salt = secrets.token_bytes(16)
@@ -536,12 +631,14 @@ class AppRepository:
                 connection.execute(
                     """
                     INSERT INTO users(
-                        user_id, email, password_hash, password_salt, created_at
-                    ) VALUES (?, ?, ?, ?, ?)
+                        user_id, email, nickname, password_hash, password_salt,
+                        created_at
+                    ) VALUES (?, ?, ?, ?, ?, ?)
                     """,
                     (
                         user_id,
                         normalised_email,
+                        normalised_nickname,
                         self._hash_password(password, salt),
                         base64.b64encode(salt).decode("ascii"),
                         timestamp,
@@ -564,22 +661,37 @@ class AppRepository:
                 )
                 connection.commit()
         except sqlite3.IntegrityError as exc:
+            message = str(exc).casefold()
+            if "nickname" in message:
+                raise ValueError("该昵称已被使用。") from exc
             raise ValueError("该邮箱已经注册。") from exc
         return self.get_user(user_id)
 
-    def verify_login(self, email: str, password: str) -> dict[str, Any]:
-        normalised_email, password = self._validate_credentials(email, password)
+    def verify_login(self, identifier: str, password: str) -> dict[str, Any]:
+        normalised_identifier = identifier.strip()
+        if not 2 <= len(normalised_identifier) <= 240:
+            raise ValueError("请输入邮箱或昵称。")
+        password = self._validate_password(password)
         with self._connect() as connection:
-            row = connection.execute(
-                "SELECT * FROM users WHERE email = ? AND status = 'active'",
-                (normalised_email,),
-            ).fetchone()
+            if "@" in normalised_identifier:
+                row = connection.execute(
+                    "SELECT * FROM users WHERE email = ? AND status = 'active'",
+                    (normalised_identifier.casefold(),),
+                ).fetchone()
+            else:
+                row = connection.execute(
+                    """
+                    SELECT * FROM users
+                    WHERE nickname = ? COLLATE NOCASE AND status = 'active'
+                    """,
+                    (normalised_identifier,),
+                ).fetchone()
             if row is None:
-                raise ValueError("邮箱或密码错误。")
+                raise ValueError("邮箱/昵称或密码错误。")
             salt = base64.b64decode(row["password_salt"])
             candidate = self._hash_password(password, salt)
             if not hmac.compare_digest(candidate, row["password_hash"]):
-                raise ValueError("邮箱或密码错误。")
+                raise ValueError("邮箱/昵称或密码错误。")
             connection.execute(
                 "UPDATE users SET last_login_at = ? WHERE user_id = ?",
                 (_now(), row["user_id"]),
@@ -649,7 +761,10 @@ class AppRepository:
     def get_user(self, user_id: str) -> dict[str, Any]:
         with self._connect() as connection:
             user = connection.execute(
-                "SELECT user_id, email, status, created_at, last_login_at FROM users WHERE user_id = ?",
+                """
+                SELECT user_id, email, nickname, status, created_at, last_login_at
+                FROM users WHERE user_id = ?
+                """,
                 (user_id,),
             ).fetchone()
             if user is None:
@@ -666,6 +781,7 @@ class AppRepository:
             return {
                 "user_id": user["user_id"],
                 "email": user["email"],
+                "nickname": user["nickname"],
                 "status": user["status"],
                 "created_at": user["created_at"],
                 "last_login_at": user["last_login_at"],

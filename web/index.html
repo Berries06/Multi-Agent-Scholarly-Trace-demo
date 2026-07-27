@@ -27,6 +27,104 @@
     </header>
 
     <main>
+      <section id="auth-view" class="auth-view" aria-label="账号登录与注册">
+        <div class="auth-showcase">
+          <div>
+            <span class="auth-kicker">SCHOLARLY TRACE · ACCOUNT</span>
+            <h1>先认识你，<br />再开始学习。</h1>
+            <p>
+              登录后，你的学习画像、论文证据快照和实验记录会长期保留，
+              每一次反馈都会成为下一轮个性化规划的依据。
+            </p>
+          </div>
+          <div class="auth-proof">
+            <span><b>3</b> 个复合智能体</span>
+            <span><b>SQL</b> 长期学习记录</span>
+            <span><b>可追溯</b> 论文证据</span>
+          </div>
+        </div>
+
+        <div class="auth-card">
+          <div class="auth-card-heading">
+            <span class="brand-mark" aria-hidden="true">研</span>
+            <div>
+              <strong>欢迎来到研海寻踪</strong>
+              <small>登录或创建你的学习账号</small>
+            </div>
+          </div>
+
+          <div class="auth-tabs" role="tablist" aria-label="登录或注册">
+            <button id="show-login-button" class="active" type="button" role="tab">
+              登录
+            </button>
+            <button id="show-register-button" type="button" role="tab">
+              注册
+            </button>
+          </div>
+
+          <form id="login-form" class="auth-form">
+            <label for="login-identifier">邮箱或昵称</label>
+            <input
+              id="login-identifier"
+              autocomplete="username"
+              placeholder="name@example.com 或你的昵称"
+              required
+            />
+            <label for="login-password">密码</label>
+            <input
+              id="login-password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="输入密码"
+              minlength="8"
+              required
+            />
+            <button id="login-button" class="primary-button" type="submit">
+              <span>进入学习工作台</span>
+              <span aria-hidden="true">→</span>
+            </button>
+          </form>
+
+          <form id="register-form" class="auth-form" hidden>
+            <label for="register-email">邮箱</label>
+            <input
+              id="register-email"
+              type="email"
+              autocomplete="email"
+              placeholder="name@example.com"
+              required
+            />
+            <label for="register-nickname">昵称</label>
+            <input
+              id="register-nickname"
+              autocomplete="nickname"
+              maxlength="32"
+              placeholder="2—32 位，用于登录和展示"
+              required
+            />
+            <label for="register-password">密码</label>
+            <input
+              id="register-password"
+              type="password"
+              autocomplete="new-password"
+              placeholder="至少 8 个字符"
+              minlength="8"
+              required
+            />
+            <button id="register-button" class="primary-button" type="submit">
+              <span>创建账号</span>
+              <span aria-hidden="true">→</span>
+            </button>
+          </form>
+
+          <p id="registration-status" class="auth-hint">
+            注册只需要邮箱、昵称和密码，详细学习画像可在登录后完善。
+          </p>
+          <p id="account-message" class="provider-test-status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <div id="app-view" hidden>
       <section class="hero">
         <div class="eyebrow">多智能体博弈推理 × 动态科研知识图谱</div>
         <h1>让每一条科研关联<br />都经得起追问。</h1>
@@ -43,74 +141,51 @@
 
       <section class="workbench" aria-label="多智能体推理工作台">
         <aside class="control-panel">
-          <div class="account-panel">
+          <div class="account-panel account-summary">
             <div class="section-label">00 · 账号与长期画像</div>
-            <p id="account-status" class="account-status">请注册或登录后使用研海寻踪。</p>
-            <div id="auth-forms">
-              <label class="query-label" for="auth-email">邮箱</label>
-              <input id="auth-email" type="email" autocomplete="email" />
-              <label class="query-label" for="auth-password">密码</label>
-              <input
-                id="auth-password"
-                type="password"
-                autocomplete="current-password"
-                placeholder="至少 8 个字符"
-              />
-              <details id="registration-profile">
-                <summary>首次注册：填写个性化画像</summary>
-                <label class="query-label" for="profile-name">昵称</label>
-                <input id="profile-name" maxlength="80" />
-                <div class="compact-grid">
-                  <div>
-                    <label class="query-label" for="profile-education">教育阶段</label>
-                    <input id="profile-education" value="本科" maxlength="80" />
-                  </div>
-                  <div>
-                    <label class="query-label" for="profile-role">当前角色</label>
-                    <input id="profile-role" value="学生" maxlength="80" />
-                  </div>
-                </div>
-                <label class="query-label" for="profile-goal">学习目标</label>
-                <textarea id="profile-goal" rows="3"></textarea>
-                <label class="query-label" for="profile-interests">兴趣领域（逗号分隔）</label>
-                <input id="profile-interests" placeholder="多智能体，嵌入式系统" />
-                <label class="query-label" for="profile-style">偏好方式</label>
-                <input id="profile-style" value="结构化、循序渐进、包含实操" />
-                <label class="query-label" for="profile-difficulty">目标难度</label>
-                <select id="profile-difficulty">
-                  <option value="1">L1 · 入门</option>
-                  <option value="2">L2 · 基础</option>
-                  <option value="3" selected>L3 · 中等</option>
-                  <option value="4">L4 · 进阶</option>
-                  <option value="5">L5 · 研究</option>
-                </select>
-              </details>
-              <div class="account-actions">
-                <button id="login-button" class="secondary-button" type="button">登录</button>
-                <button id="register-button" class="secondary-button" type="button">
-                  注册并建立画像
-                </button>
-              </div>
-            </div>
-            <button id="logout-button" class="secondary-button" type="button" hidden>
+            <p id="account-status" class="account-status"></p>
+            <button id="logout-button" class="secondary-button" type="button">
               退出登录
             </button>
-            <p id="account-message" class="provider-test-status" aria-live="polite"></p>
           </div>
 
-          <div id="auth-gate">
-            <div class="empty-state">
-              <h2>🔐 请注册或登录</h2>
-              <p>研海寻踪需要账号才能使用。请在上方输入邮箱和密码注册或登录。</p>
-            </div>
-          </div>
-
-          <div id="workbench-gated" hidden>
+          <div id="workbench-gated">
           <div class="section-label">01 · 学习者画像</div>
           <div id="profile-list" class="profile-list" aria-live="polite"></div>
           <p id="profile-mode-note" class="preset-description">
-            未登录时使用合成画像；登录后自动使用自己的版本化画像。
+            当前询问自动使用你的版本化画像。
           </p>
+          <details id="profile-editor" class="profile-editor">
+            <summary>完善学习画像</summary>
+            <div class="compact-grid">
+              <div>
+                <label class="query-label" for="profile-education">教育阶段</label>
+                <input id="profile-education" maxlength="80" />
+              </div>
+              <div>
+                <label class="query-label" for="profile-role">当前角色</label>
+                <input id="profile-role" maxlength="80" />
+              </div>
+            </div>
+            <label class="query-label" for="profile-goal">学习目标</label>
+            <textarea id="profile-goal" rows="3"></textarea>
+            <label class="query-label" for="profile-interests">兴趣领域（逗号分隔）</label>
+            <input id="profile-interests" placeholder="多智能体，嵌入式系统" />
+            <label class="query-label" for="profile-style">偏好方式</label>
+            <input id="profile-style" />
+            <label class="query-label" for="profile-difficulty">目标难度</label>
+            <select id="profile-difficulty">
+              <option value="1">L1 · 入门</option>
+              <option value="2">L2 · 基础</option>
+              <option value="3">L3 · 中等</option>
+              <option value="4">L4 · 进阶</option>
+              <option value="5">L5 · 研究</option>
+            </select>
+            <button id="save-profile-button" class="secondary-button" type="button">
+              保存画像新版本
+            </button>
+            <p id="profile-save-status" class="provider-test-status" aria-live="polite"></p>
+          </details>
 
           <label class="query-label" for="research-query">本轮研究任务</label>
           <textarea id="research-query" rows="4">多智能体科研推理如何通过证据溯源降低幻觉并发现研究蓝海？</textarea>
@@ -166,7 +241,7 @@
 
           <div class="privacy-note">
             <span aria-hidden="true">◇</span>
-            注册画像会保存在本机 SQLite；本地验证环境不向第三方发送问卷数据。
+            账号、画像和问卷保存在本站 SQLite；API Key 不写入数据库。
           </div>
           </div><!-- end workbench-gated -->
         </aside>
@@ -426,6 +501,7 @@
           </div>
         </div>
       </section>
+      </div>
     </main>
 
     <footer>

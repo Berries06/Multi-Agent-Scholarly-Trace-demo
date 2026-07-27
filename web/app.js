@@ -13,6 +13,7 @@ const state = {
   providers: [],
   selectedProvider: "mock",
   user: null,
+  registrationOpen: false,
   experimentSessionId: null,
 };
 
@@ -72,30 +73,28 @@ function renderProfiles() {
 
 function renderAccount() {
   const authenticated = Boolean(state.user);
-  $("#auth-forms").hidden = authenticated;
-  $("#logout-button").hidden = !authenticated;
+  $("#auth-view").hidden = authenticated;
+  $("#app-view").hidden = !authenticated;
   $("#experiment-button").disabled =
     !authenticated || state.selectedProvider !== "mock";
   if (authenticated) {
     $("#account-status").textContent =
-      `${state.user.profile.name} · ${state.user.email} · 画像 v${state.user.profile_version}`;
+      `${state.user.nickname} · ${state.user.email} · 画像 v${state.user.profile_version}`;
     $("#profile-mode-note").textContent =
       "当前询问自动使用你的长期画像；后续修改会形成新版本，不覆盖历史实验。";
-    $("#auth-gate").hidden = true;
-    $("#workbench-gated").hidden = false;
     $("#api-key-note").textContent =
       "已登录用户可直接选择「免费 DeepSeek (Flash)」，无需自备 Key。也可选择其他供应商并自填 Key。";
+    $("#empty-state").hidden = Boolean(state.result);
+    $("#result-content").hidden = !state.result;
+    populateProfileEditor();
+    renderProfiles();
   } else {
-    $("#account-status").textContent = "请注册或登录后使用研海寻踪。";
-    $("#profile-mode-note").textContent = "";
-    $("#auth-gate").hidden = false;
-    $("#workbench-gated").hidden = true;
+    state.result = null;
     $("#empty-state").hidden = true;
     $("#result-content").hidden = true;
     $("#api-key-note").textContent =
       "密钥仅经当前请求转发给所选供应商，不保存到本站、浏览器存储或日志。";
   }
-  renderProfiles();
 }
 
 function splitProfileTerms(value) {
@@ -105,10 +104,10 @@ function splitProfileTerms(value) {
     .filter(Boolean);
 }
 
-function registrationProfilePayload() {
+function profileEditorPayload() {
   const interests = splitProfileTerms($("#profile-interests").value);
   return {
-    name: $("#profile-name").value.trim(),
+    name: state.user?.nickname || state.user?.profile?.name || "学习者",
     persona: "通过网站注册并持续完善的真实学习者画像",
     education: $("#profile-education").value.trim(),
     role: $("#profile-role").value.trim(),
@@ -139,13 +138,13 @@ async function registerAccount() {
     const payload = await requestJson("/api/auth/register", {
       method: "POST",
       body: JSON.stringify({
-        email: $("#auth-email").value.trim(),
-        password: $("#auth-password").value,
-        profile: registrationProfilePayload(),
+        email: $("#register-email").value.trim(),
+        nickname: $("#register-nickname").value.trim(),
+        password: $("#register-password").value,
       }),
     });
     state.user = payload.user;
-    setAccountMessage("注册成功，个性化画像已建立。");
+    setAccountMessage("");
     renderAccount();
   } catch (error) {
     setAccountMessage(`注册失败：${error.message}`, true);
@@ -161,12 +160,12 @@ async function loginAccount() {
     const payload = await requestJson("/api/auth/login", {
       method: "POST",
       body: JSON.stringify({
-        email: $("#auth-email").value.trim(),
-        password: $("#auth-password").value,
+        identifier: $("#login-identifier").value.trim(),
+        password: $("#login-password").value,
       }),
     });
     state.user = payload.user;
-    setAccountMessage("登录成功，已切换到你的长期画像。");
+    setAccountMessage("");
     renderAccount();
   } catch (error) {
     setAccountMessage(`登录失败：${error.message}`, true);
@@ -185,9 +184,58 @@ async function logoutAccount() {
     state.experimentSessionId = null;
     $("#study-survey").hidden = true;
     setAccountMessage("已退出登录。");
+    showAuthMode("login");
     renderAccount();
   } catch (error) {
     setAccountMessage(`退出失败：${error.message}`, true);
+  }
+}
+
+function showAuthMode(mode) {
+  const registering = mode === "register";
+  $("#login-form").hidden = registering;
+  $("#register-form").hidden = !registering;
+  $("#show-login-button").classList.toggle("active", !registering);
+  $("#show-register-button").classList.toggle("active", registering);
+  $("#show-login-button").setAttribute("aria-selected", String(!registering));
+  $("#show-register-button").setAttribute("aria-selected", String(registering));
+  setAccountMessage("");
+  const focusTarget = registering ? $("#register-email") : $("#login-identifier");
+  window.setTimeout(() => focusTarget.focus(), 0);
+}
+
+function populateProfileEditor() {
+  if (!state.user) return;
+  const profile = state.user.profile;
+  $("#profile-education").value =
+    profile.education === "未填写" ? "" : profile.education;
+  $("#profile-role").value =
+    profile.role === "学习者" ? "" : profile.role;
+  $("#profile-goal").value = profile.goal || "";
+  $("#profile-interests").value = (profile.interests || []).join("，");
+  $("#profile-style").value = profile.preferred_style || "";
+  $("#profile-difficulty").value = String(profile.expected_difficulty || 3);
+}
+
+async function saveProfile() {
+  if (!state.user) return;
+  const button = $("#save-profile-button");
+  button.disabled = true;
+  const status = $("#profile-save-status");
+  try {
+    const payload = await requestJson("/api/profile", {
+      method: "PUT",
+      body: JSON.stringify({ profile: profileEditorPayload() }),
+    });
+    state.user = payload.user;
+    status.textContent = `画像 v${state.user.profile_version} 已保存。`;
+    status.className = "provider-test-status success";
+    renderAccount();
+  } catch (error) {
+    status.textContent = `保存失败：${error.message}`;
+    status.className = "provider-test-status error";
+  } finally {
+    button.disabled = false;
   }
 }
 
@@ -850,12 +898,14 @@ async function initialize() {
       configPayload,
       providerPayload,
       authPayload,
+      authStatusPayload,
       libraryPayload,
     ] = await Promise.all([
       requestJson("/api/profiles"),
       requestJson("/api/configs"),
       requestJson("/api/providers"),
       requestJson("/api/auth/me"),
+      requestJson("/api/auth/status"),
       requestJson("/api/library/slices"),
     ]);
     state.profiles = profilePayload.profiles;
@@ -864,6 +914,11 @@ async function initialize() {
     state.providers = providerPayload.providers;
     state.selectedProvider = providerPayload.default_provider;
     state.user = authPayload.user;
+    state.registrationOpen = Boolean(authStatusPayload.registration_open);
+    $("#show-register-button").disabled = !state.registrationOpen;
+    $("#registration-status").textContent = state.registrationOpen
+      ? "注册只需要邮箱、昵称和密码，详细学习画像可在登录后完善。"
+      : "当前暂未开放新账号注册，已有用户仍可正常登录。";
     const nonEmptySlices = libraryPayload.slices.filter(
       (item) => Number(item.paper_count) > 0,
     );
@@ -883,9 +938,20 @@ async function initialize() {
 
   $("#run-button").addEventListener("click", runFlow);
   $("#experiment-button").addEventListener("click", runExperiment);
-  $("#register-button").addEventListener("click", registerAccount);
-  $("#login-button").addEventListener("click", loginAccount);
+  $("#register-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    registerAccount();
+  });
+  $("#login-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    loginAccount();
+  });
+  $("#show-login-button").addEventListener("click", () => showAuthMode("login"));
+  $("#show-register-button").addEventListener("click", () => {
+    if (state.registrationOpen) showAuthMode("register");
+  });
   $("#logout-button").addEventListener("click", logoutAccount);
+  $("#save-profile-button").addEventListener("click", saveProfile);
   $("#submit-survey-button").addEventListener("click", submitSurvey);
   $("#test-provider-button").addEventListener("click", testProvider);
   $("#toggle-key-button").addEventListener("click", () => {
@@ -904,6 +970,7 @@ async function initialize() {
     button.addEventListener("click", () => sendFeedback(button.dataset.feedback));
   });
   initializeSurveyInputs();
+  showAuthMode("login");
 }
 
 initialize();

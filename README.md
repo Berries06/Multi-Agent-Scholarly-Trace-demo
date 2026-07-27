@@ -197,7 +197,7 @@ web/                原生 Web 前端
 | GET | `/api/auth/me` | 获取当前登录状态和版本化画像 |
 | GET | `/api/library/slices` | 获取本地垂直领域论文切片统计 |
 | GET | `/api/history` | 获取当前用户的研究与问卷历史 |
-| POST | `/api/auth/register`、`/api/auth/login` | 注册画像或登录 |
+| POST | `/api/auth/register`、`/api/auth/login` | 邮箱、昵称注册；邮箱或昵称登录 |
 | POST | `/api/run` | 运行三 Agent 与质量准入闭环 |
 | POST | `/api/feedback` | 提交难度、问卷和概念级反馈并重新规划 |
 | POST | `/api/experiments/run` | 生成并保存 A/B/C/Full 四个共享证据版本 |
@@ -232,7 +232,8 @@ python -m yanhai --host 127.0.0.1 --port 8765
 
 公开注册默认关闭；本地首次注册前设置
 `$env:YANHAI_REGISTRATION_OPEN="1"` 并重启服务。浏览器打开
-`http://127.0.0.1:8765/`，注册或登录后输入研究问题并点击“启动协同推理”。
+`http://127.0.0.1:8765/`。注册只填写邮箱、唯一昵称和密码；登录支持邮箱或昵称。
+进入工作台后可单独完善教育阶段、角色、学习目标、兴趣与难度画像，再输入研究问题。
 系统使用用户自己的长期画像，并把问题、冻结论文快照、回答和
 问卷保存到 SQLite。数据库默认位于 `outputs/runtime/yanhai.sqlite3`；部署时
 使用 `YANHAI_DATA_DIR` 指向独立持久目录。
