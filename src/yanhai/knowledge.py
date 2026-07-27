@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +27,7 @@ class KnowledgeBase:
         self.papers = self._load_papers(root / "papers.json")
         self.relations = self._load_json(root / "relations.json")
         self.paper_by_id = {paper.paper_id: paper for paper in self.papers}
+        self.candidate_by_id: dict[str, Paper] = {}
 
     @staticmethod
     def _load_json(path: Path) -> list[dict[str, Any]]:
@@ -33,6 +35,60 @@ class KnowledgeBase:
 
     def _load_papers(self, path: Path) -> list[Paper]:
         return [Paper.from_dict(item) for item in self._load_json(path)]
+
+    def stage_candidates(self, papers: list[Paper]) -> list[dict[str, Any]]:
+        """Add live or uploaded sources to the in-memory candidate zone."""
+        staged: list[dict[str, Any]] = []
+        for paper in papers:
+            if paper.paper_id in self.paper_by_id:
+                staged.append(
+                    {"paper_id": paper.paper_id, "status": "already_verified"}
+                )
+                continue
+            candidate = replace(
+                paper,
+                knowledge_status="candidate",
+                validation_note="等待来源与证据复核",
+            )
+            self.candidate_by_id[candidate.paper_id] = candidate
+            staged.append(
+                {"paper_id": candidate.paper_id, "status": "candidate"}
+            )
+        return staged
+
+    def promote_candidate(
+        self,
+        paper_id: str,
+        validation_note: str,
+    ) -> Paper:
+        """Promote a reviewed candidate into the verified local zone."""
+        if not validation_note.strip():
+            raise ValueError("Promoting a candidate requires a validation note.")
+        try:
+            candidate = self.candidate_by_id.pop(paper_id)
+        except KeyError as exc:
+            raise KeyError(f"Unknown candidate paper: {paper_id}") from exc
+        verified = replace(
+            candidate,
+            knowledge_status="verified",
+            validation_note=validation_note.strip(),
+        )
+        self.papers.append(verified)
+        self.paper_by_id[verified.paper_id] = verified
+        return verified
+
+    def knowledge_zones(self) -> dict[str, Any]:
+        return {
+            "verified": [paper.to_dict() for paper in self.papers],
+            "candidate": [
+                paper.to_dict() for paper in self.candidate_by_id.values()
+            ],
+            "policy": {
+                "verified_usage": "可参与本地检索和正式资源生成",
+                "candidate_usage": "仅供本轮联网研究或人工复核，不自动进入正式知识库",
+                "persistence": "当前候选区为进程内 Demo，后续接数据库",
+            },
+        }
 
     @staticmethod
     def _tokens(text: str) -> set[str]:

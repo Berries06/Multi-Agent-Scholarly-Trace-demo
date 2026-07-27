@@ -23,19 +23,16 @@ class OrchestratorTests(unittest.TestCase):
         self.assertEqual(3, len(profiles))
         self.assertTrue(all(profile["synthetic"] for profile in profiles))
 
-    def test_complete_six_agent_trace_is_returned(self) -> None:
+    def test_complete_three_agent_trace_is_returned(self) -> None:
         result = self.orchestrator.run("undergraduate_ai")
         roles = {step["role"] for step in result["agent_trace"]}
-        self.assertEqual(6, len(result["agent_trace"]))
+        self.assertEqual(3, len(result["agent_trace"]))
         self.assertEqual(9, len(result["claims"]))
         self.assertEqual(
             {
-                "画像分析",
-                "证据召回",
-                "关联提出",
-                "反证与约束",
-                "置信裁决",
-                "资源编排",
+                "学情诊断与学习规划",
+                "证据检索与知识图谱构建",
+                "个性化教学与反馈",
             },
             roles,
         )
@@ -68,6 +65,7 @@ class OrchestratorTests(unittest.TestCase):
         self.assertIn("briefing", resources)
         self.assertIn("practical_guide", resources)
         self.assertIn("quiz", resources)
+        self.assertIn("feedback_form", resources)
         self.assertGreaterEqual(len(resources["quiz"]["items"]), 2)
 
     def test_feedback_changes_target_difficulty(self) -> None:
@@ -80,6 +78,45 @@ class OrchestratorTests(unittest.TestCase):
         self.assertEqual(2, hard["diagnosis"]["target_difficulty"])
         self.assertEqual(4, easy["diagnosis"]["target_difficulty"])
 
+    def test_quality_gate_is_separate_from_agent_trace(self) -> None:
+        result = self.orchestrator.run("undergraduate_ai", config="full")
+        quality = result["quality_assessment"]
+        self.assertEqual("non_agent_quality_gate", quality["kind"])
+        self.assertTrue(quality["enforced"])
+        self.assertNotIn(
+            quality["module"],
+            {step["agent"] for step in result["agent_trace"]},
+        )
+
+    def test_questionnaire_updates_concept_state_in_memory(self) -> None:
+        baseline = self.orchestrator.run("undergraduate_ai", config="full")
+        focus = baseline["report"]["knowledge_state"]["next_focus"]
+        updated = self.orchestrator.run_with_feedback(
+            "undergraduate_ai",
+            "suitable",
+            config="full",
+            prior_knowledge_state=baseline["report"]["knowledge_state"],
+            concept_feedback={focus: {"correct": True, "self_rating": 4}},
+            questionnaire={
+                "relevance": 5,
+                "difficulty_fit": 4,
+                "clarity": 5,
+                "evidence_trust": 4,
+                "usefulness": 5,
+            },
+        )
+        previous = next(
+            item["posterior_mastery"]
+            for item in baseline["report"]["knowledge_state"]["concepts"]
+            if item["concept"] == focus
+        )
+        current = next(
+            item["posterior_mastery"]
+            for item in updated["report"]["knowledge_state"]["concepts"]
+            if item["concept"] == focus
+        )
+        self.assertGreater(current, previous)
+        self.assertEqual(92.0, updated["quality_assessment"]["scores"]["user_feedback"])
     def test_graph_contains_evidence_nodes_and_edges(self) -> None:
         graph = self.orchestrator.run("graduate_cross_domain")["graph"]
         self.assertTrue(any(node["kind"] == "paper" for node in graph["nodes"]))

@@ -8,7 +8,7 @@ from typing import Any
 class FeatureFlags:
     """Feature switches used by the demo and the experiment harness.
 
-    The legacy preset preserves the original six-agent behaviour. New research
+    The legacy preset preserves the original deterministic behaviour behind three business Agents. New research
     mechanisms are opt-in so that an ablation never needs to edit business code.
     """
 
@@ -55,15 +55,15 @@ class SystemConfig:
 
 LEGACY = SystemConfig(
     name="legacy",
-    label="基础六智能体",
-    description="保留项目原有的诊断、检索、提出、批判、裁判与资源生成闭环。",
+    label="基础三智能体",
+    description="三个基础 Agent 完成学情规划、证据图谱和个性化教学；质量准入独立运行。",
     flags=FeatureFlags(),
 )
 
 FULL = SystemConfig(
     name="full",
-    label="完整创新链路",
-    description="启用句级溯源、多视角辩论、序贯反证、动态学情、时序发现与假设锦标赛。",
+    label="三智能体增强链路",
+    description="三个基础 Agent 不变；句级溯源、辩论、反证和时序分析作为内部策略启用。",
     flags=FeatureFlags(
         sentence_provenance=True,
         diverse_debate=True,
@@ -92,7 +92,7 @@ PRESETS: dict[str, SystemConfig] = {
     "legacy": LEGACY,
     "full": FULL,
     "no_critic": _ablation("no_critic", "消融：无批判者", "critic"),
-    "no_judge": _ablation("no_judge", "消融：无裁判", "judge"),
+    "no_judge": _ablation("no_judge", "消融：无质量准入", "judge"),
     "no_provenance": _ablation(
         "no_provenance", "消融：无句级溯源", "sentence_provenance"
     ),

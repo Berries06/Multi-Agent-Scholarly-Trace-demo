@@ -31,11 +31,11 @@
         <div class="eyebrow">多智能体博弈推理 × 动态科研知识图谱</div>
         <h1>让每一条科研关联<br />都经得起追问。</h1>
         <p>
-          从差异化学情画像出发，让提出者、批判者与裁判围绕真实文献证据协同决策，
-          再生成因人而异的导读、实操与测评。
+          从差异化学情画像出发，由三个基础 Agent 完成学习规划、证据图谱与个性化教学，
+          再通过独立质量模块进行证据评分和阶段准入。
         </p>
         <div class="hero-proof">
-          <span><b>6</b> 类固定 Agent</span>
+          <span><b>3</b> 个基础 Agent</span>
           <span><b>8</b> 篇可追溯文献</span>
           <span><b>3</b> 类个性化资源</span>
         </div>
@@ -107,7 +107,7 @@
               <span class="orbit-core">证据</span>
             </div>
             <h2>选择一位学习者，观察完整决策闭环</h2>
-            <p>画像诊断、证据检索、博弈裁决、资源生成和反馈更新将按顺序展开。</p>
+            <p>学习规划、证据图谱和个性化教学依次运行，质量模块在阶段之间检查。</p>
           </div>
 
           <div id="result-content" class="result-content" hidden>
@@ -133,6 +133,37 @@
               </article>
             </section>
 
+            <section class="panel-block quality-block">
+              <div class="block-heading compact">
+                <div>
+                  <span class="section-label">质量评估 · 非 Agent</span>
+                  <h2>先评分，再决定哪些知识可以进入教学资源</h2>
+                </div>
+                <span id="quality-gate-status" class="quiet-badge">等待运行</span>
+              </div>
+              <div class="innovation-grid quality-grid">
+                <article>
+                  <span>证据支撑度</span>
+                  <strong id="quality-evidence">—</strong>
+                  <small>通过命题的原文证据覆盖</small>
+                </article>
+                <article>
+                  <span>画像契合度</span>
+                  <strong id="quality-profile">—</strong>
+                  <small>难度与用户目标匹配</small>
+                </article>
+                <article>
+                  <span>用户反馈</span>
+                  <strong id="quality-feedback">待填写</strong>
+                  <small>Demo 问卷 1—5 分</small>
+                </article>
+                <article>
+                  <span>综合质量分</span>
+                  <strong id="quality-overall">—</strong>
+                  <small>证据、画像、覆盖与反馈</small>
+                </article>
+              </div>
+            </section>
             <section class="panel-block provider-run-block">
               <div class="block-heading compact">
                 <div>
@@ -290,10 +321,11 @@
                 <h2>这组资源对你来说怎么样？</h2>
                 <p id="feedback-decision">反馈会触发下一轮难度与解释策略更新。</p>
               </div>
+              <div id="feedback-questionnaire" class="feedback-questionnaire"></div>
               <div class="feedback-actions">
-                <button data-feedback="too_hard" type="button">太难，降维解释</button>
-                <button data-feedback="suitable" type="button">合适，继续推进</button>
-                <button data-feedback="too_easy" type="button">太简单，进阶挑战</button>
+                <button data-feedback="too_hard" type="button">提交问卷 · 太难</button>
+                <button data-feedback="suitable" type="button">提交问卷 · 合适</button>
+                <button data-feedback="too_easy" type="button">提交问卷 · 太简单</button>
               </div>
             </section>
           </div>

@@ -1250,3 +1250,39 @@ footer {
     transition: none !important;
   }
 }
+
+.feedback-questionnaire {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.7rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.feedback-questionnaire label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid rgba(25, 71, 71, 0.13);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.feedback-questionnaire select {
+  min-width: 3.6rem;
+  border: 1px solid rgba(25, 71, 71, 0.22);
+  border-radius: 8px;
+  padding: 0.35rem;
+  background: #fff;
+}
+
+.feedback-questionnaire small {
+  grid-column: 1 / -1;
+  color: var(--muted);
+}
+
+.quality-block {
+  border-left: 4px solid var(--teal);
+}

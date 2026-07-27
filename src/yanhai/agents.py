@@ -4,12 +4,13 @@ from collections import Counter
 from statistics import mean
 from typing import Any
 
+from .config import FeatureFlags, SystemConfig
 from .knowledge import KnowledgeBase
 from .models import Claim, LearnerProfile, Paper
 
 
-class DiagnosisAgent:
-    name = "学情诊断 Agent"
+class DiagnosisTool:
+    name = "学情诊断策略"
 
     def diagnose(self, profile: LearnerProfile, difficulty_adjustment: int = 0) -> dict[str, Any]:
         average = round(mean(profile.knowledge_scores.values()), 1)
@@ -51,8 +52,8 @@ class DiagnosisAgent:
         }
 
 
-class RetrievalAgent:
-    name = "证据检索 Agent"
+class RetrievalTool:
+    name = "证据检索策略"
 
     def retrieve(
         self,
@@ -73,8 +74,8 @@ class RetrievalAgent:
         )
 
 
-class ProposerAgent:
-    name = "提出者 Agent"
+class ClaimProposalTool:
+    name = "命题生成策略"
 
     def propose(
         self,
@@ -115,8 +116,8 @@ class ProposerAgent:
         return claims
 
 
-class CriticAgent:
-    name = "批判者 Agent"
+class EvidenceCritiqueTool:
+    name = "证据批判策略"
 
     def critique(self, claims: list[Claim], kb: KnowledgeBase) -> list[Claim]:
         for claim in claims:
@@ -138,71 +139,8 @@ class CriticAgent:
         return claims
 
 
-class JudgeAgent:
-    name = "裁判 Agent"
-
-    def adjudicate(
-        self,
-        claims: list[Claim],
-        kb: KnowledgeBase,
-        *,
-        acceptance_threshold: float = 0.78,
-        review_threshold: float = 0.58,
-        calibrated: bool = False,
-        abstention: bool = False,
-    ) -> list[Claim]:
-        for claim in claims:
-            valid_evidence = [
-                paper_id for paper_id in claim.evidence_ids if paper_id in kb.paper_by_id
-            ]
-            evidence_bonus = min(0.08, 0.04 * len(valid_evidence))
-            corroboration_bonus = 0.04 if len(valid_evidence) >= 2 else 0.0
-            penalty = 0.0
-            if not valid_evidence:
-                penalty += 0.45
-            if claim.relation in {"guarantees", "proves"}:
-                penalty += 0.20
-            if claim.base_confidence < 0.7:
-                penalty += 0.08
-            if calibrated:
-                provenance_bonus = min(0.04, 0.02 * len(claim.evidence_spans))
-                perspective_bonus = (
-                    0.02
-                    if len({view["perspective"] for view in claim.debate_views}) >= 3
-                    else 0.0
-                )
-                contradiction_penalty = min(
-                    0.24, 0.12 * len(claim.counter_evidence_ids)
-                )
-                failed_tests = sum(
-                    step["outcome"] in {"failed", "unresolved"}
-                    for step in claim.falsification_steps
-                )
-                penalty += 0.07 * failed_tests + contradiction_penalty
-                evidence_bonus += provenance_bonus + perspective_bonus
-            claim.judge_score = max(
-                0.0,
-                min(0.99, claim.base_confidence + evidence_bonus + corroboration_bonus - penalty),
-            )
-            if claim.judge_score >= acceptance_threshold and valid_evidence:
-                claim.status = "accepted"
-            elif claim.judge_score >= review_threshold and valid_evidence:
-                claim.status = "review"
-            elif abstention and (
-                not valid_evidence
-                or any(
-                    step["outcome"] == "unresolved"
-                    for step in claim.falsification_steps
-                )
-            ):
-                claim.status = "abstained"
-            else:
-                claim.status = "rejected"
-        return claims
-
-
-class ResourceAgent:
-    name = "个性化资源 Agent"
+class ResourceBuilder:
+    name = "教学资源构建器"
 
     def generate(
         self,
@@ -324,8 +262,8 @@ class ResourceAgent:
         }
 
 
-class DiverseDebateAgent:
-    name = "多视角辩论 Agent"
+class DiverseDebateTool:
+    name = "多视角辩论策略"
 
     def debate(self, claims: list[Claim], kb: KnowledgeBase) -> list[Claim]:
         for claim in claims:
@@ -361,8 +299,8 @@ class DiverseDebateAgent:
         return claims
 
 
-class SequentialFalsificationAgent:
-    name = "序贯反证 Agent"
+class SequentialFalsificationTool:
+    name = "序贯反证策略"
 
     def falsify(
         self,
@@ -407,43 +345,80 @@ class SequentialFalsificationAgent:
         return claims
 
 
-class KnowledgeTracingAgent:
-    name = "动态学情追踪 Agent"
+class KnowledgeTracingTool:
+    name = "动态学情追踪策略"
 
     def trace(
         self,
         profile: LearnerProfile,
         diagnosis: dict[str, Any],
         feedback: str | None = None,
+        *,
+        prior_state: dict[str, Any] | None = None,
+        concept_feedback: dict[str, Any] | None = None,
+        questionnaire: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        delta = {"too_hard": -0.04, "suitable": 0.03, "too_easy": 0.05}.get(
+        global_delta = {"too_hard": -0.04, "suitable": 0.03, "too_easy": 0.05}.get(
             feedback, 0.0
         )
+        prior_by_concept = {
+            str(item.get("concept")): float(item.get("posterior_mastery", 0.5))
+            for item in (prior_state or {}).get("concepts", [])
+            if isinstance(item, dict) and item.get("concept")
+        }
+        concept_feedback = concept_feedback or {}
+        questionnaire = questionnaire or {}
         concepts = []
         for topic, score in sorted(profile.knowledge_scores.items()):
-            prior = score / 100
-            posterior = max(0.01, min(0.99, prior + delta))
+            prior = prior_by_concept.get(topic, score / 100)
+            raw_signal = concept_feedback.get(topic, {})
+            if isinstance(raw_signal, (int, float)):
+                raw_signal = {"self_rating": raw_signal}
+            if not isinstance(raw_signal, dict):
+                raw_signal = {}
+            concept_delta = 0.0
+            if "correct" in raw_signal:
+                concept_delta += 0.08 if bool(raw_signal["correct"]) else -0.06
+            if "self_rating" in raw_signal:
+                rating = max(1.0, min(5.0, float(raw_signal["self_rating"])))
+                concept_delta += (rating - 3.0) * 0.02
+            posterior = max(
+                0.01,
+                min(0.99, prior + global_delta + concept_delta),
+            )
             concepts.append(
                 {
                     "concept": topic,
                     "prior_mastery": round(prior, 3),
                     "posterior_mastery": round(posterior, 3),
                     "uncertainty": round(1 - abs(posterior - 0.5) * 2, 3),
-                    "evidence": feedback or "profile_prior",
+                    "evidence": {
+                        "difficulty_feedback": feedback or "profile_prior",
+                        "concept_feedback": raw_signal,
+                    },
                 }
             )
         weakest = min(concepts, key=lambda item: item["posterior_mastery"])
+        ratings = [
+            float(value)
+            for value in questionnaire.values()
+            if isinstance(value, (int, float)) and 1 <= float(value) <= 5
+        ]
         return {
-            "model": "deterministic Bayesian-style mock tracer",
+            "model": "concept-level deterministic demo tracer",
             "concepts": concepts,
             "next_focus": weakest["concept"],
             "target_difficulty": diagnosis["target_difficulty"],
-            "warning": "当前更新来自合成画像与单次反馈；接入真实作答后再校准。",
+            "questionnaire_score": round(20 * mean(ratings), 1) if ratings else None,
+            "warning": (
+                "当前状态仅保存在本次结果中；这是概念级反馈 Demo，"
+                "接入真实作答历史后再进行统计校准。"
+            ),
         }
 
 
-class TemporalDiscoveryAgent:
-    name = "时序争议发现 Agent"
+class TemporalDiscoveryTool:
+    name = "时序争议发现策略"
 
     def analyse(
         self,
@@ -498,8 +473,8 @@ class TemporalDiscoveryAgent:
         }
 
 
-class HypothesisTournamentAgent:
-    name = "蓝海假设锦标赛 Agent"
+class HypothesisTournamentTool:
+    name = "蓝海假设排序策略"
 
     def rank(
         self,
@@ -554,3 +529,172 @@ class HypothesisTournamentAgent:
             candidate["rank"] = rank
             candidate["pairwise_wins"] = len(candidates) - rank
         return candidates
+
+
+class LearnerPlanningAgent:
+    """Business Agent 1: diagnose the learner and maintain the learning plan."""
+
+    name = "学情诊断与学习规划 Agent"
+
+    def __init__(self) -> None:
+        self._diagnosis = DiagnosisTool()
+        self._tracing = KnowledgeTracingTool()
+
+    def plan(
+        self,
+        profile: LearnerProfile,
+        difficulty_adjustment: int = 0,
+        *,
+        feedback: str | None = None,
+        enable_knowledge_tracing: bool = True,
+        prior_state: dict[str, Any] | None = None,
+        concept_feedback: dict[str, Any] | None = None,
+        questionnaire: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        diagnosis = self._diagnosis.diagnose(profile, difficulty_adjustment)
+        knowledge_state = (
+            self._tracing.trace(
+                profile,
+                diagnosis,
+                feedback,
+                prior_state=prior_state,
+                concept_feedback=concept_feedback,
+                questionnaire=questionnaire,
+            )
+            if enable_knowledge_tracing
+            else {}
+        )
+        return {
+            "diagnosis": diagnosis,
+            "knowledge_state": knowledge_state,
+            "structured_output": {
+                "blind_spots": list(diagnosis["blind_spots"]),
+                "target_difficulty": diagnosis["target_difficulty"],
+                "learning_path": list(diagnosis["learning_path"]),
+                "next_focus": knowledge_state.get("next_focus"),
+            },
+        }
+
+
+class EvidenceGraphAgent:
+    """Business Agent 2: retrieve evidence and build a grounded subgraph.
+
+    Debate, criticism, falsification and temporal analysis remain internal
+    strategies. They are deliberately not exposed as independent Agents.
+    """
+
+    name = "证据检索与知识图谱 Agent"
+
+    def __init__(self) -> None:
+        self._retrieval = RetrievalTool()
+        self._proposal = ClaimProposalTool()
+        self._critique = EvidenceCritiqueTool()
+        self._debate = DiverseDebateTool()
+        self._falsification = SequentialFalsificationTool()
+        self._discovery = TemporalDiscoveryTool()
+        self._tournament = HypothesisTournamentTool()
+
+    def collect(
+        self,
+        kb: KnowledgeBase,
+        query: str,
+        profile: LearnerProfile,
+        diagnosis: dict[str, Any],
+        config: SystemConfig,
+    ) -> dict[str, Any]:
+        flags: FeatureFlags = config.flags
+        papers = self._retrieval.retrieve(
+            kb,
+            query,
+            profile,
+            diagnosis,
+            limit=config.retrieval_limit,
+            information_gain=flags.information_gain_retrieval,
+        )
+        claims = self._proposal.propose(
+            kb,
+            papers,
+            sentence_provenance=flags.sentence_provenance,
+        )
+        strategies: list[str] = ["local_or_live_retrieval", "claim_proposal"]
+        if flags.critic:
+            claims = self._critique.critique(claims, kb)
+            strategies.append("evidence_critique")
+        if flags.diverse_debate:
+            claims = self._debate.debate(claims, kb)
+            strategies.append("diverse_debate")
+        if flags.sequential_falsification:
+            claims = self._falsification.falsify(
+                claims,
+                kb,
+                config.max_falsification_rounds,
+            )
+            strategies.append("sequential_falsification")
+        return {"papers": papers, "claims": claims, "strategies": strategies}
+
+    def discover(
+        self,
+        papers: list[Paper],
+        claims: list[Claim],
+        config: SystemConfig,
+    ) -> dict[str, Any]:
+        discovery: dict[str, Any] = {}
+        hypotheses: list[dict[str, Any]] = []
+        if config.flags.temporal_analysis:
+            discovery = self._discovery.analyse(papers, claims)
+        if config.flags.hypothesis_tournament:
+            hypotheses = self._tournament.rank(discovery, claims)
+        return {"discovery": discovery, "hypotheses": hypotheses}
+
+
+class PersonalizedTeachingAgent:
+    """Business Agent 3: turn admitted evidence into learning resources."""
+
+    name = "个性化教学与反馈 Agent"
+
+    def __init__(self) -> None:
+        self._resources = ResourceBuilder()
+
+    @staticmethod
+    def feedback_form(next_focus: str | None) -> dict[str, Any]:
+        return {
+            "version": "demo-v1",
+            "scale": {"min": 1, "max": 5},
+            "items": [
+                {"id": "relevance", "label": "内容与我的学习目标相关"},
+                {"id": "difficulty_fit", "label": "内容难度适合当前水平"},
+                {"id": "clarity", "label": "解释清楚、容易理解"},
+                {"id": "evidence_trust", "label": "来源和证据让我感到可信"},
+                {"id": "usefulness", "label": "我知道下一步可以如何行动"},
+            ],
+            "concept_feedback": {
+                "concept": next_focus,
+                "label": "本轮重点知识点自评",
+                "accepted_fields": ["self_rating", "correct"],
+            },
+            "note": "Demo 问卷仅更新本次运行中的画像状态，不持久化个人数据。",
+        }
+
+    def teach(
+        self,
+        profile: LearnerProfile,
+        diagnosis: dict[str, Any],
+        claims: list[Claim],
+        kb: KnowledgeBase,
+        *,
+        knowledge_state: dict[str, Any] | None = None,
+        hypotheses: list[dict[str, Any]] | None = None,
+        discovery: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        resources = self._resources.generate(
+            profile,
+            diagnosis,
+            claims,
+            kb,
+            tournament=hypotheses,
+            discovery=discovery,
+        )
+        resources["feedback_form"] = self.feedback_form(
+            (knowledge_state or {}).get("next_focus")
+        )
+        return resources
