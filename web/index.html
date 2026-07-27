@@ -8,11 +8,11 @@
       content="研海寻踪：基于多智能体博弈推理的科研知识图谱发现与个性化科研训练系统"
     />
     <title>研海寻踪 · 多智能体科研知识发现</title>
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="/" aria-label="研海寻踪首页">
+      <a class="brand" href="./" aria-label="研海寻踪首页">
         <span class="brand-mark" aria-hidden="true">研</span>
         <span>
           <strong>研海寻踪</strong>
@@ -48,6 +48,45 @@
 
           <label class="query-label" for="research-query">本轮研究任务</label>
           <textarea id="research-query" rows="4">多智能体科研推理如何通过证据溯源降低幻觉并发现研究蓝海？</textarea>
+
+          <label class="query-label preset-label" for="preset-select">运行方案</label>
+          <select id="preset-select" aria-describedby="preset-description"></select>
+          <p id="preset-description" class="preset-description"></p>
+
+          <div class="provider-controls">
+            <div class="section-label">01B · AI 供应商</div>
+            <label class="query-label" for="provider-select">推理引擎</label>
+            <select id="provider-select" aria-describedby="provider-description"></select>
+            <p id="provider-description" class="preset-description"></p>
+
+            <label class="query-label" for="model-input">模型 ID</label>
+            <input id="model-input" list="model-options" autocomplete="off" />
+            <datalist id="model-options"></datalist>
+
+            <div id="api-key-field">
+              <label class="query-label" for="api-key-input">API Key</label>
+              <div class="secret-input-row">
+                <input
+                  id="api-key-input"
+                  type="password"
+                  autocomplete="off"
+                  spellcheck="false"
+                  placeholder="仅随本次请求发送，不落盘"
+                />
+                <button id="toggle-key-button" type="button" aria-label="显示或隐藏 API Key">
+                  显示
+                </button>
+              </div>
+            </div>
+            <button id="test-provider-button" class="secondary-button" type="button">
+              测试连接
+            </button>
+            <p id="provider-test-status" class="provider-test-status" aria-live="polite"></p>
+            <p class="privacy-note">
+              密钥仅经当前 HTTPS 请求转发给所选供应商，不保存到本站、浏览器存储或日志。
+              公共设备使用后请关闭页面。
+            </p>
+          </div>
 
           <button id="run-button" class="primary-button" type="button">
             <span>启动协同推理</span>
@@ -94,10 +133,68 @@
               </article>
             </section>
 
+            <section class="panel-block provider-run-block">
+              <div class="block-heading compact">
+                <div>
+                  <span class="section-label">AI 运行状态</span>
+                  <h2 id="provider-run-title">离线 Mock</h2>
+                </div>
+                <span id="provider-source-badge" class="quiet-badge"></span>
+              </div>
+              <div id="provider-run-meta" class="provider-run-meta"></div>
+              <div id="provider-warnings" class="provider-warnings" hidden></div>
+              <article id="live-answer-card" class="live-answer-card" hidden>
+                <span>基于本轮来源的研究回答</span>
+                <p id="live-answer"></p>
+              </article>
+            </section>
+
+            <section class="panel-block innovation-block">
+              <div class="block-heading">
+                <div>
+                  <span class="section-label">02 · 创新机制观测</span>
+                  <h2>每项机制都有开关，也留下可复核输出</h2>
+                </div>
+                <span id="active-preset" class="quiet-badge"></span>
+              </div>
+              <div class="innovation-grid">
+                <article>
+                  <span>序贯反证</span>
+                  <strong id="falsification-summary">—</strong>
+                  <small>通过 / 失败 / 证据不足</small>
+                </article>
+                <article>
+                  <span>多视角质询</span>
+                  <strong id="debate-summary">—</strong>
+                  <small>证据、方法、外部有效性</small>
+                </article>
+                <article>
+                  <span>研究空白</span>
+                  <strong id="gap-summary">—</strong>
+                  <small>时序与低交叉验证提示</small>
+                </article>
+                <article>
+                  <span>本地总耗时</span>
+                  <strong id="probe-summary">—</strong>
+                  <small>真实墙钟探针，不是模型耗时</small>
+                </article>
+              </div>
+              <div class="innovation-detail-grid">
+                <div>
+                  <h3>蓝海假设锦标赛</h3>
+                  <ol id="hypothesis-ranking" class="compact-list"></ol>
+                </div>
+                <div>
+                  <h3>最慢阶段</h3>
+                  <ol id="probe-ranking" class="compact-list"></ol>
+                </div>
+              </div>
+            </section>
+
             <section class="panel-block">
               <div class="block-heading">
                 <div>
-                  <span class="section-label">02 · 协同轨迹</span>
+                  <span class="section-label">03 · 协同轨迹</span>
                   <h2>不是黑盒调用，而是可回放的决策链</h2>
                 </div>
                 <span id="trace-summary" class="quiet-badge"></span>
@@ -109,7 +206,7 @@
               <section class="panel-block graph-block">
                 <div class="block-heading compact">
                   <div>
-                    <span class="section-label">03 · 证据图谱</span>
+                    <span class="section-label">04 · 证据图谱</span>
                     <h2>命题、来源与置信边</h2>
                   </div>
                   <div class="legend">
@@ -132,7 +229,7 @@
               <section class="panel-block report-block">
                 <div class="block-heading compact">
                   <div>
-                    <span class="section-label">04 · 学情报告</span>
+                    <span class="section-label">05 · 学情报告</span>
                     <h2 id="report-persona">个性化匹配</h2>
                   </div>
                   <strong id="match-score" class="match-score">—</strong>
@@ -148,7 +245,7 @@
             <section class="panel-block">
               <div class="block-heading">
                 <div>
-                  <span class="section-label">05 · 裁决结果</span>
+                  <span class="section-label">06 · 裁决结果</span>
                   <h2>高置信关联进入资源，强断言被拦截</h2>
                 </div>
               </div>
@@ -170,7 +267,7 @@
             <section class="panel-block resource-block">
               <div class="block-heading">
                 <div>
-                  <span class="section-label">06 · 个性化资源</span>
+                  <span class="section-label">07 · 个性化资源</span>
                   <h2>同一知识底座，不同学习路径</h2>
                 </div>
                 <div class="resource-tabs" role="tablist" aria-label="资源类型">
@@ -189,7 +286,7 @@
 
             <section class="feedback-panel">
               <div>
-                <span class="section-label">07 · 动态反馈</span>
+                <span class="section-label">08 · 动态反馈</span>
                 <h2>这组资源对你来说怎么样？</h2>
                 <p id="feedback-decision">反馈会触发下一轮难度与解释策略更新。</p>
               </div>
@@ -209,6 +306,6 @@
       <span>所有结论均保留来源，蓝海假设明确标注为待验证。</span>
     </footer>
 
-    <script src="/app.js" defer></script>
+    <script src="app.js" defer></script>
   </body>
 </html>

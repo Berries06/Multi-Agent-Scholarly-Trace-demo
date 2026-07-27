@@ -1,8 +1,13 @@
 __pycache__/
 *.py[cod]
+*.egg-info/
 .pytest_cache/
 .venv/
 .env
+secret/
 outputs/*
 !outputs/.gitkeep
 tmp/
+build/
+dist/
+release/

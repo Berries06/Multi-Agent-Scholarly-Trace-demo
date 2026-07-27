@@ -10,6 +10,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from yanhai.evaluation import evaluate_orchestrator  # noqa: E402
 from yanhai.orchestrator import ScholarlyTraceOrchestrator  # noqa: E402
+from yanhai.providers import ProviderConfig  # noqa: E402
 
 
 class OrchestratorTests(unittest.TestCase):
@@ -88,6 +89,17 @@ class OrchestratorTests(unittest.TestCase):
         report = evaluate_orchestrator(self.orchestrator)
         self.assertEqual(9, report["case_count"])
         self.assertTrue(all(report["thresholds"].values()))
+
+    def test_explicit_mock_provider_preserves_offline_pipeline(self) -> None:
+        result = self.orchestrator.run_with_provider(
+            "undergraduate_ai",
+            "多智能体科研推理如何降低幻觉？",
+            ProviderConfig.from_payload({"provider": "mock"}),
+            config="full",
+        )
+        self.assertEqual("offline_mock", result["provider_run"]["mode"])
+        self.assertEqual("local_mock", result["provider_run"]["source_mode"])
+        self.assertEqual(0, result["provider_run"]["usage"]["total_tokens"])
 
 
 if __name__ == "__main__":

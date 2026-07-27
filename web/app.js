@@ -1,8 +1,17 @@
+const appScriptPath = new URL(document.currentScript.src).pathname;
+const APP_BASE = appScriptPath.endsWith("/app.js")
+  ? appScriptPath.slice(0, -"/app.js".length)
+  : "";
+
 const state = {
   profiles: [],
   selectedProfileId: "undergraduate_ai",
   result: null,
   activeTab: "briefing",
+  presets: [],
+  selectedPreset: "full",
+  providers: [],
+  selectedProvider: "mock",
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -18,7 +27,8 @@ function escapeHtml(value) {
 }
 
 async function requestJson(path, options = {}) {
-  const response = await fetch(path, {
+  const normalizedPath = `/${String(path).replace(/^\/+/, "")}`;
+  const response = await fetch(`${APP_BASE}${normalizedPath}`, {
     headers: { "Content-Type": "application/json" },
     ...options,
   });
@@ -58,6 +68,94 @@ function percent(value) {
   return `${Number(value).toFixed(value % 1 ? 1 : 0)}%`;
 }
 
+function renderPresets() {
+  const select = $("#preset-select");
+  select.innerHTML = state.presets
+    .map(
+      (preset) =>
+        `<option value="${escapeHtml(preset.name)}">${escapeHtml(preset.label)}</option>`,
+    )
+    .join("");
+  select.value = state.selectedPreset;
+  const updateDescription = () => {
+    state.selectedPreset = select.value;
+    const preset = state.presets.find((item) => item.name === select.value);
+    $("#preset-description").textContent = preset?.description || "";
+  };
+  select.addEventListener("change", updateDescription);
+  updateDescription();
+}
+
+function selectedProviderMetadata() {
+  return state.providers.find((item) => item.id === state.selectedProvider);
+}
+
+function renderProviders() {
+  const select = $("#provider-select");
+  select.innerHTML = state.providers
+    .map(
+      (provider) =>
+        `<option value="${escapeHtml(provider.id)}">${escapeHtml(provider.label)}</option>`,
+    )
+    .join("");
+  select.value = state.selectedProvider;
+
+  const updateProvider = (resetModel = false) => {
+    state.selectedProvider = select.value;
+    const provider = selectedProviderMetadata();
+    $("#provider-description").textContent = provider?.description || "";
+    $("#model-options").innerHTML = (provider?.models || [])
+      .map((model) => `<option value="${escapeHtml(model)}"></option>`)
+      .join("");
+    if (resetModel || !$("#model-input").value) {
+      $("#model-input").value = provider?.default_model || "";
+    }
+    const isMock = provider?.id === "mock";
+    $("#api-key-field").hidden = isMock;
+    $("#model-input").disabled = isMock;
+    if (!isMock && resetModel) {
+      $("#api-key-input").value = "";
+    }
+    const status = $("#provider-test-status");
+    status.textContent = isMock
+      ? "离线模式无需密钥；原有 mock 能力保持不变。"
+      : "实时运行约 3 次模型调用；提交反馈会重新运行并产生新的用量。";
+    status.className = "provider-test-status";
+  };
+
+  select.addEventListener("change", () => updateProvider(true));
+  updateProvider(true);
+}
+
+function llmPayload() {
+  return {
+    provider: state.selectedProvider,
+    model: $("#model-input").value.trim(),
+    api_key: state.selectedProvider === "mock" ? "" : $("#api-key-input").value.trim(),
+  };
+}
+
+async function testProvider() {
+  const button = $("#test-provider-button");
+  const status = $("#provider-test-status");
+  button.disabled = true;
+  status.className = "provider-test-status";
+  status.textContent = "正在验证连接…";
+  try {
+    const payload = await requestJson("/api/provider/test", {
+      method: "POST",
+      body: JSON.stringify({ llm: llmPayload() }),
+    });
+    status.textContent = payload.message;
+    status.classList.add("success");
+  } catch (error) {
+    status.textContent = `连接失败：${error.message}`;
+    status.classList.add("error");
+  } finally {
+    button.disabled = false;
+  }
+}
+
 function renderMetrics(result) {
   $("#metric-hallucination").textContent = percent(
     result.metrics.hallucination_proxy_rate,
@@ -68,6 +166,98 @@ function renderMetrics(result) {
   $("#metric-coverage").textContent = percent(
     result.metrics.knowledge_coverage_rate,
   );
+}
+
+function renderInnovations(result) {
+  const innovations = result.innovations || {};
+  const falsification = innovations.falsification || {};
+  const completed = Math.max(
+    0,
+    Number(falsification.rounds || 0) -
+      Number(falsification.failed || 0) -
+      Number(falsification.unresolved || 0),
+  );
+  $("#active-preset").textContent = result.system_config?.label || "基础链路";
+  $("#falsification-summary").textContent = falsification.rounds
+    ? `${completed} / ${falsification.failed} / ${falsification.unresolved}`
+    : "未启用";
+  $("#debate-summary").textContent = innovations.debate_view_count
+    ? `${innovations.debate_view_count} 次`
+    : "未启用";
+  $("#gap-summary").textContent = innovations.discovery?.research_gaps
+    ? `${innovations.discovery.research_gaps.length} 个`
+    : "未启用";
+  $("#probe-summary").textContent =
+    result.provider_run?.mode === "live_llm"
+      ? `${Number(result.provider_run.llm_duration_ms).toFixed(0)} ms`
+      : result.performance?.total_ms == null
+      ? "已关闭"
+      : `${Number(result.performance.total_ms).toFixed(2)} ms`;
+
+  const hypotheses = innovations.hypotheses || [];
+  $("#hypothesis-ranking").innerHTML = hypotheses.length
+    ? hypotheses
+        .map(
+          (item) => {
+            const score =
+              item.score == null ? "待验证" : `${Math.round(item.score * 100)}分`;
+            return `<li><b>#${item.rank} · ${score}</b>${escapeHtml(item.hypothesis)}</li>`;
+          },
+        )
+        .join("")
+    : "<li>当前方案未启用假设锦标赛。</li>";
+
+  const stages = [...(result.performance?.stages || [])]
+    .sort((a, b) => b.duration_ms - a.duration_ms)
+    .slice(0, 4);
+  $("#probe-ranking").innerHTML = stages.length
+    ? stages
+        .map(
+          (stage) =>
+            `<li><b>${escapeHtml(stage.name)}</b>${Number(stage.duration_ms).toFixed(3)} ms</li>`,
+        )
+        .join("")
+    : "<li>当前没有探针数据。</li>";
+}
+
+function renderProviderRun(result) {
+  const run = result.provider_run || {};
+  $("#provider-run-title").textContent =
+    `${run.provider_label || "离线 Mock"} · ${run.model || "offline-rules"}`;
+  const sourceLabels = {
+    local_mock: "本地 mock",
+    local_fallback: "本地降级",
+    arxiv_live: "arXiv 实时来源",
+    multi_source_live: "开放论文 + 官方文档",
+    no_relevant_sources: "未找到相关来源",
+  };
+  $("#provider-source-badge").textContent =
+    sourceLabels[run.source_mode] || run.source_mode || "本地";
+  const usage = run.usage || {};
+  $("#provider-run-meta").innerHTML = [
+    `模式 ${run.mode || "offline_mock"}`,
+    `输入 ${Number(usage.input_tokens || 0)} tokens`,
+    `输出 ${Number(usage.output_tokens || 0)} tokens`,
+    `模型 ${Number(run.llm_duration_ms || 0).toFixed(0)} ms`,
+    `检索 ${Number(run.retrieval_duration_ms || 0).toFixed(0)} ms`,
+    (run.successful_sources || []).length
+      ? `来源 ${(run.successful_sources || []).join(", ")}`
+      : "",
+    run.api_key_persisted === false ? "API Key 未持久化" : "",
+  ]
+    .filter(Boolean)
+    .map((item) => `<span>${escapeHtml(item)}</span>`)
+    .join("");
+
+  const warnings = run.warnings || [];
+  const warningBox = $("#provider-warnings");
+  warningBox.hidden = warnings.length === 0;
+  warningBox.textContent = warnings.join("；");
+
+  const answerCard = $("#live-answer-card");
+  const answer = result.answer || "";
+  answerCard.hidden = !answer;
+  $("#live-answer").textContent = answer;
 }
 
 function renderTrace(result) {
@@ -96,12 +286,14 @@ function renderGraph(graph) {
   const svg = $("#knowledge-graph");
   const groups = {
     paper: graph.nodes.filter((node) => node.kind === "paper"),
+    evidence_span: graph.nodes.filter((node) => node.kind === "evidence_span"),
     concept: graph.nodes.filter((node) => node.kind === "concept"),
     outcome: graph.nodes.filter((node) => node.kind === "outcome"),
   };
   const positions = new Map();
   const rowConfig = {
     paper: { y: 70, start: 65, end: 835 },
+    evidence_span: { y: 150, start: 65, end: 835 },
     concept: { y: 225, start: 90, end: 810 },
     outcome: { y: 365, start: 90, end: 810 },
   };
@@ -137,17 +329,22 @@ function renderGraph(graph) {
     })
     .join("");
 
-  const colors = { paper: "#3d6c8f", concept: "#087f78", outcome: "#d79232" };
+  const colors = {
+    paper: "#3d6c8f",
+    evidence_span: "#7f8f67",
+    concept: "#087f78",
+    outcome: "#d79232",
+  };
   const nodes = graph.nodes
     .filter((node) => positions.has(node.id))
     .map((node) => {
       const position = positions.get(node.id);
-      const radius = node.kind === "paper" ? 11 : 15;
+      const radius = node.kind === "paper" || node.kind === "evidence_span" ? 9 : 15;
       return `
         <g class="graph-node">
           <circle cx="${position.x}" cy="${position.y}" r="${radius}" fill="${colors[node.kind]}" />
           <text x="${position.x}" y="${position.y + 31}">
-            ${escapeHtml(truncate(node.label, node.kind === "paper" ? 15 : 18))}
+            ${escapeHtml(truncate(node.label, ["paper", "evidence_span"].includes(node.kind) ? 15 : 18))}
           </text>
         </g>
       `;
@@ -201,6 +398,7 @@ function renderClaims(result) {
         accepted: "通过",
         review: "复核",
         rejected: "拒绝",
+        abstained: "拒答",
       }[claim.status];
       return `
         <tr>
@@ -304,6 +502,8 @@ function renderResult(result) {
   $("#empty-state").hidden = true;
   $("#result-content").hidden = false;
   renderMetrics(result);
+  renderProviderRun(result);
+  renderInnovations(result);
   renderTrace(result);
   renderGraph(result.graph);
   renderReport(result);
@@ -324,6 +524,8 @@ async function runFlow() {
       body: JSON.stringify({
         profile_id: state.selectedProfileId,
         query: $("#research-query").value.trim(),
+        preset: state.selectedPreset,
+        llm: llmPayload(),
       }),
     });
     renderResult(result);
@@ -345,6 +547,8 @@ async function sendFeedback(feedback) {
         profile_id: state.selectedProfileId,
         query: $("#research-query").value.trim(),
         feedback,
+        preset: state.selectedPreset,
+        llm: llmPayload(),
       }),
     });
     renderResult(result);
@@ -355,15 +559,32 @@ async function sendFeedback(feedback) {
 
 async function initialize() {
   try {
-    const payload = await requestJson("/api/profiles");
-    state.profiles = payload.profiles;
+    const [profilePayload, configPayload, providerPayload] = await Promise.all([
+      requestJson("/api/profiles"),
+      requestJson("/api/configs"),
+      requestJson("/api/providers"),
+    ]);
+    state.profiles = profilePayload.profiles;
+    state.presets = configPayload.presets;
+    state.selectedPreset = configPayload.default_demo_preset;
+    state.providers = providerPayload.providers;
+    state.selectedProvider = providerPayload.default_provider;
     renderProfiles();
+    renderPresets();
+    renderProviders();
   } catch (error) {
     $("#profile-list").innerHTML =
       `<p class="privacy-note">画像加载失败：${escapeHtml(error.message)}</p>`;
   }
 
   $("#run-button").addEventListener("click", runFlow);
+  $("#test-provider-button").addEventListener("click", testProvider);
+  $("#toggle-key-button").addEventListener("click", () => {
+    const input = $("#api-key-input");
+    const reveal = input.type === "password";
+    input.type = reveal ? "text" : "password";
+    $("#toggle-key-button").textContent = reveal ? "隐藏" : "显示";
+  });
   $$(".tab-button").forEach((button) => {
     button.addEventListener("click", () => {
       state.activeTab = button.dataset.tab;

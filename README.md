@@ -6,6 +6,10 @@
 
 当前仓库处于**可运行工程基线**阶段：前端和六 Agent 闭环可以离线演示；科学信息抽取已形成规则基线与统一数据协议；还没有完成全文人工金标准、神经模型对照和专家盲审，因此页面中的工程代理指标不能当作论文实验结论。
 
+项目保留无需外部服务的离线 Mock，同时支持由用户临时提供 API Key 的
+DeepSeek、GPT、Claude 与 Kimi 实时路径。实时路径会并行检索开放论文索引和
+官方技术资料，并对模型返回的来源标识做确定性校验。
+
 ## 先澄清：到底有几个 Agent？
 
 当前代码中固定实现 **6 类应用层 Agent**，定义于 [`src/yanhai/agents.py`](src/yanhai/agents.py)：
@@ -69,15 +73,15 @@
 |---|---|---|
 | 前端 | 原生 HTML、CSS、JavaScript、SVG | 可演示 |
 | Web 服务 | Python 标准库 `ThreadingHTTPServer` | 可演示 |
-| 文献数据 | 8 篇 arXiv 种子文献，JSON 存储 | 工程切片 |
+| 文献数据 | 8 篇 arXiv 种子文献；实时接入官方资料、OpenAlex、Crossref 与 arXiv | 工程切片 |
 | 文档解析 | PlainText/Markdown；可选 Docling 适配器 | 基线 |
 | 实体抽取 | 中英文 schema 词典、字符跨度匹配 | 规则基线 |
 | 关系抽取 | 触发词与同句共现候选 | 规则基线 |
 | 实体融合 | Unicode、大小写、连字符规范化和规范名合并 | 规则基线 |
 | 知识图谱 | 内存 JSON 图、来源边、连通分量社区 | 工程基线 |
-| 多智能体 | 6 个确定性 Python Agent；当前未调用真实 LLM | 可回归基线 |
+| 多智能体 | 6 个确定性 Python Agent；可选接入 DeepSeek、GPT、Claude 与 Kimi | 可回归基线 |
 | 评价 | 代理指标、单元测试和证据完整性检查 | 非论文金标准 |
-| 桌面 APP | 尚未封装；建议后续采用 PySide6 + QtWebEngine | 待完成 |
+| 桌面 APP | PyQt6 Windows x64 免安装验证包 | 粗粒度验证版 |
 
 ### 2.3 优化目标与量化指标
 
@@ -196,7 +200,12 @@ web/                原生 Web 前端
 - 候选生成器后续可接 GLiNER、GLiREL、DeepKE/OneKE 或 Qwen2.5，但必须输出相同 schema。
 - 嵌入模型后续采用 SPECTER2（论文级英文表示）与 multilingual-e5-base（中英文查询和实体上下文）。
 - 图存储目前为 JSON；数据规模和融合质量达标后再接 Neo4j。
-- 桌面端建议使用 PySide6 + QtWebEngine 复用现有 Web 页面和 Python 核心。
+- 统一 LLM Provider 接口覆盖 OpenAI Responses、Anthropic Messages 和
+  OpenAI-compatible Chat；API Key 只在单次请求的进程内存中使用。
+- 实时检索并行调用官方资料目录、OpenAlex、Crossref 与 arXiv；配置
+  `SEMANTIC_SCHOLAR_API_KEY` 后可加入 Semantic Scholar。单一来源失败不会
+  终止整轮任务，没有可靠来源时系统明确拒答。
+- 桌面端使用 PyQt6 复用 Python 核心，当前发布的是无签名验证包。
 
 ## （七）使用方法
 
@@ -211,7 +220,13 @@ python -m yanhai --host 127.0.0.1 --port 8765
 
 浏览器打开 `http://127.0.0.1:8765/`，选择画像、输入研究问题并点击“启动协同推理”。
 
-### 7.2 生成证据抽取图
+### 7.2 选择 AI 供应商
+
+左侧“AI 供应商”默认选择离线 Mock，无需 API Key。选择 DeepSeek、GPT、
+Claude 或 Kimi 后填写自己的 API Key；Key 不写入文件、浏览器存储、日志或
+返回结果。实时运行会产生模型调用费用，并依赖外部论文索引的可用性。
+
+### 7.3 生成证据抽取图
 
 ```powershell
 $env:PYTHONPATH="src"
@@ -220,7 +235,7 @@ python scripts/extract_knowledge.py
 
 输出位于 `outputs/extracted_graph.json`。
 
-### 7.3 运行评测与测试
+### 7.4 运行评测与测试
 
 ```powershell
 $env:PYTHONPATH="src"
@@ -230,7 +245,7 @@ python -m unittest discover -s tests -v
 
 `scripts/evaluate.py` 目前只做 3 组画像 × 3 种反馈的工程回归。正式论文指标必须来自冻结全文测试集和人工标注。
 
-### 7.4 可选安装 Docling
+### 7.5 可选安装 Docling
 
 ```powershell
 python -m pip install -e ".[documents]"
@@ -239,6 +254,15 @@ python scripts/extract_knowledge.py --input "paper.pdf" --paper-id "stable-id"
 ```
 
 Docling 会引入较大的模型和二进制依赖，建议在独立虚拟环境中安装。
+
+### 7.6 Web、Qt 与网站部署
+
+Qt 与 Web 发布物分别通过 `scripts/build_qt_release.ps1` 和
+`scripts/build_web_release.ps1` 构建。`snowsong.top/AgentDemo/start/`
+提供网页版，`snowsong.top/AgentDemo/install/` 提供 Qt 验证版下载。完整的
+Nginx、systemd、验收与回滚流程见 [`deploy/README.md`](deploy/README.md)，
+证据来源策略见
+[`docs/项目说明/证据来源与检索.md`](docs/项目说明/证据来源与检索.md)。
 
 ## （八）混淆
 
@@ -305,5 +329,11 @@ Docling 会引入较大的模型和二进制依赖，建议在独立虚拟环境
 - 当前未整包复制 Docling、DeepKE 或 GraphRAG 源代码；适配器主要调用公开 API 并记录上游出处。
 - 两份竞赛样例可能包含身份和版权内容，公开推送前必须完成授权确认和脱敏。
 - 正式开源前由团队在 MIT、Apache-2.0 或其他方案中作出书面决定，并补充 `LICENSE`、`THIRD_PARTY_NOTICES` 和模型/数据清单。
+- 实时路径目前主要使用官方资料、论文元数据和摘要，不等同于全文系统综述；
+  重要结论仍需打开原始来源并人工复核。
 
 申报书和论文格式见 [`docs/07_submission_and_paper_format.md`](docs/07_submission_and_paper_format.md)。
+Web 版或 Qt 版更新后，请按
+[`docs/协作与运维/网站发布与维护.md`](docs/协作与运维/网站发布与维护.md)
+准备发布信息并联系宋明浩：`06245011@cumt.edu.cn`。`snowsong.top` 使用其
+个人主页域名和服务器，GitHub 更新不会自动上线。

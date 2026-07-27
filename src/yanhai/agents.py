@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import Counter
 from statistics import mean
 from typing import Any
 
@@ -59,14 +60,29 @@ class RetrievalAgent:
         query: str,
         profile: LearnerProfile,
         diagnosis: dict[str, Any],
+        *,
+        limit: int = 8,
+        information_gain: bool = False,
     ) -> list[Paper]:
-        return kb.search(query, profile, diagnosis["blind_spots"])
+        return kb.search(
+            query,
+            profile,
+            diagnosis["blind_spots"],
+            limit=limit,
+            information_gain=information_gain,
+        )
 
 
 class ProposerAgent:
     name = "提出者 Agent"
 
-    def propose(self, kb: KnowledgeBase, papers: list[Paper]) -> list[Claim]:
+    def propose(
+        self,
+        kb: KnowledgeBase,
+        papers: list[Paper],
+        *,
+        sentence_provenance: bool = False,
+    ) -> list[Claim]:
         relations = kb.candidate_relations({paper.paper_id for paper in papers})
         claims = [
             Claim(
@@ -77,6 +93,12 @@ class ProposerAgent:
                 relation_type=relation["relation_type"],
                 base_confidence=float(relation["confidence"]),
                 evidence_ids=list(relation["evidence_ids"]),
+                evidence_spans=(
+                    kb.evidence_spans_for_relation(relation)
+                    if sentence_provenance
+                    else []
+                ),
+                counter_evidence_ids=list(relation.get("counter_evidence_ids", [])),
             )
             for index, relation in enumerate(relations, start=1)
         ]
@@ -119,7 +141,16 @@ class CriticAgent:
 class JudgeAgent:
     name = "裁判 Agent"
 
-    def adjudicate(self, claims: list[Claim], kb: KnowledgeBase) -> list[Claim]:
+    def adjudicate(
+        self,
+        claims: list[Claim],
+        kb: KnowledgeBase,
+        *,
+        acceptance_threshold: float = 0.78,
+        review_threshold: float = 0.58,
+        calibrated: bool = False,
+        abstention: bool = False,
+    ) -> list[Claim]:
         for claim in claims:
             valid_evidence = [
                 paper_id for paper_id in claim.evidence_ids if paper_id in kb.paper_by_id
@@ -133,14 +164,38 @@ class JudgeAgent:
                 penalty += 0.20
             if claim.base_confidence < 0.7:
                 penalty += 0.08
+            if calibrated:
+                provenance_bonus = min(0.04, 0.02 * len(claim.evidence_spans))
+                perspective_bonus = (
+                    0.02
+                    if len({view["perspective"] for view in claim.debate_views}) >= 3
+                    else 0.0
+                )
+                contradiction_penalty = min(
+                    0.24, 0.12 * len(claim.counter_evidence_ids)
+                )
+                failed_tests = sum(
+                    step["outcome"] in {"failed", "unresolved"}
+                    for step in claim.falsification_steps
+                )
+                penalty += 0.07 * failed_tests + contradiction_penalty
+                evidence_bonus += provenance_bonus + perspective_bonus
             claim.judge_score = max(
                 0.0,
                 min(0.99, claim.base_confidence + evidence_bonus + corroboration_bonus - penalty),
             )
-            if claim.judge_score >= 0.78 and valid_evidence:
+            if claim.judge_score >= acceptance_threshold and valid_evidence:
                 claim.status = "accepted"
-            elif claim.judge_score >= 0.58 and valid_evidence:
+            elif claim.judge_score >= review_threshold and valid_evidence:
                 claim.status = "review"
+            elif abstention and (
+                not valid_evidence
+                or any(
+                    step["outcome"] == "unresolved"
+                    for step in claim.falsification_steps
+                )
+            ):
+                claim.status = "abstained"
             else:
                 claim.status = "rejected"
         return claims
@@ -155,6 +210,9 @@ class ResourceAgent:
         diagnosis: dict[str, Any],
         claims: list[Claim],
         kb: KnowledgeBase,
+        *,
+        tournament: list[dict[str, Any]] | None = None,
+        discovery: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         accepted = [claim for claim in claims if claim.status == "accepted"]
         citations = sorted({paper_id for claim in accepted for paper_id in claim.evidence_ids})
@@ -226,6 +284,23 @@ class ResourceAgent:
                 for concept in (claim.source, claim.target)
             }
         )
+        leading_hypothesis = tournament[0] if tournament else None
+        blue_ocean = {
+            "hypothesis": (
+                leading_hypothesis["hypothesis"]
+                if leading_hypothesis
+                else "将多智能体反证强度编码为动态图谱边权，可能提升跨领域研究空白的筛选质量。"
+            ),
+            "caveat": "该命题是待验证研究假设，不作为已证实事实进入知识库。",
+            "evidence_ids": (
+                leading_hypothesis["evidence_ids"]
+                if leading_hypothesis
+                else citations[:3]
+            ),
+            "tournament_score": (
+                leading_hypothesis["score"] if leading_hypothesis else None
+            ),
+        }
         return {
             "briefing": {
                 "title": f"{profile.name}的多智能体科研推理导读",
@@ -243,10 +318,239 @@ class ResourceAgent:
                 "title": "分阶理解检查",
                 "items": quiz[: max(2, min(3, difficulty))],
             },
-            "blue_ocean": {
-                "hypothesis": "将多智能体反证强度编码为动态图谱边权，可能提升跨领域研究空白的筛选质量。",
-                "caveat": "该命题是待验证研究假设，不作为已证实事实进入知识库。",
-                "evidence_ids": citations[:3],
-            },
+            "blue_ocean": blue_ocean,
+            "discovery_summary": discovery or {},
             "covered_concepts": covered_concepts,
         }
+
+
+class DiverseDebateAgent:
+    name = "多视角辩论 Agent"
+
+    def debate(self, claims: list[Claim], kb: KnowledgeBase) -> list[Claim]:
+        for claim in claims:
+            valid = [
+                paper_id
+                for paper_id in claim.evidence_ids
+                if paper_id in kb.paper_by_id
+            ]
+            views = [
+                {
+                    "perspective": "证据审计员",
+                    "stance": "support" if valid else "challenge",
+                    "finding": f"定位到 {len(valid)} 个有效来源。",
+                },
+                {
+                    "perspective": "方法论怀疑者",
+                    "stance": "challenge" if len(valid) < 2 else "support",
+                    "finding": (
+                        "单来源不足以排除方法偏差。"
+                        if len(valid) < 2
+                        else "已具备交叉来源，但仍需真实任务复验。"
+                    ),
+                },
+                {
+                    "perspective": "外部有效性审查员",
+                    "stance": "challenge",
+                    "finding": "论文切片只能支持条件性结论，不能外推为普遍保证。",
+                },
+            ]
+            claim.debate_views.extend(views)
+            if len(valid) < 2 and "多视角复核：交叉来源不足。" not in claim.criticisms:
+                claim.criticisms.append("多视角复核：交叉来源不足。")
+        return claims
+
+
+class SequentialFalsificationAgent:
+    name = "序贯反证 Agent"
+
+    def falsify(
+        self,
+        claims: list[Claim],
+        kb: KnowledgeBase,
+        max_rounds: int = 2,
+    ) -> list[Claim]:
+        for claim in claims:
+            valid = [
+                paper_id
+                for paper_id in claim.evidence_ids
+                if paper_id in kb.paper_by_id
+            ]
+            tests = [
+                {
+                    "round": 1,
+                    "test": "若命题成立，应能定位至少一个支持句及其论文。",
+                    "support_ids": valid,
+                    "counter_ids": list(claim.counter_evidence_ids),
+                    "outcome": (
+                        "passed"
+                        if claim.evidence_spans and valid
+                        else "unresolved"
+                    ),
+                },
+                {
+                    "round": 2,
+                    "test": "若结论可推广，不应依赖绝对化措辞或未处理反证。",
+                    "support_ids": valid,
+                    "counter_ids": list(claim.counter_evidence_ids),
+                    "outcome": (
+                        "failed"
+                        if claim.relation in {"guarantees", "proves"}
+                        or claim.counter_evidence_ids
+                        else "passed"
+                    ),
+                },
+            ]
+            claim.falsification_steps.extend(tests[: max(1, max_rounds)])
+            if any(step["outcome"] == "failed" for step in claim.falsification_steps):
+                claim.criticisms.append("序贯反证发现未通过的可证伪检查。")
+        return claims
+
+
+class KnowledgeTracingAgent:
+    name = "动态学情追踪 Agent"
+
+    def trace(
+        self,
+        profile: LearnerProfile,
+        diagnosis: dict[str, Any],
+        feedback: str | None = None,
+    ) -> dict[str, Any]:
+        delta = {"too_hard": -0.04, "suitable": 0.03, "too_easy": 0.05}.get(
+            feedback, 0.0
+        )
+        concepts = []
+        for topic, score in sorted(profile.knowledge_scores.items()):
+            prior = score / 100
+            posterior = max(0.01, min(0.99, prior + delta))
+            concepts.append(
+                {
+                    "concept": topic,
+                    "prior_mastery": round(prior, 3),
+                    "posterior_mastery": round(posterior, 3),
+                    "uncertainty": round(1 - abs(posterior - 0.5) * 2, 3),
+                    "evidence": feedback or "profile_prior",
+                }
+            )
+        weakest = min(concepts, key=lambda item: item["posterior_mastery"])
+        return {
+            "model": "deterministic Bayesian-style mock tracer",
+            "concepts": concepts,
+            "next_focus": weakest["concept"],
+            "target_difficulty": diagnosis["target_difficulty"],
+            "warning": "当前更新来自合成画像与单次反馈；接入真实作答后再校准。",
+        }
+
+
+class TemporalDiscoveryAgent:
+    name = "时序争议发现 Agent"
+
+    def analyse(
+        self,
+        papers: list[Paper],
+        claims: list[Claim],
+    ) -> dict[str, Any]:
+        timeline = [
+            {
+                "year": paper.year,
+                "paper_id": paper.paper_id,
+                "milestone": paper.summary,
+            }
+            for paper in sorted(papers, key=lambda item: (item.year, item.paper_id))
+        ]
+        target_counts = Counter(claim.target for claim in claims if claim.evidence_ids)
+        controversies = [
+            {
+                "topic": claim.target,
+                "reason": (
+                    "存在反向证据，需人工复核。"
+                    if claim.counter_evidence_ids
+                    else "仅有单一来源，跨场景有效性仍不确定。"
+                ),
+                "claim_id": claim.claim_id,
+                "evidence_ids": list(claim.evidence_ids),
+            }
+            for claim in claims
+            if claim.counter_evidence_ids or len(claim.evidence_ids) == 1
+        ]
+        gaps = [
+            {
+                "topic": claim.target,
+                "gap_type": (
+                    "low_corroboration"
+                    if len(claim.evidence_ids) == 1
+                    else "cross_domain_validation"
+                ),
+                "priority": round(
+                    min(0.99, 0.45 + 0.15 / max(1, target_counts[claim.target])), 3
+                ),
+                "evidence_ids": list(claim.evidence_ids),
+            }
+            for claim in claims
+            if claim.status in {"accepted", "review"}
+        ]
+        gaps.sort(key=lambda item: item["priority"], reverse=True)
+        return {
+            "timeline": timeline,
+            "controversies": controversies,
+            "research_gaps": gaps[:5],
+            "method": "按文献年份、证据数与反证状态进行可复现拓扑启发式分析。",
+        }
+
+
+class HypothesisTournamentAgent:
+    name = "蓝海假设锦标赛 Agent"
+
+    def rank(
+        self,
+        discovery: dict[str, Any],
+        claims: list[Claim],
+    ) -> list[dict[str, Any]]:
+        accepted = [claim for claim in claims if claim.status == "accepted"]
+        evidence_ids = sorted(
+            {paper_id for claim in accepted for paper_id in claim.evidence_ids}
+        )
+        gap_topic = (
+            discovery.get("research_gaps", [{}])[0].get("topic", "科研发现质量")
+            if discovery.get("research_gaps")
+            else "科研发现质量"
+        )
+        candidates = [
+            {
+                "hypothesis": f"将序贯反证失败率编码为动态图谱边权，可能改善“{gap_topic}”候选的排序。",
+                "novelty": 0.86,
+                "evidence_strength": min(0.92, 0.52 + 0.05 * len(evidence_ids)),
+                "testability": 0.93,
+                "uncertainty_value": 0.81,
+            },
+            {
+                "hypothesis": "按学习者概念不确定度调节检索信息增益，可能提高跨学科证据覆盖。",
+                "novelty": 0.79,
+                "evidence_strength": min(0.88, 0.48 + 0.04 * len(evidence_ids)),
+                "testability": 0.88,
+                "uncertainty_value": 0.76,
+            },
+            {
+                "hypothesis": "由角色多样性而非智能体数量决定辩论收益，可能降低无效讨论成本。",
+                "novelty": 0.75,
+                "evidence_strength": min(0.86, 0.5 + 0.04 * len(evidence_ids)),
+                "testability": 0.91,
+                "uncertainty_value": 0.73,
+            },
+        ]
+        for index, candidate in enumerate(candidates, start=1):
+            score = (
+                0.30 * candidate["novelty"]
+                + 0.25 * candidate["evidence_strength"]
+                + 0.30 * candidate["testability"]
+                + 0.15 * candidate["uncertainty_value"]
+            )
+            candidate["candidate_id"] = f"H{index:02d}"
+            candidate["score"] = round(score, 3)
+            candidate["evidence_ids"] = evidence_ids[:3]
+            candidate["status"] = "hypothesis_not_fact"
+        candidates.sort(key=lambda item: item["score"], reverse=True)
+        for rank, candidate in enumerate(candidates, start=1):
+            candidate["rank"] = rank
+            candidate["pairwise_wins"] = len(candidates) - rank
+        return candidates

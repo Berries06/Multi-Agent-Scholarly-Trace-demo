@@ -1,0 +1,9 @@
+{
+  "slug": "04_query_robustness",
+  "title": "查询覆盖与对抗措辞鲁棒性",
+  "purpose": "覆盖不同角色、主题与绝对化诱导查询，检查召回概念和压力命题拦截。",
+  "presets": ["full", "legacy"],
+  "case_ids": ["M001", "M003", "M004", "M005", "M006", "M007", "M008", "M009"],
+  "repetitions": 3,
+  "primary_metrics": ["预期概念覆盖", "压力命题拦截率", "证据 ID 覆盖", "耗时"]
+}
