@@ -9,6 +9,7 @@ import threading
 import unittest
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+from unittest.mock import patch
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -17,6 +18,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 from yanhai.experiments import ExperimentRunner  # noqa: E402
 from yanhai.models import Paper  # noqa: E402
 from yanhai.orchestrator import ScholarlyTraceOrchestrator  # noqa: E402
+from yanhai.providers import LLMResponse  # noqa: E402
 from yanhai.server import DemoRequestHandler  # noqa: E402
 from yanhai.storage import AppRepository  # noqa: E402
 
@@ -188,6 +190,61 @@ class AccountApiTests(unittest.TestCase):
                 and item["paper_count"] >= 4
                 for item in slices["slices"]
             )
+        )
+
+    def test_free_deepseek_connection_uses_server_key(self) -> None:
+        status, _, _ = self.request(
+            "POST",
+            "/api/auth/register",
+            {
+                "email": "free-deepseek@example.com",
+                "nickname": "免费模型测试者",
+                "password": "strong-local-password",
+            },
+        )
+        self.assertEqual(201, status)
+        captured = {}
+
+        class StubProvider:
+            def test_connection(self) -> LLMResponse:
+                return LLMResponse(
+                    content="OK",
+                    provider="deepseek",
+                    model="deepseek-v4-flash",
+                    duration_ms=1,
+                    usage={
+                        "input_tokens": 1,
+                        "output_tokens": 1,
+                        "total_tokens": 2,
+                    },
+                )
+
+        def fake_create_provider(config):
+            captured["config"] = config
+            return StubProvider()
+
+        with (
+            patch("yanhai.server.SERVER_API_KEY", "server-managed-test-key"),
+            patch("yanhai.server.create_provider", side_effect=fake_create_provider),
+        ):
+            status, result, _ = self.request(
+                "POST",
+                "/api/provider/test",
+                {
+                    "llm": {
+                        "provider": "free-deepseek",
+                        "model": "deepseek-v4-flash",
+                        "api_key": "",
+                    }
+                },
+            )
+
+        self.assertEqual(200, status)
+        self.assertTrue(result["ok"])
+        self.assertEqual("deepseek", captured["config"].provider)
+        self.assertEqual(
+            "server-managed-test-key",
+            captured["config"].api_key,
         )
 
 

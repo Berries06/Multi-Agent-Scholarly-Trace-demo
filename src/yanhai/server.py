@@ -68,7 +68,11 @@ def _server_provider_for_user(
 ) -> ProviderConfig:
     """Construct provider config. For 'free-deepseek', inject the server API key."""
     raw = dict(payload or {})
-    if raw.get("provider") == "free-deepseek" and user is not None:
+    if raw.get("provider") == "free-deepseek":
+        if user is None:
+            raise PermissionError("请先登录后使用 DeepSeek Free。")
+        if not SERVER_API_KEY:
+            raise ValueError("服务器尚未配置 DeepSeek Free API Key。")
         raw["api_key"] = SERVER_API_KEY
         raw["provider"] = "deepseek"
     return ProviderConfig.from_payload(raw)
@@ -311,7 +315,7 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
             profile_id, profile = self._profile_for_request(payload, user)
             query = payload.get("query") or DEFAULT_QUERY
             preset = payload.get("preset", "full")
-            provider_config = ProviderConfig.from_payload(payload.get("llm"))
+            provider_config = _server_provider_for_user(user, payload.get("llm"))
             if route == "/api/provider/test":
                 if provider_config.provider == "mock":
                     self._send_json(

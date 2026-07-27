@@ -126,6 +126,24 @@ class ProviderTests(unittest.TestCase):
         with self.assertRaisesRegex(ProviderError, r"\[REDACTED\]"):
             create_provider(config, transport).test_connection()
 
+    def test_provider_error_with_empty_key_keeps_message_readable(self) -> None:
+        def transport(
+            url: str,
+            headers: dict[str, str],
+            payload: dict[str, Any],
+            timeout: float,
+        ) -> tuple[dict[str, Any], dict[str, str]]:
+            raise ProviderError("供应商返回 HTTP 401")
+
+        config = ProviderConfig.from_payload(
+            {
+                "provider": "free-deepseek",
+                "model": "deepseek-v4-flash",
+            }
+        )
+        with self.assertRaisesRegex(ProviderError, "^供应商返回 HTTP 401$"):
+            create_provider(config, transport).test_connection()
+
     def test_openai_responses_text_is_extracted(self) -> None:
         def transport(
             url: str,

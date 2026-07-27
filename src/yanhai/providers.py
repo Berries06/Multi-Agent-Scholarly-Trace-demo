@@ -248,7 +248,9 @@ class BaseProvider:
                 self.config.timeout_seconds,
             )
         except ProviderError as exc:
-            message = str(exc).replace(self.config.api_key, "[REDACTED]")
+            message = str(exc)
+            if self.config.api_key:
+                message = message.replace(self.config.api_key, "[REDACTED]")
             raise ProviderError(message, status_code=exc.status_code) from exc
         return data, response_headers, (time.perf_counter() - started) * 1000
 
