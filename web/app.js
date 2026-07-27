@@ -228,6 +228,8 @@ function renderProviderRun(result) {
     local_mock: "本地 mock",
     local_fallback: "本地降级",
     arxiv_live: "arXiv 实时来源",
+    multi_source_live: "开放论文 + 官方文档",
+    no_relevant_sources: "未找到相关来源",
   };
   $("#provider-source-badge").textContent =
     sourceLabels[run.source_mode] || run.source_mode || "本地";
@@ -238,6 +240,9 @@ function renderProviderRun(result) {
     `输出 ${Number(usage.output_tokens || 0)} tokens`,
     `模型 ${Number(run.llm_duration_ms || 0).toFixed(0)} ms`,
     `检索 ${Number(run.retrieval_duration_ms || 0).toFixed(0)} ms`,
+    (run.successful_sources || []).length
+      ? `来源 ${(run.successful_sources || []).join(", ")}`
+      : "",
     run.api_key_persisted === false ? "API Key 未持久化" : "",
   ]
     .filter(Boolean)

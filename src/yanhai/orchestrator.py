@@ -551,7 +551,7 @@ class ScholarlyTraceOrchestrator:
                     "status": "completed",
                     "summary": (
                         f"生成 {len(provider_run.get('search_queries', []))} 条 "
-                        "arXiv 英文检索式。"
+                        "开放论文与官方文档检索式。"
                     ),
                     "duration_ms": calls[0]["duration_ms"],
                     "input_count": 1,
@@ -560,16 +560,21 @@ class ScholarlyTraceOrchestrator:
             )
         trace.append(
             {
-                "agent": "arXiv 实时检索 Agent",
+                "agent": "多源证据检索 Agent",
                 "role": "外部证据召回",
                 "status": (
-                    "degraded"
-                    if provider_run.get("source_mode") == "local_fallback"
-                    else "completed"
+                    "abstained"
+                    if provider_run.get("evidence_status") == "insufficient"
+                    else (
+                        "degraded"
+                        if provider_run.get("source_mode") == "local_fallback"
+                        else "completed"
+                    )
                 ),
                 "summary": (
                     f"召回 {paper_count} 篇来源；模式为 "
-                    f"{provider_run.get('source_mode')}。"
+                    f"{provider_run.get('source_mode')}；成功来源 "
+                    f"{', '.join(provider_run.get('successful_sources', [])) or '无'}。"
                 ),
                 "duration_ms": provider_run.get("retrieval_duration_ms", 0.0),
                 "input_count": len(provider_run.get("search_queries", [])),

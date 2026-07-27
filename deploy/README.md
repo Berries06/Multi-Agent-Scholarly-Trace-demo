@@ -44,8 +44,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build_web_release.ps
 当前验证构建校验：
 
 ```text
-Qt ZIP:  feabdb6e6c820a42a97996dc7e1c0a15f076600289425efe34ac8165ab09633a
-Web TGZ: bc7883a56bacd0530f0295bb5067ed72b2dfb23ac30ddebac4c7b1fe36c34b48
+Qt ZIP:  ac0f4b453c83afba531f4e84aaaf00b4cddd6a0b20f4ea85b449cafb51c99d6d
+Web TGZ: 4c18af75c88d40fd898abc9494667069f5c963dc00c1c5cc1489e298017ebbbd
 ```
 
 Qt 构建会先运行单元测试。发布前还应使用下面的环境变量执行冻结版冒烟：
@@ -114,7 +114,7 @@ install -m 0644 /tmp/YanhaiTrace-Windows-x64-0.1.0.zip \
 上传前后的 SHA-256 必须相同：
 
 ```text
-feabdb6e6c820a42a97996dc7e1c0a15f076600289425efe34ac8165ab09633a
+ac0f4b453c83afba531f4e84aaaf00b4cddd6a0b20f4ea85b449cafb51c99d6d
 ```
 
 ### 4. 增量接入 Nginx

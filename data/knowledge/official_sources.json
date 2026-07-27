@@ -1,0 +1,82 @@
+[
+  {
+    "paper_id": "official:espressif:esp-idf-i2s",
+    "title": "ESP-IDF Programming Guide: Inter-IC Sound (I2S)",
+    "authors": ["Espressif Systems"],
+    "year": 2026,
+    "published": "2026-07-26",
+    "categories": ["official-documentation", "embedded-audio", "ESP32"],
+    "summary": "Espressif 的 ESP32 I2S 官方参考文档，说明标准 I2S、PDM、TDM、ADC/DAC 模式、时钟与数据线、芯片支持矩阵、驱动配置和音频示例，是选择数字麦克风、Codec 与功放接口的主要依据。",
+    "concepts": ["ESP32", "I2S", "PDM", "audio input", "audio output", "microphone", "codec"],
+    "source_url": "https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/peripherals/i2s.html",
+    "source_type": "official_documentation",
+    "publisher": "Espressif Systems",
+    "authority_tier": 1,
+    "license": "reference-only",
+    "retrieved_at": "2026-07-26",
+    "content_hash": "catalog-summary-v1",
+    "external_ids": {
+      "canonical_url": "https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/peripherals/i2s.html"
+    }
+  },
+  {
+    "paper_id": "official:espressif:esp-adf",
+    "title": "Espressif Audio Development Framework Guide",
+    "authors": ["Espressif Systems"],
+    "year": 2026,
+    "published": "2026-07-26",
+    "categories": ["official-documentation", "embedded-audio", "ESP32"],
+    "summary": "ESP-ADF 是建立在 ESP-IDF 上的官方音频应用框架，提供音频 Pipeline、输入输出 Stream、Codec、音频处理、录音与播放组件，并给出适配音频开发板和自定义 Codec 的工程方法。",
+    "concepts": ["ESP32", "ESP-ADF", "audio pipeline", "codec", "recording", "playback", "ALC"],
+    "source_url": "https://docs.espressif.com/projects/esp-adf/en/latest/",
+    "source_type": "official_documentation",
+    "publisher": "Espressif Systems",
+    "authority_tier": 1,
+    "license": "reference-only",
+    "retrieved_at": "2026-07-26",
+    "content_hash": "catalog-summary-v1",
+    "external_ids": {
+      "canonical_url": "https://docs.espressif.com/projects/esp-adf/en/latest/"
+    }
+  },
+  {
+    "paper_id": "official:espressif:audio-design-guidelines",
+    "title": "ESP32 Audio Design Guidelines",
+    "authors": ["Espressif Systems"],
+    "year": 2026,
+    "published": "2026-06-01",
+    "categories": ["official-design-guide", "hardware", "embedded-audio", "ESP32"],
+    "summary": "Espressif 面向 ESP32 音频产品的官方硬件设计指南，覆盖音频器件选型、接口、电源、时钟、PCB 布局、噪声与信号完整性等设计注意事项，适合便携式音频原型的原理图和 PCB 复核。",
+    "concepts": ["ESP32", "audio hardware", "power supply", "PCB layout", "noise", "signal integrity", "portable audio"],
+    "source_url": "https://documentation.espressif.com/esp32_audio_design_guidelines__en.pdf",
+    "source_type": "official_design_guide",
+    "publisher": "Espressif Systems",
+    "authority_tier": 1,
+    "license": "reference-only",
+    "retrieved_at": "2026-07-26",
+    "content_hash": "catalog-summary-v1",
+    "external_ids": {
+      "canonical_url": "https://documentation.espressif.com/esp32_audio_design_guidelines__en.pdf"
+    }
+  },
+  {
+    "paper_id": "official:espressif:esp-adf-source",
+    "title": "Espressif ESP-ADF Official Source and Examples",
+    "authors": ["Espressif Systems"],
+    "year": 2026,
+    "published": "2026-07-26",
+    "categories": ["official-source-code", "embedded-audio", "ESP32"],
+    "summary": "Espressif 官方 ESP-ADF 源代码仓库，包含播放器、录音、I2S、蓝牙音频、ALC、混音和音频 Pipeline 示例。工程实现应固定兼容分支或发行版本，并以示例和对应版本文档交叉验证。",
+    "concepts": ["ESP32", "ESP-ADF", "I2S", "audio examples", "amplifier", "microphone", "speaker"],
+    "source_url": "https://github.com/espressif/esp-adf",
+    "source_type": "official_source_code",
+    "publisher": "Espressif Systems",
+    "authority_tier": 1,
+    "license": "repository-license",
+    "retrieved_at": "2026-07-26",
+    "content_hash": "catalog-summary-v1",
+    "external_ids": {
+      "canonical_url": "https://github.com/espressif/esp-adf"
+    }
+  }
+]

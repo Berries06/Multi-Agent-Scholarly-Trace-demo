@@ -15,6 +15,13 @@ class Paper:
     summary: str
     concepts: tuple[str, ...]
     source_url: str
+    source_type: str = "scholarly"
+    publisher: str = ""
+    authority_tier: int = 2
+    license: str = ""
+    retrieved_at: str = ""
+    content_hash: str = ""
+    external_ids: dict[str, str] = field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Paper":
@@ -28,6 +35,16 @@ class Paper:
             summary=data["summary"],
             concepts=tuple(data["concepts"]),
             source_url=data["source_url"],
+            source_type=str(data.get("source_type", "scholarly")),
+            publisher=str(data.get("publisher", "")),
+            authority_tier=int(data.get("authority_tier", 2)),
+            license=str(data.get("license", "")),
+            retrieved_at=str(data.get("retrieved_at", "")),
+            content_hash=str(data.get("content_hash", "")),
+            external_ids={
+                str(key): str(value)
+                for key, value in (data.get("external_ids") or {}).items()
+            },
         )
 
     def to_dict(self) -> dict[str, Any]:

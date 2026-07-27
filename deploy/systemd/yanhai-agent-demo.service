@@ -12,6 +12,7 @@ Environment=PYTHONPATH=/opt/yanhai-agent-demo/current/src
 Environment=YANHAI_PROJECT_ROOT=/opt/yanhai-agent-demo/current
 Environment=PYTHONDONTWRITEBYTECODE=1
 Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=-/etc/yanhai-agent-demo.env
 ExecStart=/usr/bin/python3 -m yanhai --host 127.0.0.1 --port 8765
 Restart=on-failure
 RestartSec=3

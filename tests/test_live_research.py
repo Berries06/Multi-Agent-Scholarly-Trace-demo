@@ -131,6 +131,13 @@ class StubRetriever:
         ]
 
 
+class EmptyRetriever:
+    source_id = "empty"
+
+    def search(self, queries: list[str], limit: int = 6) -> list[Paper]:
+        return []
+
+
 class LiveResearchTests(unittest.TestCase):
     def test_live_pipeline_filters_invented_citations_and_never_returns_key(self) -> None:
         config = ProviderConfig.from_payload(
@@ -166,7 +173,7 @@ class LiveResearchTests(unittest.TestCase):
             profile,
             {"target_difficulty": 3, "blind_spots": ["证据检索"]},
         )
-        self.assertEqual("arxiv_live", result["provider_run"]["source_mode"])
+        self.assertEqual("multi_source_live", result["provider_run"]["source_mode"])
         self.assertEqual(["live-1"], result["claims"][0]["evidence_ids"])
         self.assertEqual(
             ["live-1"],
@@ -179,6 +186,98 @@ class LiveResearchTests(unittest.TestCase):
         self.assertNotIn("never-return-this-key", str(result))
         self.assertFalse(result["provider_run"]["api_key_persisted"])
         self.assertEqual(45, result["provider_run"]["usage"]["total_tokens"])
+
+    def test_zero_proposals_returns_structured_abstention(self) -> None:
+        provider = StubProvider()
+        provider.responses = [
+            {
+                "search_queries": ["ESP32 portable audio amplifier"],
+                "research_questions": ["Which interfaces are supported?"],
+            },
+            {"claims": []},
+        ]
+        config = ProviderConfig.from_payload(
+            {
+                "provider": "openai",
+                "model": "gpt-5.6-terra",
+                "api_key": "never-return-this-key",
+            }
+        )
+        kb = KnowledgeBase(PROJECT_ROOT / "data" / "knowledge")
+        profile = LearnerProfile.from_dict(
+            {
+                "profile_id": "test",
+                "name": "测试学习者",
+                "persona": "测试",
+                "education": "本科",
+                "role": "开发者",
+                "goal": "制作原型",
+                "interests": ["ESP32"],
+                "knowledge_scores": {"证据检索": 60},
+                "preferred_style": "分步",
+                "expected_difficulty": 2,
+                "required_concepts": ["I2S"],
+            }
+        )
+        result = LiveResearchService(
+            provider,
+            config,
+            kb,
+            StubRetriever(),
+        ).run(
+            "如何基于 ESP32 开发便携式扩音器？",
+            profile,
+            {"target_difficulty": 2, "blind_spots": ["证据检索"]},
+        )
+        self.assertEqual("insufficient", result["provider_run"]["evidence_status"])
+        self.assertEqual([], result["claims"])
+        self.assertIn("证据不足", result["answer"])
+        self.assertEqual(2, len(result["provider_run"]["calls"]))
+
+    def test_irrelevant_local_slice_is_not_used_for_esp32_fallback(self) -> None:
+        provider = StubProvider()
+        provider.responses = [
+            {
+                "search_queries": ["ESP32 portable audio amplifier"],
+                "research_questions": ["Which audio interfaces are supported?"],
+            }
+        ]
+        config = ProviderConfig.from_payload(
+            {
+                "provider": "openai",
+                "model": "gpt-5.6-terra",
+                "api_key": "never-return-this-key",
+            }
+        )
+        kb = KnowledgeBase(PROJECT_ROOT / "data" / "knowledge")
+        profile = LearnerProfile.from_dict(
+            {
+                "profile_id": "test",
+                "name": "测试学习者",
+                "persona": "测试",
+                "education": "本科",
+                "role": "开发者",
+                "goal": "制作原型",
+                "interests": ["ESP32"],
+                "knowledge_scores": {"证据检索": 60},
+                "preferred_style": "分步",
+                "expected_difficulty": 2,
+                "required_concepts": ["I2S"],
+            }
+        )
+        result = LiveResearchService(
+            provider,
+            config,
+            kb,
+            EmptyRetriever(),
+        ).run(
+            "如何基于 ESP32 开发便携式扩音器？",
+            profile,
+            {"target_difficulty": 2, "blind_spots": ["证据检索"]},
+        )
+        self.assertEqual("no_relevant_sources", result["provider_run"]["source_mode"])
+        self.assertEqual([], result["papers"])
+        self.assertEqual(1, len(result["provider_run"]["calls"]))
 
 
 if __name__ == "__main__":
