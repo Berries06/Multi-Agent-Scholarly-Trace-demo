@@ -2,7 +2,7 @@
 
 ## 已核验的现状
 
-核验日期：2026-07-26。
+核验日期：2026-07-27。
 
 - 本机：WSL 2.7.3，Ubuntu 24.04，WSL2，项目可从
   `/mnt/d/project/IndependentProjects/Multi-Agent-Scholarly-Trace-demo` 访问；
@@ -10,8 +10,13 @@
 - Nginx、HTTPS 和 Certbot 自动续期均已运行；
 - 现有站点配置是 `/etc/nginx/sites-available/mysite`，站点根目录是
   `/var/www/mysite`；
-- `https://snowsong.top/` 返回 200，两个 AgentDemo 目标路径上线前均为 404；
+- `https://snowsong.top/`、`/AgentDemo/`、`/AgentDemo/start/` 和
+  `/AgentDemo/install/` 均返回 200；
 - 云服务器当前约使用 419 MiB 内存和 2.6 GB 磁盘。
+
+当前线上应用版本为 `/opt/yanhai-agent-demo/releases/0.2.0-9ad5926-r2`，
+上一版本 `/opt/yanhai-agent-demo/releases/0.1.0-20260726` 保留用于回滚。
+SQLite 数据位于 `/var/lib/yanhai-agent-demo/yanhai.sqlite3`，不随代码版本切换。
 
 ## 目标结构
 
@@ -32,20 +37,20 @@ Web 服务直接运行在腾讯云，不经过宿舍 M920q 和 FRP。这样不�
 在 Windows PowerShell 中：
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build_qt_release.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build_web_release.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build_qt_release.ps1 -Version 0.2.0
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build_web_release.ps1 -Version 0.2.0
 ```
 
 产物：
 
-- `release/YanhaiTrace-Windows-x64-0.1.0.zip`
-- `release/yanhai-web-0.1.0.tar.gz`
+- `release/YanhaiTrace-Windows-x64-0.2.0.zip`
+- `release/yanhai-web-0.2.0.tar.gz`
 
 当前验证构建校验：
 
 ```text
-Qt ZIP:  ac0f4b453c83afba531f4e84aaaf00b4cddd6a0b20f4ea85b449cafb51c99d6d
-Web TGZ: 4c18af75c88d40fd898abc9494667069f5c963dc00c1c5cc1489e298017ebbbd
+Qt ZIP:  06067974be78a7d50399eaef0205bdacec770066c6d7b7b72176eda341253984
+Web TGZ: c6f56b0ef8704e15ca91cba843dc3486431b05f6bb5aa8f6d2c78921ce80e826
 ```
 
 Qt 构建会先运行单元测试。发布前还应使用下面的环境变量执行冻结版冒烟：
@@ -55,6 +60,16 @@ $env:YANHAI_QT_SMOKE_TEST="1"
 $env:QT_QPA_PLATFORM="offscreen"
 Start-Process release/qt-dist/YanhaiTrace/YanhaiTrace.exe -Wait
 ```
+
+## 日常增量更新
+
+已有站点优先使用 `scripts/update_agentdemo_remote.sh`。它会校验 Web/Qt 哈希，
+创建新版本目录，备份当前 service、环境文件和下载页，切换 `current` 后等待健康
+端点就绪；若约 15 秒内仍未就绪，则恢复旧软链接和服务配置。服务器 Key 只通过
+权限为 `0700` 的暂存目录传入，安装为 `root:yanhai-agent 0640` 后删除暂存副本。
+
+发布完成后保留上一版本目录和 `/var/backups/yanhai-agent-demo/<时间>/`，不要在
+用户尚未验收时清理。
 
 ## 首次上线步骤
 
@@ -66,8 +81,8 @@ Start-Process release/qt-dist/YanhaiTrace/YanhaiTrace.exe -Wait
 
 ```bash
 cd /mnt/d/project/IndependentProjects/Multi-Agent-Scholarly-Trace-demo
-scp release/yanhai-web-0.1.0.tar.gz TencentCloud:/tmp/
-scp release/YanhaiTrace-Windows-x64-0.1.0.zip TencentCloud:/tmp/
+scp release/yanhai-web-0.2.0.tar.gz TencentCloud:/tmp/
+scp release/YanhaiTrace-Windows-x64-0.2.0.zip TencentCloud:/tmp/
 scp -r deploy TencentCloud:/tmp/yanhai-deploy
 ```
 
@@ -79,11 +94,11 @@ scp -r deploy TencentCloud:/tmp/yanhai-deploy
 id yanhai-agent >/dev/null 2>&1 ||
   useradd --system --home /nonexistent --shell /usr/sbin/nologin yanhai-agent
 
-install -d -o root -g root /opt/yanhai-agent-demo/releases/0.1.0
-tar -xzf /tmp/yanhai-web-0.1.0.tar.gz \
-  -C /opt/yanhai-agent-demo/releases/0.1.0
-chown -R root:root /opt/yanhai-agent-demo/releases/0.1.0
-ln -sfn /opt/yanhai-agent-demo/releases/0.1.0 /opt/yanhai-agent-demo/current
+install -d -o root -g root /opt/yanhai-agent-demo/releases/<release-id>
+tar -xzf /tmp/yanhai-web-0.2.0.tar.gz \
+  -C /opt/yanhai-agent-demo/releases/<release-id>
+chown -R root:root /opt/yanhai-agent-demo/releases/<release-id>
+ln -sfn /opt/yanhai-agent-demo/releases/<release-id> /opt/yanhai-agent-demo/current
 
 install -m 0644 /tmp/yanhai-deploy/systemd/yanhai-agent-demo.service \
   /etc/systemd/system/yanhai-agent-demo.service
@@ -107,14 +122,14 @@ install -m 0644 /tmp/yanhai-deploy/install/index.html \
   /var/www/mysite/AgentDemo/install/index.html
 install -m 0644 /tmp/yanhai-deploy/install/styles.css \
   /var/www/mysite/AgentDemo/install/styles.css
-install -m 0644 /tmp/YanhaiTrace-Windows-x64-0.1.0.zip \
-  /var/www/mysite/AgentDemo/install/YanhaiTrace-Windows-x64-0.1.0.zip
+install -m 0644 /tmp/YanhaiTrace-Windows-x64-0.2.0.zip \
+  /var/www/mysite/AgentDemo/install/YanhaiTrace-Windows-x64-0.2.0.zip
 ```
 
 上传前后的 SHA-256 必须相同：
 
 ```text
-ac0f4b453c83afba531f4e84aaaf00b4cddd6a0b20f4ea85b449cafb51c99d6d
+06067974be78a7d50399eaef0205bdacec770066c6d7b7b72176eda341253984
 ```
 
 ### 4. 增量接入 Nginx
@@ -152,7 +167,7 @@ curl --fail --head https://snowsong.top/AgentDemo/
 curl --fail --head https://snowsong.top/AgentDemo/start/
 curl --fail --head https://snowsong.top/AgentDemo/install/
 curl --fail --head \
-  https://snowsong.top/AgentDemo/install/YanhaiTrace-Windows-x64-0.1.0.zip
+  https://snowsong.top/AgentDemo/install/YanhaiTrace-Windows-x64-0.2.0.zip
 journalctl -u yanhai-agent-demo --since "10 minutes ago" --no-pager
 ```
 
@@ -173,7 +188,11 @@ journalctl -u yanhai-agent-demo --since "10 minutes ago" --no-pager
 - 后端日志只记录方法、路径和状态，不记录请求体；
 - Nginx 默认 access log 不记录请求体，API 位置额外返回 `no-store`；
 - 每个公网 IP 的 API 基础速率为 30 次/分钟，突发 10 次；
-- 当前是公开验证版，不提供账户系统或服务端代管 Key；
+- 当前公开验证版提供账号、版本化画像和服务器托管的免费 DeepSeek；
+- 公开注册通过 `YANHAI_REGISTRATION_OPEN=1` 开启，公网 Cookie 使用
+  `Secure` 且 Path 为 `/AgentDemo/start/`；
+- SQLite 位于 `/var/lib/yanhai-agent-demo`，服务器 Key 仅由
+  `root:yanhai-agent` 以 `0640` 读取；
 - 供应商调用和 arXiv 检索会从腾讯云公网发起，正式开放前应确认各供应商
   对服务器区域、数据处理和用户自带 Key 的条款。
 

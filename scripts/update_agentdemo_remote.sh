@@ -57,6 +57,7 @@ printf '%s  %s\n' "$EXPECTED_QT_HASH" "$QT_ARCHIVE" | sha256sum -c -
   printf 'Server DeepSeek key file is empty.\n' >&2
   exit 1
 }
+chmod 0600 "$KEY_FILE"
 [[ ! -e "$RELEASE_DIR" ]] || {
   printf 'Release already exists: %s\n' "$RELEASE_DIR" >&2
   exit 1
@@ -93,10 +94,19 @@ mv -f "$env_tmp" "$ENV_FILE"
 
 ln -sfn "$RELEASE_DIR" "$CURRENT_LINK"
 systemctl daemon-reload
-if ! systemctl restart yanhai-agent-demo ||
-  ! systemctl is-active --quiet yanhai-agent-demo ||
-  ! curl --fail --silent --show-error http://127.0.0.1:8765/api/health \
-    > "$backup_dir/new-health.json"; then
+service_ready=0
+if systemctl restart yanhai-agent-demo; then
+  for _attempt in $(seq 1 30); do
+    if systemctl is-active --quiet yanhai-agent-demo &&
+      curl --fail --silent http://127.0.0.1:8765/api/health \
+        > "$backup_dir/new-health.json"; then
+      service_ready=1
+      break
+    fi
+    sleep 0.5
+  done
+fi
+if [[ "$service_ready" -ne 1 ]]; then
   printf 'New service failed; restoring previous release.\n' >&2
   if [[ -n "$old_release" ]]; then
     ln -sfn "$old_release" "$CURRENT_LINK"
