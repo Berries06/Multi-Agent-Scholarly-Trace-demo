@@ -10,6 +10,7 @@ Group=yanhai-agent
 WorkingDirectory=/opt/yanhai-agent-demo/current
 Environment=PYTHONPATH=/opt/yanhai-agent-demo/current/src
 Environment=YANHAI_PROJECT_ROOT=/opt/yanhai-agent-demo/current
+Environment=YANHAI_DATA_DIR=/var/lib/yanhai-agent-demo
 Environment=PYTHONDONTWRITEBYTECODE=1
 Environment=PYTHONUNBUFFERED=1
 EnvironmentFile=-/etc/yanhai-agent-demo.env
@@ -22,11 +23,15 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
+StateDirectory=yanhai-agent-demo
+StateDirectoryMode=0750
+ReadWritePaths=/var/lib/yanhai-agent-demo
 ProtectKernelTunables=true
 ProtectKernelModules=true
 ProtectControlGroups=true
 RestrictSUIDSGID=true
 LockPersonality=true
+UMask=0027
 MemoryMax=512M
 TasksMax=64
 
