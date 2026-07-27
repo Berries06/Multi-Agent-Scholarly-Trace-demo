@@ -117,16 +117,30 @@ class OrchestratorTests(unittest.TestCase):
         )
         self.assertGreater(current, previous)
         self.assertEqual(92.0, updated["quality_assessment"]["scores"]["user_feedback"])
-    def test_graph_contains_evidence_nodes_and_edges(self) -> None:
+    def test_graph_is_concept_first_and_keeps_paper_provenance_on_edges(self) -> None:
         graph = self.orchestrator.run("graduate_cross_domain")["graph"]
-        self.assertTrue(any(node["kind"] == "paper" for node in graph["nodes"]))
-        self.assertTrue(any(edge["label"] == "evidence" for edge in graph["edges"]))
+        self.assertEqual("paper_grounded_concept_graph", graph["graph_type"])
+        self.assertEqual("zh-CN", graph["language"])
+        self.assertTrue(graph["nodes"])
+        self.assertTrue(all(node["kind"] == "concept" for node in graph["nodes"]))
+        self.assertTrue(all(edge["evidence_ids"] for edge in graph["edges"]))
+        self.assertTrue(all(edge["evidence_titles"] for edge in graph["edges"]))
 
     def test_engineering_thresholds_pass(self) -> None:
         report = evaluate_orchestrator(self.orchestrator)
         self.assertEqual(9, report["case_count"])
         self.assertTrue(all(report["thresholds"].values()))
 
+    def test_dashboard_metrics_are_computed_not_hardcoded(self) -> None:
+        result = self.orchestrator.run("undergraduate_ai")
+        metrics = result["metrics"]
+        self.assertGreater(metrics["hallucination_proxy_rate"], 0)
+        self.assertLess(metrics["hallucination_proxy_rate"], 100)
+        self.assertGreater(metrics["adaptation_accuracy"], 0)
+        self.assertLess(metrics["adaptation_accuracy"], 100)
+        self.assertGreater(metrics["knowledge_coverage_rate"], 0)
+        self.assertLess(metrics["knowledge_coverage_rate"], 100)
+        self.assertNotIn("metric_details", metrics)
     def test_explicit_mock_provider_preserves_offline_pipeline(self) -> None:
         result = self.orchestrator.run_with_provider(
             "undergraduate_ai",
@@ -136,6 +150,13 @@ class OrchestratorTests(unittest.TestCase):
         )
         self.assertEqual("offline_mock", result["provider_run"]["mode"])
         self.assertEqual("local_mock", result["provider_run"]["source_mode"])
+        self.assertEqual(
+            len(result["papers"]),
+            result["provider_run"]["source_counts"]["local_knowledge_base"],
+        )
+        self.assertEqual(
+            len(result["papers"]), result["provider_run"]["selected_paper_count"]
+        )
         self.assertEqual(0, result["provider_run"]["usage"]["total_tokens"])
 
 

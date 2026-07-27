@@ -10,7 +10,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from yanhai.knowledge import KnowledgeBase  # noqa: E402
-from yanhai.live_research import LiveResearchService  # noqa: E402
+from yanhai.live_research import (  # noqa: E402
+    LiveResearchService,
+    _deduplicate_criticisms,
+)
 from yanhai.models import LearnerProfile, Paper  # noqa: E402
 from yanhai.providers import LLMResponse, ProviderConfig  # noqa: E402
 
@@ -31,7 +34,7 @@ class StubProvider:
                         "target": "可追溯证据",
                         "evidence_ids": ["live-1", "invented-id"],
                         "confidence": 0.84,
-                        "limitations": ["仅基于摘要。"],
+                        "limitations": ["Only based on the abstract evidence."],
                     }
                 ],
             },
@@ -47,7 +50,7 @@ class StubProvider:
                         "claim_id": "L001",
                         "verdict": "accepted",
                         "score": 0.81,
-                        "criticisms": ["仍需全文复核。"],
+                        "criticisms": ["Evidence should be checked against the full text."],
                     }
                 ],
                 "briefing": {
@@ -142,6 +145,17 @@ class EmptyRetriever:
 
 
 class LiveResearchTests(unittest.TestCase):
+    def test_repeated_criticism_sentences_are_removed(self) -> None:
+        self.assertEqual(
+            ["当前仅有单一来源，需复核全文。"],
+            _deduplicate_criticisms(
+                [
+                    "当前仅有单一来源，需复核全文。当前仅有单一来源，需复核全文。",
+                    "当前仅有单一来源，需复核全文。",
+                ]
+            ),
+        )
+
     def test_live_pipeline_filters_invented_citations_and_never_returns_key(self) -> None:
         config = ProviderConfig.from_payload(
             {
@@ -177,6 +191,8 @@ class LiveResearchTests(unittest.TestCase):
             {"target_difficulty": 3, "blind_spots": ["证据检索"]},
         )
         self.assertEqual("multi_source_live", result["provider_run"]["source_mode"])
+        self.assertEqual({"external": 1}, result["provider_run"]["source_counts"])
+        self.assertEqual(1, result["provider_run"]["selected_paper_count"])
         self.assertEqual(["live-1"], result["claims"][0]["evidence_ids"])
         self.assertEqual(
             ["live-1"],
@@ -189,6 +205,12 @@ class LiveResearchTests(unittest.TestCase):
         self.assertNotIn("never-return-this-key", str(result))
         self.assertFalse(result["provider_run"]["api_key_persisted"])
         self.assertEqual("non_agent_quality_gate", result["quality_assessment"]["kind"])
+        self.assertTrue(
+            all(
+                any("\u4e00" <= char <= "\u9fff" for char in criticism)
+                for criticism in result["claims"][0]["criticisms"]
+            )
+        )
         self.assertEqual(60, result["provider_run"]["usage"]["total_tokens"])
 
     def test_zero_proposals_returns_structured_abstention(self) -> None:

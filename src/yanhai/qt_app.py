@@ -320,9 +320,9 @@ def _format_result(result: dict[str, Any]) -> str:
 
     lines.append("=" * 60)
     lines.append("【评测指标】")
-    lines.append(f"  幻觉代理率：{metrics.get('hallucination_proxy_rate', 0)}%")
-    lines.append(f"  适配准确率：{metrics.get('adaptation_accuracy', 0)}%")
-    lines.append(f"  知识覆盖率：{metrics.get('knowledge_coverage_rate', 0)}%")
+    lines.append(f"  证据风险代理：{metrics.get('hallucination_proxy_rate', 0)}%")
+    lines.append(f"  画像适配度：{metrics.get('adaptation_accuracy', 0)}%")
+    lines.append(f"  画像知识覆盖：{metrics.get('knowledge_coverage_rate', 0)}%")
 
     lines.append("=" * 60)
     lines.append("【生成资源】")

@@ -33,7 +33,7 @@ class DiagnosisTool:
         match_score = max(0, 100 - abs(target_difficulty - profile.expected_difficulty) * 18)
         path = blind_spots[:3] or ["前沿证据综合"]
         path.append("多智能体交叉验证")
-        path.append("研究假设与蓝海发现")
+        path.append("个性化学习与反馈")
         return {
             "readiness_score": average,
             "blind_spots": blind_spots,
@@ -46,7 +46,7 @@ class DiagnosisTool:
                 {"stage": "概念校准", "difficulty": max(1, target_difficulty - 1)},
                 {"stage": "证据追踪", "difficulty": target_difficulty},
                 {"stage": "博弈推理", "difficulty": min(5, target_difficulty + 1)},
-                {"stage": "蓝海挑战", "difficulty": min(5, target_difficulty + 1)},
+                {"stage": "应用反馈", "difficulty": min(5, target_difficulty + 1)},
             ],
             "learning_path": path,
         }
@@ -224,16 +224,17 @@ class ResourceBuilder:
         )
         leading_hypothesis = tournament[0] if tournament else None
         blue_ocean = {
+            "enabled": leading_hypothesis is not None,
             "hypothesis": (
-                leading_hypothesis["hypothesis"]
-                if leading_hypothesis
-                else "将多智能体反证强度编码为动态图谱边权，可能提升跨领域研究空白的筛选质量。"
+                leading_hypothesis["hypothesis"] if leading_hypothesis else ""
             ),
-            "caveat": "该命题是待验证研究假设，不作为已证实事实进入知识库。",
-            "evidence_ids": (
-                leading_hypothesis["evidence_ids"]
+            "caveat": (
+                "该命题是待验证研究假设，不作为已证实事实进入知识库。"
                 if leading_hypothesis
-                else citations[:3]
+                else "当前问题未触发研究假设生成。"
+            ),
+            "evidence_ids": (
+                leading_hypothesis["evidence_ids"] if leading_hypothesis else []
             ),
             "tournament_score": (
                 leading_hypothesis["score"] if leading_hypothesis else None
@@ -637,12 +638,16 @@ class EvidenceGraphAgent:
         papers: list[Paper],
         claims: list[Claim],
         config: SystemConfig,
+        query: str = "",
     ) -> dict[str, Any]:
         discovery: dict[str, Any] = {}
         hypotheses: list[dict[str, Any]] = []
         if config.flags.temporal_analysis:
             discovery = self._discovery.analyse(papers, claims)
-        if config.flags.hypothesis_tournament:
+        hypothesis_terms = ("蓝海", "研究空白", "研究假设", "创新方向", "research gap", "hypothesis")
+        if config.flags.hypothesis_tournament and any(
+            term in query.lower() for term in hypothesis_terms
+        ):
             hypotheses = self._tournament.rank(discovery, claims)
         return {"discovery": discovery, "hypotheses": hypotheses}
 

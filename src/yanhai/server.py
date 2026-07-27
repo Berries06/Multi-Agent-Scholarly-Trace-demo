@@ -186,7 +186,7 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
                     "project": "研海寻踪",
                     "profiles": len(self.orchestrator.profiles),
                     "papers": len(self.orchestrator.kb.papers),
-                    "default_demo_preset": "full",
+                    "default_demo_preset": "legacy",
                     "providers": len(list_providers()),
                     "database": self.repository.study_statistics(),
                 }
@@ -237,7 +237,7 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
             return
         if route == "/api/configs":
             self._send_json(
-                {"presets": list_presets(), "default_demo_preset": "full"}
+                {"presets": list_presets(), "default_demo_preset": "legacy"}
             )
             return
         if route == "/api/profiles":

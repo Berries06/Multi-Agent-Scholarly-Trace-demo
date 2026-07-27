@@ -10,7 +10,7 @@ import threading
 import time
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Protocol
@@ -481,6 +481,7 @@ class RetrievalReport:
     attempted_sources: list[str]
     successful_sources: list[str]
     warnings: list[str]
+    source_counts: dict[str, int] = field(default_factory=dict)
 
 
 class MultiSourceRetriever:
@@ -493,18 +494,26 @@ class MultiSourceRetriever:
         catalog_path: Path,
         adapters: list[SourceAdapter] | None = None,
     ) -> None:
+        configuration_warnings: list[str] = []
         if adapters is None:
-            adapters = [
-                OfficialDocsRetriever(catalog_path),
-                OpenAlexRetriever(),
-                CrossrefRetriever(),
-                ArxivRetriever(),
-            ]
+            adapters = [OfficialDocsRetriever(catalog_path)]
+            openalex_key = os.environ.get("OPENALEX_API_KEY", "").strip()
+            if openalex_key:
+                adapters.append(OpenAlexRetriever(api_key=openalex_key))
+            else:
+                configuration_warnings.append("未配置 OpenAlex Key，已跳过该来源")
+            adapters.extend([CrossrefRetriever(), ArxivRetriever()])
             semantic_key = os.environ.get("SEMANTIC_SCHOLAR_API_KEY", "").strip()
             if semantic_key:
                 adapters.append(SemanticScholarRetriever(semantic_key))
         self.adapters = adapters
-        self.last_report = RetrievalReport([], [], [], [])
+        self.configuration_warnings = configuration_warnings
+        self.last_report = RetrievalReport(
+            papers=[],
+            attempted_sources=[],
+            successful_sources=[],
+            warnings=list(configuration_warnings),
+        )
         self._lock = threading.Lock()
 
     @staticmethod
@@ -553,7 +562,8 @@ class MultiSourceRetriever:
     def search(self, queries: list[str], limit: int = 8) -> list[Paper]:
         attempted = [adapter.source_id for adapter in self.adapters]
         successful: list[str] = []
-        warnings: list[str] = []
+        source_counts = {source_id: 0 for source_id in attempted}
+        warnings: list[str] = list(self.configuration_warnings)
         collected: list[Paper] = []
         with ThreadPoolExecutor(max_workers=min(5, len(self.adapters))) as executor:
             future_by_adapter = {
@@ -567,6 +577,7 @@ class MultiSourceRetriever:
                 except Exception as exc:
                     warnings.append(f"{adapter.source_id} 检索失败：{type(exc).__name__}")
                     continue
+                source_counts[adapter.source_id] = len(results)
                 successful.append(adapter.source_id)
                 collected.extend(results)
 
@@ -599,5 +610,6 @@ class MultiSourceRetriever:
                 attempted_sources=attempted,
                 successful_sources=sorted(successful),
                 warnings=warnings,
+                source_counts=source_counts,
             )
         return papers

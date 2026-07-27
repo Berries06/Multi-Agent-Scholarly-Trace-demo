@@ -103,6 +103,7 @@ class LearnerProfile:
             "knowledge_scores": dict(self.knowledge_scores),
             "preferred_style": self.preferred_style,
             "expected_difficulty": self.expected_difficulty,
+            "required_concepts": list(self.required_concepts),
             "synthetic": self.synthetic,
         }
 

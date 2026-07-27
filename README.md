@@ -76,7 +76,7 @@ DeepSeek、GPT、Claude 与 Kimi 实时路径。实时路径会并行检索开�
 | 实体抽取 | 中英文 schema 词典、字符跨度匹配 | 规则基线 |
 | 关系抽取 | 触发词与同句共现候选 | 规则基线 |
 | 实体融合 | Unicode、大小写、连字符规范化和规范名合并 | 规则基线 |
-| 知识图谱 | 内存 JSON 图、来源边、连通分量社区 | 工程基线 |
+| 知识图谱 | 论文知识证据流：按“方法或概念—作用关系—研究结果”展示，点击查看论文来源与质量意见 | 工程基线 |
 | 多智能体 | 3 个业务 Agent；独立质量准入；可选接入 DeepSeek、GPT、Claude 与 Kimi | 可回归基线 |
 | 评价 | 代理指标、单元测试和证据完整性检查 | 非论文金标准 |
 | 桌面 APP | PyQt6 Windows x64 免安装验证包 | 粗粒度验证版 |
@@ -214,9 +214,9 @@ web/                原生 Web 前端
 - 图存储目前为 JSON；数据规模和融合质量达标后再接 Neo4j。
 - 统一 LLM Provider 接口覆盖 OpenAI Responses、Anthropic Messages 和
   OpenAI-compatible Chat；API Key 只在单次请求的进程内存中使用。
-- 实时检索并行调用官方资料目录、OpenAlex、Crossref 与 arXiv；配置
-  `SEMANTIC_SCHOLAR_API_KEY` 后可加入 Semantic Scholar。单一来源失败不会
-  终止整轮任务，没有可靠来源时系统明确拒答。
+- 实时检索并行调用官方资料目录、Crossref 与 arXiv；配置
+  `OPENALEX_API_KEY` 后启用 OpenAlex，配置 `SEMANTIC_SCHOLAR_API_KEY` 后可加入
+  Semantic Scholar。未配置的鉴权来源会被明确跳过；单一来源失败不会终止整轮任务。
 - 桌面端使用 PyQt6 复用 Python 核心，当前发布的是无签名验证包。
 
 ## （七）使用方法
@@ -302,7 +302,7 @@ Nginx、systemd、验收与回滚流程见 [`deploy/README.md`](deploy/README.md
 | 3 个业务 Agent | 固定应用角色数量；质量门控和内部策略不计入 |
 | 9 条候选命题 | 一次默认运行的关系候选数量，不是 Agent |
 | 14 条候选关系 | 新增规则抽取管线在 8 篇种子文献上的冒烟输出 |
-| 幻觉代理率 0% | 工程规则检查结果，不是专家盲审幻觉率 |
+| 证据风险代理 | 由来源数量、质量置信度和强断言风险计算，不是真实幻觉率 |
 | accepted | 通过当前规则裁决，不等于已经获得人工金标准确认 |
 | 蓝海发现 | 对待验证研究假设进行排序，不是保证发现真实空白 |
 

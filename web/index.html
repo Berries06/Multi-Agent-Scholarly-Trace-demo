@@ -188,7 +188,7 @@
           </details>
 
           <label class="query-label" for="research-query">本轮研究任务</label>
-          <textarea id="research-query" rows="4">多智能体科研推理如何通过证据溯源降低幻觉并发现研究蓝海？</textarea>
+          <textarea id="research-query" rows="4">多智能体科研推理如何通过证据溯源降低幻觉？</textarea>
 
           <label class="query-label preset-label" for="preset-select">运行方案</label>
           <select id="preset-select" aria-describedby="preset-description"></select>
@@ -232,12 +232,34 @@
             <span>启动协同推理</span>
             <span aria-hidden="true">→</span>
           </button>
+<<<<<<< Updated upstream
           <button id="experiment-button" class="secondary-button" type="button" disabled>
             运行 A/B/C/Full 随机对照
           </button>
           <p id="library-status" class="preset-description">
             正在读取本地垂直领域论文切片…
           </p>
+=======
+          <section id="run-progress" class="run-progress" aria-live="polite" hidden>
+            <div class="run-progress-heading">
+              <span id="run-progress-stage">准备启动</span>
+              <strong id="run-progress-percent">0%</strong>
+            </div>
+            <div
+              id="run-progress-track"
+              class="run-progress-track"
+              role="progressbar"
+              aria-label="协同推理完成进度"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+            >
+              <i id="run-progress-bar"></i>
+            </div>
+            <p id="run-progress-note">正在准备本轮任务。</p>
+            <small>阶段进度为流程提示；100%表示服务器已返回完整结果。</small>
+          </section>
+>>>>>>> Stashed changes
 
           <div class="privacy-note">
             <span aria-hidden="true">◇</span>
@@ -260,23 +282,23 @@
           <div id="result-content" class="result-content" hidden>
             <section class="metric-strip" aria-label="核心评测指标">
               <article>
-                <span>幻觉代理率</span>
+                <span>证据风险代理</span>
                 <strong id="metric-hallucination">—</strong>
-                <small>目标 &lt; 5%</small>
+                <small>越低越好 · 非真实幻觉率</small>
               </article>
               <article>
-                <span>画像适配准确率</span>
+                <span>画像适配度</span>
                 <strong id="metric-adaptation">—</strong>
-                <small>目标 ≥ 85%</small>
+                <small>难度、薄弱点与学习目标</small>
               </article>
               <article>
-                <span>知识点覆盖率</span>
+                <span>画像知识覆盖</span>
                 <strong id="metric-coverage">—</strong>
-                <small>目标 ≥ 90%</small>
+                <small>本轮资源对画像知识需求的覆盖</small>
               </article>
               <article class="metric-note">
                 <span>当前口径</span>
-                <p>工程代理指标<br />待专家盲审</p>
+                <p id="metric-scope">工程代理指标<br />待专家盲审</p>
               </article>
             </section>
 
@@ -320,6 +342,7 @@
                 <span id="provider-source-badge" class="quiet-badge"></span>
               </div>
               <div id="provider-run-meta" class="provider-run-meta"></div>
+              <div id="provider-source-counts" class="provider-source-counts" hidden></div>
               <div id="provider-warnings" class="provider-warnings" hidden></div>
               <article id="live-answer-card" class="live-answer-card" hidden>
                 <span>基于本轮来源的研究回答</span>
@@ -358,8 +381,8 @@
                 </article>
               </div>
               <div class="innovation-detail-grid">
-                <div>
-                  <h3>蓝海假设锦标赛</h3>
+                <div id="hypothesis-panel">
+                  <h3>研究假设候选（按需启用）</h3>
                   <ol id="hypothesis-ranking" class="compact-list"></ol>
                 </div>
                 <div>
@@ -384,23 +407,36 @@
               <section class="panel-block graph-block">
                 <div class="block-heading compact">
                   <div>
-                    <span class="section-label">04 · 证据图谱</span>
-                    <h2>命题、来源与置信边</h2>
+                    <span class="section-label">04 · 论文知识证据流</span>
+                    <h2>从论文中看清“什么方法，如何产生什么作用”</h2>
+                    <p class="graph-intro">每条流线代表一项经过质量检查的论文结论；流线越醒目，证据可信度越高。</p>
                   </div>
                   <div class="legend">
-                    <span><i class="legend-paper"></i>文献</span>
-                    <span><i class="legend-concept"></i>概念</span>
-                    <span><i class="legend-outcome"></i>结论</span>
+                    <span><i class="legend-mechanism"></i>方法或概念</span>
+                    <span><i class="legend-flow"></i>论文中的作用关系</span>
+                    <span><i class="legend-outcome"></i>研究结果</span>
                   </div>
                 </div>
-                <div class="graph-scroll">
-                  <svg
-                    id="knowledge-graph"
-                    class="knowledge-graph"
-                    viewBox="0 0 900 430"
-                    role="img"
-                    aria-label="本轮知识图谱"
-                  ></svg>
+                <div class="evidence-flow-shell">
+                  <div class="evidence-flow-map">
+                    <div class="flow-stage-head" aria-hidden="true">
+                      <span>01 · 方法或概念</span>
+                      <span>02 · 作用机制</span>
+                      <span>03 · 研究结果</span>
+                    </div>
+                    <div
+                      id="evidence-flow-list"
+                      class="evidence-flow-list"
+                      role="list"
+                      aria-label="论文知识证据流"
+                    ></div>
+                  </div>
+                  <aside
+                    id="evidence-flow-detail"
+                    class="evidence-flow-detail"
+                    aria-live="polite"
+                    aria-label="所选关系的论文依据"
+                  ></aside>
                 </div>
               </section>
 
@@ -423,7 +459,7 @@
             <section class="panel-block">
               <div class="block-heading">
                 <div>
-                  <span class="section-label">06 · 裁决结果</span>
+                  <span class="section-label">06 · 质量审查结果</span>
                   <h2>高置信关联进入资源，强断言被拦截</h2>
                 </div>
               </div>
@@ -434,7 +470,7 @@
                       <th>候选命题</th>
                       <th>证据</th>
                       <th>批判意见</th>
-                      <th>裁决</th>
+                      <th>质量结论</th>
                     </tr>
                   </thead>
                   <tbody id="claim-table"></tbody>
@@ -455,7 +491,7 @@
                 </div>
               </div>
               <div id="resource-content" class="resource-content"></div>
-              <div class="blue-ocean">
+              <div id="blue-ocean-panel" class="blue-ocean" hidden>
                 <span>待验证蓝海假设</span>
                 <strong id="blue-ocean-hypothesis"></strong>
                 <p id="blue-ocean-caveat"></p>

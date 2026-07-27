@@ -19,7 +19,7 @@ from .quality import QualityGate
 from .storage import LocalPaperLibrary
 
 
-DEFAULT_QUERY = "多智能体科研推理如何通过证据溯源降低幻觉并发现研究蓝海？"
+DEFAULT_QUERY = "多智能体科研推理如何通过证据溯源降低幻觉？"
 
 
 class ScholarlyTraceOrchestrator:
@@ -161,6 +161,7 @@ class ScholarlyTraceOrchestrator:
                 papers,
                 claims,
                 active,
+                query,
             )
         discovery = discovery_output["discovery"]
         hypotheses = discovery_output["hypotheses"]
@@ -218,6 +219,7 @@ class ScholarlyTraceOrchestrator:
                 include_provenance=flags.sentence_provenance,
             )
         metrics = self._metrics(profile, diagnosis, claims, resources)
+        diagnosis["resource_match_score"] = metrics["adaptation_accuracy"]
         quality_assessment = self.quality_gate.evaluate_result(
             quality_assessment,
             profile,
@@ -225,13 +227,14 @@ class ScholarlyTraceOrchestrator:
             claims,
             resources,
             questionnaire,
+            metrics,
         )
         report = {
             "blind_spots": diagnosis["blind_spots"],
             "strengths": diagnosis["strengths"],
             "difficulty_curve": diagnosis["difficulty_curve"],
             "learning_path": diagnosis["learning_path"],
-            "resource_match_score": diagnosis["resource_match_score"],
+            "resource_match_score": metrics["adaptation_accuracy"],
             "feedback_adjustment": difficulty_adjustment,
             "knowledge_state": knowledge_state,
         }
@@ -365,6 +368,8 @@ class ScholarlyTraceOrchestrator:
                 **provider_config.public_dict(),
                 "mode": "offline_mock",
                 "source_mode": "local_mock",
+                "source_counts": {"local_knowledge_base": len(result["papers"])},
+                "selected_paper_count": len(result["papers"]),
                 "calls": [],
                 "usage": {
                     "input_tokens": 0,
@@ -442,6 +447,29 @@ class ScholarlyTraceOrchestrator:
                 "response_count": len(ratings),
                 "scope": "demo_in_memory",
             }
+        hypothesis_terms = (
+            "蓝海",
+            "研究空白",
+            "研究假设",
+            "创新方向",
+            "research gap",
+            "hypothesis",
+        )
+        hypothesis_enabled = bool(
+            result["system_config"]["flags"].get("hypothesis_tournament")
+            and any(term in query.lower() for term in hypothesis_terms)
+        )
+        blue_ocean = result["resources"].setdefault("blue_ocean", {})
+        blue_ocean["enabled"] = hypothesis_enabled
+        if not hypothesis_enabled:
+            blue_ocean.update(
+                {
+                    "hypothesis": "",
+                    "caveat": "当前问题未触发研究假设生成。",
+                    "evidence_ids": [],
+                    "tournament_score": None,
+                }
+            )
         result["agent_trace"] = self._live_trace(
             result["agent_trace"],
             live["provider_run"],
@@ -449,6 +477,27 @@ class ScholarlyTraceOrchestrator:
             len(live["claims"]),
         )
         result["metrics"] = self._live_metrics(result)
+        result["diagnosis"]["resource_match_score"] = result["metrics"]["adaptation_accuracy"]
+        result["report"]["resource_match_score"] = result["metrics"]["adaptation_accuracy"]
+        quality_scores = result["quality_assessment"]["scores"]
+        quality_scores["profile_fit"] = result["metrics"]["adaptation_accuracy"]
+        quality_scores["knowledge_coverage"] = result["metrics"]["knowledge_coverage_rate"]
+        feedback_score = quality_scores.get("user_feedback")
+        if feedback_score is None:
+            quality_scores["overall_quality"] = round(
+                0.5 * quality_scores.get("evidence_grounding", 0.0)
+                + 0.3 * quality_scores["profile_fit"]
+                + 0.2 * quality_scores["knowledge_coverage"],
+                1,
+            )
+        else:
+            quality_scores["overall_quality"] = round(
+                0.35 * quality_scores.get("evidence_grounding", 0.0)
+                + 0.25 * quality_scores["profile_fit"]
+                + 0.20 * quality_scores["knowledge_coverage"]
+                + 0.20 * float(feedback_score),
+                1,
+            )
         result["performance"]["live_llm_ms"] = live["provider_run"]["llm_duration_ms"]
         result["performance"]["live_retrieval_ms"] = live["provider_run"][
             "retrieval_duration_ms"
@@ -517,47 +566,165 @@ class ScholarlyTraceOrchestrator:
         ]
 
     @staticmethod
-    def _live_metrics(result: dict[str, Any]) -> dict[str, Any]:
+    def _evidence_risk_metrics(claims: list[dict[str, Any]]) -> tuple[float, dict[str, Any]]:
+        admitted = [
+            claim for claim in claims if claim.get("status") in {"accepted", "review"}
+        ]
+        if not admitted:
+            return 100.0, {
+                "assessed_claims": 0,
+                "single_source_claims": 0,
+                "review_claims": 0,
+                "unsupported_claims": 0,
+                "formula": "对进入回答或待复核的命题，综合来源数量、置信度、强断言和批判意见估计残余证据风险。",
+            }
+        risk_values: list[float] = []
+        single_source = 0
+        unsupported = 0
+        review_count = 0
+        for claim in admitted:
+            evidence_count = len(claim.get("evidence_ids", []))
+            score = float(claim.get("judge_score", 0.0))
+            relation = str(claim.get("relation", "")).lower()
+            criticism_text = " ".join(claim.get("criticisms", []))
+            if evidence_count == 0:
+                risk = 0.70
+                unsupported += 1
+            elif evidence_count == 1:
+                risk = 0.18
+                single_source += 1
+            else:
+                risk = 0.04
+            if not claim.get("evidence_spans"):
+                risk += 0.08
+            risk += 0.25 * max(0.0, 1.0 - score)
+            if claim.get("status") == "review":
+                risk += 0.20
+                review_count += 1
+            if relation in {"guarantees", "proves", "必然", "保证", "证明"}:
+                risk += 0.20
+            if any(
+                marker in criticism_text
+                for marker in ("缺少", "单一", "绝对", "低于", "反证", "不足", "不确定")
+            ):
+                risk += 0.08
+            risk_values.append(min(1.0, risk))
+        rate = 100 * sum(risk_values) / len(risk_values)
+        return round(rate, 1), {
+            "assessed_claims": len(admitted),
+            "single_source_claims": single_source,
+            "review_claims": review_count,
+            "unsupported_claims": unsupported,
+            "formula": "对进入回答或待复核的命题，综合来源数量、置信度、强断言和批判意见估计残余证据风险。",
+        }
+
+    @staticmethod
+    def _personalization_metrics(
+        profile: dict[str, Any],
+        diagnosis: dict[str, Any],
+        resources: dict[str, Any],
+    ) -> tuple[float, float, dict[str, Any]]:
+        blind_spots = list(diagnosis.get("blind_spots", []))
+        required = list(profile.get("required_concepts", []))
+        expected_concepts = list(dict.fromkeys(required + blind_spots))
+        resource_text = json.dumps(resources, ensure_ascii=False).lower()
+        covered = [
+            concept
+            for concept in expected_concepts
+            if str(concept).lower() in resource_text
+        ]
+        coverage = (
+            100 * len(covered) / len(expected_concepts)
+            if expected_concepts
+            else 100.0
+        )
+        expected_difficulty = int(profile.get("expected_difficulty", 3))
+        target_difficulty = int(diagnosis.get("target_difficulty", 3))
+        difficulty_fit = max(
+            0.0,
+            100.0 - 25.0 * abs(target_difficulty - expected_difficulty),
+        )
+        covered_blind_spots = [
+            concept for concept in blind_spots if str(concept).lower() in resource_text
+        ]
+        blind_spot_fit = (
+            100 * len(covered_blind_spots) / len(blind_spots)
+            if blind_spots
+            else 100.0
+        )
+        interests = list(profile.get("interests", []))
+        goal = str(profile.get("goal", "")).strip().lower()
+        if goal and goal in resource_text:
+            goal_alignment = 100.0
+        elif interests:
+            goal_alignment = 100 * sum(
+                str(item).lower() in resource_text for item in interests
+            ) / len(interests)
+        else:
+            goal_alignment = 100.0
+        adaptation = (
+            0.45 * difficulty_fit
+            + 0.30 * blind_spot_fit
+            + 0.25 * goal_alignment
+        )
+        details = {
+            "difficulty_fit": round(difficulty_fit, 1),
+            "blind_spot_fit": round(blind_spot_fit, 1),
+            "goal_alignment": round(goal_alignment, 1),
+            "covered_concepts": covered,
+            "expected_concepts": expected_concepts,
+            "coverage_numerator": len(covered),
+            "coverage_denominator": len(expected_concepts),
+            "adaptation_formula": "难度匹配 45% + 薄弱点响应 30% + 学习目标相关性 25%。",
+            "coverage_formula": "本轮资源实际覆盖的概念 / 画像必需概念与薄弱概念的并集。",
+        }
+        return round(adaptation, 1), round(coverage, 1), details
+
+    @classmethod
+    def _live_metrics(cls, result: dict[str, Any]) -> dict[str, Any]:
         claims = result["claims"]
-        accepted = [claim for claim in claims if claim["status"] == "accepted"]
+        risk_rate, _ = cls._evidence_risk_metrics(claims)
+        adaptation, coverage, _ = cls._personalization_metrics(
+            result["profile"],
+            result["diagnosis"],
+            result["resources"],
+        )
         supported = [
             claim
             for claim in claims
             if claim["evidence_ids"] and claim["evidence_spans"]
         ]
-        unsupported_accepted = [
-            claim for claim in accepted if not claim["evidence_ids"]
-        ]
-        hallucination_proxy = (
-            100 * len(unsupported_accepted) / len(accepted) if accepted else 0.0
-        )
         evidence_coverage = 100 * len(supported) / len(claims) if claims else 0.0
         baseline = dict(result["metrics"])
         baseline.update(
             {
-                "hallucination_proxy_rate": round(hallucination_proxy, 1),
-                "accepted_claims": len(accepted),
-                "review_claims": sum(
-                    claim["status"] == "review" for claim in claims
+                "hallucination_proxy_rate": risk_rate,
+                "adaptation_accuracy": adaptation,
+                "knowledge_coverage_rate": coverage,
+                "accepted_claims": sum(
+                    claim["status"] == "accepted" for claim in claims
                 ),
+                "review_claims": sum(claim["status"] == "review" for claim in claims),
                 "rejected_claims": sum(
                     claim["status"] == "rejected" for claim in claims
                 ),
-                "abstained_claims": 0,
+                "abstained_claims": sum(
+                    claim["status"] == "abstained" for claim in claims
+                ),
                 "evidence_id_coverage": round(evidence_coverage, 1),
                 "sentence_provenance_coverage": round(evidence_coverage, 1),
                 "metric_scope": (
-                    "实时召回摘要的工程证据约束指标；不等同于专家核验后的事实准确率。"
+                    "实时摘要上的工程风险与匹配指标；证据风险不是人工核验后的真实幻觉率。"
                 ),
             }
         )
         return baseline
-
     @staticmethod
     def _live_innovations(result: dict[str, Any]) -> dict[str, Any]:
         papers = result["papers"]
         claims = result["claims"]
         blue_ocean = result["resources"]["blue_ocean"]
+        hypothesis_enabled = bool(blue_ocean.get("enabled"))
         return {
             "knowledge_state": result["report"].get("knowledge_state", {}),
             "discovery": {
@@ -579,27 +746,35 @@ class ScholarlyTraceOrchestrator:
                     for claim in claims
                     if claim["status"] == "review"
                 ],
-                "research_gaps": [
-                    {
-                        "topic": blue_ocean["hypothesis"],
-                        "gap_type": "llm_hypothesis_not_fact",
-                        "priority": None,
-                        "evidence_ids": blue_ocean["evidence_ids"],
-                    }
-                ],
+                "research_gaps": (
+                    [
+                        {
+                            "topic": blue_ocean["hypothesis"],
+                            "gap_type": "llm_hypothesis_not_fact",
+                            "priority": None,
+                            "evidence_ids": blue_ocean["evidence_ids"],
+                        }
+                    ]
+                    if hypothesis_enabled
+                    else []
+                ),
                 "method": "LLM 基于实时召回摘要提出，确定性代码验证来源 ID。",
             },
-            "hypotheses": [
-                {
-                    "candidate_id": "LH01",
-                    "hypothesis": blue_ocean["hypothesis"],
-                    "score": None,
-                    "evidence_ids": blue_ocean["evidence_ids"],
-                    "status": "hypothesis_not_fact",
-                    "rank": 1,
-                    "pairwise_wins": 0,
-                }
-            ],
+            "hypotheses": (
+                [
+                    {
+                        "candidate_id": "LH01",
+                        "hypothesis": blue_ocean["hypothesis"],
+                        "score": None,
+                        "evidence_ids": blue_ocean["evidence_ids"],
+                        "status": "hypothesis_not_fact",
+                        "rank": 1,
+                        "pairwise_wins": 0,
+                    }
+                ]
+                if hypothesis_enabled
+                else []
+            ),
             "falsification": {
                 "rounds": len(claims),
                 "failed": sum(
@@ -621,28 +796,14 @@ class ScholarlyTraceOrchestrator:
         claims: list[Claim],
         resources: dict[str, Any],
     ) -> dict[str, Any]:
+        claim_dicts = [claim.to_dict() for claim in claims]
+        risk_rate, _ = self._evidence_risk_metrics(claim_dicts)
+        adaptation, coverage, _ = self._personalization_metrics(
+            profile.public_dict(),
+            diagnosis,
+            resources,
+        )
         accepted = [claim for claim in claims if claim.status == "accepted"]
-        unsupported = [claim for claim in accepted if not claim.evidence_ids]
-        hallucination_proxy = (
-            100 * len(unsupported) / len(accepted) if accepted else 100.0
-        )
-        adaptation_accuracy = max(
-            0,
-            100
-            - 20
-            * abs(
-                diagnosis["target_difficulty"] - profile.expected_difficulty
-            ),
-        )
-        covered_text = " ".join(resources["covered_concepts"]).lower()
-        covered_count = sum(
-            concept.lower() in covered_text for concept in profile.required_concepts
-        )
-        coverage_rate = (
-            100 * covered_count / len(profile.required_concepts)
-            if profile.required_concepts
-            else 100.0
-        )
         valid_evidence_claims = [
             claim
             for claim in claims
@@ -650,7 +811,7 @@ class ScholarlyTraceOrchestrator:
             and all(paper_id in self.kb.paper_by_id for paper_id in claim.evidence_ids)
         ]
         evidence_coverage = (
-            100 * len(valid_evidence_claims) / len(claims) if claims else 100.0
+            100 * len(valid_evidence_claims) / len(claims) if claims else 0.0
         )
         provenance_claims = [
             claim for claim in claims if claim.evidence_ids and claim.evidence_spans
@@ -661,21 +822,17 @@ class ScholarlyTraceOrchestrator:
             else 0.0
         )
         return {
-            "hallucination_proxy_rate": round(hallucination_proxy, 1),
-            "adaptation_accuracy": round(adaptation_accuracy, 1),
-            "knowledge_coverage_rate": round(coverage_rate, 1),
+            "hallucination_proxy_rate": risk_rate,
+            "adaptation_accuracy": adaptation,
+            "knowledge_coverage_rate": coverage,
             "accepted_claims": len(accepted),
             "review_claims": sum(claim.status == "review" for claim in claims),
-            "rejected_claims": sum(
-                claim.status == "rejected" for claim in claims
-            ),
-            "abstained_claims": sum(
-                claim.status == "abstained" for claim in claims
-            ),
+            "rejected_claims": sum(claim.status == "rejected" for claim in claims),
+            "abstained_claims": sum(claim.status == "abstained" for claim in claims),
             "evidence_id_coverage": round(evidence_coverage, 1),
             "sentence_provenance_coverage": round(provenance_coverage, 1),
             "metric_scope": (
-                "离线工程代理指标；正式论文结论仍需独立金标准、领域专家盲审"
-                "和统计显著性检验。"
+                "离线工程风险与匹配指标；证据风险不是人工核验后的真实幻觉率，"
+                "正式结论仍需独立金标准和专家盲审。"
             ),
         }

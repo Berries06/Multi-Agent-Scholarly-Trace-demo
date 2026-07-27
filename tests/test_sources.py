@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import os
 import sys
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 
@@ -95,6 +97,19 @@ class SourceAdapterTests(unittest.TestCase):
         self.assertEqual("10.1/test", result.external_ids["doi"])
         self.assertEqual("gold", result.license)
 
+    def test_openalex_is_skipped_with_clear_warning_when_key_is_missing(self) -> None:
+        with patch.dict(os.environ, {"OPENALEX_API_KEY": ""}, clear=False):
+            retriever = MultiSourceRetriever(
+                PROJECT_ROOT / "data" / "knowledge" / "official_sources.json"
+            )
+        self.assertNotIn(
+            "openalex",
+            [adapter.source_id for adapter in retriever.adapters],
+        )
+        self.assertIn(
+            "未配置 OpenAlex Key，已跳过该来源",
+            retriever.last_report.warnings,
+        )
     def test_crossref_normalises_doi_and_markup(self) -> None:
         def getter(url: str, headers: dict[str, str], timeout: float) -> dict:
             return {
@@ -142,6 +157,10 @@ class SourceAdapterTests(unittest.TestCase):
         self.assertEqual(
             ["official_docs", "openalex"],
             retriever.last_report.successful_sources,
+        )
+        self.assertEqual(
+            {"timed_out": 0, "openalex": 1, "official_docs": 1},
+            retriever.last_report.source_counts,
         )
 
     def test_multi_source_prioritises_official_documents(self) -> None:

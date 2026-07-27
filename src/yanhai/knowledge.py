@@ -219,23 +219,34 @@ class KnowledgeBase:
         claims: list[dict[str, Any]],
         include_provenance: bool = False,
     ) -> dict[str, Any]:
-        nodes: dict[str, dict[str, str]] = {}
+        """Build a concept-first graph; papers remain provenance on relation edges."""
+        nodes: dict[str, dict[str, Any]] = {}
         edges: list[dict[str, Any]] = []
+
+        def add_concept(label: str, role: str) -> str:
+            node_id = f"concept:{label}"
+            existing = nodes.get(node_id)
+            if existing is None:
+                nodes[node_id] = {
+                    "id": node_id,
+                    "label": label,
+                    "kind": "concept",
+                    "role": role,
+                }
+            elif existing.get("role") != role:
+                existing["role"] = "both"
+            return node_id
+
         for claim in claims:
             if claim["status"] in {"rejected", "abstained"}:
                 continue
-            source_id = f"concept:{claim['source']}"
-            target_id = f"concept:{claim['target']}"
-            nodes[source_id] = {
-                "id": source_id,
-                "label": claim["source"],
-                "kind": "concept",
-            }
-            nodes[target_id] = {
-                "id": target_id,
-                "label": claim["target"],
-                "kind": "outcome",
-            }
+            source_id = add_concept(claim["source"], "mechanism")
+            target_id = add_concept(claim["target"], "outcome")
+            evidence_titles = [
+                self.paper_by_id[paper_id].title
+                for paper_id in claim["evidence_ids"]
+                if paper_id in self.paper_by_id
+            ]
             edges.append(
                 {
                     "source": source_id,
@@ -244,61 +255,20 @@ class KnowledgeBase:
                     "status": claim["status"],
                     "confidence": claim["judge_score"],
                     "evidence_ids": claim["evidence_ids"],
+                    "evidence_titles": evidence_titles,
+                    "evidence_spans": (
+                        claim.get("evidence_spans", []) if include_provenance else []
+                    ),
+                    "claim_id": claim["claim_id"],
+                    "criticisms": claim.get("criticisms", []),
                 }
             )
-            for paper_id in claim["evidence_ids"]:
-                paper = self.paper_by_id.get(paper_id)
-                if paper is None:
-                    continue
-                nodes[paper_id] = {
-                    "id": paper_id,
-                    "label": paper.title,
-                    "kind": "paper",
-                }
-                edges.append(
-                    {
-                        "source": paper_id,
-                        "target": source_id,
-                        "label": "evidence",
-                        "status": "accepted",
-                        "confidence": 1.0,
-                        "evidence_ids": [paper_id],
-                    }
-                )
-            if include_provenance:
-                for span in claim.get("evidence_spans", []):
-                    span_id = f"span:{span['sentence_id']}"
-                    nodes[span_id] = {
-                        "id": span_id,
-                        "label": span["text"],
-                        "kind": "evidence_span",
-                    }
-                    edges.append(
-                        {
-                            "source": span["paper_id"],
-                            "target": span_id,
-                            "label": "contains",
-                            "status": "accepted",
-                            "confidence": 1.0,
-                            "evidence_ids": [span["paper_id"]],
-                        }
-                    )
-                    edges.append(
-                        {
-                            "source": span_id,
-                            "target": source_id,
-                            "label": span["stance"],
-                            "status": (
-                                "review"
-                                if span["stance"] == "contradict"
-                                else claim["status"]
-                            ),
-                            "confidence": claim["judge_score"],
-                            "evidence_ids": [span["paper_id"]],
-                        }
-                    )
-        return {"nodes": list(nodes.values()), "edges": edges}
-
+        return {
+            "nodes": list(nodes.values()),
+            "edges": edges,
+            "graph_type": "paper_grounded_concept_graph",
+            "language": "zh-CN",
+        }
     def extracted_paper_graph(self) -> dict[str, Any]:
         """Build the evidence-first graph produced from paper text, not curated triples."""
         extractor = SchemaGuidedExtractor.from_path(self.root / "extraction_schema.json")

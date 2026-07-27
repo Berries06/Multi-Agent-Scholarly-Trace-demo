@@ -337,17 +337,14 @@ async function testProvider() {
 }
 
 function renderMetrics(result) {
+  const metrics = result.metrics || {};
   $("#metric-hallucination").textContent = percent(
-    result.metrics.hallucination_proxy_rate,
+    metrics.hallucination_proxy_rate,
   );
-  $("#metric-adaptation").textContent = percent(
-    result.metrics.adaptation_accuracy,
-  );
-  $("#metric-coverage").textContent = percent(
-    result.metrics.knowledge_coverage_rate,
-  );
+  $("#metric-adaptation").textContent = percent(metrics.adaptation_accuracy);
+  $("#metric-coverage").textContent = percent(metrics.knowledge_coverage_rate);
+  $("#metric-scope").textContent = metrics.metric_scope || "工程代理指标，待专家盲审。";
 }
-
 function renderQuality(result) {
   const assessment = result.quality_assessment || {};
   const scores = assessment.scores || {};
@@ -376,9 +373,10 @@ function renderInnovations(result) {
   $("#debate-summary").textContent = innovations.debate_view_count
     ? `${innovations.debate_view_count} 次`
     : "未启用";
-  $("#gap-summary").textContent = innovations.discovery?.research_gaps
-    ? `${innovations.discovery.research_gaps.length} 个`
-    : "未启用";
+  const researchGaps = innovations.discovery?.research_gaps || [];
+  $("#gap-summary").textContent = researchGaps.length
+    ? `${researchGaps.length} 个`
+    : "按需关闭";
   $("#probe-summary").textContent =
     result.provider_run?.mode === "live_llm"
       ? `${Number(result.provider_run.llm_duration_ms).toFixed(0)} ms`
@@ -387,17 +385,17 @@ function renderInnovations(result) {
       : `${Number(result.performance.total_ms).toFixed(2)} ms`;
 
   const hypotheses = innovations.hypotheses || [];
-  $("#hypothesis-ranking").innerHTML = hypotheses.length
-    ? hypotheses
-        .map(
-          (item) => {
-            const score =
-              item.score == null ? "待验证" : `${Math.round(item.score * 100)}分`;
-            return `<li><b>#${item.rank} · ${score}</b>${escapeHtml(item.hypothesis)}</li>`;
-          },
-        )
-        .join("")
-    : "<li>当前方案未启用假设锦标赛。</li>";
+  const hypothesisPanel = $("#hypothesis-panel");
+  hypothesisPanel.hidden = hypotheses.length === 0;
+  $("#hypothesis-ranking").innerHTML = hypotheses
+    .map(
+      (item) => {
+        const score =
+          item.score == null ? "待验证" : `${Math.round(item.score * 100)}分`;
+        return `<li><b>#${item.rank} · ${score}</b>${escapeHtml(item.hypothesis)}</li>`;
+      },
+    )
+    .join("");
 
   const stages = [...(result.performance?.stages || [])]
     .sort((a, b) => b.duration_ms - a.duration_ms)
@@ -443,6 +441,42 @@ function renderProviderRun(result) {
     .map((item) => `<span>${escapeHtml(item)}</span>`)
     .join("");
 
+  const sourceNames = {
+    official_docs: "官方资料",
+    openalex: "OpenAlex",
+    crossref: "Crossref",
+    arxiv: "arXiv",
+    semantic_scholar: "Semantic Scholar",
+    local_knowledge_base: "本地知识库",
+    external: "外部检索源",
+    multi_source: "多源检索",
+  };
+  const sourceCounts = run.source_counts || {};
+  const sourceEntries = Object.entries(sourceCounts);
+  const sourceCountBox = $("#provider-source-counts");
+  sourceCountBox.hidden = sourceEntries.length === 0;
+  sourceCountBox.innerHTML = sourceEntries.length
+    ? `
+      <div class="source-count-heading">
+        <span>各来源初步返回</span>
+        <small>去重筛选后入选 <b>${Number(run.selected_paper_count ?? result.papers?.length ?? 0)}</b> 篇</small>
+      </div>
+      <div class="source-count-list">
+        ${sourceEntries
+          .map(([source, count]) => {
+            const numericCount = Number(count || 0);
+            return `
+              <span class="source-count-item ${numericCount === 0 ? "empty" : ""}">
+                ${escapeHtml(sourceNames[source] || source)}
+                <b>${numericCount}</b> 篇
+              </span>
+            `;
+          })
+          .join("")}
+      </div>
+    `
+    : "";
+
   const warnings = run.warnings || [];
   const warningBox = $("#provider-warnings");
   warningBox.hidden = warnings.length === 0;
@@ -476,77 +510,167 @@ function truncate(text, length = 18) {
   return text.length > length ? `${text.slice(0, length)}…` : text;
 }
 
-function renderGraph(graph) {
-  const svg = $("#knowledge-graph");
-  const groups = {
-    paper: graph.nodes.filter((node) => node.kind === "paper"),
-    evidence_span: graph.nodes.filter((node) => node.kind === "evidence_span"),
-    concept: graph.nodes.filter((node) => node.kind === "concept"),
-    outcome: graph.nodes.filter((node) => node.kind === "outcome"),
+function graphRelationLabel(value) {
+  const labels = {
+    evidence: "文献支持",
+    contains: "包含证据句",
+    support: "支持",
+    contradict: "反驳",
+    supports: "支持",
+    requires: "需要",
+    guides: "引导",
+    guarantees: "保证",
+    improves: "提升",
+    enables: "促进",
+    reduces: "降低",
+    challenges: "质疑",
+    extends: "扩展",
   };
-  const positions = new Map();
-  const rowConfig = {
-    paper: { y: 70, start: 65, end: 835 },
-    evidence_span: { y: 150, start: 65, end: 835 },
-    concept: { y: 225, start: 90, end: 810 },
-    outcome: { y: 365, start: 90, end: 810 },
-  };
-  Object.entries(groups).forEach(([kind, nodes]) => {
-    const config = rowConfig[kind];
-    nodes.forEach((node, index) => {
-      const span = nodes.length > 1 ? (config.end - config.start) / (nodes.length - 1) : 0;
-      positions.set(node.id, {
-        x: nodes.length === 1 ? 450 : config.start + span * index,
-        y: config.y,
-      });
-    });
-  });
-
-  const edges = graph.edges
-    .filter((edge) => positions.has(edge.source) && positions.has(edge.target))
-    .map((edge) => {
-      const source = positions.get(edge.source);
-      const target = positions.get(edge.target);
-      return `
-        <g>
-          <line
-            class="graph-edge ${edge.label === "evidence" ? "evidence" : ""}"
-            x1="${source.x}" y1="${source.y}" x2="${target.x}" y2="${target.y}"
-          />
-          ${
-            edge.label !== "evidence"
-              ? `<text class="graph-label" x="${(source.x + target.x) / 2}" y="${(source.y + target.y) / 2 - 5}">${escapeHtml(edge.label)}</text>`
-              : ""
-          }
-        </g>
-      `;
-    })
-    .join("");
-
-  const colors = {
-    paper: "#3d6c8f",
-    evidence_span: "#7f8f67",
-    concept: "#087f78",
-    outcome: "#d79232",
-  };
-  const nodes = graph.nodes
-    .filter((node) => positions.has(node.id))
-    .map((node) => {
-      const position = positions.get(node.id);
-      const radius = node.kind === "paper" || node.kind === "evidence_span" ? 9 : 15;
-      return `
-        <g class="graph-node">
-          <circle cx="${position.x}" cy="${position.y}" r="${radius}" fill="${colors[node.kind]}" />
-          <text x="${position.x}" y="${position.y + 31}">
-            ${escapeHtml(truncate(node.label, ["paper", "evidence_span"].includes(node.kind) ? 15 : 18))}
-          </text>
-        </g>
-      `;
-    })
-    .join("");
-  svg.innerHTML = `${edges}${nodes}`;
+  const raw = String(value || "关联");
+  return labels[raw.toLowerCase()] || (/^[A-Za-z]/.test(raw) ? "关联" : raw);
 }
 
+function graphEvidenceText(span) {
+  if (typeof span === "string") return span.trim();
+  if (!span || typeof span !== "object") return "";
+  return String(span.text || span.sentence || span.quote || span.span || "").trim();
+}
+
+function uniqueCriticismSentences(values) {
+  const seen = new Set();
+  const sentences = [];
+  (values || []).forEach((value) => {
+    const parts = String(value || "").match(/[^。！？!?]+[。！？!?]?/gu) || [];
+    parts.forEach((part) => {
+      const sentence = part.trim();
+      const key = sentence.replace(/\s+/gu, "").replace(/[。！？!?]+$/u, "");
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      sentences.push(/[。！？!?]$/u.test(sentence) ? sentence : `${sentence}。`);
+    });
+  });
+  return sentences;
+}
+
+function renderGraph(graph) {
+  const flowList = $("#evidence-flow-list");
+  const detailPanel = $("#evidence-flow-detail");
+  const allNodes = graph?.nodes || [];
+  const relationEdges = (graph?.edges || [])
+    .filter((edge) => edge.claim_id && !["rejected", "abstained"].includes(edge.status))
+    .sort((left, right) => Number(right.confidence || 0) - Number(left.confidence || 0))
+    .slice(0, 7);
+  const nodeById = new Map(allNodes.map((node) => [node.id, node]));
+
+  if (!relationEdges.length) {
+    flowList.innerHTML = '<p class="flow-empty">本轮没有通过质量准入的中文知识关系。</p>';
+    detailPanel.innerHTML = `
+      <div class="flow-detail-empty">
+        <span>等待证据</span>
+        <strong>暂无可展示的论文结论</strong>
+        <p>只有具备论文来源并通过质量检查的关系，才会进入这里。</p>
+      </div>
+    `;
+    return;
+  }
+
+  flowList.innerHTML = relationEdges
+    .map((edge, index) => {
+      const source = nodeById.get(edge.source)?.label || edge.source;
+      const target = nodeById.get(edge.target)?.label || edge.target;
+      const relation = graphRelationLabel(edge.label);
+      const confidence = Math.round(Number(edge.confidence || 0) * 100);
+      const paperCount = (edge.evidence_titles || edge.evidence_ids || []).length;
+      const status = edge.status === "review" ? "待复核" : "已通过";
+      const flowWidth = 10 + Math.round(Math.max(0, Math.min(1, Number(edge.confidence || 0))) * 16);
+      return `
+        <button
+          class="evidence-flow-lane ${index === 0 ? "active" : ""} ${escapeHtml(edge.status || "accepted")}"
+          data-flow-index="${index}"
+          type="button"
+          role="listitem"
+          aria-pressed="${index === 0 ? "true" : "false"}"
+          aria-label="${escapeHtml(`${source}${relation}${target}，可信度${confidence}%`)}"
+          style="--flow-width: ${flowWidth}px; --flow-opacity: ${(0.52 + confidence / 220).toFixed(2)}"
+        >
+          <span class="flow-concept flow-source">
+            <small>方法 ${String(index + 1).padStart(2, "0")}</small>
+            <strong>${escapeHtml(source)}</strong>
+          </span>
+          <span class="flow-channel">
+            <span class="flow-river" aria-hidden="true"></span>
+            <span class="flow-pulse" aria-hidden="true"></span>
+            <span class="flow-relation">
+              <strong>${escapeHtml(relation)}</strong>
+              <small>${confidence}% · ${paperCount} 篇论文</small>
+            </span>
+          </span>
+          <span class="flow-concept flow-target">
+            <small>${status}</small>
+            <strong>${escapeHtml(target)}</strong>
+          </span>
+        </button>
+      `;
+    })
+    .join("");
+
+  const renderFlowDetail = (index) => {
+    const edge = relationEdges[index];
+    if (!edge) return;
+    const source = nodeById.get(edge.source)?.label || edge.source;
+    const target = nodeById.get(edge.target)?.label || edge.target;
+    const relation = graphRelationLabel(edge.label);
+    const confidence = Math.round(Number(edge.confidence || 0) * 100);
+    const papers = (edge.evidence_titles || edge.evidence_ids || []).slice(0, 3);
+    const evidenceText = (edge.evidence_spans || [])
+      .map(graphEvidenceText)
+      .filter(Boolean)
+      .slice(0, 1);
+    const criticisms = uniqueCriticismSentences(edge.criticisms).slice(0, 2);
+    const status = edge.status === "review" ? "待复核" : "已通过质量准入";
+
+    detailPanel.innerHTML = `
+      <div class="flow-detail-topline">
+        <span>${status}</span>
+        <strong>${confidence}<small>%</small></strong>
+      </div>
+      <p class="flow-detail-caption">当前证据流</p>
+      <h3>
+        <span>${escapeHtml(source)}</span>
+        <em>${escapeHtml(relation)}</em>
+        <span>${escapeHtml(target)}</span>
+      </h3>
+      <div class="flow-confidence" aria-label="可信度 ${confidence}%">
+        <i style="width: ${confidence}%"></i>
+      </div>
+      <section class="flow-detail-section">
+        <h4>论文依据 · ${papers.length} 篇</h4>
+        ${papers.length
+          ? `<ol>${papers.map((paper) => `<li>${escapeHtml(paper)}</li>`).join("")}</ol>`
+          : "<p>暂无可追溯论文。</p>"}
+      </section>
+      ${evidenceText.length
+        ? `<blockquote>${escapeHtml(evidenceText[0])}</blockquote>`
+        : ""}
+      <section class="flow-detail-section flow-quality-note">
+        <h4>质量检查</h4>
+        <p>${escapeHtml(criticisms[0] || "证据与命题结构一致，未发现阻断性问题。")}</p>
+      </section>
+      <p class="flow-detail-tip">点击左侧任意一条证据流，可查看对应论文来源。</p>
+    `;
+
+    $$(".evidence-flow-lane").forEach((lane, laneIndex) => {
+      const active = laneIndex === index;
+      lane.classList.toggle("active", active);
+      lane.setAttribute("aria-pressed", String(active));
+    });
+  };
+
+  $$(".evidence-flow-lane").forEach((lane) => {
+    lane.addEventListener("click", () => renderFlowDetail(Number(lane.dataset.flowIndex)));
+  });
+  renderFlowDetail(0);
+}
 function renderReport(result) {
   $("#report-persona").textContent = result.profile.persona;
   $("#match-score").textContent = `${result.report.resource_match_score}%`;
@@ -584,10 +708,10 @@ function renderClaims(result) {
             .map((id) => `<span class="evidence-chip">${escapeHtml(id)}</span>`)
             .join("")
         : '<span class="evidence-chip">无来源</span>';
-      const criticism = claim.criticisms
+      const criticism = uniqueCriticismSentences(claim.criticisms)
         .slice(0, 2)
         .map(escapeHtml)
-        .join("<br />");
+        .join("<br />") || "未发现阻断性问题。";
       const label = {
         accepted: "通过",
         review: "复核",
@@ -597,7 +721,7 @@ function renderClaims(result) {
       return `
         <tr>
           <td>
-            <span class="claim-main">${escapeHtml(claim.source)} ${escapeHtml(claim.relation)} ${escapeHtml(claim.target)}</span>
+            <span class="claim-main">${escapeHtml(claim.source)} ${escapeHtml(graphRelationLabel(claim.relation))} ${escapeHtml(claim.target)}</span>
           </td>
           <td>${evidence}</td>
           <td>${criticism}</td>
@@ -687,8 +811,10 @@ function renderResource() {
   $$(".tab-button").forEach((button) => {
     button.classList.toggle("active", button.dataset.tab === state.activeTab);
   });
-  $("#blue-ocean-hypothesis").textContent = resources.blue_ocean.hypothesis;
-  $("#blue-ocean-caveat").textContent = resources.blue_ocean.caveat;
+  const blueOcean = resources.blue_ocean || {};
+  $("#blue-ocean-panel").hidden = !blueOcean.enabled;
+  $("#blue-ocean-hypothesis").textContent = blueOcean.hypothesis || "";
+  $("#blue-ocean-caveat").textContent = blueOcean.caveat || "";
 }
 
 function renderQuestionnaire(result) {
@@ -773,6 +899,84 @@ function renderResult(result) {
   }
 }
 
+const RUN_PROGRESS_STAGES = [
+  {
+    percent: 10,
+    label: "准备画像与任务",
+    note: "正在读取学习目标、知识水平和本轮研究问题。",
+  },
+  {
+    percent: 28,
+    label: "检索论文证据",
+    note: "正在检索开放论文来源；离线模式读取本地知识库。",
+  },
+  {
+    percent: 52,
+    label: "解析知识关系",
+    note: "正在提取中文知识概念并组织论文证据流。",
+  },
+  {
+    percent: 74,
+    label: "执行质量检查",
+    note: "正在核对来源、批判意见和知识准入条件。",
+  },
+  {
+    percent: 90,
+    label: "生成个性化资源",
+    note: "正在生成学习路径、导读、实操和测评内容。",
+  },
+];
+
+function setRunProgress(progress, status = "running") {
+  const panel = $("#run-progress");
+  const value = Math.max(0, Math.min(100, Number(progress.percent || 0)));
+  panel.hidden = false;
+  panel.className = `run-progress ${status}`;
+  $("#run-progress-stage").textContent = progress.label;
+  $("#run-progress-percent").textContent = `${Math.round(value)}%`;
+  $("#run-progress-note").textContent = progress.note;
+  $("#run-progress-bar").style.width = `${value}%`;
+  $("#run-progress-track").setAttribute("aria-valuenow", String(Math.round(value)));
+}
+
+function beginRunProgress() {
+  let stageIndex = 0;
+  const stageDelay = state.selectedProvider === "mock" ? 180 : 1600;
+  const minimumDuration = state.selectedProvider === "mock" ? 1050 : 0;
+  setRunProgress(RUN_PROGRESS_STAGES[stageIndex]);
+  const timer = window.setInterval(() => {
+    if (stageIndex >= RUN_PROGRESS_STAGES.length - 1) return;
+    stageIndex += 1;
+    setRunProgress(RUN_PROGRESS_STAGES[stageIndex]);
+  }, stageDelay);
+  return {
+    minimumWait: new Promise((resolve) => window.setTimeout(resolve, minimumDuration)),
+    complete() {
+      window.clearInterval(timer);
+      setRunProgress(
+        {
+          percent: 100,
+          label: "本轮任务已完成",
+          note: "完整结果已返回，可以查看证据流、质量意见和个性化资源。",
+        },
+        "completed",
+      );
+    },
+    fail() {
+      window.clearInterval(timer);
+      const current = Number($("#run-progress-track").getAttribute("aria-valuenow") || 0);
+      setRunProgress(
+        {
+          percent: current,
+          label: "本轮任务未完成",
+          note: "运行过程中出现错误，请检查连接或配置后重试。",
+        },
+        "failed",
+      );
+    },
+  };
+}
+
 async function runFlow() {
   if (!state.user) {
     window.alert("请先注册或登录后使用。");
@@ -780,10 +984,11 @@ async function runFlow() {
   }
   const button = $("#run-button");
   const original = button.innerHTML;
+  const progress = beginRunProgress();
   button.disabled = true;
   button.innerHTML = "<span>智能体协同中…</span><span>•••</span>";
   try {
-    const result = await requestJson("/api/run", {
+    const request = requestJson("/api/run", {
       method: "POST",
       body: JSON.stringify({
         query: $("#research-query").value.trim(),
@@ -791,15 +996,19 @@ async function runFlow() {
         llm: llmPayload(),
       }),
     });
+    const [result] = await Promise.all([request, progress.minimumWait]);
+    progress.complete();
     renderResult(result);
     $("#result-content").scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (error) {
+    progress.fail();
     window.alert(`运行失败：${error.message}`);
   } finally {
     button.disabled = false;
     button.innerHTML = original;
   }
 }
+<<<<<<< Updated upstream
 
 async function runExperiment() {
   if (!state.user) {
@@ -870,6 +1079,8 @@ async function submitSurvey() {
   }
 }
 
+=======
+>>>>>>> Stashed changes
 async function sendFeedback(feedback) {
   if (!state.result) return;
   try {

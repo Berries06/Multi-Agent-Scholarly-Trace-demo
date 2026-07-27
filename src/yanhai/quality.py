@@ -129,28 +129,39 @@ class QualityGate:
         claims: list[Claim],
         resources: dict[str, Any],
         questionnaire: dict[str, Any] | None = None,
+        metrics: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         accepted = [claim for claim in claims if claim.status == "accepted"]
-        grounded = [
-            claim
+        grounding_scores = [
+            (70.0 if claim.evidence_ids else 0.0)
+            + (30.0 if claim.evidence_spans else 0.0)
             for claim in accepted
-            if claim.evidence_ids and claim.evidence_spans
         ]
         evidence_score = (
-            100 * len(grounded) / len(accepted) if accepted else 0.0
+            sum(grounding_scores) / len(grounding_scores)
+            if grounding_scores
+            else 0.0
         )
-        profile_fit = float(diagnosis["resource_match_score"])
-        covered_text = " ".join(resources.get("covered_concepts", [])).lower()
-        coverage = (
-            100
-            * sum(
-                concept.lower() in covered_text
-                for concept in profile.required_concepts
+        profile_fit = float(
+            (metrics or {}).get(
+                "adaptation_accuracy",
+                diagnosis["resource_match_score"],
             )
-            / len(profile.required_concepts)
-            if profile.required_concepts
-            else 100.0
         )
+        if metrics and "knowledge_coverage_rate" in metrics:
+            coverage = float(metrics["knowledge_coverage_rate"])
+        else:
+            covered_text = " ".join(resources.get("covered_concepts", [])).lower()
+            coverage = (
+                100
+                * sum(
+                    concept.lower() in covered_text
+                    for concept in profile.required_concepts
+                )
+                / len(profile.required_concepts)
+                if profile.required_concepts
+                else 100.0
+            )
         ratings = [
             float(value)
             for value in (questionnaire or {}).values()

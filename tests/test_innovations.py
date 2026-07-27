@@ -21,9 +21,15 @@ class InnovationPipelineTests(unittest.TestCase):
         self.assertEqual("legacy", result["system_config"]["name"])
         self.assertEqual(3, len(result["agent_trace"]))
         self.assertFalse(result["system_config"]["flags"]["sentence_provenance"])
+        self.assertEqual([], result["innovations"]["hypotheses"])
+        self.assertFalse(result["resources"]["blue_ocean"]["enabled"])
 
     def test_full_preset_exposes_research_mechanisms(self) -> None:
-        result = self.orchestrator.run("undergraduate_ai", config="full")
+        result = self.orchestrator.run(
+            "undergraduate_ai",
+            "请分析该领域的研究空白并提出待验证假设。",
+            config="full",
+        )
         self.assertEqual("full", result["system_config"]["name"])
         self.assertGreater(result["innovations"]["debate_view_count"], 0)
         self.assertGreater(result["innovations"]["falsification"]["rounds"], 0)
@@ -46,7 +52,7 @@ class InnovationPipelineTests(unittest.TestCase):
             )
         )
         self.assertTrue(
-            any(node["kind"] == "evidence_span" for node in result["graph"]["nodes"])
+            any(edge["evidence_spans"] for edge in result["graph"]["edges"])
         )
 
     def test_ablation_changes_only_requested_switch(self) -> None:
