@@ -82,7 +82,7 @@ class ServerIntegrationTests(unittest.TestCase):
         self.assertEqual(health["core_agents"], 3)
         self.assertEqual(health["system_agents"], 5)
         self.assertEqual(health["domains"], 3)
-        self.assertEqual(health["papers"], 19)
+        self.assertEqual(health["papers"], 90)
         self.assertIn("X-Request-ID", health_headers)
         self.assertEqual(ready_status, 200)
         self.assertEqual(ready["status"], "ready")
@@ -91,6 +91,16 @@ class ServerIntegrationTests(unittest.TestCase):
         status, _, payload = self.request("GET", "/api/domains")
         self.assertEqual(status, 200)
         self.assertEqual(len(payload["domains"]), 3)
+        self.assertTrue(
+            all(domain["paper_count"] == 30 for domain in payload["domains"])
+        )
+        self.assertEqual(
+            19,
+            sum(
+                domain["evidence_paper_count"]
+                for domain in payload["domains"]
+            ),
+        )
         run_status, _, result = self.request(
             "POST",
             "/api/run",

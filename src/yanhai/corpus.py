@@ -23,6 +23,14 @@ class VerticalCorpus:
         self.paper_records = {
             item["paper_id"]: item for item in self.manifest.get("papers", [])
         }
+        self.evidence_papers = [
+            paper
+            for paper in self.papers
+            if not self.paper_records[paper.paper_id].get(
+                "exclude_from_evidence_graph",
+                False,
+            )
+        ]
         self.extractor = SchemaGuidedExtractor.from_path(schema_path)
         self._extraction: ExtractionResult | None = None
 
@@ -33,6 +41,10 @@ class VerticalCorpus:
             "domain_name": self.manifest["domain_name"],
             "version": self.manifest["version"],
             "paper_count": len(self.papers),
+            "evidence_paper_count": len(self.evidence_papers),
+            "metadata_only_paper_count": (
+                len(self.papers) - len(self.evidence_papers)
+            ),
         }
         for key in (
             "description",
@@ -47,7 +59,7 @@ class VerticalCorpus:
     def documents(self) -> list:
         parser = PlainTextParser()
         documents = []
-        for paper in self.papers:
+        for paper in self.evidence_papers:
             record = self.paper_records[paper.paper_id]
             documents.append(
                 parser.parse(

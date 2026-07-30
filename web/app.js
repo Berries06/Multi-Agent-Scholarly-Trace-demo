@@ -115,7 +115,8 @@ function renderDomains() {
   if (!selected) return;
   $("#domain-description").textContent = selected.description;
   $("#domain-stats").innerHTML = `
-    <span>${selected.paper_count} 篇论文</span>
+    <span>${selected.paper_count} 篇收录 / ${selected.evidence_paper_count} 篇证据层</span>
+    <span>${selected.metadata_only_paper_count} 篇待全文解析</span>
     <span>版本 ${escapeHtml(selected.version)}</span>
     <span>${selected.is_default ? "核心领域" : "扩展领域"}</span>
   `;
@@ -123,6 +124,10 @@ function renderDomains() {
 
 function percent(value) {
   return `${Number(value).toFixed(value % 1 ? 1 : 0)}%`;
+}
+
+function intervalPercent(interval) {
+  return `${percent(interval[0] * 100)}–${percent(interval[1] * 100)}`;
 }
 
 function renderMetrics(result) {
@@ -133,14 +138,20 @@ function renderMetrics(result) {
   $("#metric-hallucination").textContent = percent(
     triad.accepted_precision * 100,
   );
+  $("#metric-hallucination-note").textContent =
+    `${triad.true_positive_count}/${triad.accepted_count} · 95% CI ${intervalPercent(triad.accepted_precision_ci95)}`;
   $("#metric-adaptation").textContent = percent(
     triad.unsupported_acceptance_rate * 100,
   );
+  $("#metric-adaptation-note").textContent =
+    `${triad.false_positive_count}/${triad.gold_unsupported_count} · 越低越好`;
   $("#metric-coverage").textContent = percent(
-    quality.relation_evidence_coverage * 100,
+    triad.gold_recall * 100,
   );
+  $("#metric-coverage-note").textContent =
+    `${triad.true_positive_count}/${triad.gold_supported_count} · 95% CI ${intervalPercent(triad.gold_recall_ci95)}`;
   $("#metric-graph-scale").innerHTML =
-    `<b>${quality.paper_count}</b> 论文 · <b>${quality.entity_count}</b> 实体<br /><b>${quality.relation_count}</b> 候选关系`;
+    `<b>${quality.paper_count}</b> 论文 · <b>${quality.entity_count}</b> 实体<br /><b>${quality.relation_count}</b> 候选关系 · 证据绑定 ${percent(quality.relation_evidence_coverage * 100)}（结构约束）`;
 }
 
 function renderTrace(result) {
@@ -493,8 +504,12 @@ function renderClaims(result) {
 
 function renderAblation(result) {
   const ablation = result.ablation;
+  const triadVariant = ablation.variants.find(
+    (item) => item.variant_id === "evidence_triad",
+  );
+  const triadErrors = triadVariant.cases.filter((item) => !item.correct).length;
   $("#ablation-gain").textContent =
-    `较最佳基线精确率 +${ablation.comparison.accepted_precision_gain_pp.toFixed(1)} pp`;
+    `24 条压力集 · 本方法仍错 ${triadErrors} 条 · 较最佳基线 +${ablation.comparison.accepted_precision_gain_pp.toFixed(1)} pp`;
   $("#ablation-table").innerHTML = ablation.variants
     .map((variant) => {
       const metrics = variant.metrics;
@@ -502,10 +517,10 @@ function renderAblation(result) {
       return `
         <tr class="${featured ? "featured-row" : ""}">
           <td><strong>${escapeHtml(variant.label)}</strong>${featured ? '<span class="method-tag">本项目</span>' : ""}</td>
-          <td>${percent(metrics.accepted_precision * 100)}</td>
-          <td>${percent(metrics.gold_recall * 100)}</td>
-          <td>${percent(metrics.unsupported_acceptance_rate * 100)}</td>
-          <td>${percent(metrics.evidence_coverage * 100)}</td>
+          <td>${percent(metrics.accepted_precision * 100)}<small>${metrics.true_positive_count}/${metrics.accepted_count}</small></td>
+          <td>${percent(metrics.gold_recall * 100)}<small>${metrics.true_positive_count}/${metrics.gold_supported_count}</small></td>
+          <td>${percent(metrics.unsupported_acceptance_rate * 100)}<small>${metrics.false_positive_count}/${metrics.gold_unsupported_count}</small></td>
+          <td>${percent(metrics.evidence_coverage * 100)}<small>结构约束</small></td>
         </tr>
       `;
     })

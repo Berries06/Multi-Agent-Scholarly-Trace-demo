@@ -2789,10 +2789,12 @@
     "domain_id": "materials-discovery-gnn",
     "domain_name": "材料发现与图神经网络",
     "version": "2026-07-30",
-    "paper_count": 5,
+    "paper_count": 30,
+    "evidence_paper_count": 5,
+    "metadata_only_paper_count": 25,
     "description": "跨学科技术情报切片：追踪晶体图网络、通用势函数与主动学习材料发现路线。",
     "query_example": "请沿知识图谱分析图神经网络如何用于材料性质预测与稳定材料发现，并推荐关键论文。",
-    "corpus_type": "verified-metadata-and-abstract-derived knowledge cards",
-    "source_scope": "项目组依据期刊官网、DOI 元数据和公开摘要撰写中文知识卡；未缓存论文全文，卡片证据只能证明本卡片中记录的摘要级命题。"
+    "corpus_type": "tiered scholarly corpus: evidence cards plus metadata-only retrieval records",
+    "source_scope": "5 篇经官网/DOI 与公开摘要整理的证据卡用于演示关系图；25 篇 Crossref DOI 元数据记录只用于书目检索，取得并解析全文前不得作为关系证据。"
   }
 }

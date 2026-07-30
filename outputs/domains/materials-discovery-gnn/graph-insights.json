@@ -3,11 +3,13 @@
     "domain_id": "materials-discovery-gnn",
     "domain_name": "材料发现与图神经网络",
     "version": "2026-07-30",
-    "paper_count": 5,
+    "paper_count": 30,
+    "evidence_paper_count": 5,
+    "metadata_only_paper_count": 25,
     "description": "跨学科技术情报切片：追踪晶体图网络、通用势函数与主动学习材料发现路线。",
     "query_example": "请沿知识图谱分析图神经网络如何用于材料性质预测与稳定材料发现，并推荐关键论文。",
-    "corpus_type": "verified-metadata-and-abstract-derived knowledge cards",
-    "source_scope": "项目组依据期刊官网、DOI 元数据和公开摘要撰写中文知识卡；未缓存论文全文，卡片证据只能证明本卡片中记录的摘要级命题。"
+    "corpus_type": "tiered scholarly corpus: evidence cards plus metadata-only retrieval records",
+    "source_scope": "5 篇经官网/DOI 与公开摘要整理的证据卡用于演示关系图；25 篇 Crossref DOI 元数据记录只用于书目检索，取得并解析全文前不得作为关系证据。"
   },
   "timeline": [
     {
@@ -64,6 +66,70 @@
       ]
     },
     {
+      "paper_id": "10.1103-physrevmaterials.4.063801",
+      "year": 2020,
+      "title": "Developing an improved crystal graph convolutional neural network framework for accelerated materials discovery",
+      "source_url": "https://doi.org/10.1103/physrevmaterials.4.063801",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1103-physrevmaterials.4.093801",
+      "year": 2020,
+      "title": "Orbital graph convolutional neural network for material property prediction",
+      "source_url": "https://doi.org/10.1103/physrevmaterials.4.093801",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1103-physrevmaterials.4.113807",
+      "year": 2020,
+      "title": "Development of a general-purpose machine-learning interatomic potential for aluminum by the physically informed neural network method",
+      "source_url": "https://doi.org/10.1103/physrevmaterials.4.113807",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1109-bigdata50022.2020.9378060",
+      "year": 2020,
+      "title": "Graph Neural Network Architecture Search for Molecular Property Prediction",
+      "source_url": "https://doi.org/10.1109/bigdata50022.2020.9378060",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1038-s41467-021-26226-7",
+      "year": 2021,
+      "title": "Coupling complementary strategy to flexible graph neural network for quick discovery of coformer in diverse co-crystal materials",
+      "source_url": "https://doi.org/10.1038/s41467-021-26226-7",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1038-s41524-021-00650-1",
+      "year": 2021,
+      "title": "Atomistic Line Graph Neural Network for improved materials property predictions",
+      "source_url": "https://doi.org/10.1038/s41524-021-00650-1",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1063-5.0066061",
+      "year": 2021,
+      "title": "Molecular dynamics simulation of metallic Al–Ce liquids using a neural network machine learning interatomic potential",
+      "source_url": "https://doi.org/10.1063/5.0066061",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1007-s00521-021-06616-0",
+      "year": 2022,
+      "title": "Graph neural network for Hamiltonian-based material property prediction",
+      "source_url": "https://doi.org/10.1007/s00521-021-06616-0",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
       "paper_id": "10.1038-s43588-022-00349-3",
       "year": 2022,
       "title": "A Universal Graph Deep Learning Interatomic Potential for the Periodic Table",
@@ -102,6 +168,142 @@
         "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:1",
         "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:2"
       ]
+    },
+    {
+      "paper_id": "10.1088-2632-2153-acf115",
+      "year": 2023,
+      "title": "Data efficiency and extrapolation trends in neural network interatomic potentials",
+      "source_url": "https://doi.org/10.1088/2632-2153/acf115",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1002-adma.202409175",
+      "year": 2024,
+      "title": "Universal Ensemble‐Embedding Graph Neural Network for Direct Prediction of Optical Spectra from Crystal Structures",
+      "source_url": "https://doi.org/10.1002/adma.202409175",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1016-j.commatsci.2023.112619",
+      "year": 2024,
+      "title": "Graph isomorphism network for materials property prediction along with explainability analysis",
+      "source_url": "https://doi.org/10.1016/j.commatsci.2023.112619",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1016-j.commatsci.2023.112655",
+      "year": 2024,
+      "title": "Spline-based neural network interatomic potentials: Blending classical and machine learning models",
+      "source_url": "https://doi.org/10.1016/j.commatsci.2023.112655",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1016-j.commatsci.2024.112783",
+      "year": 2024,
+      "title": "Predicting melting temperature of inorganic crystals via crystal graph neural network enhanced by transfer learning",
+      "source_url": "https://doi.org/10.1016/j.commatsci.2024.112783",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1038-s41524-024-01407-2",
+      "year": 2024,
+      "title": "Graph neural network coarse-grain force field for the molecular crystal RDX",
+      "source_url": "https://doi.org/10.1038/s41524-024-01407-2",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1039-d3dd00233k",
+      "year": 2024,
+      "title": "An equivariant graph neural network for the elasticity tensors of all seven crystal systems",
+      "source_url": "https://doi.org/10.1039/d3dd00233k",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1103-physrevmaterials.8.033802",
+      "year": 2024,
+      "title": "Equivariant graph neural network interatomic potential for Green-Kubo thermal conductivity in phase change materials",
+      "source_url": "https://doi.org/10.1103/physrevmaterials.8.033802",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1016-j.actamat.2025.121347",
+      "year": 2025,
+      "title": "Machine learning-driven discovery of hard magnetic materials using high-throughput computation and screening",
+      "source_url": "https://doi.org/10.1016/j.actamat.2025.121347",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1016-j.commatsci.2024.113358",
+      "year": 2025,
+      "title": "SGNN-T: Space graph neural network coupled transformer for molecular property prediction",
+      "source_url": "https://doi.org/10.1016/j.commatsci.2024.113358",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1016-j.mtcomm.2025.112021",
+      "year": 2025,
+      "title": "MatGNet: A graph neural network for crystal property prediction as an alternative to first-principles calculations",
+      "source_url": "https://doi.org/10.1016/j.mtcomm.2025.112021",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1021-acs.jcim.5c01460",
+      "year": 2025,
+      "title": "PSCG-Net: A Multiscale Crystal Graph Neural Network for Accelerated Materials Discovery",
+      "source_url": "https://doi.org/10.1021/acs.jcim.5c01460",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1039-d4dd00352g",
+      "year": 2025,
+      "title": "A Cartesian encoding graph neural network for crystal structure property prediction: application to thermal ellipsoid estimation",
+      "source_url": "https://doi.org/10.1039/d4dd00352g",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1039-d5ce00096c",
+      "year": 2025,
+      "title": "Accelerating materials property discovery in uncharted domains through the integration of high-throughput computation and machine learning",
+      "source_url": "https://doi.org/10.1039/d5ce00096c",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1109-ijcnn64981.2025.11228283",
+      "year": 2025,
+      "title": "ADA-GNN: Atom-Distance-Angle Graph Neural Network for Crystal Material Property Prediction",
+      "source_url": "https://doi.org/10.1109/ijcnn64981.2025.11228283",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.3390-inorganics13120395",
+      "year": 2025,
+      "title": "Accelerated Discovery of Energy Materials via Graph Neural Network",
+      "source_url": "https://doi.org/10.3390/inorganics13120395",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1038-s41524-026-02131-9",
+      "year": 2026,
+      "title": "Physics-informed graph neural network representation learning for crystal property prediction",
+      "source_url": "https://doi.org/10.1038/s41524-026-02131-9",
+      "contributions": [],
+      "evidence_ids": []
     }
   ],
   "research_ideas": [

@@ -21,7 +21,7 @@ VTY = 冻结测试集中“关系正确且证据跨度正确”的 accepted 三�
 优化目标是在以下约束下最大化 VTY：
 
 - accepted 三元组精确率 ≥ 0.90；
-- 关系证据覆盖率 = 1.00；
+- accepted 关系的证据绑定完整率 = 1.00（结构护栏，不能替代证据跨度 F1）；
 - 实体 strict micro-F1 ≥ 0.82；
 - 关系 micro-F1 ≥ 0.72；
 - 单篇处理成功率 ≥ 0.95；
@@ -37,7 +37,7 @@ VTY = 冻结测试集中“关系正确且证据跨度正确”的 accepted 三�
 | WP2 科学信息抽取 | schema 词典、触发词和同句共现 | GLiNER、GLiREL；SciBERT+DyGIE++；DeepKE/OneKE；Qwen2.5-7B-Instruct | 实体、文档级关系、实验 n 元组和证据跨度 | B |
 | WP3 实体链接与动态图谱 | 规范名精确合并；JSON 图；连通分量 | multilingual-e5-base；SPECTER2；FAISS；Neo4j；Leiden 社区 | 跨论文消歧、版本、冲突和演化关系 | C |
 | WP4 多智能体证据校验 | 3 个核心决策 Agent；3 项辅助服务；规则裁判 | Qwen2.5-7B-Instruct；SciFact verifier；Debate-Augmented RAG 思路 | 单次抽取 vs. 同质投票 vs. 提出/批判/裁判、置信校准、成本 | D |
-| WP5 应用与复现实验 | 原生 Web、Python HTTP 服务、18 项测试、四组消融 | 统一实验 CLI；MLflow 或轻量 JSON registry；PySide6 APP | 数据冻结、实验复现、评审演示、失败恢复 | D 主责，全员集成 |
+| WP5 应用与复现实验 | 原生 Web、Python HTTP 服务、47 项测试、四组消融 | 统一实验 CLI；MLflow 或轻量 JSON registry；可选 PyInstaller/PySide6 壳 | 数据冻结、实验复现、评审演示、失败恢复 | D 主责，全员集成 |
 
 WP1–WP4 是科研核心；WP5 服务于复现和展示，不能挤占全文标注与抽取实验时间。
 
@@ -329,7 +329,7 @@ WP1–WP4 是科研核心；WP5 服务于复现和展示，不能挤占全文标
 **验收**
 
 - 三核心 Agent 轨迹完整率 100%；
-- accepted 三元组精确率 ≥ 0.90、证据覆盖率 100%；
+- accepted 三元组精确率 ≥ 0.90、证据绑定完整率 100%，并单独报告证据跨度 F1；
 - 相对最强单次抽取基线精确率提升 ≥ 5 个百分点，或无证据关系减少 ≥ 30%，且召回下降不超过 5 个百分点；
 - 运行失败可定位到具体 Agent、模型和证据；
 - 新环境按 README 可复现。

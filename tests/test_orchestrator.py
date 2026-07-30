@@ -131,6 +131,26 @@ class OrchestratorTests(unittest.TestCase):
             variants["evidence_triad"]["metrics"]["accepted_precision"],
             variants["single_pass"]["metrics"]["accepted_precision"],
         )
+        triad = variants["evidence_triad"]
+        self.assertEqual(24, result["ablation"]["case_count"])
+        self.assertLess(triad["metrics"]["accepted_precision"], 1.0)
+        self.assertLess(triad["metrics"]["gold_recall"], 1.0)
+        self.assertGreater(
+            triad["metrics"]["unsupported_acceptance_rate"],
+            0.0,
+        )
+        self.assertEqual(
+            "structural_guardrail",
+            triad["metrics"]["evidence_coverage_kind"],
+        )
+        self.assertEqual(
+            {"B013", "B014", "B019", "B020"},
+            {
+                item["claim_id"]
+                for item in triad["cases"]
+                if not item["correct"]
+            },
+        )
         self.assertGreaterEqual(
             len(result["graph_insights"]["research_ideas"]),
             1,

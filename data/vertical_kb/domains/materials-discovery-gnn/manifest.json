@@ -4,105 +4,1174 @@
   "version": "2026-07-30",
   "description": "跨学科技术情报切片：追踪晶体图网络、通用势函数与主动学习材料发现路线。",
   "query_example": "请沿知识图谱分析图神经网络如何用于材料性质预测与稳定材料发现，并推荐关键论文。",
-  "corpus_type": "verified-metadata-and-abstract-derived knowledge cards",
-  "source_scope": "项目组依据期刊官网、DOI 元数据和公开摘要撰写中文知识卡；未缓存论文全文，卡片证据只能证明本卡片中记录的摘要级命题。",
+  "corpus_type": "tiered scholarly corpus: evidence cards plus metadata-only retrieval records",
+  "source_scope": "5 篇经官网/DOI 与公开摘要整理的证据卡用于演示关系图；25 篇 Crossref DOI 元数据记录只用于书目检索，取得并解析全文前不得作为关系证据。",
   "search_audit": {
     "searched_on": "2026-07-30",
+    "provider": "Crossref REST API",
     "queries": [
-      "site:nature.com graph networks materials discovery GNoME",
-      "site:pubs.acs.org MEGNet materials graph network",
-      "site:nature.com M3GNet universal interatomic potential",
-      "crystal graph convolutional neural networks DOI",
-      "Materials Project APL Materials DOI"
+      "graph neural network materials property prediction",
+      "crystal graph neural network materials discovery",
+      "machine learning interatomic potential graph neural network",
+      "machine learning materials discovery high throughput"
     ],
-    "inclusion": "同行评审论文；有 DOI 或期刊官方页面；能形成方法—任务—数据集—发现关系。",
-    "exclusion": "博客、营销稿、无法核验出处的二手总结和仅有代码无论文的方法。"
+    "inclusion": "Crossref journal-article/proceedings-article; DOI, venue and publication date present; title passes two domain keyword groups.",
+    "exclusion": "Books, chapters, preprints/posted content, missing DOI/venue/date, duplicate DOI/title, and off-topic title records.",
+    "selection": "Crossref journal/proceedings records with DOI and venue; two required title-keyword groups; title/DOI deduplication; rank, query coverage, citation snapshot and recency scoring; domain-curated priority list; correction/retraction exclusion.",
+    "candidate_count": 42,
+    "cache_path": "data/vertical_kb/search_cache/crossref-candidates-2026-07-30.json",
+    "previous_manual_audit": {
+      "searched_on": "2026-07-30",
+      "queries": [
+        "site:nature.com graph networks materials discovery GNoME",
+        "site:pubs.acs.org MEGNet materials graph network",
+        "site:nature.com M3GNet universal interatomic potential",
+        "crystal graph convolutional neural networks DOI",
+        "Materials Project APL Materials DOI"
+      ],
+      "inclusion": "同行评审论文；有 DOI 或期刊官方页面；能形成方法—任务—数据集—发现关系。",
+      "exclusion": "博客、营销稿、无法核验出处的二手总结和仅有代码无论文的方法。"
+    }
   },
   "papers": [
     {
       "paper_id": "10.1103-PhysRevLett.120.145301",
       "title": "Crystal Graph Convolutional Neural Networks for an Accurate and Interpretable Prediction of Material Properties",
-      "authors": ["Tian Xie", "Jeffrey C. Grossman"],
+      "authors": [
+        "Tian Xie",
+        "Jeffrey C. Grossman"
+      ],
       "year": 2018,
       "published": "2018-04-09",
       "venue": "Physical Review Letters",
-      "categories": ["materials informatics", "graph neural network"],
+      "categories": [
+        "materials informatics",
+        "graph neural network"
+      ],
       "summary": "CGCNN 将晶体表示为图并学习材料表示，用于预测材料性质，同时提供局部化学环境层面的解释线索。",
-      "concepts": ["CGCNN", "graph neural network", "Materials Project", "material property prediction"],
+      "concepts": [
+        "CGCNN",
+        "graph neural network",
+        "Materials Project",
+        "material property prediction"
+      ],
       "source_url": "https://doi.org/10.1103/PhysRevLett.120.145301",
       "document_path": "documents/cgcnn-2018.md",
       "peer_reviewed": true,
       "source_acquired": false,
       "source_verified_against_original": false,
-      "knowledge_card_basis": "publisher metadata and public abstract"
+      "knowledge_card_basis": "publisher metadata and public abstract",
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "10.1021-acs.chemmater.9b01294",
       "title": "Graph Networks as a Universal Machine Learning Framework for Molecules and Crystals",
-      "authors": ["Chi Chen", "Weike Ye", "Yunxing Zuo", "Chen Zheng", "Shyue Ping Ong"],
+      "authors": [
+        "Chi Chen",
+        "Weike Ye",
+        "Yunxing Zuo",
+        "Chen Zheng",
+        "Shyue Ping Ong"
+      ],
       "year": 2019,
       "published": "2019-07-22",
       "venue": "Chemistry of Materials",
-      "categories": ["materials informatics", "graph network"],
+      "categories": [
+        "materials informatics",
+        "graph network"
+      ],
       "summary": "MEGNet 以图网络统一处理分子和晶体，并引入全局状态属性预测多种材料性质。",
-      "concepts": ["MEGNet", "global state attributes", "Materials Project", "material property prediction"],
+      "concepts": [
+        "MEGNet",
+        "global state attributes",
+        "Materials Project",
+        "material property prediction"
+      ],
       "source_url": "https://doi.org/10.1021/acs.chemmater.9b01294",
       "document_path": "documents/megnet-2019.md",
       "peer_reviewed": true,
       "source_acquired": false,
       "source_verified_against_original": false,
-      "knowledge_card_basis": "publisher metadata and public abstract"
+      "knowledge_card_basis": "publisher metadata and public abstract",
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "10.1038-s43588-022-00349-3",
       "title": "A Universal Graph Deep Learning Interatomic Potential for the Periodic Table",
-      "authors": ["Chi Chen", "Shyue Ping Ong"],
+      "authors": [
+        "Chi Chen",
+        "Shyue Ping Ong"
+      ],
       "year": 2022,
       "published": "2022-11-28",
       "venue": "Nature Computational Science",
-      "categories": ["interatomic potential", "graph deep learning"],
+      "categories": [
+        "interatomic potential",
+        "graph deep learning"
+      ],
       "summary": "M3GNet 显式纳入三体相互作用，并从 Materials Project 结构弛豫数据学习跨元素原子间势。",
-      "concepts": ["M3GNet", "three-body interactions", "Materials Project", "interatomic potential learning", "crystal structure relaxation"],
+      "concepts": [
+        "M3GNet",
+        "three-body interactions",
+        "Materials Project",
+        "interatomic potential learning",
+        "crystal structure relaxation"
+      ],
       "source_url": "https://doi.org/10.1038/s43588-022-00349-3",
       "document_path": "documents/m3gnet-2022.md",
       "peer_reviewed": true,
       "source_acquired": false,
       "source_verified_against_original": false,
-      "knowledge_card_basis": "publisher metadata and public abstract"
+      "knowledge_card_basis": "publisher metadata and public abstract",
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "10.1038-s41586-023-06735-9",
       "title": "Scaling Deep Learning for Materials Discovery",
-      "authors": ["Amil Merchant", "Simon Batzner", "Samuel S. Schoenholz", "Muratahan Aykol", "Gowoon Cheon", "Ekin Dogus Cubuk"],
+      "authors": [
+        "Amil Merchant",
+        "Simon Batzner",
+        "Samuel S. Schoenholz",
+        "Muratahan Aykol",
+        "Gowoon Cheon",
+        "Ekin Dogus Cubuk"
+      ],
       "year": 2023,
       "published": "2023-11-29",
       "venue": "Nature",
-      "categories": ["materials discovery", "active learning"],
+      "categories": [
+        "materials discovery",
+        "active learning"
+      ],
       "summary": "GNoME 将图网络、主动学习和密度泛函理论计算结合，用大规模候选搜索扩展稳定无机晶体空间。",
-      "concepts": ["GNoME", "graph neural network", "active learning", "density functional theory", "stable material discovery", "2.2 million stable structures", "381,000 new stable structures", "736 experimental structures"],
+      "concepts": [
+        "GNoME",
+        "graph neural network",
+        "active learning",
+        "density functional theory",
+        "stable material discovery",
+        "2.2 million stable structures",
+        "381,000 new stable structures",
+        "736 experimental structures"
+      ],
       "source_url": "https://doi.org/10.1038/s41586-023-06735-9",
       "document_path": "documents/gnome-2023.md",
       "peer_reviewed": true,
       "source_acquired": false,
       "source_verified_against_original": false,
-      "knowledge_card_basis": "publisher metadata and public abstract"
+      "knowledge_card_basis": "publisher metadata and public abstract",
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "10.1063-1.4812323",
       "title": "Commentary: The Materials Project: A Materials Genome Approach to Accelerating Materials Innovation",
-      "authors": ["Anubhav Jain", "Shyue Ping Ong", "Geoffroy Hautier", "Wei Chen", "William Davidson", "Stephen Dacek", "Gerbrand Ceder", "Kristin A. Persson"],
+      "authors": [
+        "Anubhav Jain",
+        "Shyue Ping Ong",
+        "Geoffroy Hautier",
+        "Wei Chen",
+        "William Davidson",
+        "Stephen Dacek",
+        "Gerbrand Ceder",
+        "Kristin A. Persson"
+      ],
       "year": 2013,
       "published": "2013-07-01",
       "venue": "APL Materials",
-      "categories": ["materials database", "high-throughput computation"],
+      "categories": [
+        "materials database",
+        "high-throughput computation"
+      ],
       "summary": "Materials Project 通过高通量第一性原理计算与开放数据基础设施支持材料性质研究和材料创新。",
-      "concepts": ["Materials Project", "density functional theory", "material property prediction", "stable material discovery"],
+      "concepts": [
+        "Materials Project",
+        "density functional theory",
+        "material property prediction",
+        "stable material discovery"
+      ],
       "source_url": "https://doi.org/10.1063/1.4812323",
       "document_path": "documents/materials-project-2013.md",
       "peer_reviewed": true,
       "source_acquired": false,
       "source_verified_against_original": false,
-      "knowledge_card_basis": "DOI metadata and institutional publication record"
+      "knowledge_card_basis": "DOI metadata and institutional publication record",
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
+    },
+    {
+      "paper_id": "10.1021-acs.jcim.5c01460",
+      "doi": "10.1021/acs.jcim.5c01460",
+      "title": "PSCG-Net: A Multiscale Crystal Graph Neural Network for Accelerated Materials Discovery",
+      "authors": [
+        "Guangyao Chen",
+        "Zhilong Wang",
+        "Fengqi You"
+      ],
+      "year": 2025,
+      "published": "2025-10-27",
+      "venue": "Journal of Chemical Information and Modeling",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "materials",
+        "material",
+        "crystal",
+        "graph neural",
+        "materials discovery"
+      ],
+      "source_url": "https://doi.org/10.1021/acs.jcim.5c01460",
+      "document_path": "documents/metadata-ed39bca63d30.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 2,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1103-physrevmaterials.8.033802",
+      "doi": "10.1103/physrevmaterials.8.033802",
+      "title": "Equivariant graph neural network interatomic potential for Green-Kubo thermal conductivity in phase change materials",
+      "authors": [
+        "Sung-Ho Lee",
+        "Jing Li",
+        "Valerio Olevano",
+        "Benoit Sklénard"
+      ],
+      "year": 2024,
+      "published": "2024-03-18",
+      "venue": "Physical Review Materials",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "materials",
+        "material",
+        "interatomic",
+        "graph neural",
+        "interatomic potential"
+      ],
+      "source_url": "https://doi.org/10.1103/physrevmaterials.8.033802",
+      "document_path": "documents/metadata-23e2701c9760.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 8,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1103-physrevmaterials.4.063801",
+      "doi": "10.1103/physrevmaterials.4.063801",
+      "title": "Developing an improved crystal graph convolutional neural network framework for accelerated materials discovery",
+      "authors": [
+        "Cheol Woo Park",
+        "Chris Wolverton"
+      ],
+      "year": 2020,
+      "published": "2020-06-01",
+      "venue": "Physical Review Materials",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "materials",
+        "material",
+        "crystal",
+        "materials discovery"
+      ],
+      "source_url": "https://doi.org/10.1103/physrevmaterials.4.063801",
+      "document_path": "documents/metadata-97d54c967e5e.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 261,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1038-s41524-021-00650-1",
+      "doi": "10.1038/s41524-021-00650-1",
+      "title": "Atomistic Line Graph Neural Network for improved materials property predictions",
+      "authors": [
+        "Kamal Choudhary",
+        "Brian DeCost"
+      ],
+      "year": 2021,
+      "published": "2021-11-15",
+      "venue": "npj Computational Materials",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "materials",
+        "material",
+        "graph neural",
+        "property prediction"
+      ],
+      "source_url": "https://doi.org/10.1038/s41524-021-00650-1",
+      "document_path": "documents/metadata-bc9354e614af.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 656,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1038-s41467-021-26226-7",
+      "doi": "10.1038/s41467-021-26226-7",
+      "title": "Coupling complementary strategy to flexible graph neural network for quick discovery of coformer in diverse co-crystal materials",
+      "authors": [
+        "Yuanyuan Jiang",
+        "Zongwei Yang",
+        "Jiali Guo",
+        "Hongzhen Li",
+        "Yijing Liu",
+        "Yanzhi Guo",
+        "Menglong Li",
+        "Xuemei Pu"
+      ],
+      "year": 2021,
+      "published": "2021-10-12",
+      "venue": "Nature Communications",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "materials",
+        "material",
+        "crystal",
+        "graph neural"
+      ],
+      "source_url": "https://doi.org/10.1038/s41467-021-26226-7",
+      "document_path": "documents/metadata-a078e8998f4d.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 110,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1109-ijcnn64981.2025.11228283",
+      "doi": "10.1109/ijcnn64981.2025.11228283",
+      "title": "ADA-GNN: Atom-Distance-Angle Graph Neural Network for Crystal Material Property Prediction",
+      "authors": [
+        "Jiao Huang",
+        "Qianli Xing",
+        "Jinglong Ji",
+        "Bo Yang"
+      ],
+      "year": 2025,
+      "published": "2025-06-30",
+      "venue": "2025 International Joint Conference on Neural Networks (IJCNN)",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "material",
+        "crystal",
+        "graph neural",
+        "property prediction"
+      ],
+      "source_url": "https://doi.org/10.1109/ijcnn64981.2025.11228283",
+      "document_path": "documents/metadata-8cb932182dfa.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 1,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1038-s41524-026-02131-9",
+      "doi": "10.1038/s41524-026-02131-9",
+      "title": "Physics-informed graph neural network representation learning for crystal property prediction",
+      "authors": [
+        "Jie Cao",
+        "Kai Huang",
+        "Jian Mao",
+        "Mengya Zhong",
+        "Chen Chen",
+        "Kexun Li",
+        "Taikang Liu"
+      ],
+      "year": 2026,
+      "published": "2026-05-18",
+      "venue": "npj Computational Materials",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "crystal",
+        "graph neural",
+        "property prediction"
+      ],
+      "source_url": "https://doi.org/10.1038/s41524-026-02131-9",
+      "document_path": "documents/metadata-9fc21f02b685.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 0,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1039-d4dd00352g",
+      "doi": "10.1039/d4dd00352g",
+      "title": "A Cartesian encoding graph neural network for crystal structure property prediction: application to thermal ellipsoid estimation",
+      "authors": [
+        "Àlex Solé",
+        "Albert Mosella-Montoro",
+        "Joan Cardona",
+        "Silvia Gómez-Coca",
+        "Daniel Aravena",
+        "Eliseo Ruiz",
+        "Javier Ruiz-Hidalgo"
+      ],
+      "year": 2025,
+      "published": "2025-01-01",
+      "venue": "Digital Discovery",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "crystal",
+        "graph neural",
+        "property prediction"
+      ],
+      "source_url": "https://doi.org/10.1039/d4dd00352g",
+      "document_path": "documents/metadata-6f834baf1181.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 8,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1063-5.0066061",
+      "doi": "10.1063/5.0066061",
+      "title": "Molecular dynamics simulation of metallic Al–Ce liquids using a neural network machine learning interatomic potential",
+      "authors": [
+        "L. Tang",
+        "K. M. Ho",
+        "C. Z. Wang"
+      ],
+      "year": 2021,
+      "published": "2021-11-21",
+      "venue": "The Journal of Chemical Physics",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "molecular",
+        "interatomic",
+        "machine learning",
+        "interatomic potential"
+      ],
+      "source_url": "https://doi.org/10.1063/5.0066061",
+      "document_path": "documents/metadata-002b3cb48801.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 27,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1016-j.mtcomm.2025.112021",
+      "doi": "10.1016/j.mtcomm.2025.112021",
+      "title": "MatGNet: A graph neural network for crystal property prediction as an alternative to first-principles calculations",
+      "authors": [
+        "Pandi Teng",
+        "Chengyu Fu",
+        "Shiru Shen",
+        "Huaijuan Zang",
+        "Jing Fang",
+        "Yongsheng Ren",
+        "Shu Zhan"
+      ],
+      "year": 2025,
+      "published": "2025-03-01",
+      "venue": "Materials Today Communications",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "crystal",
+        "graph neural",
+        "property prediction"
+      ],
+      "source_url": "https://doi.org/10.1016/j.mtcomm.2025.112021",
+      "document_path": "documents/metadata-d51fe4c3ffc9.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 1,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1109-bigdata50022.2020.9378060",
+      "doi": "10.1109/bigdata50022.2020.9378060",
+      "title": "Graph Neural Network Architecture Search for Molecular Property Prediction",
+      "authors": [
+        "Shengli Jiang",
+        "Prasanna Balaprakash"
+      ],
+      "year": 2020,
+      "published": "2020-12-10",
+      "venue": "2020 IEEE International Conference on Big Data (Big Data)",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "molecular",
+        "graph neural",
+        "property prediction"
+      ],
+      "source_url": "https://doi.org/10.1109/bigdata50022.2020.9378060",
+      "document_path": "documents/metadata-cec598b83fa7.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 35,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1007-s00521-021-06616-0",
+      "doi": "10.1007/s00521-021-06616-0",
+      "title": "Graph neural network for Hamiltonian-based material property prediction",
+      "authors": [
+        "Hexin Bai",
+        "Peng Chu",
+        "Jeng-Yuan Tsai",
+        "Nathan Wilson",
+        "Xiaofeng Qian",
+        "Qimin Yan",
+        "Haibin Ling"
+      ],
+      "year": 2022,
+      "published": "2022-03-01",
+      "venue": "Neural Computing and Applications",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "material",
+        "graph neural",
+        "property prediction"
+      ],
+      "source_url": "https://doi.org/10.1007/s00521-021-06616-0",
+      "document_path": "documents/metadata-2302bf3ed114.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 3,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.3390-inorganics13120395",
+      "doi": "10.3390/inorganics13120395",
+      "title": "Accelerated Discovery of Energy Materials via Graph Neural Network",
+      "authors": [
+        "Zhenwen Sheng",
+        "Hui Zhu",
+        "Bo Shao",
+        "Yu He",
+        "Zhuang Liu",
+        "Suqin Wang",
+        "Ming Sheng"
+      ],
+      "year": 2025,
+      "published": "2025-11-29",
+      "venue": "Inorganics",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "materials",
+        "material",
+        "graph neural"
+      ],
+      "source_url": "https://doi.org/10.3390/inorganics13120395",
+      "document_path": "documents/metadata-6995d90db093.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 6,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1039-d5ce00096c",
+      "doi": "10.1039/d5ce00096c",
+      "title": "Accelerating materials property discovery in uncharted domains through the integration of high-throughput computation and machine learning",
+      "authors": [
+        "Chih Shan Tan"
+      ],
+      "year": 2025,
+      "published": "2025-01-01",
+      "venue": "CrystEngComm",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "materials",
+        "material",
+        "machine learning",
+        "high-throughput"
+      ],
+      "source_url": "https://doi.org/10.1039/d5ce00096c",
+      "document_path": "documents/metadata-958918d213fb.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 2,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1016-j.commatsci.2023.112655",
+      "doi": "10.1016/j.commatsci.2023.112655",
+      "title": "Spline-based neural network interatomic potentials: Blending classical and machine learning models",
+      "authors": [
+        "Joshua A. Vita",
+        "Dallas R. Trinkle"
+      ],
+      "year": 2024,
+      "published": "2024-01-01",
+      "venue": "Computational Materials Science",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "interatomic",
+        "machine learning",
+        "interatomic potential"
+      ],
+      "source_url": "https://doi.org/10.1016/j.commatsci.2023.112655",
+      "document_path": "documents/metadata-6d0f78a6fe36.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 8,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1016-j.commatsci.2024.113358",
+      "doi": "10.1016/j.commatsci.2024.113358",
+      "title": "SGNN-T: Space graph neural network coupled transformer for molecular property prediction",
+      "authors": [
+        "Taohong Zhang",
+        "Chenglong Xia",
+        "Huguang Yang",
+        "Xuxu Guo",
+        "Han Zheng",
+        "Aziguli Wulamu"
+      ],
+      "year": 2025,
+      "published": "2025-01-01",
+      "venue": "Computational Materials Science",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "molecular",
+        "graph neural",
+        "property prediction"
+      ],
+      "source_url": "https://doi.org/10.1016/j.commatsci.2024.113358",
+      "document_path": "documents/metadata-a07887626ca7.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 3,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1016-j.actamat.2025.121347",
+      "doi": "10.1016/j.actamat.2025.121347",
+      "title": "Machine learning-driven discovery of hard magnetic materials using high-throughput computation and screening",
+      "authors": [
+        "Anita Halder",
+        "Durga Paudyal",
+        "Stefano Sanvito",
+        "Martin Takáč",
+        "Huseyin Ucar"
+      ],
+      "year": 2025,
+      "published": "2025-09-01",
+      "venue": "Acta Materialia",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "materials",
+        "material",
+        "machine learning",
+        "high-throughput"
+      ],
+      "source_url": "https://doi.org/10.1016/j.actamat.2025.121347",
+      "document_path": "documents/metadata-977dd3120846.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 5,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1016-j.commatsci.2023.112619",
+      "doi": "10.1016/j.commatsci.2023.112619",
+      "title": "Graph isomorphism network for materials property prediction along with explainability analysis",
+      "authors": [
+        "Jianping Xiao",
+        "Li Yang",
+        "Shuqun Wang"
+      ],
+      "year": 2024,
+      "published": "2024-01-01",
+      "venue": "Computational Materials Science",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "materials",
+        "material",
+        "property prediction"
+      ],
+      "source_url": "https://doi.org/10.1016/j.commatsci.2023.112619",
+      "document_path": "documents/metadata-11e6e0fefb30.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 27,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1038-s41524-024-01407-2",
+      "doi": "10.1038/s41524-024-01407-2",
+      "title": "Graph neural network coarse-grain force field for the molecular crystal RDX",
+      "authors": [
+        "Brian H. Lee",
+        "James P. Larentzos",
+        "John K. Brennan",
+        "Alejandro Strachan"
+      ],
+      "year": 2024,
+      "published": "2024-09-07",
+      "venue": "npj Computational Materials",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "crystal",
+        "molecular",
+        "graph neural"
+      ],
+      "source_url": "https://doi.org/10.1038/s41524-024-01407-2",
+      "document_path": "documents/metadata-6d1a76a10911.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 10,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1039-d3dd00233k",
+      "doi": "10.1039/d3dd00233k",
+      "title": "An equivariant graph neural network for the elasticity tensors of all seven crystal systems",
+      "authors": [
+        "Mingjian Wen",
+        "Matthew K. Horton",
+        "Jason M. Munro",
+        "Patrick Huck",
+        "Kristin A. Persson"
+      ],
+      "year": 2024,
+      "published": "2024-01-01",
+      "venue": "Digital Discovery",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "crystal",
+        "graph neural"
+      ],
+      "source_url": "https://doi.org/10.1039/d3dd00233k",
+      "document_path": "documents/metadata-1a4911884e6b.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 32,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1002-adma.202409175",
+      "doi": "10.1002/adma.202409175",
+      "title": "Universal Ensemble‐Embedding Graph Neural Network for Direct Prediction of Optical Spectra from Crystal Structures",
+      "authors": [
+        "Nguyen Tuan Hung",
+        "Ryotaro Okabe",
+        "Abhijatmedhi Chotrattanapituk",
+        "Mingda Li"
+      ],
+      "year": 2024,
+      "published": "2024-11-01",
+      "venue": "Advanced Materials",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "crystal",
+        "graph neural"
+      ],
+      "source_url": "https://doi.org/10.1002/adma.202409175",
+      "document_path": "documents/metadata-d6f014903262.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 37,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1016-j.commatsci.2024.112783",
+      "doi": "10.1016/j.commatsci.2024.112783",
+      "title": "Predicting melting temperature of inorganic crystals via crystal graph neural network enhanced by transfer learning",
+      "authors": [
+        "Jaesun Kim",
+        "Jisu Jung",
+        "Sookyung Kim",
+        "Seungwu Han"
+      ],
+      "year": 2024,
+      "published": "2024-02-01",
+      "venue": "Computational Materials Science",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "crystal",
+        "graph neural"
+      ],
+      "source_url": "https://doi.org/10.1016/j.commatsci.2024.112783",
+      "document_path": "documents/metadata-acc7de7616ac.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 9,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1103-physrevmaterials.4.113807",
+      "doi": "10.1103/physrevmaterials.4.113807",
+      "title": "Development of a general-purpose machine-learning interatomic potential for aluminum by the physically informed neural network method",
+      "authors": [
+        "G. P. Purja Pun",
+        "V. Yamakov",
+        "J. Hickman",
+        "E. H. Glaessgen",
+        "Y. Mishin"
+      ],
+      "year": 2020,
+      "published": "2020-11-19",
+      "venue": "Physical Review Materials",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "interatomic",
+        "interatomic potential"
+      ],
+      "source_url": "https://doi.org/10.1103/physrevmaterials.4.113807",
+      "document_path": "documents/metadata-353cfe14774c.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 37,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1103-physrevmaterials.4.093801",
+      "doi": "10.1103/physrevmaterials.4.093801",
+      "title": "Orbital graph convolutional neural network for material property prediction",
+      "authors": [
+        "Mohammadreza Karamad",
+        "Rishikesh Magar",
+        "Yuting Shi",
+        "Samira Siahrostami",
+        "Ian D. Gates",
+        "Amir Barati Farimani"
+      ],
+      "year": 2020,
+      "published": "2020-09-08",
+      "venue": "Physical Review Materials",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "material",
+        "property prediction"
+      ],
+      "source_url": "https://doi.org/10.1103/physrevmaterials.4.093801",
+      "document_path": "documents/metadata-220a2848320a.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 129,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1088-2632-2153-acf115",
+      "doi": "10.1088/2632-2153/acf115",
+      "title": "Data efficiency and extrapolation trends in neural network interatomic potentials",
+      "authors": [
+        "Joshua A Vita",
+        "Daniel Schwalbe-Koda"
+      ],
+      "year": 2023,
+      "published": "2023-09-01",
+      "venue": "Machine Learning: Science and Technology",
+      "categories": [
+        "materials informatics",
+        "machine learning"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“材料发现与图神经网络”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "material property prediction",
+        "interatomic",
+        "interatomic potential"
+      ],
+      "source_url": "https://doi.org/10.1088/2632-2153/acf115",
+      "document_path": "documents/metadata-ad7cf86244e2.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 18,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
     }
-  ]
+  ],
+  "paper_count_target": 30,
+  "evidence_tier_summary": {
+    "evidence_cards": 5,
+    "metadata_only": 25,
+    "policy": "Only evidence_cards are parsed into the relation graph. Metadata-only records participate in bibliographic retrieval but cannot support graph relations."
+  }
 }

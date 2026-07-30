@@ -250,6 +250,8 @@ class KnowledgeBase:
                 }
             )
             for paper_id in claim["evidence_ids"]:
+                if not self.evidence_is_valid(paper_id):
+                    continue
                 resolved_paper_id = self.paper_id_for_evidence(paper_id)
                 if resolved_paper_id not in self.paper_by_id:
                     continue
@@ -284,6 +286,9 @@ class KnowledgeBase:
         return evidence_id
 
     def evidence_is_valid(self, evidence_id: str) -> bool:
+        if evidence_id in self.vertical_corpus.paper_records:
+            record = self.vertical_corpus.paper_records[evidence_id]
+            return not record.get("exclude_from_evidence_graph", False)
         if evidence_id in self.paper_by_id:
             return True
         return evidence_id in self.vertical_corpus.evidence_index()
@@ -296,7 +301,7 @@ class KnowledgeBase:
                 details.append(index[evidence_id])
                 continue
             paper = self.paper_by_id.get(evidence_id)
-            if paper:
+            if paper and self.evidence_is_valid(evidence_id):
                 details.append(
                     {
                         "evidence_id": evidence_id,

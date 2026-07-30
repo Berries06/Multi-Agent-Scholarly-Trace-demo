@@ -134,6 +134,35 @@ Smoke 检查覆盖：
 - 三套图谱合计 19 篇论文、108 条实体证据跨度、66 个实体、91 条候选关系，关系证据覆盖率均为 100%。
 - 新增 `/api/domains`；`/api/run`、`/api/feedback` 和 `/api/graph-query` 接受 `domain_id`，扩展领域检索严格隔离。
 - 前端新增领域选择器，切换时同步默认查询、领域说明、论文数和版本。
+
+## 领域知识库扩展至 30 篇/领域
+
+- 三个领域均扩展到 30 篇可检索论文记录，总计 90 篇：
+  - 科学文献信息抽取：8 篇证据卡 + 22 篇 Crossref 元数据记录；
+  - 材料发现与图神经网络：5 篇证据卡 + 25 篇 Crossref 元数据记录；
+  - 教育知识追踪：6 篇证据卡 + 24 篇 Crossref 元数据记录。
+- 新增 `scripts/expand_vertical_corpora.py`：12 组检索式、3 路有界并发、25 秒请求超时、指数退避、DOI/题名去重、领域关键词筛选、人工优先表和更正/撤稿排除。
+- 新增 `data/vertical_kb/search_cache/crossref-candidates-2026-07-30.json`，保存检索时间、候选条目、引用量快照、查询命中和选择分数，支持离线复核。
+- 新增 71 份元数据知识卡。它们明确标记 `evidence_tier=metadata_only`、`source_acquired=false` 和 `exclude_from_evidence_graph=true`。
+- `VerticalCorpus` 现在区分全部检索论文与证据层论文；关系抽取只读取证据层，避免仅凭论文题名生成伪关系。
+- `/api/domains` 同时返回 `paper_count`、`evidence_paper_count` 和 `metadata_only_paper_count`，前端可显示“30 篇收录 / N 篇证据层”。
 - `scripts/build_demo_assets.py` 现在生成每领域 JSON/SQLite/Idea，并输出 3 领域 × 3 画像 = 9 组完整输入—中间数据—个性化输出。
 - 新增 `docs/15_multi_domain_test_data.md`，逐项映射赛题条款。
 - 回归测试增至 46 项，全部通过。
+
+## 评测去满分化与可交付运行
+
+- Track A 从 12 条机制样例扩展为 24 条固定噪声压力命题（13 条支持、11 条不支持），新增低置信真阳性、有效证据 ID 语义错配、元数据越权和结构错误；不随机翻转标签，不为制造数字修改 gold。
+- 三智能体当前接收精确率 84.6%（11/13）、Gold 召回 84.6%（11/13）、不支持命题接收率 18.2%（2/11），明确展示 2 个假阳性和 2 个假阴性。
+- 所有二项指标返回分子/分母与 Wilson 95% 区间。原“证据覆盖率 100%”更名为“证据绑定护栏”，只表示存在有效引用 ID，不表示引用语义正确。
+- 前端同步显示噪声压力集口径、置信区间、错误案例数量和结构护栏，避免把工程不变量伪装成模型性能。
+- 新增 `RUN_DEMO.bat`、`STOP_DEMO.bat` 与有超时的 `scripts/launch_demo.ps1`，接收者安装 Python 3.11+ 后可双击运行。
+- 新增 `scripts/package_demo.ps1` 和 `docs/16_demo_distribution.md`，可生成不含 Git 历史与运行日志的 Windows 交付 ZIP，并明确本地 ZIP、公网 HTTPS 与 EXE 封装的适用边界。
+- 当前自动化测试共 47 项，资产重建、后端冒烟及浏览器真实运行均已通过。
+
+## Windows 双击启动兼容性修复（2026-07-31）
+
+- 修复系统拒绝 `Start-Process URL` 时批处理窗口直接关闭、用户无法看到原因的问题。
+- `RUN_DEMO.bat`、`STOP_DEMO.bat` 改为纯 ASCII 控制文本，避免旧版 `cmd.exe` 把 UTF-8 中文错误提示误解析成命令。
+- 浏览器启动改为 ShellExecute + Explorer 两级尝试；若均被安全策略拦截，后端继续运行，窗口保留并显示手动地址。
+- 新增 `OPEN_DEMO.url` 作为备用入口，并纳入交付 ZIP。

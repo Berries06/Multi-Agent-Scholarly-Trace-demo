@@ -8,7 +8,7 @@
       content="研海寻踪：基于多智能体博弈推理的科研知识图谱发现与个性化科研训练系统"
     />
     <title>研海寻踪 · 多智能体科研知识发现</title>
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/styles.css?v=20260730-noise24" />
   </head>
   <body>
     <header class="topbar">
@@ -37,7 +37,7 @@
         <div class="hero-proof">
           <span><b>5</b> 个协同角色 / 3 个决策 Agent</span>
           <span><b id="hero-domain-count">3</b> 个可切换垂直领域</span>
-          <span><b id="hero-paper-count">19</b> 篇同行评审知识卡</span>
+          <span><b id="hero-paper-count">90</b> 篇可检索论文 / 19 篇证据卡</span>
           <span><b>3</b> 类意图驱动图检索</span>
         </div>
       </section>
@@ -82,19 +82,19 @@
           <div id="result-content" class="result-content" hidden>
             <section class="metric-strip" aria-label="核心评测指标">
               <article>
-                <span>三智能体接收精确率</span>
+                <span>噪声压力集接收精确率</span>
                 <strong id="metric-hallucination">—</strong>
-                <small>12 条冻结演示命题</small>
+                <small id="metric-hallucination-note">24 条分层命题</small>
               </article>
               <article>
                 <span>不支持命题接收率</span>
                 <strong id="metric-adaptation">—</strong>
-                <small>越低越好</small>
+                <small id="metric-adaptation-note">越低越好</small>
               </article>
               <article>
-                <span>关系证据覆盖率</span>
+                <span>Gold 保留召回率</span>
                 <strong id="metric-coverage">—</strong>
-                <small>每条边保留原文跨度</small>
+                <small id="metric-coverage-note">支持命题保留比例</small>
               </article>
               <article class="metric-note">
                 <span>垂直知识库切片</span>
@@ -248,7 +248,7 @@
                       <th>接收精确率</th>
                       <th>Gold 召回</th>
                       <th>不支持接收率</th>
-                      <th>证据覆盖</th>
+                      <th>证据绑定护栏</th>
                     </tr>
                   </thead>
                   <tbody id="ablation-table"></tbody>
@@ -336,6 +336,6 @@
       <span>所有结论均保留来源，蓝海假设明确标注为待验证。</span>
     </footer>
 
-    <script src="/app.js" defer></script>
+    <script src="/app.js?v=20260730-noise24" defer></script>
   </body>
 </html>

@@ -6,7 +6,21 @@
 
 ## 2. Windows 一键启动
 
-PowerShell：
+交给其他人使用时，先完整解压，然后直接双击根目录：
+
+```text
+RUN_DEMO.bat
+```
+
+启动器会寻找 `python` 或 Windows `py -3`，启动后端、执行最多 12 秒的健康检查，并自动打开浏览器。结束时双击 `STOP_DEMO.bat`。完整的压缩包、公网和 EXE 选择见 `docs/16_demo_distribution.md`。
+
+PowerShell 等价命令：
+
+```powershell
+.\scripts\launch_demo.ps1
+```
+
+底层前台启动：
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
@@ -21,7 +35,7 @@ Set-ExecutionPolicy -Scope Process Bypass
 
 后台模式不重定向长期子进程的输出句柄，并在 10 秒内轮询健康状态；启动失败会自动终止子进程并返回错误，不会无限等待。
 
-脚本先寻找系统 `python`，没有则使用 Codex 工作区内置 Python。默认只绑定 IPv4 回环地址：
+脚本先寻找系统 `python`，其次寻找 Windows `py -3`，最后才尝试 Codex 工作区内置 Python。默认只绑定 IPv4 回环地址：
 
 ```text
 http://127.0.0.1:8765/
@@ -73,6 +87,14 @@ docker compose down
 ```
 
 `Dockerfile` 默认以非 root 用户运行，并且在尝试绑定 `0.0.0.0` 时采取 fail-closed：必须配置 Bearer Token，或像当前 Compose 一样在确认宿主机只发布回环端口后显式设置 `YANHAI_ALLOW_REMOTE_WITHOUT_TOKEN=true`。
+
+## 4.1 生成交付 ZIP
+
+```powershell
+.\scripts\package_demo.ps1
+```
+
+输出 `dist/yanhai-demo-windows.zip`，不包含 Git 历史与当前运行日志。ZIP 本地运行不需要域名；远程分享才需要受保护的公网 HTTPS 入口。
 
 ## 5. 环境变量
 

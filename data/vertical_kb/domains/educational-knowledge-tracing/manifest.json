@@ -4,123 +4,1115 @@
   "version": "2026-07-30",
   "description": "赛题场景对齐切片：追踪循环网络、记忆网络和注意力模型如何刻画学习者知识状态。",
   "query_example": "请比较 DKT、DKVMN、SAINT 与 AKT 的知识追踪路线，并为学习者生成循证学习建议。",
-  "corpus_type": "verified-metadata-and-abstract-derived knowledge cards",
-  "source_scope": "项目组依据会议官网、DOI 元数据和公开摘要撰写知识卡；未缓存论文全文，卡片证据只能证明本卡片中记录的摘要级命题。",
+  "corpus_type": "tiered scholarly corpus: evidence cards plus metadata-only retrieval records",
+  "source_scope": "6 篇经会议官网/DOI 与公开摘要整理的证据卡用于演示关系图；24 篇 Crossref DOI 元数据记录只用于书目检索，取得并解析全文前不得作为关系证据。",
   "search_audit": {
     "searched_on": "2026-07-30",
+    "provider": "Crossref REST API",
     "queries": [
-      "site:proceedings.neurips.cc Deep Knowledge Tracing",
-      "DKVMN WWW 2017 DOI",
-      "SAINT knowledge tracing DOI",
-      "site:kdd.org attentive knowledge tracing",
-      "site:proceedings.neurips.cc pyKT",
-      "EdNet dataset AIED DOI"
+      "knowledge tracing deep learning",
+      "Bayesian knowledge tracing student modeling",
+      "transformer knowledge tracing",
+      "knowledge tracing intelligent tutoring systems"
     ],
-    "inclusion": "同行评审论文或数据集论文；有会议官方页或 DOI；能形成模型—数据集—任务关系。",
-    "exclusion": "未说明评测数据的模型介绍、无法核验来源的排行榜和营销性案例。"
+    "inclusion": "Crossref journal-article/proceedings-article; DOI, venue and publication date present; title passes two domain keyword groups.",
+    "exclusion": "Books, chapters, preprints/posted content, missing DOI/venue/date, duplicate DOI/title, and off-topic title records.",
+    "selection": "Crossref journal/proceedings records with DOI and venue; two required title-keyword groups; title/DOI deduplication; rank, query coverage, citation snapshot and recency scoring; domain-curated priority list; correction/retraction exclusion.",
+    "candidate_count": 135,
+    "cache_path": "data/vertical_kb/search_cache/crossref-candidates-2026-07-30.json",
+    "previous_manual_audit": {
+      "searched_on": "2026-07-30",
+      "queries": [
+        "site:proceedings.neurips.cc Deep Knowledge Tracing",
+        "DKVMN WWW 2017 DOI",
+        "SAINT knowledge tracing DOI",
+        "site:kdd.org attentive knowledge tracing",
+        "site:proceedings.neurips.cc pyKT",
+        "EdNet dataset AIED DOI"
+      ],
+      "inclusion": "同行评审论文或数据集论文；有会议官方页或 DOI；能形成模型—数据集—任务关系。",
+      "exclusion": "未说明评测数据的模型介绍、无法核验来源的排行榜和营销性案例。"
+    }
   },
   "papers": [
     {
       "paper_id": "neurips-2015-dkt",
       "title": "Deep Knowledge Tracing",
-      "authors": ["Chris Piech", "Jonathan Bassen", "Jonathan Huang", "Surya Ganguli", "Mehran Sahami", "Leonidas Guibas", "Jascha Sohl-Dickstein"],
+      "authors": [
+        "Chris Piech",
+        "Jonathan Bassen",
+        "Jonathan Huang",
+        "Surya Ganguli",
+        "Mehran Sahami",
+        "Leonidas Guibas",
+        "Jascha Sohl-Dickstein"
+      ],
       "year": 2015,
       "published": "2015-12-01",
       "venue": "NeurIPS 2015",
-      "categories": ["knowledge tracing", "recurrent neural network"],
+      "categories": [
+        "knowledge tracing",
+        "recurrent neural network"
+      ],
       "summary": "DKT 使用循环神经网络表示学习者交互序列，并预测其后续答题表现。",
-      "concepts": ["Deep Knowledge Tracing", "recurrent neural network", "knowledge tracing", "ASSISTments", "learner performance prediction"],
+      "concepts": [
+        "Deep Knowledge Tracing",
+        "recurrent neural network",
+        "knowledge tracing",
+        "ASSISTments",
+        "learner performance prediction"
+      ],
       "source_url": "https://proceedings.neurips.cc/paper/2015/hash/bac9162b47c56fc8a4d2a519803d51b3-Abstract.html",
       "document_path": "documents/dkt-2015.md",
       "peer_reviewed": true,
       "source_acquired": false,
       "source_verified_against_original": false,
-      "knowledge_card_basis": "official proceedings metadata and abstract"
+      "knowledge_card_basis": "official proceedings metadata and abstract",
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "10.1145-3038912.3052580",
       "title": "Dynamic Key-Value Memory Networks for Knowledge Tracing",
-      "authors": ["Jiani Zhang", "Xingjian Shi", "Irwin King", "Dit-Yan Yeung"],
+      "authors": [
+        "Jiani Zhang",
+        "Xingjian Shi",
+        "Irwin King",
+        "Dit-Yan Yeung"
+      ],
       "year": 2017,
       "published": "2017-04-03",
       "venue": "The Web Conference 2017",
-      "categories": ["knowledge tracing", "memory network"],
+      "categories": [
+        "knowledge tracing",
+        "memory network"
+      ],
       "summary": "DKVMN 用静态键表示知识概念、动态值表示学习者掌握状态，以键值记忆网络执行知识追踪。",
-      "concepts": ["DKVMN", "key-value memory network", "knowledge tracing", "ASSISTments", "learner performance prediction"],
+      "concepts": [
+        "DKVMN",
+        "key-value memory network",
+        "knowledge tracing",
+        "ASSISTments",
+        "learner performance prediction"
+      ],
       "source_url": "https://doi.org/10.1145/3038912.3052580",
       "document_path": "documents/dkvmn-2017.md",
       "peer_reviewed": true,
       "source_acquired": false,
       "source_verified_against_original": false,
-      "knowledge_card_basis": "DOI metadata, DBLP record and public abstract"
+      "knowledge_card_basis": "DOI metadata, DBLP record and public abstract",
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "10.1145-3386527.3405945",
       "title": "Towards an Appropriate Query, Key, and Value Computation for Knowledge Tracing",
-      "authors": ["Youngduck Choi", "Youngnam Lee", "Junghyun Cho", "Jonghun Baek", "Byungsoo Kim", "Yeongmin Cha", "Donghyun Shin", "Chan Bae"],
+      "authors": [
+        "Youngduck Choi",
+        "Youngnam Lee",
+        "Junghyun Cho",
+        "Jonghun Baek",
+        "Byungsoo Kim",
+        "Yeongmin Cha",
+        "Donghyun Shin",
+        "Chan Bae"
+      ],
       "year": 2020,
       "published": "2020-08-12",
       "venue": "ACM Learning at Scale 2020",
-      "categories": ["knowledge tracing", "self-attention"],
+      "categories": [
+        "knowledge tracing",
+        "self-attention"
+      ],
       "summary": "SAINT 将练习序列和作答序列分置于 Transformer 编码器与解码器，以自注意力建模学习过程。",
-      "concepts": ["SAINT", "self-attention", "knowledge tracing", "EdNet", "learner performance prediction"],
+      "concepts": [
+        "SAINT",
+        "self-attention",
+        "knowledge tracing",
+        "EdNet",
+        "learner performance prediction"
+      ],
       "source_url": "https://doi.org/10.1145/3386527.3405945",
       "document_path": "documents/saint-2020.md",
       "peer_reviewed": true,
       "source_acquired": false,
       "source_verified_against_original": false,
-      "knowledge_card_basis": "publisher metadata and public abstract"
+      "knowledge_card_basis": "publisher metadata and public abstract",
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "10.1145-3394486.3403282",
       "title": "Context-Aware Attentive Knowledge Tracing",
-      "authors": ["Aritra Ghosh", "Neil Heffernan", "Andrew S. Lan"],
+      "authors": [
+        "Aritra Ghosh",
+        "Neil Heffernan",
+        "Andrew S. Lan"
+      ],
       "year": 2020,
       "published": "2020-08-23",
       "venue": "KDD 2020",
-      "categories": ["knowledge tracing", "attention"],
+      "categories": [
+        "knowledge tracing",
+        "attention"
+      ],
       "summary": "AKT 通过单调注意力强调近期相关交互，并以 Rasch 模型式正则化编码问题难度。",
-      "concepts": ["AKT", "monotonic attention", "Rasch model", "knowledge tracing", "ASSISTments", "learner performance prediction"],
+      "concepts": [
+        "AKT",
+        "monotonic attention",
+        "Rasch model",
+        "knowledge tracing",
+        "ASSISTments",
+        "learner performance prediction"
+      ],
       "source_url": "https://doi.org/10.1145/3394486.3403282",
       "document_path": "documents/akt-2020.md",
       "peer_reviewed": true,
       "source_acquired": false,
       "source_verified_against_original": false,
-      "knowledge_card_basis": "official KDD record and public abstract"
+      "knowledge_card_basis": "official KDD record and public abstract",
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "neurips-2022-pykt",
       "title": "pyKT: A Python Library to Benchmark Deep Learning based Knowledge Tracing Models",
-      "authors": ["Zitao Liu", "Qiong Liu", "Jiliang Tang", "Weiqi Luo", "Jianwen Wang"],
+      "authors": [
+        "Zitao Liu",
+        "Qiong Liu",
+        "Jiliang Tang",
+        "Weiqi Luo",
+        "Jianwen Wang"
+      ],
       "year": 2022,
       "published": "2022-12-01",
       "venue": "NeurIPS 2022 Datasets and Benchmarks",
-      "categories": ["knowledge tracing", "benchmarking"],
+      "categories": [
+        "knowledge tracing",
+        "benchmarking"
+      ],
       "summary": "pyKT 统一多种知识追踪模型与数据预处理，并指出标签泄漏会造成不可靠比较。",
-      "concepts": ["pyKT", "standardized preprocessing", "knowledge tracing", "ASSISTments", "EdNet", "label leakage"],
+      "concepts": [
+        "pyKT",
+        "standardized preprocessing",
+        "knowledge tracing",
+        "ASSISTments",
+        "EdNet",
+        "label leakage"
+      ],
       "source_url": "https://proceedings.neurips.cc/paper_files/paper/2022/hash/75ca2b23d9794f02a92449af65a57556-Abstract-Datasets_and_Benchmarks.html",
       "document_path": "documents/pykt-2022.md",
       "peer_reviewed": true,
       "source_acquired": false,
       "source_verified_against_original": false,
-      "knowledge_card_basis": "official proceedings metadata and abstract"
+      "knowledge_card_basis": "official proceedings metadata and abstract",
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "10.1007-978-3-030-52240-7_13",
       "title": "EdNet: A Large-Scale Hierarchical Dataset in Education",
-      "authors": ["Youngduck Choi", "Youngnam Lee", "Junghyun Cho", "Jonghun Baek", "Byungsoo Kim", "Yeongmin Cha", "Donghyun Shin", "Chan Bae"],
+      "authors": [
+        "Youngduck Choi",
+        "Youngnam Lee",
+        "Junghyun Cho",
+        "Jonghun Baek",
+        "Byungsoo Kim",
+        "Yeongmin Cha",
+        "Donghyun Shin",
+        "Chan Bae"
+      ],
       "year": 2020,
       "published": "2020-06-10",
       "venue": "AIED 2020",
-      "categories": ["education dataset", "knowledge tracing"],
+      "categories": [
+        "education dataset",
+        "knowledge tracing"
+      ],
       "summary": "EdNet 是包含约 1.31 亿次交互和 784,309 名学习者的大规模分层教育数据集。",
-      "concepts": ["EdNet", "knowledge tracing", "learner performance prediction", "784,309 learners", "131 million interactions"],
+      "concepts": [
+        "EdNet",
+        "knowledge tracing",
+        "learner performance prediction",
+        "784,309 learners",
+        "131 million interactions"
+      ],
       "source_url": "https://doi.org/10.1007/978-3-030-52240-7_13",
       "document_path": "documents/ednet-2020.md",
       "peer_reviewed": true,
       "source_acquired": false,
       "source_verified_against_original": false,
-      "knowledge_card_basis": "publisher metadata and open abstract"
+      "knowledge_card_basis": "publisher metadata and open abstract",
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
+    },
+    {
+      "paper_id": "10.1007-s11257-017-9193-2",
+      "doi": "10.1007/s11257-017-9193-2",
+      "title": "Bayesian knowledge tracing, logistic models, and beyond: an overview of learner modeling techniques",
+      "authors": [
+        "Radek Pelánek"
+      ],
+      "year": 2017,
+      "published": "2017-12-01",
+      "venue": "User Modeling and User-Adapted Interaction",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "bayesian knowledge tracing",
+        "learner"
+      ],
+      "source_url": "https://doi.org/10.1007/s11257-017-9193-2",
+      "document_path": "documents/metadata-c9c79e77b218.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 198,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1016-j.knosys.2018.03.001",
+      "doi": "10.1016/j.knosys.2018.03.001",
+      "title": "A three learning states Bayesian knowledge tracing model",
+      "authors": [
+        "Kai Zhang",
+        "Yiyu Yao"
+      ],
+      "year": 2018,
+      "published": "2018-05-01",
+      "venue": "Knowledge-Based Systems",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "bayesian knowledge tracing"
+      ],
+      "source_url": "https://doi.org/10.1016/j.knosys.2018.03.001",
+      "document_path": "documents/metadata-dadf191bd366.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 56,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1109-icdm.2018.00156",
+      "doi": "10.1109/icdm.2018.00156",
+      "title": "Deep Knowledge Tracing and Dynamic Student Classification for Knowledge Tracing",
+      "authors": [
+        "Sein Minn",
+        "Yi Yu",
+        "Michel C. Desmarais",
+        "Feida Zhu",
+        "Jill-Jenn Vie"
+      ],
+      "year": 2018,
+      "published": "2018-11-01",
+      "venue": "2018 IEEE International Conference on Data Mining (ICDM)",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "deep knowledge tracing"
+      ],
+      "source_url": "https://doi.org/10.1109/icdm.2018.00156",
+      "document_path": "documents/metadata-92f87ecf725e.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 121,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1145-3543507.3583255",
+      "doi": "10.1145/3543507.3583255",
+      "title": "Tracing Knowledge Instead of Patterns: Stable Knowledge Tracing with Diagnostic Transformer",
+      "authors": [
+        "Yu Yin",
+        "Le Dai",
+        "Zhenya Huang",
+        "Shuanghong Shen",
+        "Fei Wang",
+        "Qi Liu",
+        "Enhong Chen",
+        "Xin Li"
+      ],
+      "year": 2023,
+      "published": "2023-04-30",
+      "venue": "Proceedings of the ACM Web Conference 2023",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "transformer"
+      ],
+      "source_url": "https://doi.org/10.1145/3543507.3583255",
+      "document_path": "documents/metadata-6b71c6d5dcf9.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 103,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1145-3448139.3448170",
+      "doi": "10.1145/3448139.3448170",
+      "title": "Variational Deep Knowledge Tracing for Language Learning",
+      "authors": [
+        "Sherry Ruan",
+        "Wei Wei",
+        "James Landay"
+      ],
+      "year": 2021,
+      "published": "2021-04-12",
+      "venue": "LAK21: 11th International Learning Analytics and Knowledge Conference",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "deep knowledge tracing"
+      ],
+      "source_url": "https://doi.org/10.1145/3448139.3448170",
+      "document_path": "documents/metadata-e192a7b67190.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 3,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1007-s10489-022-03621-1",
+      "doi": "10.1007/s10489-022-03621-1",
+      "title": "What is wrong with deep knowledge tracing? Attention-based knowledge tracing",
+      "authors": [
+        "Xianqing Wang",
+        "Zetao Zheng",
+        "Jia Zhu",
+        "Weihao Yu"
+      ],
+      "year": 2023,
+      "published": "2023-02-01",
+      "venue": "Applied Intelligence",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "deep knowledge tracing",
+        "attention"
+      ],
+      "source_url": "https://doi.org/10.1007/s10489-022-03621-1",
+      "document_path": "documents/metadata-535dfe4e757b.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 19,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1109-tlt.2023.3254544",
+      "doi": "10.1109/tlt.2023.3254544",
+      "title": "Dynamic Cognitive Diagnosis: An Educational Priors-Enhanced Deep Knowledge Tracing Perspective",
+      "authors": [
+        "Fei Wang",
+        "Zhenya Huang",
+        "Qi Liu",
+        "Enhong Chen",
+        "Yu Yin",
+        "Jianhui Ma",
+        "Shijin Wang"
+      ],
+      "year": 2023,
+      "published": "2023-06-01",
+      "venue": "IEEE Transactions on Learning Technologies",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "deep knowledge tracing",
+        "educational"
+      ],
+      "source_url": "https://doi.org/10.1109/tlt.2023.3254544",
+      "document_path": "documents/metadata-2af2814e21ed.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 42,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1145-2883851.2883885",
+      "doi": "10.1145/2883851.2883885",
+      "title": "Sequencing educational content in classrooms using Bayesian knowledge tracing",
+      "authors": [
+        "Yossi Ben David",
+        "Avi Segal",
+        "Ya'akov (Kobi) Gal"
+      ],
+      "year": 2016,
+      "published": "2016-01-01",
+      "venue": "Proceedings of the Sixth International Conference on Learning Analytics & Knowledge - LAK '16",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "bayesian knowledge tracing",
+        "educational"
+      ],
+      "source_url": "https://doi.org/10.1145/2883851.2883885",
+      "document_path": "documents/metadata-d8fd5ef2012f.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 39,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1145-3303772.3303830",
+      "doi": "10.1145/3303772.3303830",
+      "title": "Deep Knowledge Tracing and Engagement with MOOCs",
+      "authors": [
+        "Kritphong Mongkhonvanit",
+        "Klint Kanopka",
+        "David Lang"
+      ],
+      "year": 2019,
+      "published": "2019-03-04",
+      "venue": "Proceedings of the 9th International Conference on Learning Analytics & Knowledge",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "deep knowledge tracing"
+      ],
+      "source_url": "https://doi.org/10.1145/3303772.3303830",
+      "document_path": "documents/metadata-1845e2bb17c1.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 30,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1609-aaai.v36i11.21560",
+      "doi": "10.1609/aaai.v36i11.21560",
+      "title": "Interpretable Knowledge Tracing: Simple and Efficient Student Modeling with Causal Relations",
+      "authors": [
+        "Sein Minn",
+        "Jill-Jênn Vie",
+        "Koh Takeuchi",
+        "Hisashi Kashima",
+        "Feida Zhu"
+      ],
+      "year": 2022,
+      "published": "2022-06-28",
+      "venue": "Proceedings of the AAAI Conference on Artificial Intelligence",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "source_url": "https://doi.org/10.1609/aaai.v36i11.21560",
+      "document_path": "documents/metadata-ed21812dce8c.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 37,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1145-3231644.3231647",
+      "doi": "10.1145/3231644.3231647",
+      "title": "Addressing two problems in deep knowledge tracing via prediction-consistent regularization",
+      "authors": [
+        "Chun-Kit Yeung",
+        "Dit-Yan Yeung"
+      ],
+      "year": 2018,
+      "published": "2018-06-26",
+      "venue": "Proceedings of the Fifth Annual ACM Conference on Learning at Scale",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "deep knowledge tracing"
+      ],
+      "source_url": "https://doi.org/10.1145/3231644.3231647",
+      "document_path": "documents/metadata-61f24dd65195.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 281,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1016-j.knosys.2023.111300",
+      "doi": "10.1016/j.knosys.2023.111300",
+      "title": "HiTSKT: A hierarchical transformer model for session-aware knowledge tracing",
+      "authors": [
+        "Fucai Ke",
+        "Weiqing Wang",
+        "Weicong Tan",
+        "Lan Du",
+        "Yuan Jin",
+        "Yujin Huang",
+        "Hongzhi Yin"
+      ],
+      "year": 2024,
+      "published": "2024-01-01",
+      "venue": "Knowledge-Based Systems",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "transformer"
+      ],
+      "source_url": "https://doi.org/10.1016/j.knosys.2023.111300",
+      "document_path": "documents/metadata-921f75f0771f.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 53,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1016-j.eswa.2024.124451",
+      "doi": "10.1016/j.eswa.2024.124451",
+      "title": "Meta-path structured graph pre-training for improving knowledge tracing in intelligent tutoring",
+      "authors": [
+        "Menglin Zhu",
+        "Liqing Qiu",
+        "Jingcheng Zhou"
+      ],
+      "year": 2024,
+      "published": "2024-11-01",
+      "venue": "Expert Systems with Applications",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "intelligent tutoring"
+      ],
+      "source_url": "https://doi.org/10.1016/j.eswa.2024.124451",
+      "document_path": "documents/metadata-f1615ce558af.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 13,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1145-3051457.3053985",
+      "doi": "10.1145/3051457.3053985",
+      "title": "Deep Knowledge Tracing On Programming Exercises",
+      "authors": [
+        "Lisa Wang",
+        "Angela Sy",
+        "Larry Liu",
+        "Chris Piech"
+      ],
+      "year": 2017,
+      "published": "2017-04-12",
+      "venue": "Proceedings of the Fourth (2017) ACM Conference on Learning @ Scale",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "deep knowledge tracing"
+      ],
+      "source_url": "https://doi.org/10.1145/3051457.3053985",
+      "document_path": "documents/metadata-dfdf39bba803.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 101,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1145-3051457.3053976",
+      "doi": "10.1145/3051457.3053976",
+      "title": "Incorporating Rich Features into Deep Knowledge Tracing",
+      "authors": [
+        "Liang Zhang",
+        "Xiaolu Xiong",
+        "Siyuan Zhao",
+        "Anthony Botelho",
+        "Neil T. Heffernan"
+      ],
+      "year": 2017,
+      "published": "2017-04-12",
+      "venue": "Proceedings of the Fourth (2017) ACM Conference on Learning @ Scale",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "deep knowledge tracing"
+      ],
+      "source_url": "https://doi.org/10.1145/3051457.3053976",
+      "document_path": "documents/metadata-466f12c0ac60.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 90,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1007-s11257-023-09389-4",
+      "doi": "10.1007/s11257-023-09389-4",
+      "title": "Twenty-five years of Bayesian knowledge tracing: a systematic review",
+      "authors": [
+        "Ines Šarić-Grgić",
+        "Ani Grubišić",
+        "Angelina Gašpar"
+      ],
+      "year": 2024,
+      "published": "2024-09-01",
+      "venue": "User Modeling and User-Adapted Interaction",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "bayesian knowledge tracing"
+      ],
+      "source_url": "https://doi.org/10.1007/s11257-023-09389-4",
+      "document_path": "documents/metadata-858b98dae8ac.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 25,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1145-3580595",
+      "doi": "10.1145/3580595",
+      "title": "Fine-Grained Interaction Modeling with Multi-Relational Transformer for Knowledge Tracing",
+      "authors": [
+        "Jiajun Cui",
+        "Zeyuan Chen",
+        "Aimin Zhou",
+        "Jianyong Wang",
+        "Wei Zhang"
+      ],
+      "year": 2023,
+      "published": "2023-10-31",
+      "venue": "ACM Transactions on Information Systems",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "transformer"
+      ],
+      "source_url": "https://doi.org/10.1145/3580595",
+      "document_path": "documents/metadata-1b7d3db0dcde.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 37,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1109-tlt.2023.3346671",
+      "doi": "10.1109/tlt.2023.3346671",
+      "title": "Deep Knowledge Tracing Incorporating a Hypernetwork With Independent Student and Item Networks",
+      "authors": [
+        "Emiko Tsutsumi",
+        "Yiming Guo",
+        "Ryo Kinoshita",
+        "Maomi Ueno"
+      ],
+      "year": 2024,
+      "published": "2024-01-01",
+      "venue": "IEEE Transactions on Learning Technologies",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "deep knowledge tracing"
+      ],
+      "source_url": "https://doi.org/10.1109/tlt.2023.3346671",
+      "document_path": "documents/metadata-c0697e8ec3b1.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 14,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1109-tlt.2023.3336240",
+      "doi": "10.1109/tlt.2023.3336240",
+      "title": "OPKT: Enhancing Knowledge Tracing With Optimized Pretraining Mechanisms in Intelligent Tutoring",
+      "authors": [
+        "Liqing Qiu",
+        "Menglin Zhu",
+        "Jingcheng Zhou"
+      ],
+      "year": 2024,
+      "published": "2024-01-01",
+      "venue": "IEEE Transactions on Learning Technologies",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing",
+        "intelligent tutoring"
+      ],
+      "source_url": "https://doi.org/10.1109/tlt.2023.3336240",
+      "document_path": "documents/metadata-24b25740053b.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 11,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1016-j.knosys.2022.110036",
+      "doi": "10.1016/j.knosys.2022.110036",
+      "title": "A survey on deep learning based knowledge tracing",
+      "authors": [
+        "Xiangyu Song",
+        "Jianxin Li",
+        "Taotao Cai",
+        "Shuiqiao Yang",
+        "Tingting Yang",
+        "Chengfei Liu"
+      ],
+      "year": 2022,
+      "published": "2022-12-01",
+      "venue": "Knowledge-Based Systems",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing"
+      ],
+      "source_url": "https://doi.org/10.1016/j.knosys.2022.110036",
+      "document_path": "documents/metadata-33bd282bb525.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 149,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1145-3303772.3303786",
+      "doi": "10.1145/3303772.3303786",
+      "title": "Knowledge Query Network for Knowledge Tracing",
+      "authors": [
+        "Jinseok Lee",
+        "Dit-Yan Yeung"
+      ],
+      "year": 2019,
+      "published": "2019-03-04",
+      "venue": "Proceedings of the 9th International Conference on Learning Analytics & Knowledge",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing"
+      ],
+      "source_url": "https://doi.org/10.1145/3303772.3303786",
+      "document_path": "documents/metadata-f1d453f8a7b8.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 63,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1145-3350546.3352513",
+      "doi": "10.1145/3350546.3352513",
+      "title": "Graph-based Knowledge Tracing: Modeling Student Proficiency Using Graph Neural Network",
+      "authors": [
+        "Hiromi Nakagawa",
+        "Yusuke Iwasawa",
+        "Yutaka Matsuo"
+      ],
+      "year": 2019,
+      "published": "2019-10-14",
+      "venue": "IEEE/WIC/ACM International Conference on Web Intelligence",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing"
+      ],
+      "source_url": "https://doi.org/10.1145/3350546.3352513",
+      "document_path": "documents/metadata-e9f62b62279d.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 291,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1609-aaai.v33i01.3301750",
+      "doi": "10.1609/aaai.v33i01.3301750",
+      "title": "Knowledge Tracing Machines: Factorization Machines for Knowledge Tracing",
+      "authors": [
+        "Jill-Jenn Vie",
+        "Hisashi Kashima"
+      ],
+      "year": 2019,
+      "published": "2019-07-17",
+      "venue": "Proceedings of the AAAI Conference on Artificial Intelligence",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing"
+      ],
+      "source_url": "https://doi.org/10.1609/aaai.v33i01.3301750",
+      "document_path": "documents/metadata-a7834a4bca97.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 140,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1007-s40593-022-00297-z",
+      "doi": "10.1007/s40593-022-00297-z",
+      "title": "Interpreting Deep Learning Models for Knowledge Tracing",
+      "authors": [
+        "Yu Lu",
+        "Deliang Wang",
+        "Penghe Chen",
+        "Qinggang Meng",
+        "Shengquan Yu"
+      ],
+      "year": 2023,
+      "published": "2023-09-01",
+      "venue": "International Journal of Artificial Intelligence in Education",
+      "categories": [
+        "knowledge tracing",
+        "student modeling"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“教育知识追踪与个性化学习”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "knowledge tracing"
+      ],
+      "source_url": "https://doi.org/10.1007/s40593-022-00297-z",
+      "document_path": "documents/metadata-70d95e1c9cfc.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 33,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
     }
-  ]
+  ],
+  "paper_count_target": 30,
+  "evidence_tier_summary": {
+    "evidence_cards": 6,
+    "metadata_only": 24,
+    "policy": "Only evidence_cards are parsed into the relation graph. Metadata-only records participate in bibliographic retrieval but cannot support graph relations."
+  }
 }

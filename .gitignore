@@ -10,5 +10,7 @@ outputs/*.json
 outputs/*.db
 outputs/*.log
 outputs/*.jsonl
+outputs/*.pid
 papers/**/*.pdf
 tmp/
+dist/

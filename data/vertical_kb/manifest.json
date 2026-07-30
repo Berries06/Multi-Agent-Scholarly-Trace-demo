@@ -1,140 +1,1115 @@
 {
   "domain_id": "scientific-ie-kg",
   "domain_name": "科学文献信息抽取与知识图谱构建",
-  "version": "2026-07-29",
+  "version": "2026-07-30",
   "description": "项目核心领域：从科研论文抽取实体、关系与证据跨度，并构建可审计知识图谱。",
   "query_example": "如何从科学论文中抽取可追溯知识图谱，并利用图谱理解技术脉络和生成研究想法？",
-  "corpus_type": "peer-reviewed-paper knowledge cards with locally indexed PDFs",
-  "source_scope": "知识卡为项目组释义；ACL Anthology 链接和本地 PDF 用于来源追溯，卡片文字不等同于论文逐字原文。",
+  "corpus_type": "tiered scholarly corpus: evidence cards plus metadata-only retrieval records",
+  "source_scope": "8 篇 ACL 论文证据卡用于关系抽取；22 篇 Crossref DOI 元数据记录只用于书目检索，取得并解析全文前不得作为关系证据。知识卡文字不等同于论文逐字原文。",
   "license_note": "本切片的知识卡为项目组基于论文摘要自行整理的释义；论文 PDF 来自 ACL Anthology，2016 年后材料按 CC BY 4.0 提供。下载文件仅作为本地研究语料，引用时须保留作者和来源。",
   "papers": [
     {
       "paper_id": "D18-1360",
       "title": "Multi-Task Identification of Entities, Relations, and Coreference for Scientific Knowledge Graph Construction",
-      "authors": ["Yi Luan", "Luheng He", "Mari Ostendorf", "Hannaneh Hajishirzi"],
+      "authors": [
+        "Yi Luan",
+        "Luheng He",
+        "Mari Ostendorf",
+        "Hannaneh Hajishirzi"
+      ],
       "year": 2018,
       "published": "2018-10-01",
       "venue": "EMNLP 2018",
-      "categories": ["scientific information extraction", "knowledge graph"],
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
       "summary": "SciERC 同时标注科学实体、关系和共指；SciIE 以共享跨度表示联合建模，并用结果构建科学知识图谱。",
-      "concepts": ["SciERC", "SciIE", "scientific information extraction", "scientific knowledge graph", "coreference"],
+      "concepts": [
+        "SciERC",
+        "SciIE",
+        "scientific information extraction",
+        "scientific knowledge graph",
+        "coreference"
+      ],
       "source_url": "https://aclanthology.org/D18-1360/",
       "pdf_url": "https://aclanthology.org/D18-1360.pdf",
       "document_path": "documents/D18-1360.md",
       "local_pdf": "papers/scientific-ie-kg/D18-1360.pdf",
-      "peer_reviewed": true
+      "peer_reviewed": true,
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "D19-1585",
       "title": "Entity, Relation, and Event Extraction with Contextualized Span Representations",
-      "authors": ["David Wadden", "Ulme Wennberg", "Yi Luan", "Hannaneh Hajishirzi"],
+      "authors": [
+        "David Wadden",
+        "Ulme Wennberg",
+        "Yi Luan",
+        "Hannaneh Hajishirzi"
+      ],
       "year": 2019,
       "published": "2019-11-01",
       "venue": "EMNLP-IJCNLP 2019",
-      "categories": ["scientific information extraction", "span model"],
+      "categories": [
+        "scientific information extraction",
+        "span model"
+      ],
       "summary": "DyGIE++ 使用 BERT 上下文跨度表示与动态图传播，联合完成实体、关系、事件和共指抽取。",
-      "concepts": ["DyGIE++", "contextualized span representations", "SciERC", "scientific information extraction"],
+      "concepts": [
+        "DyGIE++",
+        "contextualized span representations",
+        "SciERC",
+        "scientific information extraction"
+      ],
       "source_url": "https://aclanthology.org/D19-1585/",
       "pdf_url": "https://aclanthology.org/D19-1585.pdf",
       "document_path": "documents/D19-1585.md",
       "local_pdf": "papers/scientific-ie-kg/D19-1585.pdf",
-      "peer_reviewed": true
+      "peer_reviewed": true,
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "2020.acl-main.670",
       "title": "SciREX: A Challenge Dataset for Document-Level Information Extraction",
-      "authors": ["Sarthak Jain", "Madeleine van Zuylen", "Hannaneh Hajishirzi", "Iz Beltagy"],
+      "authors": [
+        "Sarthak Jain",
+        "Madeleine van Zuylen",
+        "Hannaneh Hajishirzi",
+        "Iz Beltagy"
+      ],
       "year": 2020,
       "published": "2020-07-01",
       "venue": "ACL 2020",
-      "categories": ["document-level information extraction", "n-ary relation extraction"],
+      "categories": [
+        "document-level information extraction",
+        "n-ary relation extraction"
+      ],
       "summary": "SciREX 面向科学论文全文，覆盖显著实体识别、实体聚类和文档级 N 元关系抽取。",
-      "concepts": ["SciREX", "document-level information extraction", "n-ary relation extraction", "scientific literature"],
+      "concepts": [
+        "SciREX",
+        "document-level information extraction",
+        "n-ary relation extraction",
+        "scientific literature"
+      ],
       "source_url": "https://aclanthology.org/2020.acl-main.670/",
       "pdf_url": "https://aclanthology.org/2020.acl-main.670.pdf",
       "document_path": "documents/2020.acl-main.670.md",
       "local_pdf": "papers/scientific-ie-kg/2020.acl-main.670.pdf",
-      "peer_reviewed": true
+      "peer_reviewed": true,
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "2022.emnlp-main.46",
       "title": "ReSel: N-ary Relation Extraction from Scientific Text and Tables by Learning to Retrieve and Select",
-      "authors": ["Yuchen Zhuang", "Yinghao Li", "Junyang Zhang", "Yue Yu", "Yingjun Mou", "Xiang Chen", "Le Song", "Chao Zhang"],
+      "authors": [
+        "Yuchen Zhuang",
+        "Yinghao Li",
+        "Junyang Zhang",
+        "Yue Yu",
+        "Yingjun Mou",
+        "Xiang Chen",
+        "Le Song",
+        "Chao Zhang"
+      ],
       "year": 2022,
       "published": "2022-12-01",
       "venue": "EMNLP 2022",
-      "categories": ["n-ary relation extraction", "table extraction"],
+      "categories": [
+        "n-ary relation extraction",
+        "table extraction"
+      ],
       "summary": "ReSel 先检索相关段落或表格，再从跨模态实体关联图中选择目标实体，抽取科学论文 N 元关系。",
-      "concepts": ["ReSel", "n-ary relation extraction", "text-table evidence", "scientific information extraction"],
+      "concepts": [
+        "ReSel",
+        "n-ary relation extraction",
+        "text-table evidence",
+        "scientific information extraction"
+      ],
       "source_url": "https://aclanthology.org/2022.emnlp-main.46/",
       "pdf_url": "https://aclanthology.org/2022.emnlp-main.46.pdf",
       "document_path": "documents/2022.emnlp-main.46.md",
       "local_pdf": "papers/scientific-ie-kg/2022.emnlp-main.46.pdf",
-      "peer_reviewed": true
+      "peer_reviewed": true,
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "2024.emnlp-main.726",
       "title": "SciER: An Entity and Relation Extraction Dataset for Datasets, Methods, and Tasks in Scientific Documents",
-      "authors": ["Qi Zhang", "Zhijia Chen", "Huitong Pan", "Cornelia Caragea", "Longin Jan Latecki", "Eduard Dragut"],
+      "authors": [
+        "Qi Zhang",
+        "Zhijia Chen",
+        "Huitong Pan",
+        "Cornelia Caragea",
+        "Longin Jan Latecki",
+        "Eduard Dragut"
+      ],
       "year": 2024,
       "published": "2024-11-01",
       "venue": "EMNLP 2024",
-      "categories": ["full-text scientific information extraction", "out-of-distribution evaluation"],
+      "categories": [
+        "full-text scientific information extraction",
+        "out-of-distribution evaluation"
+      ],
       "summary": "SciER 标注 106 篇全文，包含超过 24k 实体和 12k 关系，并设置分布外测试集。",
-      "concepts": ["SciER", "full-text scientific information extraction", "24k entities", "12k relations", "out-of-distribution evaluation"],
+      "concepts": [
+        "SciER",
+        "full-text scientific information extraction",
+        "24k entities",
+        "12k relations",
+        "out-of-distribution evaluation"
+      ],
       "source_url": "https://aclanthology.org/2024.emnlp-main.726/",
       "pdf_url": "https://aclanthology.org/2024.emnlp-main.726.pdf",
       "document_path": "documents/2024.emnlp-main.726.md",
       "local_pdf": "papers/scientific-ie-kg/2024.emnlp-main.726.pdf",
-      "peer_reviewed": true
+      "peer_reviewed": true,
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "2024.naacl-long.300",
       "title": "GLiNER: Generalist Model for Named Entity Recognition using Bidirectional Transformer",
-      "authors": ["Urchade Zaratiana", "Nadi Tomeh", "Pierre Holat", "Thierry Charnois"],
+      "authors": [
+        "Urchade Zaratiana",
+        "Nadi Tomeh",
+        "Pierre Holat",
+        "Thierry Charnois"
+      ],
       "year": 2024,
       "published": "2024-06-01",
       "venue": "NAACL 2024",
-      "categories": ["open-type entity recognition", "zero-shot extraction"],
+      "categories": [
+        "open-type entity recognition",
+        "zero-shot extraction"
+      ],
       "summary": "GLiNER 用自然语言标签驱动紧凑双向 Transformer，在一次前向传播中完成开放类型实体识别。",
-      "concepts": ["GLiNER", "open-type entity recognition", "bidirectional transformer", "zero-shot extraction"],
+      "concepts": [
+        "GLiNER",
+        "open-type entity recognition",
+        "bidirectional transformer",
+        "zero-shot extraction"
+      ],
       "source_url": "https://aclanthology.org/2024.naacl-long.300/",
       "pdf_url": "https://aclanthology.org/2024.naacl-long.300.pdf",
       "document_path": "documents/2024.naacl-long.300.md",
       "local_pdf": "papers/scientific-ie-kg/2024.naacl-long.300.pdf",
-      "peer_reviewed": true
+      "peer_reviewed": true,
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "2025.naacl-long.418",
       "title": "GLiREL - Generalist Model for Zero-Shot Relation Extraction",
-      "authors": ["Jack Boylan", "Chris Hokamp", "Demian Gholipour Ghalandari"],
+      "authors": [
+        "Jack Boylan",
+        "Chris Hokamp",
+        "Demian Gholipour Ghalandari"
+      ],
       "year": 2025,
       "published": "2025-04-01",
       "venue": "NAACL 2025",
-      "categories": ["zero-shot relation extraction", "open relation schema"],
+      "categories": [
+        "zero-shot relation extraction",
+        "open relation schema"
+      ],
       "summary": "GLiREL 以自然语言关系标签对多个实体对进行零样本关系分类，可作为开放 schema 的候选生成器。",
-      "concepts": ["GLiREL", "zero-shot relation extraction", "open relation schema", "relation extraction"],
+      "concepts": [
+        "GLiREL",
+        "zero-shot relation extraction",
+        "open relation schema",
+        "relation extraction"
+      ],
       "source_url": "https://aclanthology.org/2025.naacl-long.418/",
       "pdf_url": "https://aclanthology.org/2025.naacl-long.418.pdf",
       "document_path": "documents/2025.naacl-long.418.md",
       "local_pdf": "papers/scientific-ie-kg/2025.naacl-long.418.pdf",
-      "peer_reviewed": true
+      "peer_reviewed": true,
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
     },
     {
       "paper_id": "2025.emnlp-main.732",
       "title": "SciNLP: A Domain-Specific Benchmark for Full-Text Scientific Entity and Relation Extraction in NLP",
-      "authors": ["Decheng Duan", "Jitong Peng", "Yingyi Zhang", "Chengzhi Zhang"],
+      "authors": [
+        "Decheng Duan",
+        "Jitong Peng",
+        "Yingyi Zhang",
+        "Chengzhi Zhang"
+      ],
       "year": 2025,
       "published": "2025-11-01",
       "venue": "EMNLP 2025",
-      "categories": ["full-text scientific information extraction", "NLP knowledge graph"],
+      "categories": [
+        "full-text scientific information extraction",
+        "NLP knowledge graph"
+      ],
       "summary": "SciNLP 面向 NLP 领域全文实体关系抽取，并使用训练后的模型自动构建细粒度 NLP 知识图谱。",
-      "concepts": ["SciNLP", "full-text scientific information extraction", "NLP knowledge graph", "scientific knowledge graph"],
+      "concepts": [
+        "SciNLP",
+        "full-text scientific information extraction",
+        "NLP knowledge graph",
+        "scientific knowledge graph"
+      ],
       "source_url": "https://aclanthology.org/2025.emnlp-main.732/",
       "pdf_url": "https://aclanthology.org/2025.emnlp-main.732.pdf",
       "document_path": "documents/2025.emnlp-main.732.md",
       "local_pdf": "papers/scientific-ie-kg/2025.emnlp-main.732.pdf",
-      "peer_reviewed": true
+      "peer_reviewed": true,
+      "evidence_tier": "evidence_card",
+      "exclude_from_evidence_graph": false
+    },
+    {
+      "paper_id": "10.1109-ecis65594.2025.11086863",
+      "doi": "10.1109/ecis65594.2025.11086863",
+      "title": "Information Extraction and Knowledge Graph Construction of Chinese Scientific and Technical Literature Based on Fine-Tuning Large Language Models",
+      "authors": [
+        "Xinyuan She",
+        "Yahong Yu",
+        "Lizhang Chen"
+      ],
+      "year": 2025,
+      "published": "2025-05-23",
+      "venue": "2025 IEEE 2nd International Conference on Electronics, Communications and Intelligent Science (ECIS)",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scientific",
+        "literature",
+        "knowledge graph",
+        "information extraction"
+      ],
+      "source_url": "https://doi.org/10.1109/ecis65594.2025.11086863",
+      "document_path": "documents/metadata-136e8ea3ddfb.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 0,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1016-j.cageo.2017.12.007",
+      "doi": "10.1016/j.cageo.2017.12.007",
+      "title": "Information extraction and knowledge graph construction from geoscience literature",
+      "authors": [
+        "Chengbin Wang",
+        "Xiaogang Ma",
+        "Jianguo Chen",
+        "Jingwen Chen"
+      ],
+      "year": 2018,
+      "published": "2018-03-01",
+      "venue": "Computers & Geosciences",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "literature",
+        "knowledge graph",
+        "information extraction"
+      ],
+      "source_url": "https://doi.org/10.1016/j.cageo.2017.12.007",
+      "document_path": "documents/metadata-b9f861c202cc.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 196,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1109-ickg59574.2023.00036",
+      "doi": "10.1109/ickg59574.2023.00036",
+      "title": "Investigations on Scientific Literature Meta Information Extraction Using Large Language Models",
+      "authors": [
+        "Menghao Guo",
+        "Fan Wu",
+        "Jinling Jiang",
+        "Xiaoran Yan",
+        "Guangyong Chen",
+        "Wenhui Li",
+        "Yunhong Zhao",
+        "Zeyi Sun"
+      ],
+      "year": 2023,
+      "published": "2023-12-01",
+      "venue": "2023 IEEE International Conference on Knowledge Graph (ICKG)",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scientific",
+        "literature",
+        "information extraction"
+      ],
+      "source_url": "https://doi.org/10.1109/ickg59574.2023.00036",
+      "document_path": "documents/metadata-060d0288902a.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 6,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.3724-2096-7004.di.2025.0175",
+      "doi": "10.3724/2096-7004.di.2025.0175",
+      "title": "Retrieval Augmented Document-Level Information Extraction from Scientific Articles Using Large Language Models",
+      "authors": [
+        "Xizong Zhang",
+        "Zixin Jiang",
+        "Zhichun Wang"
+      ],
+      "year": 2026,
+      "published": "2026-03-01",
+      "venue": "Data Intelligence",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scientific",
+        "information extraction",
+        "document-level"
+      ],
+      "source_url": "https://doi.org/10.3724/2096-7004.di.2025.0175",
+      "document_path": "documents/metadata-4d05eb07d4ae.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 0,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1007-s00799-021-00313-y",
+      "doi": "10.1007/s00799-021-00313-y",
+      "title": "Evaluating BERT-based scientific relation classifiers for scholarly knowledge graph construction on digital library collections",
+      "authors": [
+        "Ming Jiang",
+        "Jennifer D’Souza",
+        "Sören Auer",
+        "J. Stephen Downie"
+      ],
+      "year": 2022,
+      "published": "2022-06-01",
+      "venue": "International Journal on Digital Libraries",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scientific",
+        "scholarly",
+        "knowledge graph"
+      ],
+      "source_url": "https://doi.org/10.1007/s00799-021-00313-y",
+      "document_path": "documents/metadata-5c5fa4f33538.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 8,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.5220-0012260300003598",
+      "doi": "10.5220/0012260300003598",
+      "title": "DAF: Data Acquisition Framework to Support Information Extraction from Scientific Publications",
+      "authors": [
+        "Muhammad Suryani",
+        "Steffen Hahne",
+        "Christian Beth",
+        "Klaus Wallmann",
+        "Matthias Renz"
+      ],
+      "year": 2023,
+      "published": "2023-01-01",
+      "venue": "Proceedings of the 15th International Joint Conference on Knowledge Discovery, Knowledge Engineering and Knowledge Management",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scientific",
+        "information extraction"
+      ],
+      "source_url": "https://doi.org/10.5220/0012260300003598",
+      "document_path": "documents/metadata-1b1051011b64.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 3,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1109-anthology.2013.6784932",
+      "doi": "10.1109/anthology.2013.6784932",
+      "title": "Chinese Scientific And Technological Named Entity identification and Relation extraction based on knowledge tree",
+      "authors": [
+        "Xi Liu",
+        "Peng Lu",
+        "Xiaorong Qu",
+        "Yibo Gao",
+        "YiPing Yang"
+      ],
+      "year": 2013,
+      "published": "2013-01-01",
+      "venue": "IEEE Conference Anthology",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scientific",
+        "named entity",
+        "relation extraction"
+      ],
+      "source_url": "https://doi.org/10.1109/anthology.2013.6784932",
+      "document_path": "documents/metadata-071ea0be7285.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 0,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.18653-v1-2026.findings-acl.1657",
+      "doi": "10.18653/v1/2026.findings-acl.1657",
+      "title": "SudokuFill: A Multi-Agent Progressive Filling Framework for Document-Level Scientific Information Extraction",
+      "authors": [
+        "Yang Li",
+        "Yajiao Wang",
+        "Yu Zhang",
+        "Yuanzhe Zhang",
+        "Maodi Hu",
+        "Mengting Zhang",
+        "Xi Sun",
+        "Hua Yue",
+        "Zhixiong Zhang"
+      ],
+      "year": 2026,
+      "published": "2026-01-01",
+      "venue": "Findings of the Association for Computational Linguistics: ACL 2026",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scientific",
+        "information extraction",
+        "document-level"
+      ],
+      "source_url": "https://doi.org/10.18653/v1/2026.findings-acl.1657",
+      "document_path": "documents/metadata-60e01277a6f4.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 0,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1016-j.ipm.2020.102309",
+      "doi": "10.1016/j.ipm.2020.102309",
+      "title": "A neural knowledge graph evaluator: Combining structural and semantic evidence of knowledge graphs for predicting supportive knowledge in scientific QA",
+      "authors": [
+        "Chen Qiao",
+        "Xiao Hu"
+      ],
+      "year": 2020,
+      "published": "2020-11-01",
+      "venue": "Information Processing & Management",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scientific",
+        "knowledge graph"
+      ],
+      "source_url": "https://doi.org/10.1016/j.ipm.2020.102309",
+      "document_path": "documents/metadata-898e9a7963d9.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 22,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1109-icoict66265.2025.11193072",
+      "doi": "10.1109/icoict66265.2025.11193072",
+      "title": "Entity Extraction in Scientific Literature Using Hidden Markov Model and Conditional Random Fields",
+      "authors": [
+        "Kayyisa Zulfa Mustafida",
+        "Ade Romadhony"
+      ],
+      "year": 2025,
+      "published": "2025-07-30",
+      "venue": "2025 International Conference on Information and Communication Technology (ICoICT)",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scientific",
+        "literature",
+        "entity extraction"
+      ],
+      "source_url": "https://doi.org/10.1109/icoict66265.2025.11193072",
+      "document_path": "documents/metadata-1a2243a37f24.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 1,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1145-3460210.3493582",
+      "doi": "10.1145/3460210.3493582",
+      "title": "Triple Classification for Scholarly Knowledge Graph Completion",
+      "authors": [
+        "Mohamad Yaser Jaradeh",
+        "Kuldeep Singh",
+        "Markus Stocker",
+        "Sören Auer"
+      ],
+      "year": 2021,
+      "published": "2021-12-02",
+      "venue": "Proceedings of the 11th Knowledge Capture Conference",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scholarly",
+        "knowledge graph"
+      ],
+      "source_url": "https://doi.org/10.1145/3460210.3493582",
+      "document_path": "documents/metadata-5d4341bb150f.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 13,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.31763-businta.v8i2.657",
+      "doi": "10.31763/businta.v8i2.657",
+      "title": "Knowledge graph completion for scholarly knowledge graph",
+      "authors": [
+        "Taufiqurrahman Taufiqurrahman",
+        "Kemas Rahmat Saleh Wiharja",
+        "Gia Septiana Wulandari"
+      ],
+      "year": 2024,
+      "published": "2024-12-04",
+      "venue": "Bulletin of Social Informatics Theory and Application",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scholarly",
+        "knowledge graph"
+      ],
+      "source_url": "https://doi.org/10.31763/businta.v8i2.657",
+      "document_path": "documents/metadata-0eec51b530e7.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 2,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1145-3383583.3398530",
+      "doi": "10.1145/3383583.3398530",
+      "title": "Toward Representing Research Contributions in Scholarly Knowledge Graphs Using Knowledge Graph Cells",
+      "authors": [
+        "Lars Vogt",
+        "Jennifer D'Souza",
+        "Markus Stocker",
+        "Sören Auer"
+      ],
+      "year": 2020,
+      "published": "2020-08-01",
+      "venue": "Proceedings of the ACM/IEEE Joint Conference on Digital Libraries in 2020",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scholarly",
+        "knowledge graph"
+      ],
+      "source_url": "https://doi.org/10.1145/3383583.3398530",
+      "document_path": "documents/metadata-3d0b289809ed.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 15,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.18653-v1-2025.wasp-main.4",
+      "doi": "10.18653/v1/2025.wasp-main.4",
+      "title": "Zero-Shot Cross-Sentential Scientific Relation Extraction via Entity-Guided Summarization",
+      "authors": [
+        "Vani Kanjirangat",
+        "Fabio Rinaldi"
+      ],
+      "year": 2025,
+      "published": "2025-01-01",
+      "venue": "Proceedings of the Third Workshop for Artificial Intelligence for Scientific Publications",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scientific",
+        "relation extraction"
+      ],
+      "source_url": "https://doi.org/10.18653/v1/2025.wasp-main.4",
+      "document_path": "documents/metadata-6715a4273939.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 0,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1109-s.a.i.ence50533.2020.9303196",
+      "doi": "10.1109/s.a.i.ence50533.2020.9303196",
+      "title": "Entity Recognition and Relation Extraction from Scientific and Technical Texts in Russian",
+      "authors": [
+        "Elena Bruches",
+        "Alexey Pauls",
+        "Tatiana Batura",
+        "Vladimir Isachenko"
+      ],
+      "year": 2020,
+      "published": "2020-11-14",
+      "venue": "2020 Science and Artificial Intelligence conference (S.A.I.ence)",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scientific",
+        "relation extraction"
+      ],
+      "source_url": "https://doi.org/10.1109/s.a.i.ence50533.2020.9303196",
+      "document_path": "documents/metadata-8d853f87da5e.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 10,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1016-j.neunet.2025.107250",
+      "doi": "10.1016/j.neunet.2025.107250",
+      "title": "Span-aware pre-trained network with deep information bottleneck for scientific entity relation extraction",
+      "authors": [
+        "Youwei Wang",
+        "Peisong Cao",
+        "Haichuan Fang",
+        "Yangdong Ye"
+      ],
+      "year": 2025,
+      "published": "2025-06-01",
+      "venue": "Neural Networks",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scientific",
+        "relation extraction"
+      ],
+      "source_url": "https://doi.org/10.1016/j.neunet.2025.107250",
+      "document_path": "documents/metadata-bd16ad96c7c4.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 7,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.3390-math12091349",
+      "doi": "10.3390/math12091349",
+      "title": "A Graph-Based Keyword Extraction Method for Academic Literature Knowledge Graph Construction",
+      "authors": [
+        "Lin Zhang",
+        "Yanan Li",
+        "Qinru Li"
+      ],
+      "year": 2024,
+      "published": "2024-04-29",
+      "venue": "Mathematics",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "literature",
+        "knowledge graph"
+      ],
+      "source_url": "https://doi.org/10.3390/math12091349",
+      "document_path": "documents/metadata-c7a933165318.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 16,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.52825-cordi.v1i.272",
+      "doi": "10.52825/cordi.v1i.272",
+      "title": "Organizing Scholarly Knowledge in the Open Research Knowledge Graph",
+      "authors": [
+        "Sören Auer",
+        "Markus Stocker",
+        "Oliver Karras",
+        "Allard Oelen",
+        "Jennifer D'Souza",
+        "Anna-Lena Lorenz"
+      ],
+      "year": 2023,
+      "published": "2023-09-07",
+      "venue": "Proceedings of the Conference on Research Data Infrastructure",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scholarly",
+        "knowledge graph"
+      ],
+      "source_url": "https://doi.org/10.52825/cordi.v1i.272",
+      "document_path": "documents/metadata-f171d61733e0.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "journal-article",
+      "citation_count_snapshot": 0,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1109-icsc.2018.00045",
+      "doi": "10.1109/icsc.2018.00045",
+      "title": "Data Acquisition and Information Extraction for Scientific Knowledge Base Building",
+      "authors": [
+        "Piotr Andruszkiewicz",
+        "Henryk Rybinski"
+      ],
+      "year": 2018,
+      "published": "2018-01-01",
+      "venue": "2018 IEEE 12th International Conference on Semantic Computing (ICSC)",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scientific",
+        "information extraction"
+      ],
+      "source_url": "https://doi.org/10.1109/icsc.2018.00045",
+      "document_path": "documents/metadata-37e81cbfc0f4.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 2,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1117-12.3111111",
+      "doi": "10.1117/12.3111111",
+      "title": "PSCF-NER: prompt-driven Chinese scholarly entity recognition and knowledge graph construction",
+      "authors": [
+        "Yunlong Wang",
+        "Wenzhi Si",
+        "Songbo Zhang",
+        "Miaomiao Jia",
+        "Suzhi Zhang",
+        "Pu Li"
+      ],
+      "year": 2026,
+      "published": "2026-04-15",
+      "venue": "International Conference on Pattern Recognition and Image Analysis (PRIA 2025)",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scholarly",
+        "knowledge graph"
+      ],
+      "source_url": "https://doi.org/10.1117/12.3111111",
+      "document_path": "documents/metadata-31d189c60eaa.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 0,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.1109-icbda65366.2025.11211295",
+      "doi": "10.1109/icbda65366.2025.11211295",
+      "title": "Knowledge Discovery from Scholarly Resources Using Large Language Model and Knowledge Graph",
+      "authors": [
+        "Jiao Li",
+        "Guojian Xian",
+        "Yongwen Huang",
+        "Tan Sun"
+      ],
+      "year": 2025,
+      "published": "2025-03-13",
+      "venue": "2025 10th International Conference on Big Data Analytics (ICBDA)",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scholarly",
+        "knowledge graph"
+      ],
+      "source_url": "https://doi.org/10.1109/icbda65366.2025.11211295",
+      "document_path": "documents/metadata-dc89637bade3.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 0,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
+    },
+    {
+      "paper_id": "10.18653-v1-2021.semeval-1.175",
+      "doi": "10.18653/v1/2021.semeval-1.175",
+      "title": "Counts@IITK at SemEval-2021 Task 8: SciBERT Based Entity And Semantic Relation Extraction For Scientific Data",
+      "authors": [
+        "Akash Gangwar",
+        "Sabhay Jain",
+        "Shubham Sourav",
+        "Ashutosh Modi"
+      ],
+      "year": 2021,
+      "published": "2021-01-01",
+      "venue": "Proceedings of the 15th International Workshop on Semantic Evaluation (SemEval-2021)",
+      "categories": [
+        "scientific information extraction",
+        "knowledge graph"
+      ],
+      "summary": "该论文经 Crossref 元数据筛选纳入“科学文献信息抽取与知识图谱构建”检索扩展层；方法、实验和结论须在取得全文并完成证据抽取后写入关系图。",
+      "concepts": [
+        "scientific information extraction",
+        "scientific",
+        "relation extraction"
+      ],
+      "source_url": "https://doi.org/10.18653/v1/2021.semeval-1.175",
+      "document_path": "documents/metadata-8ec83d7d4c23.md",
+      "peer_reviewed": true,
+      "peer_reviewed_status": "Crossref-type-inferred",
+      "crossref_type": "proceedings-article",
+      "citation_count_snapshot": 5,
+      "metadata_provider": "Crossref REST API",
+      "metadata_retrieved_on": "2026-07-30",
+      "source_acquired": false,
+      "source_verified_against_original": false,
+      "knowledge_card_basis": "Crossref bibliographic metadata only",
+      "evidence_tier": "metadata_only",
+      "exclude_from_evidence_graph": true
     }
-  ]
+  ],
+  "paper_count_target": 30,
+  "evidence_tier_summary": {
+    "evidence_cards": 8,
+    "metadata_only": 22,
+    "policy": "Only evidence_cards are parsed into the relation graph. Metadata-only records participate in bibliographic retrieval but cannot support graph relations."
+  },
+  "search_audit": {
+    "searched_on": "2026-07-30",
+    "provider": "Crossref REST API",
+    "queries": [
+      "scientific information extraction knowledge graph",
+      "scientific literature entity relation extraction",
+      "scientific document level information extraction",
+      "scholarly knowledge graph construction"
+    ],
+    "inclusion": "Crossref journal-article/proceedings-article; DOI, venue and publication date present; title passes two domain keyword groups.",
+    "exclusion": "Books, chapters, preprints/posted content, missing DOI/venue/date, duplicate DOI/title, and off-topic title records.",
+    "selection": "Crossref journal/proceedings records with DOI and venue; two required title-keyword groups; title/DOI deduplication; rank, query coverage, citation snapshot and recency scoring; domain-curated priority list; correction/retraction exclusion.",
+    "candidate_count": 26,
+    "cache_path": "data/vertical_kb/search_cache/crossref-candidates-2026-07-30.json",
+    "previous_manual_audit": {}
+  }
 }

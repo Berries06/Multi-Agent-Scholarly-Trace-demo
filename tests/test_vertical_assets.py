@@ -19,20 +19,30 @@ class VerticalAssetTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.kb = KnowledgeBase(PROJECT_ROOT / "data" / "knowledge")
 
-    def test_vertical_slice_has_eight_peer_reviewed_papers(self) -> None:
-        self.assertEqual(8, len(self.kb.vertical_corpus.papers))
+    def test_vertical_slice_has_thirty_peer_reviewed_papers(self) -> None:
+        self.assertEqual(30, len(self.kb.vertical_corpus.papers))
+        self.assertEqual(8, len(self.kb.vertical_corpus.evidence_papers))
         self.assertTrue(
             all(
                 "aclanthology.org" in paper.source_url
-                for paper in self.kb.vertical_corpus.papers
+                for paper in self.kb.vertical_corpus.evidence_papers
             )
+        )
+        metadata_only = [
+            record
+            for record in self.kb.vertical_corpus.paper_records.values()
+            if record["evidence_tier"] == "metadata_only"
+        ]
+        self.assertEqual(22, len(metadata_only))
+        self.assertTrue(
+            all(record["exclude_from_evidence_graph"] for record in metadata_only)
         )
 
     def test_registry_exposes_three_reproducible_vertical_slices(self) -> None:
         expected = {
-            "scientific-ie-kg": 8,
-            "materials-discovery-gnn": 5,
-            "educational-knowledge-tracing": 6,
+            "scientific-ie-kg": 30,
+            "materials-discovery-gnn": 30,
+            "educational-knowledge-tracing": 30,
         }
         self.assertEqual(set(expected), set(self.kb.domain_configs))
         for domain_id, paper_count in expected.items():
@@ -49,6 +59,28 @@ class VerticalAssetTests(unittest.TestCase):
                     for paper in kb.vertical_corpus.papers
                 )
             )
+
+    def test_metadata_only_records_cannot_create_graph_evidence(self) -> None:
+        for domain_id in self.kb.domain_configs:
+            kb = KnowledgeBase(
+                PROJECT_ROOT / "data" / "knowledge",
+                domain_id,
+            )
+            graph_paper_ids = {
+                item["paper_id"]
+                for item in kb.extracted_paper_graph()["papers"]
+            }
+            metadata_only_ids = {
+                paper_id
+                for paper_id, record in kb.vertical_corpus.paper_records.items()
+                if record["evidence_tier"] == "metadata_only"
+            }
+            self.assertTrue(graph_paper_ids)
+            self.assertTrue(metadata_only_ids)
+            self.assertTrue(graph_paper_ids.isdisjoint(metadata_only_ids))
+            metadata_id = next(iter(metadata_only_ids))
+            self.assertFalse(kb.evidence_is_valid(metadata_id))
+            self.assertEqual([], kb.evidence_details([metadata_id]))
 
     def test_every_vertical_slice_builds_a_grounded_graph(self) -> None:
         for domain_id in self.kb.domain_configs:

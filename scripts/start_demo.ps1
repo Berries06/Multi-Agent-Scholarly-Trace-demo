@@ -8,21 +8,26 @@ param(
 
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $command = Get-Command python -ErrorAction SilentlyContinue
+$pyLauncher = Get-Command py -ErrorAction SilentlyContinue
 $bundledPython = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+$pythonPrefixArguments = @()
 
 if ($command) {
     $pythonExecutable = $command.Source
+} elseif ($pyLauncher) {
+    $pythonExecutable = $pyLauncher.Source
+    $pythonPrefixArguments = @("-3")
 } elseif (Test-Path -LiteralPath $bundledPython) {
     $pythonExecutable = $bundledPython
 } else {
-    throw "Python 3.11+ was not found. Install Python or run inside Codex."
+    throw "Python 3.11+ was not found. Install Python from https://www.python.org/downloads/ and enable Add Python to PATH."
 }
 
 $env:PYTHONPATH = Join-Path $projectRoot "src"
 Write-Host "Yanhai backend: http://${HostAddress}:$Port/"
 
 if (-not $Background) {
-    & $pythonExecutable -m yanhai.server --host $HostAddress --port $Port
+    & $pythonExecutable @pythonPrefixArguments -m yanhai.server --host $HostAddress --port $Port
     exit $LASTEXITCODE
 }
 
@@ -31,7 +36,7 @@ if (-not $Background) {
 # blocked even after the server is healthy.
 $process = Start-Process `
     -FilePath $pythonExecutable `
-    -ArgumentList @("-m", "yanhai.server", "--host", $HostAddress, "--port", "$Port") `
+    -ArgumentList @($pythonPrefixArguments + @("-m", "yanhai.server", "--host", $HostAddress, "--port", "$Port")) `
     -WorkingDirectory $projectRoot `
     -WindowStyle Hidden `
     -PassThru
@@ -53,8 +58,12 @@ while ([DateTime]::UtcNow -lt $deadline) {
             $health.PSObject.Properties.Name -contains "domains" -and
             $health.PSObject.Properties.Name -contains "default_domain"
         ) {
-            $healthy = $true
-            break
+            Start-Sleep -Milliseconds 200
+            $process.Refresh()
+            if (-not $process.HasExited) {
+                $healthy = $true
+                break
+            }
         }
     } catch {
         Start-Sleep -Milliseconds 200

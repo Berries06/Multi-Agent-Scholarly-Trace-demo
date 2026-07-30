@@ -113,8 +113,8 @@
       "canonical_name": "document-level information extraction",
       "entity_type": "TASK",
       "aliases": [
-        "Document-level information extraction",
-        "document-level information extraction"
+        "document-level information extraction",
+        "Document-level information extraction"
       ],
       "mentions": [
         {
@@ -359,8 +359,8 @@
       "canonical_name": "zero-shot relation extraction",
       "entity_type": "TASK",
       "aliases": [
-        "zero-shot relation extraction",
-        "Zero-shot relation extraction"
+        "Zero-shot relation extraction",
+        "zero-shot relation extraction"
       ],
       "mentions": [
         {
@@ -886,8 +886,8 @@
       "canonical_name": "text-table evidence",
       "entity_type": "METHOD",
       "aliases": [
-        "Text-table evidence",
-        "text-table evidence"
+        "text-table evidence",
+        "Text-table evidence"
       ],
       "mentions": [
         {
@@ -4682,11 +4682,13 @@
   "domain": {
     "domain_id": "scientific-ie-kg",
     "domain_name": "科学文献信息抽取与知识图谱构建",
-    "version": "2026-07-29",
-    "paper_count": 8,
+    "version": "2026-07-30",
+    "paper_count": 30,
+    "evidence_paper_count": 8,
+    "metadata_only_paper_count": 22,
     "description": "项目核心领域：从科研论文抽取实体、关系与证据跨度，并构建可审计知识图谱。",
     "query_example": "如何从科学论文中抽取可追溯知识图谱，并利用图谱理解技术脉络和生成研究想法？",
-    "corpus_type": "peer-reviewed-paper knowledge cards with locally indexed PDFs",
-    "source_scope": "知识卡为项目组释义；ACL Anthology 链接和本地 PDF 用于来源追溯，卡片文字不等同于论文逐字原文。"
+    "corpus_type": "tiered scholarly corpus: evidence cards plus metadata-only retrieval records",
+    "source_scope": "8 篇 ACL 论文证据卡用于关系抽取；22 篇 Crossref DOI 元数据记录只用于书目检索，取得并解析全文前不得作为关系证据。知识卡文字不等同于论文逐字原文。"
   }
 }

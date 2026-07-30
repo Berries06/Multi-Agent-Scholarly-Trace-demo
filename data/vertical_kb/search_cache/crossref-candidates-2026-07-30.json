@@ -1,0 +1,4469 @@
+{
+  "provider": "Crossref REST API",
+  "endpoint": "https://api.crossref.org/works",
+  "retrieved_at": "2026-07-30T15:03:25+00:00",
+  "target_papers_per_domain": 30,
+  "selection_policy": "Crossref journal/proceedings records with DOI and venue; two required title-keyword groups; title/DOI deduplication; rank, query coverage, citation snapshot and recency scoring; domain-curated priority list; correction/retraction exclusion.",
+  "domains": {
+    "scientific-ie-kg": {
+      "queries": [
+        "scientific information extraction knowledge graph",
+        "scientific literature entity relation extraction",
+        "scientific document level information extraction",
+        "scholarly knowledge graph construction"
+      ],
+      "candidate_count": 26,
+      "candidates": [
+        {
+          "doi": "10.1109/ecis65594.2025.11086863",
+          "title": "Information Extraction and Knowledge Graph Construction of Chinese Scientific and Technical Literature Based on Fine-Tuning Large Language Models",
+          "authors": [
+            "Xinyuan She",
+            "Yahong Yu",
+            "Lizhang Chen"
+          ],
+          "year": 2025,
+          "published": "2025-05-23",
+          "venue": "2025 IEEE 2nd International Conference on Electronics, Communications and Intelligent Science (ECIS)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/ecis65594.2025.11086863",
+          "query_hits": [
+            "scientific information extraction knowledge graph"
+          ],
+          "best_query_rank": 10,
+          "keyword_score": 15.0,
+          "selection_score": 18.1649
+        },
+        {
+          "doi": "10.1016/j.cageo.2017.12.007",
+          "title": "Information extraction and knowledge graph construction from geoscience literature",
+          "authors": [
+            "Chengbin Wang",
+            "Xiaogang Ma",
+            "Jianguo Chen",
+            "Jingwen Chen"
+          ],
+          "year": 2018,
+          "published": "2018-03-01",
+          "venue": "Computers & Geosciences",
+          "type": "journal-article",
+          "citation_count": 196,
+          "source_url": "https://doi.org/10.1016/j.cageo.2017.12.007",
+          "query_hits": [
+            "scientific information extraction knowledge graph"
+          ],
+          "best_query_rank": 38,
+          "keyword_score": 12.0,
+          "selection_score": 16.5634
+        },
+        {
+          "doi": "10.1109/ickg59574.2023.00036",
+          "title": "Investigations on Scientific Literature Meta Information Extraction Using Large Language Models",
+          "authors": [
+            "Menghao Guo",
+            "Fan Wu",
+            "Jinling Jiang",
+            "Xiaoran Yan",
+            "Guangyong Chen",
+            "Wenhui Li",
+            "Yunhong Zhao",
+            "Zeyi Sun"
+          ],
+          "year": 2023,
+          "published": "2023-12-01",
+          "venue": "2023 IEEE International Conference on Knowledge Graph (ICKG)",
+          "type": "proceedings-article",
+          "citation_count": 6,
+          "source_url": "https://doi.org/10.1109/ickg59574.2023.00036",
+          "query_hits": [
+            "scientific information extraction knowledge graph"
+          ],
+          "best_query_rank": 3,
+          "keyword_score": 10.0,
+          "selection_score": 14.9745
+        },
+        {
+          "doi": "10.3724/2096-7004.di.2025.0175",
+          "title": "Retrieval Augmented Document-Level Information Extraction from Scientific Articles Using Large Language Models",
+          "authors": [
+            "Xizong Zhang",
+            "Zixin Jiang",
+            "Zhichun Wang"
+          ],
+          "year": 2026,
+          "published": "2026-03-01",
+          "venue": "Data Intelligence",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.3724/2096-7004.di.2025.0175",
+          "query_hits": [
+            "scientific document level information extraction"
+          ],
+          "best_query_rank": 2,
+          "keyword_score": 10.0,
+          "selection_score": 14.7684
+        },
+        {
+          "doi": "10.1007/s00799-021-00313-y",
+          "title": "Evaluating BERT-based scientific relation classifiers for scholarly knowledge graph construction on digital library collections",
+          "authors": [
+            "Ming Jiang",
+            "Jennifer D’Souza",
+            "Sören Auer",
+            "J. Stephen Downie"
+          ],
+          "year": 2022,
+          "published": "2022-06-01",
+          "venue": "International Journal on Digital Libraries",
+          "type": "journal-article",
+          "citation_count": 8,
+          "source_url": "https://doi.org/10.1007/s00799-021-00313-y",
+          "query_hits": [
+            "scholarly knowledge graph construction"
+          ],
+          "best_query_rank": 23,
+          "keyword_score": 11.0,
+          "selection_score": 14.5683
+        },
+        {
+          "doi": "10.5220/0012260300003598",
+          "title": "DAF: Data Acquisition Framework to Support Information Extraction from Scientific Publications",
+          "authors": [
+            "Muhammad Suryani",
+            "Steffen Hahne",
+            "Christian Beth",
+            "Klaus Wallmann",
+            "Matthias Renz"
+          ],
+          "year": 2023,
+          "published": "2023-01-01",
+          "venue": "Proceedings of the 15th International Joint Conference on Knowledge Discovery, Knowledge Engineering and Knowledge Management",
+          "type": "proceedings-article",
+          "citation_count": 3,
+          "source_url": "https://doi.org/10.5220/0012260300003598",
+          "query_hits": [
+            "scientific information extraction knowledge graph"
+          ],
+          "best_query_rank": 1,
+          "keyword_score": 8.0,
+          "selection_score": 14.4221
+        },
+        {
+          "doi": "10.1109/anthology.2013.6784932",
+          "title": "Chinese Scientific And Technological Named Entity identification and Relation extraction based on knowledge tree",
+          "authors": [
+            "Xi Liu",
+            "Peng Lu",
+            "Xiaorong Qu",
+            "Yibo Gao",
+            "YiPing Yang"
+          ],
+          "year": 2013,
+          "published": "2013-01-01",
+          "venue": "IEEE Conference Anthology",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/anthology.2013.6784932",
+          "query_hits": [
+            "scientific literature entity relation extraction"
+          ],
+          "best_query_rank": 8,
+          "keyword_score": 10.0,
+          "selection_score": 12.9142
+        },
+        {
+          "doi": "10.18653/v1/2026.findings-acl.1657",
+          "title": "SudokuFill: A Multi-Agent Progressive Filling Framework for Document-Level Scientific Information Extraction",
+          "authors": [
+            "Yang Li",
+            "Yajiao Wang",
+            "Yu Zhang",
+            "Yuanzhe Zhang",
+            "Maodi Hu",
+            "Mengting Zhang",
+            "Xi Sun",
+            "Hua Yue",
+            "Zhixiong Zhang"
+          ],
+          "year": 2026,
+          "published": "2026-01-01",
+          "venue": "Findings of the Association for Computational Linguistics: ACL 2026",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.18653/v1/2026.findings-acl.1657",
+          "query_hits": [
+            "scientific document level information extraction"
+          ],
+          "best_query_rank": 24,
+          "keyword_score": 10.0,
+          "selection_score": 12.7565
+        },
+        {
+          "doi": "10.1016/j.ipm.2020.102309",
+          "title": "A neural knowledge graph evaluator: Combining structural and semantic evidence of knowledge graphs for predicting supportive knowledge in scientific QA",
+          "authors": [
+            "Chen Qiao",
+            "Xiao Hu"
+          ],
+          "year": 2020,
+          "published": "2020-11-01",
+          "venue": "Information Processing & Management",
+          "type": "journal-article",
+          "citation_count": 22,
+          "source_url": "https://doi.org/10.1016/j.ipm.2020.102309",
+          "query_hits": [
+            "scientific information extraction knowledge graph"
+          ],
+          "best_query_rank": 17,
+          "keyword_score": 8.0,
+          "selection_score": 12.0319
+        },
+        {
+          "doi": "10.1109/icoict66265.2025.11193072",
+          "title": "Entity Extraction in Scientific Literature Using Hidden Markov Model and Conditional Random Fields",
+          "authors": [
+            "Kayyisa Zulfa Mustafida",
+            "Ade Romadhony"
+          ],
+          "year": 2025,
+          "published": "2025-07-30",
+          "venue": "2025 International Conference on Information and Communication Technology (ICoICT)",
+          "type": "proceedings-article",
+          "citation_count": 1,
+          "source_url": "https://doi.org/10.1109/icoict66265.2025.11193072",
+          "query_hits": [
+            "scientific literature entity relation extraction"
+          ],
+          "best_query_rank": 27,
+          "keyword_score": 9.0,
+          "selection_score": 11.9708
+        },
+        {
+          "doi": "10.1145/3460210.3493582",
+          "title": "Triple Classification for Scholarly Knowledge Graph Completion",
+          "authors": [
+            "Mohamad Yaser Jaradeh",
+            "Kuldeep Singh",
+            "Markus Stocker",
+            "Sören Auer"
+          ],
+          "year": 2021,
+          "published": "2021-12-02",
+          "venue": "Proceedings of the 11th Knowledge Capture Conference",
+          "type": "proceedings-article",
+          "citation_count": 13,
+          "source_url": "https://doi.org/10.1145/3460210.3493582",
+          "query_hits": [
+            "scholarly knowledge graph construction"
+          ],
+          "best_query_rank": 17,
+          "keyword_score": 8.0,
+          "selection_score": 11.8563
+        },
+        {
+          "doi": "10.1016/j.ipm.2022.102980",
+          "title": "Hotness prediction of scientific topics based on a bibliographic knowledge graph",
+          "authors": [
+            "Chaoguang Huo",
+            "Shutian Ma",
+            "Xiaozhong Liu"
+          ],
+          "year": 2022,
+          "published": "2022-07-01",
+          "venue": "Information Processing & Management",
+          "type": "journal-article",
+          "citation_count": 25,
+          "source_url": "https://doi.org/10.1016/j.ipm.2022.102980",
+          "query_hits": [
+            "scientific information extraction knowledge graph"
+          ],
+          "best_query_rank": 56,
+          "keyword_score": 8.0,
+          "selection_score": 11.7295
+        },
+        {
+          "doi": "10.31763/businta.v8i2.657",
+          "title": "Knowledge graph completion for scholarly knowledge graph",
+          "authors": [
+            "Taufiqurrahman Taufiqurrahman",
+            "Kemas Rahmat Saleh Wiharja",
+            "Gia Septiana Wulandari"
+          ],
+          "year": 2024,
+          "published": "2024-12-04",
+          "venue": "Bulletin of Social Informatics Theory and Application",
+          "type": "journal-article",
+          "citation_count": 2,
+          "source_url": "https://doi.org/10.31763/businta.v8i2.657",
+          "query_hits": [
+            "scholarly knowledge graph construction"
+          ],
+          "best_query_rank": 10,
+          "keyword_score": 8.0,
+          "selection_score": 11.602
+        },
+        {
+          "doi": "10.1145/3383583.3398530",
+          "title": "Toward Representing Research Contributions in Scholarly Knowledge Graphs Using Knowledge Graph Cells",
+          "authors": [
+            "Lars Vogt",
+            "Jennifer D'Souza",
+            "Markus Stocker",
+            "Sören Auer"
+          ],
+          "year": 2020,
+          "published": "2020-08-01",
+          "venue": "Proceedings of the ACM/IEEE Joint Conference on Digital Libraries in 2020",
+          "type": "proceedings-article",
+          "citation_count": 15,
+          "source_url": "https://doi.org/10.1145/3383583.3398530",
+          "query_hits": [
+            "scholarly knowledge graph construction"
+          ],
+          "best_query_rank": 66,
+          "keyword_score": 8.0,
+          "selection_score": 11.3965
+        },
+        {
+          "doi": "10.1109/icbk50248.2020.00040",
+          "title": "Scientific Workflow Recommendation Based on Service Knowledge Graph",
+          "authors": [
+            "Jin Diao",
+            "Zhangbing Zhou"
+          ],
+          "year": 2020,
+          "published": "2020-08-01",
+          "venue": "2020 IEEE International Conference on Knowledge Graph (ICKG)",
+          "type": "proceedings-article",
+          "citation_count": 5,
+          "source_url": "https://doi.org/10.1109/icbk50248.2020.00040",
+          "query_hits": [
+            "scientific information extraction knowledge graph"
+          ],
+          "best_query_rank": 28,
+          "keyword_score": 8.0,
+          "selection_score": 11.2341
+        },
+        {
+          "doi": "10.18653/v1/2025.wasp-main.4",
+          "title": "Zero-Shot Cross-Sentential Scientific Relation Extraction via Entity-Guided Summarization",
+          "authors": [
+            "Vani Kanjirangat",
+            "Fabio Rinaldi"
+          ],
+          "year": 2025,
+          "published": "2025-01-01",
+          "venue": "Proceedings of the Third Workshop for Artificial Intelligence for Scientific Publications",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.18653/v1/2025.wasp-main.4",
+          "query_hits": [
+            "scientific literature entity relation extraction"
+          ],
+          "best_query_rank": 3,
+          "keyword_score": 7.0,
+          "selection_score": 11.2094
+        },
+        {
+          "doi": "10.1109/s.a.i.ence50533.2020.9303196",
+          "title": "Entity Recognition and Relation Extraction from Scientific and Technical Texts in Russian",
+          "authors": [
+            "Elena Bruches",
+            "Alexey Pauls",
+            "Tatiana Batura",
+            "Vladimir Isachenko"
+          ],
+          "year": 2020,
+          "published": "2020-11-14",
+          "venue": "2020 Science and Artificial Intelligence conference (S.A.I.ence)",
+          "type": "proceedings-article",
+          "citation_count": 10,
+          "source_url": "https://doi.org/10.1109/s.a.i.ence50533.2020.9303196",
+          "query_hits": [
+            "scientific literature entity relation extraction"
+          ],
+          "best_query_rank": 10,
+          "keyword_score": 7.0,
+          "selection_score": 11.0063
+        },
+        {
+          "doi": "10.1016/j.neunet.2025.107250",
+          "title": "Span-aware pre-trained network with deep information bottleneck for scientific entity relation extraction",
+          "authors": [
+            "Youwei Wang",
+            "Peisong Cao",
+            "Haichuan Fang",
+            "Yangdong Ye"
+          ],
+          "year": 2025,
+          "published": "2025-06-01",
+          "venue": "Neural Networks",
+          "type": "journal-article",
+          "citation_count": 7,
+          "source_url": "https://doi.org/10.1016/j.neunet.2025.107250",
+          "query_hits": [
+            "scientific literature entity relation extraction"
+          ],
+          "best_query_rank": 18,
+          "keyword_score": 7.0,
+          "selection_score": 10.7459
+        },
+        {
+          "doi": "10.1038/s41598-026-54613-x",
+          "title": "Knowledge graph-enhanced heterogeneous graph neural network for scientific talent innovation potential identification",
+          "authors": [
+            "Rong Wang"
+          ],
+          "year": 2026,
+          "published": "2026-06-01",
+          "venue": "Scientific Reports",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1038/s41598-026-54613-x",
+          "query_hits": [
+            "scientific information extraction knowledge graph"
+          ],
+          "best_query_rank": 27,
+          "keyword_score": 8.0,
+          "selection_score": 10.7098
+        },
+        {
+          "doi": "10.3390/math12091349",
+          "title": "A Graph-Based Keyword Extraction Method for Academic Literature Knowledge Graph Construction",
+          "authors": [
+            "Lin Zhang",
+            "Yanan Li",
+            "Qinru Li"
+          ],
+          "year": 2024,
+          "published": "2024-04-29",
+          "venue": "Mathematics",
+          "type": "journal-article",
+          "citation_count": 16,
+          "source_url": "https://doi.org/10.3390/math12091349",
+          "query_hits": [
+            "scholarly knowledge graph construction"
+          ],
+          "best_query_rank": 46,
+          "keyword_score": 7.0,
+          "selection_score": 10.6802
+        },
+        {
+          "doi": "10.52825/cordi.v1i.272",
+          "title": "Organizing Scholarly Knowledge in the Open Research Knowledge Graph",
+          "authors": [
+            "Sören Auer",
+            "Markus Stocker",
+            "Oliver Karras",
+            "Allard Oelen",
+            "Jennifer D'Souza",
+            "Anna-Lena Lorenz"
+          ],
+          "year": 2023,
+          "published": "2023-09-07",
+          "venue": "Proceedings of the Conference on Research Data Infrastructure",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.52825/cordi.v1i.272",
+          "query_hits": [
+            "scholarly knowledge graph construction"
+          ],
+          "best_query_rank": 22,
+          "keyword_score": 8.0,
+          "selection_score": 10.6728
+        },
+        {
+          "doi": "10.1109/icsc.2018.00045",
+          "title": "Data Acquisition and Information Extraction for Scientific Knowledge Base Building",
+          "authors": [
+            "Piotr Andruszkiewicz",
+            "Henryk Rybinski"
+          ],
+          "year": 2018,
+          "published": "2018-01-01",
+          "venue": "2018 IEEE 12th International Conference on Semantic Computing (ICSC)",
+          "type": "proceedings-article",
+          "citation_count": 2,
+          "source_url": "https://doi.org/10.1109/icsc.2018.00045",
+          "query_hits": [
+            "scientific information extraction knowledge graph"
+          ],
+          "best_query_rank": 70,
+          "keyword_score": 8.0,
+          "selection_score": 10.5752
+        },
+        {
+          "doi": "10.1117/12.3111111",
+          "title": "PSCF-NER: prompt-driven Chinese scholarly entity recognition and knowledge graph construction",
+          "authors": [
+            "Yunlong Wang",
+            "Wenzhi Si",
+            "Songbo Zhang",
+            "Miaomiao Jia",
+            "Suzhi Zhang",
+            "Pu Li"
+          ],
+          "year": 2026,
+          "published": "2026-04-15",
+          "venue": "International Conference on Pattern Recognition and Image Analysis (PRIA 2025)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1117/12.3111111",
+          "query_hits": [
+            "scholarly knowledge graph construction"
+          ],
+          "best_query_rank": 44,
+          "keyword_score": 8.0,
+          "selection_score": 10.543
+        },
+        {
+          "doi": "10.1109/icbda65366.2025.11211295",
+          "title": "Knowledge Discovery from Scholarly Resources Using Large Language Model and Knowledge Graph",
+          "authors": [
+            "Jiao Li",
+            "Guojian Xian",
+            "Yongwen Huang",
+            "Tan Sun"
+          ],
+          "year": 2025,
+          "published": "2025-03-13",
+          "venue": "2025 10th International Conference on Big Data Analytics (ICBDA)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/icbda65366.2025.11211295",
+          "query_hits": [
+            "scholarly knowledge graph construction"
+          ],
+          "best_query_rank": 39,
+          "keyword_score": 8.0,
+          "selection_score": 10.5405
+        },
+        {
+          "doi": "10.18653/v1/2025.emnlp-main.732",
+          "title": "SciNLP: A Domain-Specific Benchmark for Full-Text Scientific Entity and Relation Extraction in NLP",
+          "authors": [
+            "Decheng Duan",
+            "Jitong Peng",
+            "Yingyi Zhang",
+            "Chengzhi Zhang"
+          ],
+          "year": 2025,
+          "published": "2025-01-01",
+          "venue": "Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing",
+          "type": "proceedings-article",
+          "citation_count": 3,
+          "source_url": "https://doi.org/10.18653/v1/2025.emnlp-main.732",
+          "query_hits": [
+            "scientific literature entity relation extraction"
+          ],
+          "best_query_rank": 46,
+          "keyword_score": 7.0,
+          "selection_score": 10.0918
+        },
+        {
+          "doi": "10.18653/v1/2021.semeval-1.175",
+          "title": "Counts@IITK at SemEval-2021 Task 8: SciBERT Based Entity And Semantic Relation Extraction For Scientific Data",
+          "authors": [
+            "Akash Gangwar",
+            "Sabhay Jain",
+            "Shubham Sourav",
+            "Ashutosh Modi"
+          ],
+          "year": 2021,
+          "published": "2021-01-01",
+          "venue": "Proceedings of the 15th International Workshop on Semantic Evaluation (SemEval-2021)",
+          "type": "proceedings-article",
+          "citation_count": 5,
+          "source_url": "https://doi.org/10.18653/v1/2021.semeval-1.175",
+          "query_hits": [
+            "scientific literature entity relation extraction"
+          ],
+          "best_query_rank": 53,
+          "keyword_score": 7.0,
+          "selection_score": 10.0676
+        }
+      ]
+    },
+    "materials-discovery-gnn": {
+      "queries": [
+        "graph neural network materials property prediction",
+        "crystal graph neural network materials discovery",
+        "machine learning interatomic potential graph neural network",
+        "machine learning materials discovery high throughput"
+      ],
+      "candidate_count": 42,
+      "candidates": [
+        {
+          "doi": "10.1021/acs.jcim.5c01460",
+          "title": "PSCG-Net: A Multiscale Crystal Graph Neural Network for Accelerated Materials Discovery",
+          "authors": [
+            "Guangyao Chen",
+            "Zhilong Wang",
+            "Fengqi You"
+          ],
+          "year": 2025,
+          "published": "2025-10-27",
+          "venue": "Journal of Chemical Information and Modeling",
+          "type": "journal-article",
+          "citation_count": 2,
+          "source_url": "https://doi.org/10.1021/acs.jcim.5c01460",
+          "query_hits": [
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 7,
+          "keyword_score": 18.0,
+          "selection_score": 21.889
+        },
+        {
+          "doi": "10.1103/physrevmaterials.8.033802",
+          "title": "Equivariant graph neural network interatomic potential for Green-Kubo thermal conductivity in phase change materials",
+          "authors": [
+            "Sung-Ho Lee",
+            "Jing Li",
+            "Valerio Olevano",
+            "Benoit Sklénard"
+          ],
+          "year": 2024,
+          "published": "2024-03-18",
+          "venue": "Physical Review Materials",
+          "type": "journal-article",
+          "citation_count": 8,
+          "source_url": "https://doi.org/10.1103/physrevmaterials.8.033802",
+          "query_hits": [
+            "machine learning interatomic potential graph neural network"
+          ],
+          "best_query_rank": 55,
+          "keyword_score": 17.0,
+          "selection_score": 20.3536
+        },
+        {
+          "doi": "10.1103/physrevmaterials.4.063801",
+          "title": "Developing an improved crystal graph convolutional neural network framework for accelerated materials discovery",
+          "authors": [
+            "Cheol Woo Park",
+            "Chris Wolverton"
+          ],
+          "year": 2020,
+          "published": "2020-06-01",
+          "venue": "Physical Review Materials",
+          "type": "journal-article",
+          "citation_count": 261,
+          "source_url": "https://doi.org/10.1103/physrevmaterials.4.063801",
+          "query_hits": [
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 2,
+          "keyword_score": 13.0,
+          "selection_score": 19.9467
+        },
+        {
+          "doi": "10.1038/s41524-021-00650-1",
+          "title": "Atomistic Line Graph Neural Network for improved materials property predictions",
+          "authors": [
+            "Kamal Choudhary",
+            "Brian DeCost"
+          ],
+          "year": 2021,
+          "published": "2021-11-15",
+          "venue": "npj Computational Materials",
+          "type": "journal-article",
+          "citation_count": 656,
+          "source_url": "https://doi.org/10.1038/s41524-021-00650-1",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 34,
+          "keyword_score": 14.0,
+          "selection_score": 19.2436
+        },
+        {
+          "doi": "10.1515/ntrev-2025-0200",
+          "title": "Deep learning in-depth analysis of crystal graph convolutional neural networks: A new era in materials discovery and its applications",
+          "authors": [
+            "Nilam Qureshi",
+            "Jinhong Bang",
+            "Jaehyeok Doh"
+          ],
+          "year": 2025,
+          "published": "2025-08-16",
+          "venue": "Nanotechnology Reviews",
+          "type": "journal-article",
+          "citation_count": 4,
+          "source_url": "https://doi.org/10.1515/ntrev-2025-0200",
+          "query_hits": [
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 49,
+          "keyword_score": 16.0,
+          "selection_score": 19.1704
+        },
+        {
+          "doi": "10.1038/s41467-021-26226-7",
+          "title": "Coupling complementary strategy to flexible graph neural network for quick discovery of coformer in diverse co-crystal materials",
+          "authors": [
+            "Yuanyuan Jiang",
+            "Zongwei Yang",
+            "Jiali Guo",
+            "Hongzhen Li",
+            "Yijing Liu",
+            "Yanzhi Guo",
+            "Menglong Li",
+            "Xuemei Pu"
+          ],
+          "year": 2021,
+          "published": "2021-10-12",
+          "venue": "Nature Communications",
+          "type": "journal-article",
+          "citation_count": 110,
+          "source_url": "https://doi.org/10.1038/s41467-021-26226-7",
+          "query_hits": [
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 16,
+          "keyword_score": 13.0,
+          "selection_score": 17.7853
+        },
+        {
+          "doi": "10.1109/ijcnn64981.2025.11228283",
+          "title": "ADA-GNN: Atom-Distance-Angle Graph Neural Network for Crystal Material Property Prediction",
+          "authors": [
+            "Jiao Huang",
+            "Qianli Xing",
+            "Jinglong Ji",
+            "Bo Yang"
+          ],
+          "year": 2025,
+          "published": "2025-06-30",
+          "venue": "2025 International Joint Conference on Neural Networks (IJCNN)",
+          "type": "proceedings-article",
+          "citation_count": 1,
+          "source_url": "https://doi.org/10.1109/ijcnn64981.2025.11228283",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 37,
+          "keyword_score": 14.0,
+          "selection_score": 16.8586
+        },
+        {
+          "doi": "10.1016/j.commatsci.2026.114731",
+          "title": "GSMNet: A geometry- and state-driven multiplex graph neural network for crystal property prediction",
+          "authors": [
+            "Zeming Wang",
+            "Mingyang Wang",
+            "Luyi Jia",
+            "Xianjie Wang"
+          ],
+          "year": 2026,
+          "published": "2026-05-01",
+          "venue": "Computational Materials Science",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1016/j.commatsci.2026.114731",
+          "query_hits": [
+            "graph neural network materials property prediction",
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 20,
+          "keyword_score": 12.0,
+          "selection_score": 16.3344
+        },
+        {
+          "doi": "10.1038/s41524-026-02131-9",
+          "title": "Physics-informed graph neural network representation learning for crystal property prediction",
+          "authors": [
+            "Jie Cao",
+            "Kai Huang",
+            "Jian Mao",
+            "Mengya Zhong",
+            "Chen Chen",
+            "Kexun Li",
+            "Taikang Liu"
+          ],
+          "year": 2026,
+          "published": "2026-05-18",
+          "venue": "npj Computational Materials",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1038/s41524-026-02131-9",
+          "query_hits": [
+            "graph neural network materials property prediction",
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 30,
+          "keyword_score": 12.0,
+          "selection_score": 16.1703
+        },
+        {
+          "doi": "10.1039/d4dd00352g",
+          "title": "A Cartesian encoding graph neural network for crystal structure property prediction: application to thermal ellipsoid estimation",
+          "authors": [
+            "Àlex Solé",
+            "Albert Mosella-Montoro",
+            "Joan Cardona",
+            "Silvia Gómez-Coca",
+            "Daniel Aravena",
+            "Eliseo Ruiz",
+            "Javier Ruiz-Hidalgo"
+          ],
+          "year": 2025,
+          "published": "2025-01-01",
+          "venue": "Digital Discovery",
+          "type": "journal-article",
+          "citation_count": 8,
+          "source_url": "https://doi.org/10.1039/d4dd00352g",
+          "query_hits": [
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 43,
+          "keyword_score": 12.0,
+          "selection_score": 15.4642
+        },
+        {
+          "doi": "10.29003/m2477.mmmsec-2021/81-83",
+          "title": "PREDICTION OF THE BAND GAP OF CRYSTAL MATERIALS USING GRAPH NEURAL NETWORK",
+          "authors": [
+            "Ivan Rubtsov",
+            "Kirill Karpov",
+            "Artem Mitrofanov"
+          ],
+          "year": 2021,
+          "published": "2021-10-27",
+          "venue": "Mathematical modeling in materials science of electronic component",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.29003/m2477.mmmsec-2021/81-83",
+          "query_hits": [
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 77,
+          "keyword_score": 13.0,
+          "selection_score": 15.1958
+        },
+        {
+          "doi": "10.1063/5.0066061",
+          "title": "Molecular dynamics simulation of metallic Al–Ce liquids using a neural network machine learning interatomic potential",
+          "authors": [
+            "L. Tang",
+            "K. M. Ho",
+            "C. Z. Wang"
+          ],
+          "year": 2021,
+          "published": "2021-11-21",
+          "venue": "The Journal of Chemical Physics",
+          "type": "journal-article",
+          "citation_count": 27,
+          "source_url": "https://doi.org/10.1063/5.0066061",
+          "query_hits": [
+            "machine learning interatomic potential graph neural network"
+          ],
+          "best_query_rank": 17,
+          "keyword_score": 11.0,
+          "selection_score": 15.1573
+        },
+        {
+          "doi": "10.1016/j.mtcomm.2025.112021",
+          "title": "MatGNet: A graph neural network for crystal property prediction as an alternative to first-principles calculations",
+          "authors": [
+            "Pandi Teng",
+            "Chengyu Fu",
+            "Shiru Shen",
+            "Huaijuan Zang",
+            "Jing Fang",
+            "Yongsheng Ren",
+            "Shu Zhan"
+          ],
+          "year": 2025,
+          "published": "2025-03-01",
+          "venue": "Materials Today Communications",
+          "type": "journal-article",
+          "citation_count": 1,
+          "source_url": "https://doi.org/10.1016/j.mtcomm.2025.112021",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 45,
+          "keyword_score": 12.0,
+          "selection_score": 14.7973
+        },
+        {
+          "doi": "10.1109/bigdata50022.2020.9378060",
+          "title": "Graph Neural Network Architecture Search for Molecular Property Prediction",
+          "authors": [
+            "Shengli Jiang",
+            "Prasanna Balaprakash"
+          ],
+          "year": 2020,
+          "published": "2020-12-10",
+          "venue": "2020 IEEE International Conference on Big Data (Big Data)",
+          "type": "proceedings-article",
+          "citation_count": 35,
+          "source_url": "https://doi.org/10.1109/bigdata50022.2020.9378060",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 31,
+          "keyword_score": 10.0,
+          "selection_score": 13.9747
+        },
+        {
+          "doi": "10.1063/5.0284672",
+          "title": "Developing a neural network machine learning interatomic potential for molecular dynamics simulations of La–Si–P systems",
+          "authors": [
+            "Ling Tang",
+            "Weiyi Xia",
+            "Gayatri Viswanathan",
+            "Ernesto Soto",
+            "Kirill Kovnir",
+            "Cai-Zhuang Wang"
+          ],
+          "year": 2025,
+          "published": "2025-08-28",
+          "venue": "The Journal of Chemical Physics",
+          "type": "journal-article",
+          "citation_count": 2,
+          "source_url": "https://doi.org/10.1063/5.0284672",
+          "query_hits": [
+            "machine learning interatomic potential graph neural network"
+          ],
+          "best_query_rank": 58,
+          "keyword_score": 11.0,
+          "selection_score": 13.9023
+        },
+        {
+          "doi": "10.1007/s00521-021-06616-0",
+          "title": "Graph neural network for Hamiltonian-based material property prediction",
+          "authors": [
+            "Hexin Bai",
+            "Peng Chu",
+            "Jeng-Yuan Tsai",
+            "Nathan Wilson",
+            "Xiaofeng Qian",
+            "Qimin Yan",
+            "Haibin Ling"
+          ],
+          "year": 2022,
+          "published": "2022-03-01",
+          "venue": "Neural Computing and Applications",
+          "type": "journal-article",
+          "citation_count": 3,
+          "source_url": "https://doi.org/10.1007/s00521-021-06616-0",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 77,
+          "keyword_score": 11.0,
+          "selection_score": 13.8379
+        },
+        {
+          "doi": "10.3390/inorganics13120395",
+          "title": "Accelerated Discovery of Energy Materials via Graph Neural Network",
+          "authors": [
+            "Zhenwen Sheng",
+            "Hui Zhu",
+            "Bo Shao",
+            "Yu He",
+            "Zhuang Liu",
+            "Suqin Wang",
+            "Ming Sheng"
+          ],
+          "year": 2025,
+          "published": "2025-11-29",
+          "venue": "Inorganics",
+          "type": "journal-article",
+          "citation_count": 6,
+          "source_url": "https://doi.org/10.3390/inorganics13120395",
+          "query_hits": [
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 42,
+          "keyword_score": 10.0,
+          "selection_score": 13.3623
+        },
+        {
+          "doi": "10.1039/d5ce00096c",
+          "title": "Accelerating materials property discovery in uncharted domains through the integration of high-throughput computation and machine learning",
+          "authors": [
+            "Chih Shan Tan"
+          ],
+          "year": 2025,
+          "published": "2025-01-01",
+          "venue": "CrystEngComm",
+          "type": "journal-article",
+          "citation_count": 2,
+          "source_url": "https://doi.org/10.1039/d5ce00096c",
+          "query_hits": [
+            "machine learning materials discovery high throughput"
+          ],
+          "best_query_rank": 17,
+          "keyword_score": 10.0,
+          "selection_score": 13.3473
+        },
+        {
+          "doi": "10.1016/j.commatsci.2023.112655",
+          "title": "Spline-based neural network interatomic potentials: Blending classical and machine learning models",
+          "authors": [
+            "Joshua A. Vita",
+            "Dallas R. Trinkle"
+          ],
+          "year": 2024,
+          "published": "2024-01-01",
+          "venue": "Computational Materials Science",
+          "type": "journal-article",
+          "citation_count": 8,
+          "source_url": "https://doi.org/10.1016/j.commatsci.2023.112655",
+          "query_hits": [
+            "machine learning interatomic potential graph neural network"
+          ],
+          "best_query_rank": 65,
+          "keyword_score": 10.0,
+          "selection_score": 13.3104
+        },
+        {
+          "doi": "10.1016/j.commatsci.2024.113358",
+          "title": "SGNN-T: Space graph neural network coupled transformer for molecular property prediction",
+          "authors": [
+            "Taohong Zhang",
+            "Chenglong Xia",
+            "Huguang Yang",
+            "Xuxu Guo",
+            "Han Zheng",
+            "Aziguli Wulamu"
+          ],
+          "year": 2025,
+          "published": "2025-01-01",
+          "venue": "Computational Materials Science",
+          "type": "journal-article",
+          "citation_count": 3,
+          "source_url": "https://doi.org/10.1016/j.commatsci.2024.113358",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 26,
+          "keyword_score": 10.0,
+          "selection_score": 13.2865
+        },
+        {
+          "doi": "10.1016/j.actamat.2025.121347",
+          "title": "Machine learning-driven discovery of hard magnetic materials using high-throughput computation and screening",
+          "authors": [
+            "Anita Halder",
+            "Durga Paudyal",
+            "Stefano Sanvito",
+            "Martin Takáč",
+            "Huseyin Ucar"
+          ],
+          "year": 2025,
+          "published": "2025-09-01",
+          "venue": "Acta Materialia",
+          "type": "journal-article",
+          "citation_count": 5,
+          "source_url": "https://doi.org/10.1016/j.actamat.2025.121347",
+          "query_hits": [
+            "machine learning materials discovery high throughput"
+          ],
+          "best_query_rank": 44,
+          "keyword_score": 10.0,
+          "selection_score": 13.2812
+        },
+        {
+          "doi": "10.1109/cisat62382.2024.10695352",
+          "title": "MSGNN: Multi-Scale Graph Neural Network for Molecular Property Prediction",
+          "authors": [
+            "Zhixin Zhang"
+          ],
+          "year": 2024,
+          "published": "2024-07-12",
+          "venue": "2024 7th International Conference on Computer Information Science and Application Technology (CISAT)",
+          "type": "proceedings-article",
+          "citation_count": 3,
+          "source_url": "https://doi.org/10.1109/cisat62382.2024.10695352",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 38,
+          "keyword_score": 10.0,
+          "selection_score": 13.1109
+        },
+        {
+          "doi": "10.1016/j.neunet.2025.108157",
+          "title": "Consistency-regularized graph neural networks for molecular property prediction",
+          "authors": [
+            "Jongmin Han",
+            "Seokho Kang"
+          ],
+          "year": 2026,
+          "published": "2026-02-01",
+          "venue": "Neural Networks",
+          "type": "journal-article",
+          "citation_count": 2,
+          "source_url": "https://doi.org/10.1016/j.neunet.2025.108157",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 55,
+          "keyword_score": 10.0,
+          "selection_score": 12.9565
+        },
+        {
+          "doi": "10.1016/j.commatsci.2023.112619",
+          "title": "Graph isomorphism network for materials property prediction along with explainability analysis",
+          "authors": [
+            "Jianping Xiao",
+            "Li Yang",
+            "Shuqun Wang"
+          ],
+          "year": 2024,
+          "published": "2024-01-01",
+          "venue": "Computational Materials Science",
+          "type": "journal-article",
+          "citation_count": 27,
+          "source_url": "https://doi.org/10.1016/j.commatsci.2023.112619",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 47,
+          "keyword_score": 9.0,
+          "selection_score": 12.8906
+        },
+        {
+          "doi": "10.5220/0012410700003636",
+          "title": "FEAT: A Fast, Effective, and Feasible Model for Molecular Property Prediction Based on Graph Neural Network",
+          "authors": [
+            "Mukesh Rohil",
+            "Ishan Sharma"
+          ],
+          "year": 2024,
+          "published": "2024-01-01",
+          "venue": "Proceedings of the 16th International Conference on Agents and Artificial Intelligence",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.5220/0012410700003636",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 17,
+          "keyword_score": 10.0,
+          "selection_score": 12.8301
+        },
+        {
+          "doi": "10.1016/j.microc.2025.116593",
+          "title": "Bi-xlstm-QeoGNN: A multimodal geometric graph neural network approach for molecular property prediction",
+          "authors": [
+            "Zhixin Jiang",
+            "Junsheng Wang",
+            "Weiwei Wang"
+          ],
+          "year": 2026,
+          "published": "2026-01-01",
+          "venue": "Microchemical Journal",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1016/j.microc.2025.116593",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 57,
+          "keyword_score": 10.0,
+          "selection_score": 12.4698
+        },
+        {
+          "doi": "10.1039/d3dd00233k",
+          "title": "An equivariant graph neural network for the elasticity tensors of all seven crystal systems",
+          "authors": [
+            "Mingjian Wen",
+            "Matthew K. Horton",
+            "Jason M. Munro",
+            "Patrick Huck",
+            "Kristin A. Persson"
+          ],
+          "year": 2024,
+          "published": "2024-01-01",
+          "venue": "Digital Discovery",
+          "type": "journal-article",
+          "citation_count": 32,
+          "source_url": "https://doi.org/10.1039/d3dd00233k",
+          "query_hits": [
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 15,
+          "keyword_score": 8.0,
+          "selection_score": 12.4113
+        },
+        {
+          "doi": "10.1038/s41524-024-01407-2",
+          "title": "Graph neural network coarse-grain force field for the molecular crystal RDX",
+          "authors": [
+            "Brian H. Lee",
+            "James P. Larentzos",
+            "John K. Brennan",
+            "Alejandro Strachan"
+          ],
+          "year": 2024,
+          "published": "2024-09-07",
+          "venue": "npj Computational Materials",
+          "type": "journal-article",
+          "citation_count": 10,
+          "source_url": "https://doi.org/10.1038/s41524-024-01407-2",
+          "query_hits": [
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 65,
+          "keyword_score": 9.0,
+          "selection_score": 12.3975
+        },
+        {
+          "doi": "10.1145/3718751.3718898",
+          "title": "Quantum Heterogeneous Graph Neural Network for Molecular Property Prediction",
+          "authors": [
+            "Wanli Xu",
+            "Yang Shen"
+          ],
+          "year": 2024,
+          "published": "2024-11-15",
+          "venue": "Proceedings of the 2024 4th International Conference on Big Data, Artificial Intelligence and Risk Management",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1145/3718751.3718898",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 71,
+          "keyword_score": 10.0,
+          "selection_score": 12.3347
+        },
+        {
+          "doi": "10.2172/2003103",
+          "title": "Graph Convolutional Neural Network Modeling of Vacancy Formation for Materials Discovery in Solar Thermochemical Water Splitting.",
+          "authors": [
+            "Matthew Witman",
+            "Anuj Goyal",
+            "Tadashi Ogitsu",
+            "Anthony McDaniel",
+            "Stephan Lany"
+          ],
+          "year": 2022,
+          "published": "2022-04-01",
+          "venue": "Proposed for presentation at the MRS Spring 2022 in ,",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.2172/2003103",
+          "query_hits": [
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 75,
+          "keyword_score": 10.0,
+          "selection_score": 12.2419
+        },
+        {
+          "doi": "10.1002/adma.202409175",
+          "title": "Universal Ensemble‐Embedding Graph Neural Network for Direct Prediction of Optical Spectra from Crystal Structures",
+          "authors": [
+            "Nguyen Tuan Hung",
+            "Ryotaro Okabe",
+            "Abhijatmedhi Chotrattanapituk",
+            "Mingda Li"
+          ],
+          "year": 2024,
+          "published": "2024-11-01",
+          "venue": "Advanced Materials",
+          "type": "journal-article",
+          "citation_count": 37,
+          "source_url": "https://doi.org/10.1002/adma.202409175",
+          "query_hits": [
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 56,
+          "keyword_score": 8.0,
+          "selection_score": 11.9743
+        },
+        {
+          "doi": "10.1016/j.commatsci.2024.112783",
+          "title": "Predicting melting temperature of inorganic crystals via crystal graph neural network enhanced by transfer learning",
+          "authors": [
+            "Jaesun Kim",
+            "Jisu Jung",
+            "Sookyung Kim",
+            "Seungwu Han"
+          ],
+          "year": 2024,
+          "published": "2024-02-01",
+          "venue": "Computational Materials Science",
+          "type": "journal-article",
+          "citation_count": 9,
+          "source_url": "https://doi.org/10.1016/j.commatsci.2024.112783",
+          "query_hits": [
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 54,
+          "keyword_score": 8.0,
+          "selection_score": 11.4043
+        },
+        {
+          "doi": "10.1103/physrevmaterials.4.113807",
+          "title": "Development of a general-purpose machine-learning interatomic potential for aluminum by the physically informed neural network method",
+          "authors": [
+            "G. P. Purja Pun",
+            "V. Yamakov",
+            "J. Hickman",
+            "E. H. Glaessgen",
+            "Y. Mishin"
+          ],
+          "year": 2020,
+          "published": "2020-11-19",
+          "venue": "Physical Review Materials",
+          "type": "journal-article",
+          "citation_count": 37,
+          "source_url": "https://doi.org/10.1103/physrevmaterials.4.113807",
+          "query_hits": [
+            "machine learning interatomic potential graph neural network"
+          ],
+          "best_query_rank": 48,
+          "keyword_score": 7.0,
+          "selection_score": 10.8571
+        },
+        {
+          "doi": "10.1002/adom.202270071",
+          "title": "Discovery of New Plasmonic Metals via High‐Throughput Machine Learning (Advanced Optical Materials 18/2022)",
+          "authors": [
+            "Ethan P. Shapera",
+            "André Schleife"
+          ],
+          "year": 2022,
+          "published": "2022-09-01",
+          "venue": "Advanced Optical Materials",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1002/adom.202270071",
+          "query_hits": [
+            "machine learning materials discovery high throughput"
+          ],
+          "best_query_rank": 16,
+          "keyword_score": 8.0,
+          "selection_score": 10.78
+        },
+        {
+          "doi": "10.1103/physrevmaterials.4.093801",
+          "title": "Orbital graph convolutional neural network for material property prediction",
+          "authors": [
+            "Mohammadreza Karamad",
+            "Rishikesh Magar",
+            "Yuting Shi",
+            "Samira Siahrostami",
+            "Ian D. Gates",
+            "Amir Barati Farimani"
+          ],
+          "year": 2020,
+          "published": "2020-09-08",
+          "venue": "Physical Review Materials",
+          "type": "journal-article",
+          "citation_count": 129,
+          "source_url": "https://doi.org/10.1103/physrevmaterials.4.093801",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 19,
+          "keyword_score": 6.0,
+          "selection_score": 10.7316
+        },
+        {
+          "doi": "10.1088/2632-2153/acf115",
+          "title": "Data efficiency and extrapolation trends in neural network interatomic potentials",
+          "authors": [
+            "Joshua A Vita",
+            "Daniel Schwalbe-Koda"
+          ],
+          "year": 2023,
+          "published": "2023-09-01",
+          "venue": "Machine Learning: Science and Technology",
+          "type": "journal-article",
+          "citation_count": 18,
+          "source_url": "https://doi.org/10.1088/2632-2153/acf115",
+          "query_hits": [
+            "machine learning interatomic potential graph neural network"
+          ],
+          "best_query_rank": 71,
+          "keyword_score": 7.0,
+          "selection_score": 10.5735
+        },
+        {
+          "doi": "10.1002/adma.202470369",
+          "title": "Universal Ensemble‐Embedding Graph Neural Network for Direct Prediction of Optical Spectra from Crystal Structures (Adv. Mater. 46/2024)",
+          "authors": [
+            "Nguyen Tuan Hung",
+            "Ryotaro Okabe",
+            "Abhijatmedhi Chotrattanapituk",
+            "Mingda Li"
+          ],
+          "year": 2024,
+          "published": "2024-11-01",
+          "venue": "Advanced Materials",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1002/adma.202470369",
+          "query_hits": [
+            "crystal graph neural network materials discovery"
+          ],
+          "best_query_rank": 79,
+          "keyword_score": 8.0,
+          "selection_score": 10.31
+        },
+        {
+          "doi": "10.1103/physrevmaterials.8.103805",
+          "title": "Artificial-neural-network descriptor enhancing accuracy of machine-learning interatomic potential and its application to lattice defects in Si",
+          "authors": [
+            "M. Uchida",
+            "T. Yokoi",
+            "Y. Ogura",
+            "K. Matsunaga"
+          ],
+          "year": 2024,
+          "published": "2024-10-21",
+          "venue": "Physical Review Materials",
+          "type": "journal-article",
+          "citation_count": 2,
+          "source_url": "https://doi.org/10.1103/physrevmaterials.8.103805",
+          "query_hits": [
+            "machine learning interatomic potential graph neural network"
+          ],
+          "best_query_rank": 18,
+          "keyword_score": 7.0,
+          "selection_score": 10.2799
+        },
+        {
+          "doi": "10.1016/j.commatsci.2021.110761",
+          "title": "Directed graph attention neural network utilizing 3D coordinates for molecular property prediction",
+          "authors": [
+            "Chen Qian",
+            "Yunhai Xiong",
+            "Xiang Chen"
+          ],
+          "year": 2021,
+          "published": "2021-12-01",
+          "venue": "Computational Materials Science",
+          "type": "journal-article",
+          "citation_count": 18,
+          "source_url": "https://doi.org/10.1016/j.commatsci.2021.110761",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 13,
+          "keyword_score": 5.0,
+          "selection_score": 9.1282
+        },
+        {
+          "doi": "10.1109/icaccs54159.2022.9785225",
+          "title": "Generalized Graph Neural Network for prediction of molecular property",
+          "authors": [
+            "Lilapati Waikhom",
+            "Ripon Patgiri"
+          ],
+          "year": 2022,
+          "published": "2022-03-25",
+          "venue": "2022 8th International Conference on Advanced Computing and Communication Systems (ICACCS)",
+          "type": "proceedings-article",
+          "citation_count": 1,
+          "source_url": "https://doi.org/10.1109/icaccs54159.2022.9785225",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 41,
+          "keyword_score": 6.0,
+          "selection_score": 8.7057
+        },
+        {
+          "doi": "10.55529/jaimlnn.52.97.106",
+          "title": "Explainable graph neural networks for drug-target interaction prediction: a gnnexplainer-augmented framework with molecular graph representation",
+          "authors": [
+            "Dr. Mayur R Bhoyar"
+          ],
+          "year": 2025,
+          "published": "2025-10-08",
+          "venue": "Journal of Artificial Intelligence Machine Learning and Neural Network",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.55529/jaimlnn.52.97.106",
+          "query_hits": [
+            "machine learning interatomic potential graph neural network"
+          ],
+          "best_query_rank": 73,
+          "keyword_score": 6.0,
+          "selection_score": 8.3682
+        },
+        {
+          "doi": "10.1109/bibm55620.2022.9994859",
+          "title": "Pseudo-Siamese Neural Network Based Graph and Sequence Representation Learning for Molecular Property Prediction",
+          "authors": [
+            "Chaoran Zhang",
+            "Xiangfeng Yan",
+            "Yong Liu"
+          ],
+          "year": 2022,
+          "published": "2022-12-06",
+          "venue": "2022 IEEE International Conference on Bioinformatics and Biomedicine (BIBM)",
+          "type": "proceedings-article",
+          "citation_count": 1,
+          "source_url": "https://doi.org/10.1109/bibm55620.2022.9994859",
+          "query_hits": [
+            "graph neural network materials property prediction"
+          ],
+          "best_query_rank": 75,
+          "keyword_score": 5.0,
+          "selection_score": 7.5429
+        }
+      ]
+    },
+    "educational-knowledge-tracing": {
+      "queries": [
+        "knowledge tracing deep learning",
+        "Bayesian knowledge tracing student modeling",
+        "transformer knowledge tracing",
+        "knowledge tracing intelligent tutoring systems"
+      ],
+      "candidate_count": 135,
+      "candidates": [
+        {
+          "doi": "10.5120/ijcaa4901066e72b",
+          "title": "Lumina: An Intelligent Multi-Agent Adaptive Learning Management System with Bayesian Knowledge Tracing, Deep Knowledge Tracing, and Reinforcement Learning for Personalized Education",
+          "authors": [
+            "Rayudu Srinivas",
+            "Chepuri Hari Kiran",
+            "Pathivada Laxmi Ram Charan"
+          ],
+          "year": 2026,
+          "published": "2026-07-24",
+          "venue": "International Journal of Computer Applications",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.5120/ijcaa4901066e72b",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 2,
+          "keyword_score": 14.0,
+          "selection_score": 20.2684
+        },
+        {
+          "doi": "10.1109/ictbai68361.2025.00032",
+          "title": "Transformer-based Deep Knowledge Tracing Integrating Knowledge-weighted Q-matrix",
+          "authors": [
+            "Yajuan Zhao",
+            "Wugedele Bao"
+          ],
+          "year": 2025,
+          "published": "2025-08-21",
+          "venue": "2025 International Conference on Trustworthy Big Data and Artificial Intelligence (ICTBAI)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/ictbai68361.2025.00032",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 2,
+          "keyword_score": 13.0,
+          "selection_score": 19.2284
+        },
+        {
+          "doi": "10.1016/j.knosys.2018.03.001",
+          "title": "A three learning states Bayesian knowledge tracing model",
+          "authors": [
+            "Kai Zhang",
+            "Yiyu Yao"
+          ],
+          "year": 2018,
+          "published": "2018-05-01",
+          "venue": "Knowledge-Based Systems",
+          "type": "journal-article",
+          "citation_count": 56,
+          "source_url": "https://doi.org/10.1016/j.knosys.2018.03.001",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "Bayesian knowledge tracing student modeling",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 11,
+          "keyword_score": 11.0,
+          "selection_score": 18.5819
+        },
+        {
+          "doi": "10.1109/icdm.2018.00156",
+          "title": "Deep Knowledge Tracing and Dynamic Student Classification for Knowledge Tracing",
+          "authors": [
+            "Sein Minn",
+            "Yi Yu",
+            "Michel C. Desmarais",
+            "Feida Zhu",
+            "Jill-Jenn Vie"
+          ],
+          "year": 2018,
+          "published": "2018-11-01",
+          "venue": "2018 IEEE International Conference on Data Mining (ICDM)",
+          "type": "proceedings-article",
+          "citation_count": 121,
+          "source_url": "https://doi.org/10.1109/icdm.2018.00156",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "Bayesian knowledge tracing student modeling",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 21,
+          "keyword_score": 11.0,
+          "selection_score": 18.5792
+        },
+        {
+          "doi": "10.1038/s41598-025-07422-7",
+          "title": "Deep learning based knowledge tracing in intelligent tutoring systems",
+          "authors": [
+            "Xin Zhou",
+            "Zhuoxu Zhang",
+            "Xike Xie",
+            "Jiawei Zhang"
+          ],
+          "year": 2025,
+          "published": "2025-07-01",
+          "venue": "Scientific Reports",
+          "type": "journal-article",
+          "citation_count": 16,
+          "source_url": "https://doi.org/10.1038/s41598-025-07422-7",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "knowledge tracing intelligent tutoring systems"
+          ],
+          "best_query_rank": 2,
+          "keyword_score": 11.0,
+          "selection_score": 18.4589
+        },
+        {
+          "doi": "10.1109/iceict55736.2022.9908959",
+          "title": "Bayesian Knowledge Tracing based on Transformer",
+          "authors": [
+            "Tingjiang Wei",
+            "Bingying Hu",
+            "Qin Ni"
+          ],
+          "year": 2022,
+          "published": "2022-08-21",
+          "venue": "2022 IEEE 5th International Conference on Electronic Information and Communication Technology (ICEICT)",
+          "type": "proceedings-article",
+          "citation_count": 3,
+          "source_url": "https://doi.org/10.1109/iceict55736.2022.9908959",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 7,
+          "keyword_score": 13.0,
+          "selection_score": 18.3939
+        },
+        {
+          "doi": "10.1007/s11257-017-9193-2",
+          "title": "Bayesian knowledge tracing, logistic models, and beyond: an overview of learner modeling techniques",
+          "authors": [
+            "Radek Pelánek"
+          ],
+          "year": 2017,
+          "published": "2017-12-01",
+          "venue": "User Modeling and User-Adapted Interaction",
+          "type": "journal-article",
+          "citation_count": 198,
+          "source_url": "https://doi.org/10.1007/s11257-017-9193-2",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 8,
+          "keyword_score": 13.0,
+          "selection_score": 18.2931
+        },
+        {
+          "doi": "10.1109/ddcls58216.2023.10167354",
+          "title": "Deep Knowledge Tracing Model with an Evolved Transformer Structure",
+          "authors": [
+            "Zhijun Li",
+            "Zixiao Xue",
+            "Chen Liu",
+            "Yanzhang Feng"
+          ],
+          "year": 2023,
+          "published": "2023-05-12",
+          "venue": "2023 IEEE 12th Data Driven Control and Learning Systems Conference (DDCLS)",
+          "type": "proceedings-article",
+          "citation_count": 2,
+          "source_url": "https://doi.org/10.1109/ddcls58216.2023.10167354",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 10,
+          "keyword_score": 13.0,
+          "selection_score": 18.062
+        },
+        {
+          "doi": "10.1155/int/3037960",
+          "title": "GCKT: Context‐Aware Gating of Heterogeneous Learning Features With Transformer for Cognitive Knowledge Tracing in Intelligent Tutoring Systems",
+          "authors": [
+            "Zhifeng Wang",
+            "Jinyu Liu",
+            "Chunyan Zeng"
+          ],
+          "year": 2026,
+          "published": "2026-01-01",
+          "venue": "International Journal of Intelligent Systems",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1155/int/3037960",
+          "query_hits": [
+            "transformer knowledge tracing",
+            "knowledge tracing intelligent tutoring systems"
+          ],
+          "best_query_rank": 8,
+          "keyword_score": 13.0,
+          "selection_score": 17.8542
+        },
+        {
+          "doi": "10.1145/3543507.3583255",
+          "title": "Tracing Knowledge Instead of Patterns: Stable Knowledge Tracing with Diagnostic Transformer",
+          "authors": [
+            "Yu Yin",
+            "Le Dai",
+            "Zhenya Huang",
+            "Shuanghong Shen",
+            "Fei Wang",
+            "Qi Liu",
+            "Enhong Chen",
+            "Xin Li"
+          ],
+          "year": 2023,
+          "published": "2023-04-30",
+          "venue": "Proceedings of the ACM Web Conference 2023",
+          "type": "proceedings-article",
+          "citation_count": 103,
+          "source_url": "https://doi.org/10.1145/3543507.3583255",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 1,
+          "keyword_score": 10.0,
+          "selection_score": 17.837
+        },
+        {
+          "doi": "10.1109/ieir67391.2025.11491031",
+          "title": "From Knowledge Tracing to Literacy Tracing: A Question Aware Transformer for Modeling Learners' Proficiency",
+          "authors": [
+            "Zhifeng Wang",
+            "Yaowei Dong",
+            "Chunyan Zeng"
+          ],
+          "year": 2025,
+          "published": "2025-11-07",
+          "venue": "2025 International Conference on Intelligent Education and Intelligent Research (IEIR)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/ieir67391.2025.11491031",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 3,
+          "keyword_score": 12.0,
+          "selection_score": 17.7094
+        },
+        {
+          "doi": "10.1109/icmcsi61536.2024.00010",
+          "title": "Intelligent Tutoring Systems using Long Short-Term Memory Networks and Bayesian Knowledge Tracing",
+          "authors": [
+            "Subha R",
+            "Gayathri N",
+            "Sasireka S",
+            "Sathiyabanu R",
+            "Santhiyaa B",
+            "Varshini B"
+          ],
+          "year": 2024,
+          "published": "2024-01-18",
+          "venue": "2024 5th International Conference on Mobile Computing and Sustainable Informatics (ICMCSI)",
+          "type": "proceedings-article",
+          "citation_count": 5,
+          "source_url": "https://doi.org/10.1109/icmcsi61536.2024.00010",
+          "query_hits": [
+            "knowledge tracing intelligent tutoring systems"
+          ],
+          "best_query_rank": 31,
+          "keyword_score": 14.0,
+          "selection_score": 17.3566
+        },
+        {
+          "doi": "10.1145/3448139.3448170",
+          "title": "Variational Deep Knowledge Tracing for Language Learning",
+          "authors": [
+            "Sherry Ruan",
+            "Wei Wei",
+            "James Landay"
+          ],
+          "year": 2021,
+          "published": "2021-04-12",
+          "venue": "LAK21: 11th International Learning Analytics and Knowledge Conference",
+          "type": "proceedings-article",
+          "citation_count": 3,
+          "source_url": "https://doi.org/10.1145/3448139.3448170",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 1,
+          "keyword_score": 11.0,
+          "selection_score": 17.3421
+        },
+        {
+          "doi": "10.1007/s10489-022-03621-1",
+          "title": "What is wrong with deep knowledge tracing? Attention-based knowledge tracing",
+          "authors": [
+            "Xianqing Wang",
+            "Zetao Zheng",
+            "Jia Zhu",
+            "Weihao Yu"
+          ],
+          "year": 2023,
+          "published": "2023-02-01",
+          "venue": "Applied Intelligence",
+          "type": "journal-article",
+          "citation_count": 19,
+          "source_url": "https://doi.org/10.1007/s10489-022-03621-1",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 32,
+          "keyword_score": 12.0,
+          "selection_score": 17.3281
+        },
+        {
+          "doi": "10.1016/j.procs.2023.10.107",
+          "title": "A student modeling method combining Deep Learning and forgetting models with Knowledge Tracing",
+          "authors": [
+            "Shinichi Oeda",
+            "Shunichi Hasegawa"
+          ],
+          "year": 2023,
+          "published": "2023-01-01",
+          "venue": "Procedia Computer Science",
+          "type": "journal-article",
+          "citation_count": 6,
+          "source_url": "https://doi.org/10.1016/j.procs.2023.10.107",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 12,
+          "keyword_score": 12.0,
+          "selection_score": 17.3198
+        },
+        {
+          "doi": "10.1109/tlt.2023.3254544",
+          "title": "Dynamic Cognitive Diagnosis: An Educational Priors-Enhanced Deep Knowledge Tracing Perspective",
+          "authors": [
+            "Fei Wang",
+            "Zhenya Huang",
+            "Qi Liu",
+            "Enhong Chen",
+            "Yu Yin",
+            "Jianhui Ma",
+            "Shijin Wang"
+          ],
+          "year": 2023,
+          "published": "2023-06-01",
+          "venue": "IEEE Transactions on Learning Technologies",
+          "type": "journal-article",
+          "citation_count": 42,
+          "source_url": "https://doi.org/10.1109/tlt.2023.3254544",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 59,
+          "keyword_score": 13.0,
+          "selection_score": 16.9742
+        },
+        {
+          "doi": "10.31577/cai_2025_6_1468",
+          "title": "Behavior-Enhanced Knowledge Tracing Model in Intelligent Tutoring Systems",
+          "authors": [
+            "Si'ao Sun",
+            "Liqing Qiu"
+          ],
+          "year": 2025,
+          "published": "2025-01-01",
+          "venue": "Computing and Informatics",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.31577/cai_2025_6_1468",
+          "query_hits": [
+            "knowledge tracing intelligent tutoring systems"
+          ],
+          "best_query_rank": 1,
+          "keyword_score": 11.0,
+          "selection_score": 16.9
+        },
+        {
+          "doi": "10.1145/2883851.2883885",
+          "title": "Sequencing educational content in classrooms using Bayesian knowledge tracing",
+          "authors": [
+            "Yossi Ben David",
+            "Avi Segal",
+            "Ya'akov (Kobi) Gal"
+          ],
+          "year": 2016,
+          "published": "2016-01-01",
+          "venue": "Proceedings of the Sixth International Conference on Learning Analytics & Knowledge - LAK '16",
+          "type": "proceedings-article",
+          "citation_count": 39,
+          "source_url": "https://doi.org/10.1145/2883851.2883885",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 49,
+          "keyword_score": 13.0,
+          "selection_score": 16.7135
+        },
+        {
+          "doi": "10.1109/icnlp69856.2026.11527863",
+          "title": "Attention-Enhanced Knowledge Tracing: Integrating Dynamic Item Response Theory with Bayesian Knowledge Tracing",
+          "authors": [
+            "Shuyan Wang",
+            "Yao Wang",
+            "Mengfan Liu",
+            "Zhaorong Ji"
+          ],
+          "year": 2026,
+          "published": "2026-03-20",
+          "venue": "2026 8th International Conference on Natural Language Processing (ICNLP)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/icnlp69856.2026.11527863",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 13,
+          "keyword_score": 12.0,
+          "selection_score": 16.5494
+        },
+        {
+          "doi": "10.1145/3303772.3303830",
+          "title": "Deep Knowledge Tracing and Engagement with MOOCs",
+          "authors": [
+            "Kritphong Mongkhonvanit",
+            "Klint Kanopka",
+            "David Lang"
+          ],
+          "year": 2019,
+          "published": "2019-03-04",
+          "venue": "Proceedings of the 9th International Conference on Learning Analytics & Knowledge",
+          "type": "proceedings-article",
+          "citation_count": 30,
+          "source_url": "https://doi.org/10.1145/3303772.3303830",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 3,
+          "keyword_score": 11.0,
+          "selection_score": 16.4608
+        },
+        {
+          "doi": "10.1016/j.knosys.2024.112431",
+          "title": "Personalized process–type learning path recommendation based on process mining and deep knowledge tracing",
+          "authors": [
+            "Feng Zhang",
+            "Xuguang Feng",
+            "Yibing Wang"
+          ],
+          "year": 2024,
+          "published": "2024-11-01",
+          "venue": "Knowledge-Based Systems",
+          "type": "journal-article",
+          "citation_count": 27,
+          "source_url": "https://doi.org/10.1016/j.knosys.2024.112431",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 4,
+          "keyword_score": 11.0,
+          "selection_score": 16.3072
+        },
+        {
+          "doi": "10.1109/access.2025.3568171",
+          "title": "Improving Student Learning Outcome Tracing at HBCUs Using Tabular Generative AI and Deep Knowledge Tracing",
+          "authors": [
+            "Ming-Mu Kuo",
+            "Xiangfang Li",
+            "Pamela Obiomon",
+            "Lijun Qian",
+            "Xishuang Dong"
+          ],
+          "year": 2025,
+          "published": "2025-01-01",
+          "venue": "IEEE Access",
+          "type": "journal-article",
+          "citation_count": 4,
+          "source_url": "https://doi.org/10.1109/access.2025.3568171",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 11,
+          "keyword_score": 11.0,
+          "selection_score": 16.305
+        },
+        {
+          "doi": "10.1109/access.2025.3557316",
+          "title": "Tracing Student Learning Outcome at Historically Black Colleges and Universities via Deep Knowledge Tracing",
+          "authors": [
+            "Ming-Mu Kuo",
+            "Xiangfang Li",
+            "Pamela H. Obiomon",
+            "Lijun Qian",
+            "Xishuang Dong"
+          ],
+          "year": 2025,
+          "published": "2025-01-01",
+          "venue": "IEEE Access",
+          "type": "journal-article",
+          "citation_count": 3,
+          "source_url": "https://doi.org/10.1109/access.2025.3557316",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 15,
+          "keyword_score": 11.0,
+          "selection_score": 16.0349
+        },
+        {
+          "doi": "10.3390/app15179605",
+          "title": "Interpretable Knowledge Tracing via Transformer-Bayesian Hybrid Networks: Learning Temporal Dependencies and Causal Structures in Educational Data",
+          "authors": [
+            "Nhu Tam Mai",
+            "Wenyang Cao",
+            "Wenhe Liu"
+          ],
+          "year": 2025,
+          "published": "2025-08-31",
+          "venue": "Applied Sciences",
+          "type": "journal-article",
+          "citation_count": 10,
+          "source_url": "https://doi.org/10.3390/app15179605",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 14,
+          "keyword_score": 12.0,
+          "selection_score": 16.0104
+        },
+        {
+          "doi": "10.1609/aaai.v36i11.21560",
+          "title": "Interpretable Knowledge Tracing: Simple and Efficient Student Modeling with Causal Relations",
+          "authors": [
+            "Sein Minn",
+            "Jill-Jênn Vie",
+            "Koh Takeuchi",
+            "Hisashi Kashima",
+            "Feida Zhu"
+          ],
+          "year": 2022,
+          "published": "2022-06-28",
+          "venue": "Proceedings of the AAAI Conference on Artificial Intelligence",
+          "type": "journal-article",
+          "citation_count": 37,
+          "source_url": "https://doi.org/10.1609/aaai.v36i11.21560",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 47,
+          "keyword_score": 12.0,
+          "selection_score": 15.9432
+        },
+        {
+          "doi": "10.33395/sinkron.v10i1.15605",
+          "title": "Towards Adaptive Learning: A Bayesian Knowledge Tracing Approach to Student Skill Prediction Bayesian Knowledge Tracing for Modeling Daily Living Skills in Children with ASD",
+          "authors": [
+            "I Gde Eka Dharsika",
+            "I Made Dedy Setiawan",
+            "Ida Bagus Gede Sarasvananda"
+          ],
+          "year": 2026,
+          "published": "2026-01-03",
+          "venue": "sinkron",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.33395/sinkron.v10i1.15605",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 2,
+          "keyword_score": 11.0,
+          "selection_score": 15.7684
+        },
+        {
+          "doi": "10.1145/3795154.3795251",
+          "title": "Multi-Granularity Attention-Enhanced Knowledge Tracing with Explainable Cognitive Diagnosis and Hierarchical Student Modeling",
+          "authors": [
+            "Xiaying Cao",
+            "Rui Tan"
+          ],
+          "year": 2025,
+          "published": "2025-12-26",
+          "venue": "Proceedings of the 2025 6th International Conference on Computer Science and Management Technology",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1145/3795154.3795251",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 24,
+          "keyword_score": 13.0,
+          "selection_score": 15.7165
+        },
+        {
+          "doi": "10.54097/wznpy315",
+          "title": "Learning Causal and Sequential Patterns in Student Knowledge Tracing via Transformer-Augmented Bayesian Networks",
+          "authors": [
+            "Rachel Kim"
+          ],
+          "year": 2025,
+          "published": "2025-08-14",
+          "venue": "Computer Life",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.54097/wznpy315",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 3,
+          "keyword_score": 10.0,
+          "selection_score": 15.7094
+        },
+        {
+          "doi": "10.1145/3231644.3231647",
+          "title": "Addressing two problems in deep knowledge tracing via prediction-consistent regularization",
+          "authors": [
+            "Chun-Kit Yeung",
+            "Dit-Yan Yeung"
+          ],
+          "year": 2018,
+          "published": "2018-06-26",
+          "venue": "Proceedings of the Fifth Annual ACM Conference on Learning at Scale",
+          "type": "proceedings-article",
+          "citation_count": 281,
+          "source_url": "https://doi.org/10.1145/3231644.3231647",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 45,
+          "keyword_score": 11.0,
+          "selection_score": 15.6665
+        },
+        {
+          "doi": "10.1016/j.knosys.2023.111300",
+          "title": "HiTSKT: A hierarchical transformer model for session-aware knowledge tracing",
+          "authors": [
+            "Fucai Ke",
+            "Weiqing Wang",
+            "Weicong Tan",
+            "Lan Du",
+            "Yuan Jin",
+            "Yujin Huang",
+            "Hongzhi Yin"
+          ],
+          "year": 2024,
+          "published": "2024-01-01",
+          "venue": "Knowledge-Based Systems",
+          "type": "journal-article",
+          "citation_count": 53,
+          "source_url": "https://doi.org/10.1016/j.knosys.2023.111300",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 4,
+          "keyword_score": 10.0,
+          "selection_score": 15.5924
+        },
+        {
+          "doi": "10.1016/j.eswa.2024.124451",
+          "title": "Meta-path structured graph pre-training for improving knowledge tracing in intelligent tutoring",
+          "authors": [
+            "Menglin Zhu",
+            "Liqing Qiu",
+            "Jingcheng Zhou"
+          ],
+          "year": 2024,
+          "published": "2024-11-01",
+          "venue": "Expert Systems with Applications",
+          "type": "journal-article",
+          "citation_count": 13,
+          "source_url": "https://doi.org/10.1016/j.eswa.2024.124451",
+          "query_hits": [
+            "knowledge tracing intelligent tutoring systems"
+          ],
+          "best_query_rank": 7,
+          "keyword_score": 11.0,
+          "selection_score": 15.518
+        },
+        {
+          "doi": "10.5220/0015053800004021",
+          "title": "Using Deep Knowledge Tracing to Discover Knowledge Concept Relations and an Explainable Curriculum Structure",
+          "authors": [
+            "John Ryan-Purcell",
+            "Ioana Ghergulescu"
+          ],
+          "year": 2026,
+          "published": "2026-01-01",
+          "venue": "Proceedings of the 18th International Conference on Computer Supported Education",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.5220/0015053800004021",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 16,
+          "keyword_score": 11.0,
+          "selection_score": 15.44
+        },
+        {
+          "doi": "10.1145/3051457.3053985",
+          "title": "Deep Knowledge Tracing On Programming Exercises",
+          "authors": [
+            "Lisa Wang",
+            "Angela Sy",
+            "Larry Liu",
+            "Chris Piech"
+          ],
+          "year": 2017,
+          "published": "2017-04-12",
+          "venue": "Proceedings of the Fourth (2017) ACM Conference on Learning @ Scale",
+          "type": "proceedings-article",
+          "citation_count": 101,
+          "source_url": "https://doi.org/10.1145/3051457.3053985",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 27,
+          "keyword_score": 11.0,
+          "selection_score": 15.3584
+        },
+        {
+          "doi": "10.25126/jitecs.202162344",
+          "title": "A Literature Review of Knowledge Tracing for Student Modeling : Research Trends, Models, Datasets, and Challenges",
+          "authors": [
+            "Ebedia Hilda Am",
+            "Indriana Hidayah",
+            "Sri Suning Kusumawardani"
+          ],
+          "year": 2021,
+          "published": "2021-10-08",
+          "venue": "Journal of Information Technology and Computer Science",
+          "type": "journal-article",
+          "citation_count": 7,
+          "source_url": "https://doi.org/10.25126/jitecs.202162344",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 37,
+          "keyword_score": 12.0,
+          "selection_score": 15.3007
+        },
+        {
+          "doi": "10.5220/0014823100004021",
+          "title": "KTBench: A Unified Evaluation Framework for Deep Knowledge Tracing",
+          "authors": [
+            "Anass El Ayady",
+            "Maxime Devanne",
+            "Germain Forestier",
+            "Nour El Mawas"
+          ],
+          "year": 2026,
+          "published": "2026-01-01",
+          "venue": "Proceedings of the 18th International Conference on Computer Supported Education",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.5220/0014823100004021",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 26,
+          "keyword_score": 11.0,
+          "selection_score": 15.2245
+        },
+        {
+          "doi": "10.1145/3051457.3053976",
+          "title": "Incorporating Rich Features into Deep Knowledge Tracing",
+          "authors": [
+            "Liang Zhang",
+            "Xiaolu Xiong",
+            "Siyuan Zhao",
+            "Anthony Botelho",
+            "Neil T. Heffernan"
+          ],
+          "year": 2017,
+          "published": "2017-04-12",
+          "venue": "Proceedings of the Fourth (2017) ACM Conference on Learning @ Scale",
+          "type": "proceedings-article",
+          "citation_count": 90,
+          "source_url": "https://doi.org/10.1145/3051457.3053976",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 44,
+          "keyword_score": 11.0,
+          "selection_score": 15.1421
+        },
+        {
+          "doi": "10.3389/fpsyg.2023.1150329",
+          "title": "Deep knowledge tracing with learning curves",
+          "authors": [
+            "Hang Su",
+            "Xin Liu",
+            "Shanghui Yang",
+            "Xuesong Lu"
+          ],
+          "year": 2023,
+          "published": "2023-03-30",
+          "venue": "Frontiers in Psychology",
+          "type": "journal-article",
+          "citation_count": 7,
+          "source_url": "https://doi.org/10.3389/fpsyg.2023.1150329",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 8,
+          "keyword_score": 11.0,
+          "selection_score": 15.1373
+        },
+        {
+          "doi": "10.1007/s11257-023-09389-4",
+          "title": "Twenty-five years of Bayesian knowledge tracing: a systematic review",
+          "authors": [
+            "Ines Šarić-Grgić",
+            "Ani Grubišić",
+            "Angelina Gašpar"
+          ],
+          "year": 2024,
+          "published": "2024-09-01",
+          "venue": "User Modeling and User-Adapted Interaction",
+          "type": "journal-article",
+          "citation_count": 25,
+          "source_url": "https://doi.org/10.1007/s11257-023-09389-4",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 23,
+          "keyword_score": 11.0,
+          "selection_score": 15.109
+        },
+        {
+          "doi": "10.1145/1595496.1562972",
+          "title": "Estimating programming knowledge with Bayesian knowledge tracing",
+          "authors": [
+            "Jussi Kasurinen",
+            "Uolevi Nikula"
+          ],
+          "year": 2009,
+          "published": "2009-08-25",
+          "venue": "ACM SIGCSE Bulletin",
+          "type": "journal-article",
+          "citation_count": 37,
+          "source_url": "https://doi.org/10.1145/1595496.1562972",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 16,
+          "keyword_score": 11.0,
+          "selection_score": 15.0798
+        },
+        {
+          "doi": "10.3390/app12147188",
+          "title": "Deep Knowledge Tracing Based on Spatial and Temporal Representation Learning for Learning Performance Prediction",
+          "authors": [
+            "Liting Lyu",
+            "Zhifeng Wang",
+            "Haihong Yun",
+            "Zexue Yang",
+            "Ya Li"
+          ],
+          "year": 2022,
+          "published": "2022-07-17",
+          "venue": "Applied Sciences",
+          "type": "journal-article",
+          "citation_count": 32,
+          "source_url": "https://doi.org/10.3390/app12147188",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 28,
+          "keyword_score": 11.0,
+          "selection_score": 15.0544
+        },
+        {
+          "doi": "10.21275/v4i11.nov151083",
+          "title": "Dynamic Bayesian Belief Network for Modeling Student Knowledge Tracing",
+          "authors": [],
+          "year": 2015,
+          "published": "2015-11-05",
+          "venue": "International Journal of Science and Research (IJSR)",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.21275/v4i11.nov151083",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 1,
+          "keyword_score": 8.0,
+          "selection_score": 15.0
+        },
+        {
+          "doi": "10.1038/s41598-025-10497-x",
+          "title": "Deep knowledge tracing and cognitive load estimation for personalized learning path generation using neural network architecture",
+          "authors": [
+            "Chunyan Tong",
+            "Changhong Ren"
+          ],
+          "year": 2025,
+          "published": "2025-07-10",
+          "venue": "Scientific Reports",
+          "type": "journal-article",
+          "citation_count": 21,
+          "source_url": "https://doi.org/10.1038/s41598-025-10497-x",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 29,
+          "keyword_score": 11.0,
+          "selection_score": 14.9852
+        },
+        {
+          "doi": "10.1016/j.ipm.2022.103114",
+          "title": "A novel framework for deep knowledge tracing via gating-controlled forgetting and learning mechanisms",
+          "authors": [
+            "Weizhong Zhao",
+            "Jun Xia",
+            "Xingpeng Jiang",
+            "Tingting He"
+          ],
+          "year": 2023,
+          "published": "2023-01-01",
+          "venue": "Information Processing & Management",
+          "type": "journal-article",
+          "citation_count": 43,
+          "source_url": "https://doi.org/10.1016/j.ipm.2022.103114",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 68,
+          "keyword_score": 11.0,
+          "selection_score": 14.9485
+        },
+        {
+          "doi": "10.1109/tlt.2024.3381045",
+          "title": "Modeling Student Performance Using Feature Crosses Information for Knowledge Tracing",
+          "authors": [
+            "Lixiang Xu",
+            "Zhanlong Wang",
+            "Suojuan Zhang",
+            "Xin Yuan",
+            "Minjuan Wang",
+            "Enhong Chen"
+          ],
+          "year": 2024,
+          "published": "2024-01-01",
+          "venue": "IEEE Transactions on Learning Technologies",
+          "type": "journal-article",
+          "citation_count": 20,
+          "source_url": "https://doi.org/10.1109/tlt.2024.3381045",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 41,
+          "keyword_score": 11.0,
+          "selection_score": 14.8069
+        },
+        {
+          "doi": "10.1145/3636555.3636890",
+          "title": "Investigating Algorithmic Bias on Bayesian Knowledge Tracing and Carelessness Detectors",
+          "authors": [
+            "Andres Felipe Zambrano",
+            "Jiayi Zhang",
+            "Ryan S. Baker"
+          ],
+          "year": 2024,
+          "published": "2024-03-18",
+          "venue": "Proceedings of the 14th Learning Analytics and Knowledge Conference",
+          "type": "proceedings-article",
+          "citation_count": 17,
+          "source_url": "https://doi.org/10.1145/3636555.3636890",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 40,
+          "keyword_score": 11.0,
+          "selection_score": 14.7477
+        },
+        {
+          "doi": "10.1109/tlt.2023.3346671",
+          "title": "Deep Knowledge Tracing Incorporating a Hypernetwork With Independent Student and Item Networks",
+          "authors": [
+            "Emiko Tsutsumi",
+            "Yiming Guo",
+            "Ryo Kinoshita",
+            "Maomi Ueno"
+          ],
+          "year": 2024,
+          "published": "2024-01-01",
+          "venue": "IEEE Transactions on Learning Technologies",
+          "type": "journal-article",
+          "citation_count": 14,
+          "source_url": "https://doi.org/10.1109/tlt.2023.3346671",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 43,
+          "keyword_score": 11.0,
+          "selection_score": 14.6461
+        },
+        {
+          "doi": "10.1109/te.2024.3448532",
+          "title": "Knowledge Tracing Through Enhanced Questions and Directed Learning Interaction Based on Multigraph Embeddings in Intelligent Tutoring Systems",
+          "authors": [
+            "Liqing Qiu",
+            "Lulu Wang"
+          ],
+          "year": 2025,
+          "published": "2025-02-01",
+          "venue": "IEEE Transactions on Education",
+          "type": "journal-article",
+          "citation_count": 6,
+          "source_url": "https://doi.org/10.1109/te.2024.3448532",
+          "query_hits": [
+            "knowledge tracing intelligent tutoring systems"
+          ],
+          "best_query_rank": 24,
+          "keyword_score": 11.0,
+          "selection_score": 14.5616
+        },
+        {
+          "doi": "10.1109/ijcnn64981.2025.11228301",
+          "title": "Integrating Semi-Supervised Learning and Ensemble Deep Learning for Low-resource Deep Knowledge Tracing",
+          "authors": [
+            "Xishuang Dong",
+            "Lin Li",
+            "Uchechukwu Melody Okechukwu",
+            "Lijun Qian"
+          ],
+          "year": 2025,
+          "published": "2025-06-30",
+          "venue": "2025 International Joint Conference on Neural Networks (IJCNN)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/ijcnn64981.2025.11228301",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 6,
+          "keyword_score": 11.0,
+          "selection_score": 14.533
+        },
+        {
+          "doi": "10.1145/3636555.3636849",
+          "title": "Improving Model Fairness with Time-Augmented Bayesian Knowledge Tracing",
+          "authors": [
+            "Jake Barrett",
+            "Alasdair Day",
+            "Kobi Gal"
+          ],
+          "year": 2024,
+          "published": "2024-03-18",
+          "venue": "Proceedings of the 14th Learning Analytics and Knowledge Conference",
+          "type": "proceedings-article",
+          "citation_count": 8,
+          "source_url": "https://doi.org/10.1145/3636555.3636849",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 31,
+          "keyword_score": 11.0,
+          "selection_score": 14.5327
+        },
+        {
+          "doi": "10.1109/tlt.2023.3336240",
+          "title": "OPKT: Enhancing Knowledge Tracing With Optimized Pretraining Mechanisms in Intelligent Tutoring",
+          "authors": [
+            "Liqing Qiu",
+            "Menglin Zhu",
+            "Jingcheng Zhou"
+          ],
+          "year": 2024,
+          "published": "2024-01-01",
+          "venue": "IEEE Transactions on Learning Technologies",
+          "type": "journal-article",
+          "citation_count": 11,
+          "source_url": "https://doi.org/10.1109/tlt.2023.3336240",
+          "query_hits": [
+            "knowledge tracing intelligent tutoring systems"
+          ],
+          "best_query_rank": 57,
+          "keyword_score": 11.0,
+          "selection_score": 14.469
+        },
+        {
+          "doi": "10.1145/2723576.2723608",
+          "title": "Tracking student progress in a game-like learning environment with a Monte Carlo Bayesian knowledge tracing model",
+          "authors": [
+            "G.-H. Gweon",
+            "Hee-Sun Lee",
+            "Chad Dorsey",
+            "Robert Tinker",
+            "William Finzer",
+            "Daniel Damelin"
+          ],
+          "year": 2015,
+          "published": "2015-03-16",
+          "venue": "Proceedings of the Fifth International Conference on Learning Analytics And Knowledge",
+          "type": "proceedings-article",
+          "citation_count": 6,
+          "source_url": "https://doi.org/10.1145/2723576.2723608",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 14,
+          "keyword_score": 11.0,
+          "selection_score": 14.4141
+        },
+        {
+          "doi": "10.1145/3580595",
+          "title": "Fine-Grained Interaction Modeling with Multi-Relational Transformer for Knowledge Tracing",
+          "authors": [
+            "Jiajun Cui",
+            "Zeyuan Chen",
+            "Aimin Zhou",
+            "Jianyong Wang",
+            "Wei Zhang"
+          ],
+          "year": 2023,
+          "published": "2023-10-31",
+          "venue": "ACM Transactions on Information Systems",
+          "type": "journal-article",
+          "citation_count": 37,
+          "source_url": "https://doi.org/10.1145/3580595",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 21,
+          "keyword_score": 10.0,
+          "selection_score": 14.2727
+        },
+        {
+          "doi": "10.3389/frobt.2023.1249241",
+          "title": "Time-dependant Bayesian knowledge tracing—Robots that model user skills over time",
+          "authors": [
+            "Nicole Salomons",
+            "Brian Scassellati"
+          ],
+          "year": 2024,
+          "published": "2024-02-26",
+          "venue": "Frontiers in Robotics and AI",
+          "type": "journal-article",
+          "citation_count": 7,
+          "source_url": "https://doi.org/10.3389/frobt.2023.1249241",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 65,
+          "keyword_score": 11.0,
+          "selection_score": 14.2592
+        },
+        {
+          "doi": "10.1109/icdel65868.2025.11193534",
+          "title": "Accumulated Self-ensemble Knowledge Distillation for Deep Knowledge Tracing",
+          "authors": [
+            "Yuelong Xia",
+            "Xiaodi Sun",
+            "Wenjie Liu",
+            "Jing Yang"
+          ],
+          "year": 2025,
+          "published": "2025-06-13",
+          "venue": "2025 International Conference on Distance Education and Learning (ICDEL)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/icdel65868.2025.11193534",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 9,
+          "keyword_score": 11.0,
+          "selection_score": 14.2333
+        },
+        {
+          "doi": "10.1109/t4e.2019.00-34",
+          "title": "Feature-Aware Knowledge Tracing for Generation of Concept-Knowledge Reports in an Intelligent Tutoring System",
+          "authors": [
+            "Mithun Haridas",
+            "Nirmala Vasudevan",
+            "Surya Gayathry",
+            "Georg Gutjahr",
+            "Raghu Raman",
+            "Prema Nedungadi"
+          ],
+          "year": 2019,
+          "published": "2019-12-01",
+          "venue": "2019 IEEE Tenth International Conference on Technology for Education (T4E)",
+          "type": "proceedings-article",
+          "citation_count": 8,
+          "source_url": "https://doi.org/10.1109/t4e.2019.00-34",
+          "query_hits": [
+            "knowledge tracing intelligent tutoring systems"
+          ],
+          "best_query_rank": 55,
+          "keyword_score": 11.0,
+          "selection_score": 14.1536
+        },
+        {
+          "doi": "10.71086/iajse/v13i2/iajse1365",
+          "title": "A Graph Transformer–Based Self-Supervised Learning Framework for Modeling Student Knowledge Tracing in Adaptive Learning Systems",
+          "authors": [
+            "Sofiyaxon Usmonova",
+            "Feruza Sadriddinova",
+            "Botir Shukurov",
+            "Gavharxon Shadiyeva",
+            "Dildora Nazarova",
+            "Shakhista Abduganieva",
+            "Bakhadir Isakov"
+          ],
+          "year": 2026,
+          "published": "2026-06-30",
+          "venue": "International Academic Journal of Science and Engineering",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.71086/iajse/v13i2/iajse1365",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 33,
+          "keyword_score": 10.0,
+          "selection_score": 14.1363
+        },
+        {
+          "doi": "10.1109/icdmw.2018.00055",
+          "title": "End-to-End Deep Knowledge Tracing by Learning Binary Question-Embedding",
+          "authors": [
+            "Hiromi Nakagawa",
+            "Yusuke Iwasawa",
+            "Yutaka Matsuo"
+          ],
+          "year": 2018,
+          "published": "2018-11-01",
+          "venue": "2018 IEEE International Conference on Data Mining Workshops (ICDMW)",
+          "type": "proceedings-article",
+          "citation_count": 5,
+          "source_url": "https://doi.org/10.1109/icdmw.2018.00055",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 30,
+          "keyword_score": 11.0,
+          "selection_score": 14.1284
+        },
+        {
+          "doi": "10.1109/ccwc60891.2024.10427645",
+          "title": "Hypergraph Transformer for Knowledge Tracing",
+          "authors": [
+            "Xianrun He",
+            "Xianghong Lin",
+            "Yuan Zhao"
+          ],
+          "year": 2024,
+          "published": "2024-01-08",
+          "venue": "2024 IEEE 14th Annual Computing and Communication Workshop and Conference (CCWC)",
+          "type": "proceedings-article",
+          "citation_count": 2,
+          "source_url": "https://doi.org/10.1109/ccwc60891.2024.10427645",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 5,
+          "keyword_score": 10.0,
+          "selection_score": 14.126
+        },
+        {
+          "doi": "10.1109/tkde.2025.3570098",
+          "title": "Hyperbolic Hypergraph Transformer With Knowledge State Disentanglement for Knowledge Tracing",
+          "authors": [
+            "Jiawei Li",
+            "Shun Mao",
+            "Yixiu Qin",
+            "Feng Wang",
+            "Yuncheng Jiang"
+          ],
+          "year": 2025,
+          "published": "2025-08-01",
+          "venue": "IEEE Transactions on Knowledge and Data Engineering",
+          "type": "journal-article",
+          "citation_count": 5,
+          "source_url": "https://doi.org/10.1109/tkde.2025.3570098",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 8,
+          "keyword_score": 10.0,
+          "selection_score": 14.0924
+        },
+        {
+          "doi": "10.1109/cste53634.2021.00022",
+          "title": "Learning Strategy Based on Deep Knowledge Tracing",
+          "authors": [
+            "Ye Tian",
+            "Zhendong Niu",
+            "Donglei Liu"
+          ],
+          "year": 2021,
+          "published": "2021-05-01",
+          "venue": "2021 3rd International Conference on Computer Science and Technologies in Education (CSTE)",
+          "type": "proceedings-article",
+          "citation_count": 2,
+          "source_url": "https://doi.org/10.1109/cste53634.2021.00022",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 25,
+          "keyword_score": 11.0,
+          "selection_score": 14.0171
+        },
+        {
+          "doi": "10.1109/icoin56518.2023.10048977",
+          "title": "Applying Deep Knowledge Tracing Model for University Students’ Programming Learning",
+          "authors": [
+            "Hui-Chun Hung",
+            "Ping-Han Lee"
+          ],
+          "year": 2023,
+          "published": "2023-01-11",
+          "venue": "2023 International Conference on Information Networking (ICOIN)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/icoin56518.2023.10048977",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 12,
+          "keyword_score": 11.0,
+          "selection_score": 13.9747
+        },
+        {
+          "doi": "10.1145/3729605.3729638",
+          "title": "Generative AI Based on Deep Knowledge Tracing for Academic Insight and Intelligent Learning Strategy Optimization",
+          "authors": [
+            "Xuna Wang"
+          ],
+          "year": 2025,
+          "published": "2025-02-21",
+          "venue": "Proceedings of the 2025 International Conference on Big Data and Informatization Education",
+          "type": "proceedings-article",
+          "citation_count": 2,
+          "source_url": "https://doi.org/10.1145/3729605.3729638",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 49,
+          "keyword_score": 11.0,
+          "selection_score": 13.9485
+        },
+        {
+          "doi": "10.17083/ijsg.v11i2.738",
+          "title": "Bayesian Knowledge Tracing Implemented in a Telecommunications Serious Game",
+          "authors": [
+            "Halatedzi Nedombeloni",
+            "Reolyn Heymann",
+            "Japie Greeff"
+          ],
+          "year": 2024,
+          "published": "2024-06-26",
+          "venue": "International Journal of Serious Games",
+          "type": "journal-article",
+          "citation_count": 3,
+          "source_url": "https://doi.org/10.17083/ijsg.v11i2.738",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 69,
+          "keyword_score": 11.0,
+          "selection_score": 13.9436
+        },
+        {
+          "doi": "10.1109/tlt.2025.3616515",
+          "title": "RCKTE: Toward Global Optimal Causal Explanations for Deep Knowledge Tracing",
+          "authors": [
+            "Qing Li",
+            "Xin Yuan",
+            "Jianwen Sun",
+            "Xinrui Li",
+            "Sijing Chen",
+            "Xiaoxuan Shen",
+            "Sannyuya Liu"
+          ],
+          "year": 2025,
+          "published": "2025-01-01",
+          "venue": "IEEE Transactions on Learning Technologies",
+          "type": "journal-article",
+          "citation_count": 2,
+          "source_url": "https://doi.org/10.1109/tlt.2025.3616515",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 54,
+          "keyword_score": 11.0,
+          "selection_score": 13.9215
+        },
+        {
+          "doi": "10.1109/icenco49852.2021.9698953",
+          "title": "Bayesian Knowledge Tracing for Assessment Results Analysis",
+          "authors": [
+            "Mark Naeem",
+            "Andrew Tidswell",
+            "Youmna Magdy"
+          ],
+          "year": 2021,
+          "published": "2021-12-29",
+          "venue": "2021 17th International Computer Engineering Conference (ICENCO)",
+          "type": "proceedings-article",
+          "citation_count": 2,
+          "source_url": "https://doi.org/10.1109/icenco49852.2021.9698953",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 35,
+          "keyword_score": 11.0,
+          "selection_score": 13.8932
+        },
+        {
+          "doi": "10.3390/app15052692",
+          "title": "Collaborative Learning Groupings Incorporating Deep Knowledge Tracing Optimization Strategies",
+          "authors": [
+            "Haojun Li",
+            "Yaohan Chen",
+            "Weixia Liao",
+            "Xuhui Wang"
+          ],
+          "year": 2025,
+          "published": "2025-03-03",
+          "venue": "Applied Sciences",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.3390/app15052692",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 17,
+          "keyword_score": 11.0,
+          "selection_score": 13.8701
+        },
+        {
+          "doi": "10.1109/icirca69024.2026.11570336",
+          "title": "Knowledge Tracing with Ensemble Machine Learning for Multimodal Content-Aware Recommendations in Intelligent Tutoring Systems",
+          "authors": [
+            "Boomika S",
+            "Sadaiyappan E",
+            "Suguna R"
+          ],
+          "year": 2026,
+          "published": "2026-06-03",
+          "venue": "2026 7th International Conference on Inventive Research in Computing Applications (ICIRCA)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/icirca69024.2026.11570336",
+          "query_hits": [
+            "knowledge tracing intelligent tutoring systems"
+          ],
+          "best_query_rank": 20,
+          "keyword_score": 11.0,
+          "selection_score": 13.8344
+        },
+        {
+          "doi": "10.1109/iceit61397.2024.10540839",
+          "title": "Knowledge Tracing Based Wheel Spinning Detection Model in Intelligent Tutoring Systems",
+          "authors": [
+            "Mingzi Chen",
+            "Yanan Chen",
+            "Shouxiang Ni",
+            "Peilin Li",
+            "Xuguang Zhang"
+          ],
+          "year": 2024,
+          "published": "2024-03-22",
+          "venue": "2024 13th International Conference on Educational and Information Technology (ICEIT)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/iceit61397.2024.10540839",
+          "query_hits": [
+            "knowledge tracing intelligent tutoring systems"
+          ],
+          "best_query_rank": 17,
+          "keyword_score": 11.0,
+          "selection_score": 13.8301
+        },
+        {
+          "doi": "10.1007/s13042-026-03104-6",
+          "title": "Enhanced deep knowledge tracing via synthetic embeddings",
+          "authors": [
+            "Si Shi",
+            "Wuman Luo",
+            "Giovanni Pau"
+          ],
+          "year": 2026,
+          "published": "2026-06-01",
+          "venue": "International Journal of Machine Learning and Cybernetics",
+          "type": "journal-article",
+          "citation_count": 1,
+          "source_url": "https://doi.org/10.1007/s13042-026-03104-6",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 53,
+          "keyword_score": 11.0,
+          "selection_score": 13.7905
+        },
+        {
+          "doi": "10.1007/s10618-026-01208-9",
+          "title": "Prompt-tuning for improving knowledge tracing in intelligent tutoring",
+          "authors": [
+            "Menglin Zhu",
+            "Liqing Qiu",
+            "Jingcheng Zhou"
+          ],
+          "year": 2026,
+          "published": "2026-05-01",
+          "venue": "Data Mining and Knowledge Discovery",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1007/s10618-026-01208-9",
+          "query_hits": [
+            "knowledge tracing intelligent tutoring systems"
+          ],
+          "best_query_rank": 23,
+          "keyword_score": 11.0,
+          "selection_score": 13.7741
+        },
+        {
+          "doi": "10.1016/j.knosys.2022.110036",
+          "title": "A survey on deep learning based knowledge tracing",
+          "authors": [
+            "Xiangyu Song",
+            "Jianxin Li",
+            "Taotao Cai",
+            "Shuiqiao Yang",
+            "Tingting Yang",
+            "Chengfei Liu"
+          ],
+          "year": 2022,
+          "published": "2022-12-01",
+          "venue": "Knowledge-Based Systems",
+          "type": "journal-article",
+          "citation_count": 149,
+          "source_url": "https://doi.org/10.1016/j.knosys.2022.110036",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 5,
+          "keyword_score": 8.0,
+          "selection_score": 13.7449
+        },
+        {
+          "doi": "10.1371/journal.pone.0301714",
+          "title": "GELT: A graph embeddings based lite-transformer for knowledge tracing",
+          "authors": [
+            "Zhijie Liang",
+            "Ruixia Wu",
+            "Zhao Liang",
+            "Juan Yang",
+            "Ling Wang",
+            "Jianyu Su"
+          ],
+          "year": 2024,
+          "published": "2024-05-07",
+          "venue": "PLOS ONE",
+          "type": "journal-article",
+          "citation_count": 7,
+          "source_url": "https://doi.org/10.1371/journal.pone.0301714",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 17,
+          "keyword_score": 10.0,
+          "selection_score": 13.7332
+        },
+        {
+          "doi": "10.1016/j.knosys.2025.114884",
+          "title": "Is there a better way to forget? Modelling memory decay in deep knowledge tracing",
+          "authors": [
+            "Alyssa Sha",
+            "Zhenhui Gu",
+            "Bernardo Pereira Nunes"
+          ],
+          "year": 2026,
+          "published": "2026-01-01",
+          "venue": "Knowledge-Based Systems",
+          "type": "journal-article",
+          "citation_count": 1,
+          "source_url": "https://doi.org/10.1016/j.knosys.2025.114884",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 70,
+          "keyword_score": 11.0,
+          "selection_score": 13.7191
+        },
+        {
+          "doi": "10.1007/s10758-025-09829-7",
+          "title": "Reliability Coefficient for Bayesian Knowledge Tracing Models",
+          "authors": [
+            "Daisuke Shimada",
+            "Kensuke Okada"
+          ],
+          "year": 2026,
+          "published": "2026-03-01",
+          "venue": "Technology, Knowledge and Learning",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1007/s10758-025-09829-7",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 30,
+          "keyword_score": 11.0,
+          "selection_score": 13.6703
+        },
+        {
+          "doi": "10.52202/075280-0857",
+          "title": "Evolutionary Neural Architecture Search for Transformer in Knowledge Tracing",
+          "authors": [
+            "Shangshang Yang",
+            "Xiaoshan Yu",
+            "Ye Tian",
+            "Xueming Yan",
+            "Haiping Ma",
+            "Xingyi Zhang"
+          ],
+          "year": 2023,
+          "published": "2023-01-01",
+          "venue": "Advances in Neural Information Processing Systems 36",
+          "type": "proceedings-article",
+          "citation_count": 3,
+          "source_url": "https://doi.org/10.52202/075280-0857",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 11,
+          "keyword_score": 10.0,
+          "selection_score": 13.6281
+        },
+        {
+          "doi": "10.1109/icbk50248.2020.00096",
+          "title": "Neural Attentive Knowledge Tracing Model for Student Performance Prediction",
+          "authors": [
+            "Junrui Zhang",
+            "Yun Mo",
+            "Changzhi Chen",
+            "Xiaofeng He"
+          ],
+          "year": 2020,
+          "published": "2020-08-01",
+          "venue": "2020 IEEE International Conference on Knowledge Graph (ICKG)",
+          "type": "proceedings-article",
+          "citation_count": 1,
+          "source_url": "https://doi.org/10.1109/icbk50248.2020.00096",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 44,
+          "keyword_score": 11.0,
+          "selection_score": 13.6041
+        },
+        {
+          "doi": "10.1145/3579654.3579772",
+          "title": "Deep Knowledge Tracing Integrating Multiple Learning Behaviors",
+          "authors": [
+            "Longhai Zhu",
+            "Yang Ji"
+          ],
+          "year": 2022,
+          "published": "2022-12-23",
+          "venue": "Proceedings of the 2022 5th International Conference on Algorithms, Computing and Artificial Intelligence",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1145/3579654.3579772",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 24,
+          "keyword_score": 11.0,
+          "selection_score": 13.5965
+        },
+        {
+          "doi": "10.1145/3573051.3596183",
+          "title": "Efficient Transformer-based Knowledge Tracing for a Personalized Language Education Application",
+          "authors": [
+            "Dae-Eun Kim",
+            "Changki Hong",
+            "Woo Hyun Kim"
+          ],
+          "year": 2023,
+          "published": "2023-07-20",
+          "venue": "Proceedings of the Tenth ACM Conference on Learning @ Scale",
+          "type": "proceedings-article",
+          "citation_count": 3,
+          "source_url": "https://doi.org/10.1145/3573051.3596183",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 12,
+          "keyword_score": 10.0,
+          "selection_score": 13.5768
+        },
+        {
+          "doi": "10.1109/iemcon67450.2025.11381252",
+          "title": "A Novel Adaptive Learning Framework Integrating Item Response Theory, Bayesian Knowledge Tracing and Deep Learning with Confidence Calibrated Feedback",
+          "authors": [
+            "Avyakt Agrawal"
+          ],
+          "year": 2025,
+          "published": "2025-10-29",
+          "venue": "2025 IEEE 16th Annual Information Technology, Electronics and Mobile Communication Conference (IEMCON)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/iemcon67450.2025.11381252",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 38,
+          "keyword_score": 11.0,
+          "selection_score": 13.5489
+        },
+        {
+          "doi": "10.1109/icdel65868.2025.11193556",
+          "title": "Research on Precision Instruction Based on Deep Knowledge Tracing Data Analysis",
+          "authors": [
+            "Zhijun Yang",
+            "Tongtong Lu",
+            "Long Xue",
+            "Feng Wang",
+            "Zijia Ren"
+          ],
+          "year": 2025,
+          "published": "2025-06-13",
+          "venue": "2025 International Conference on Distance Education and Learning (ICDEL)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/icdel65868.2025.11193556",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 47,
+          "keyword_score": 11.0,
+          "selection_score": 13.4835
+        },
+        {
+          "doi": "10.25258/ijddt.16.70s.154",
+          "title": "Advancing Computer-Based Learning Frameworks Using Artificial Neural Networks for Skill-Disentangled Deep Knowledge Tracing",
+          "authors": [
+            "Karim Ansari",
+            "Ravindra Kumar Tiwari",
+            "Jitendra Kumar Agrawal"
+          ],
+          "year": 2026,
+          "published": "2026-07-28",
+          "venue": "International Journal of Drug Delivery Technology",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.25258/ijddt.16.70s.154",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 58,
+          "keyword_score": 11.0,
+          "selection_score": 13.4652
+        },
+        {
+          "doi": "10.3390/electronics15030642",
+          "title": "Cross-Course Knowledge Tracing for Student Performance Prediction in MOOCs",
+          "authors": [
+            "Defeng Lin",
+            "Yuanzhuo Liu",
+            "Zhengyang Wu"
+          ],
+          "year": 2026,
+          "published": "2026-02-02",
+          "venue": "Electronics",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.3390/electronics15030642",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 61,
+          "keyword_score": 11.0,
+          "selection_score": 13.4521
+        },
+        {
+          "doi": "10.1016/j.engappai.2026.115001",
+          "title": "Adversarial contrastive learning to augment deep knowledge tracing",
+          "authors": [
+            "Shenggen Ju",
+            "Xiaodi Huang",
+            "Yanting Li",
+            "Rongmei Zhao",
+            "Rui Kang",
+            "Li Chen"
+          ],
+          "year": 2026,
+          "published": "2026-08-01",
+          "venue": "Engineering Applications of Artificial Intelligence",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1016/j.engappai.2026.115001",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 62,
+          "keyword_score": 11.0,
+          "selection_score": 13.448
+        },
+        {
+          "doi": "10.1145/3303772.3303786",
+          "title": "Knowledge Query Network for Knowledge Tracing",
+          "authors": [
+            "Jinseok Lee",
+            "Dit-Yan Yeung"
+          ],
+          "year": 2019,
+          "published": "2019-03-04",
+          "venue": "Proceedings of the 9th International Conference on Learning Analytics & Knowledge",
+          "type": "proceedings-article",
+          "citation_count": 63,
+          "source_url": "https://doi.org/10.1145/3303772.3303786",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 71,
+          "keyword_score": 8.0,
+          "selection_score": 13.4409
+        },
+        {
+          "doi": "10.1016/j.knosys.2026.115947",
+          "title": "BeShift: Behavior-informed data augmentation for robust and fair deep knowledge tracing under distributional shifts",
+          "authors": [
+            "Han Kyul Kim",
+            "Stephen Lu"
+          ],
+          "year": 2026,
+          "published": "2026-06-01",
+          "venue": "Knowledge-Based Systems",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1016/j.knosys.2026.115947",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 64,
+          "keyword_score": 11.0,
+          "selection_score": 13.44
+        },
+        {
+          "doi": "10.1117/12.3105802",
+          "title": "Personalized exercise recommendation via fusing knowledge graph embeddings with deep knowledge tracing",
+          "authors": [
+            "Suqing Chen"
+          ],
+          "year": 2026,
+          "published": "2026-02-24",
+          "venue": "Third International Conference on Big Data, Computational Intelligence, and Applications (BDCIA 2025)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1117/12.3105802",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 76,
+          "keyword_score": 11.0,
+          "selection_score": 13.3988
+        },
+        {
+          "doi": "10.1109/cvidliccea56201.2022.9823984",
+          "title": "Design and implementation of question recommendation system based on deep knowledge tracing",
+          "authors": [
+            "Shuai Guo"
+          ],
+          "year": 2022,
+          "published": "2022-05-20",
+          "venue": "2022 3rd International Conference on Computer Vision, Image and Deep Learning & International Conference on Computer Engineering and Applications (CVIDL & ICCEA)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/cvidliccea56201.2022.9823984",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 42,
+          "keyword_score": 11.0,
+          "selection_score": 13.3972
+        },
+        {
+          "doi": "10.1145/3350546.3352513",
+          "title": "Graph-based Knowledge Tracing: Modeling Student Proficiency Using Graph Neural Network",
+          "authors": [
+            "Hiromi Nakagawa",
+            "Yusuke Iwasawa",
+            "Yutaka Matsuo"
+          ],
+          "year": 2019,
+          "published": "2019-10-14",
+          "venue": "IEEE/WIC/ACM International Conference on Web Intelligence",
+          "type": "proceedings-article",
+          "citation_count": 291,
+          "source_url": "https://doi.org/10.1145/3350546.3352513",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 10,
+          "keyword_score": 8.0,
+          "selection_score": 13.3903
+        },
+        {
+          "doi": "10.3758/s13428-026-02955-9",
+          "title": "BKT: A Bayesian knowledge tracing package for the R environment",
+          "authors": [
+            "Yuhao Yuan",
+            "Biying Zhou",
+            "Jia Qi",
+            "Nanyu Luo",
+            "Feng Ji"
+          ],
+          "year": 2026,
+          "published": "2026-04-22",
+          "venue": "Behavior Research Methods",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.3758/s13428-026-02955-9",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 80,
+          "keyword_score": 11.0,
+          "selection_score": 13.3872
+        },
+        {
+          "doi": "10.1109/ispa63168.2024.00199",
+          "title": "HTKT: Knowledge Tracing Based on Hypergraph Transformer",
+          "authors": [
+            "Xiaojin Guo",
+            "Xilong Chang",
+            "Xiankun Zhang",
+            "Kun Liang",
+            "Yuhu Shang",
+            "Yiying Zhang"
+          ],
+          "year": 2024,
+          "published": "2024-10-30",
+          "venue": "2024 IEEE International Symposium on Parallel and Distributed Processing with Applications (ISPA)",
+          "type": "proceedings-article",
+          "citation_count": 1,
+          "source_url": "https://doi.org/10.1109/ispa63168.2024.00199",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 13,
+          "keyword_score": 10.0,
+          "selection_score": 13.2704
+        },
+        {
+          "doi": "10.1109/iatmsi60426.2024.10502970",
+          "title": "Enhanced Transformer: Knowledge Tracing with Incorporation of Temporal Features",
+          "authors": [
+            "Akarsh R Hegde",
+            "Akash S",
+            "Adithya C H",
+            "Vaishnavi B V",
+            "Chetana Hegde"
+          ],
+          "year": 2024,
+          "published": "2024-03-14",
+          "venue": "2024 IEEE International Conference on Interdisciplinary Approaches in Technology and Management for Social Innovation (IATMSI)",
+          "type": "proceedings-article",
+          "citation_count": 1,
+          "source_url": "https://doi.org/10.1109/iatmsi60426.2024.10502970",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 22,
+          "keyword_score": 10.0,
+          "selection_score": 13.0138
+        },
+        {
+          "doi": "10.1016/j.knosys.2023.110511",
+          "title": "Learning data teaching strategies via knowledge tracing",
+          "authors": [
+            "Ghodai Abdelrahman",
+            "Qing Wang"
+          ],
+          "year": 2023,
+          "published": "2023-06-01",
+          "venue": "Knowledge-Based Systems",
+          "type": "journal-article",
+          "citation_count": 9,
+          "source_url": "https://doi.org/10.1016/j.knosys.2023.110511",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 43,
+          "keyword_score": 8.0,
+          "selection_score": 12.93
+        },
+        {
+          "doi": "10.1109/ainit65432.2025.11035828",
+          "title": "PHGKT: A Knowledge Tracing Model Based on Hypergraph Neural Network and Transformer",
+          "authors": [
+            "Chunyu Lu",
+            "Xin Liao",
+            "Peng Pu"
+          ],
+          "year": 2025,
+          "published": "2025-04-11",
+          "venue": "2025 IEEE 6th International Seminar on Artificial Intelligence, Networking and Information Technology (AINIT)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/ainit65432.2025.11035828",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 16,
+          "keyword_score": 10.0,
+          "selection_score": 12.9
+        },
+        {
+          "doi": "10.1109/tcss.2025.3627690",
+          "title": "EmoKT: Emotion-Aware Fusion Enhanced Knowledge Tracing Using Joint Graph–Transformer Model",
+          "authors": [
+            "Tao He",
+            "Zhitian Zhong",
+            "Shimin Kang",
+            "Xuri Fang",
+            "Kaihang Yang",
+            "Xiaoming Cao"
+          ],
+          "year": 2026,
+          "published": "2026-04-01",
+          "venue": "IEEE Transactions on Computational Social Systems",
+          "type": "journal-article",
+          "citation_count": 1,
+          "source_url": "https://doi.org/10.1109/tcss.2025.3627690",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 39,
+          "keyword_score": 10.0,
+          "selection_score": 12.8815
+        },
+        {
+          "doi": "10.1145/3660043.3660187",
+          "title": "A Novel and Scalable Dual Response Hypothesis Scheme Based on Transformer for Knowledge Tracing",
+          "authors": [
+            "Li Xu",
+            "Zhilong Shan"
+          ],
+          "year": 2023,
+          "published": "2023-12-22",
+          "venue": "Proceedings of the 2023 International Conference on Information Education and Artificial Intelligence",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1145/3660043.3660187",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 15,
+          "keyword_score": 10.0,
+          "selection_score": 12.8528
+        },
+        {
+          "doi": "10.1145/3788149.3788239",
+          "title": "A Transformer-based Method for Knowledge Tracing and Exercise Recommendation",
+          "authors": [
+            "Ruize Gao",
+            "Weilong Ding",
+            "Liqing Wang",
+            "Xinwei Zhang",
+            "Yaseng Lun",
+            "Yang Jun Cong Liu"
+          ],
+          "year": 2025,
+          "published": "2025-12-12",
+          "venue": "Proceedings of the 2025 9th International Conference on Computer Science and Artificial Intelligence",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1145/3788149.3788239",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 20,
+          "keyword_score": 10.0,
+          "selection_score": 12.7944
+        },
+        {
+          "doi": "10.1109/comp-sif69752.2026.11481867",
+          "title": "Transformer-Based Knowledge Tracing With Hawkes Process for Adaptive Learning Paths",
+          "authors": [
+            "S.Maflin Shaby",
+            "Vinoth T",
+            "V. Senthil Kumar",
+            "Neelraj E",
+            "M. S. Muthuraman",
+            "Raksha Kodnad R"
+          ],
+          "year": 2026,
+          "published": "2026-03-13",
+          "venue": "2026 2nd International Conference on Computing for Sustainability and Intelligent Future (COMP-SIF)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/comp-sif69752.2026.11481867",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 27,
+          "keyword_score": 10.0,
+          "selection_score": 12.7098
+        },
+        {
+          "doi": "10.5220/0010515500600070",
+          "title": "Machine Learning Techniques for Knowledge Tracing: A Systematic Literature Review",
+          "authors": [
+            "Sergio Iván Ramírez Luelmo",
+            "Nour El Mawas",
+            "Jean Heutte"
+          ],
+          "year": 2021,
+          "published": "2021-01-01",
+          "venue": "Proceedings of the 13th International Conference on Computer Supported Education",
+          "type": "proceedings-article",
+          "citation_count": 7,
+          "source_url": "https://doi.org/10.5220/0010515500600070",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 52,
+          "keyword_score": 8.0,
+          "selection_score": 12.6978
+        },
+        {
+          "doi": "10.23919/indiacom70271.2026.11525667",
+          "title": "Evolution of Knowledge Tracing Models: A Comparative Analysis of Bayesian, Deep Learning and Transformer-Based Approaches",
+          "authors": [
+            "Sowmya H. K.",
+            "A. R. Jineesh",
+            "I. Darren Raj",
+            "Srishti Kumari",
+            "Abhigna Mylavaram"
+          ],
+          "year": 2026,
+          "published": "2026-04-08",
+          "venue": "2026 13th International Conference on Computing for Sustainable Global Development (INDIACom)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.23919/indiacom70271.2026.11525667",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 28,
+          "keyword_score": 10.0,
+          "selection_score": 12.6959
+        },
+        {
+          "doi": "10.1609/aaai.v33i01.3301750",
+          "title": "Knowledge Tracing Machines: Factorization Machines for Knowledge Tracing",
+          "authors": [
+            "Jill-Jenn Vie",
+            "Hisashi Kashima"
+          ],
+          "year": 2019,
+          "published": "2019-07-17",
+          "venue": "Proceedings of the AAAI Conference on Artificial Intelligence",
+          "type": "journal-article",
+          "citation_count": 140,
+          "source_url": "https://doi.org/10.1609/aaai.v33i01.3301750",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 24,
+          "keyword_score": 8.0,
+          "selection_score": 12.6257
+        },
+        {
+          "doi": "10.5220/0013275100003932",
+          "title": "Sparse Binary Representation Learning for Knowledge Tracing",
+          "authors": [
+            "Yahya Badran",
+            "Christine Preisach"
+          ],
+          "year": 2025,
+          "published": "2025-01-01",
+          "venue": "Proceedings of the 17th International Conference on Computer Supported Education",
+          "type": "proceedings-article",
+          "citation_count": 1,
+          "source_url": "https://doi.org/10.5220/0013275100003932",
+          "query_hits": [
+            "knowledge tracing deep learning",
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 21,
+          "keyword_score": 8.0,
+          "selection_score": 12.5739
+        },
+        {
+          "doi": "10.1109/icaisisas68969.2026.11567893",
+          "title": "CogKT: Cognitively Guided Transformer with Adaptive Forgetting for Knowledge Tracing",
+          "authors": [
+            "Chiqiang Li",
+            "Yifei Sun",
+            "Sicheng Hou",
+            "Shi Cheng",
+            "Yongan Li",
+            "Mingkai Duan",
+            "Yichi Zhang",
+            "Jinshuo Shang"
+          ],
+          "year": 2026,
+          "published": "2026-05-08",
+          "venue": "2026 Joint International Conference on Automation-Intelligence-Safety (ICAIS) &amp; International Symposium on Autonomous Systems (ISAS)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/icaisisas68969.2026.11567893",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 47,
+          "keyword_score": 10.0,
+          "selection_score": 12.5235
+        },
+        {
+          "doi": "10.14801/jkiit.2025.23.11.77",
+          "title": "Transformer-based Knowledge Tracing Model Reflecting Cognitive Science-Informed Forgetting Effects",
+          "authors": [
+            "Ju-Yeong Park",
+            "Tae-Gwon Lee",
+            "Ji-Hoon Bae"
+          ],
+          "year": 2025,
+          "published": "2025-11-30",
+          "venue": "The Journal of Korean Institute of Information Technology",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.14801/jkiit.2025.23.11.77",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 61,
+          "keyword_score": 10.0,
+          "selection_score": 12.4121
+        },
+        {
+          "doi": "10.3233/web-210458",
+          "title": "Graph-based knowledge tracing: Modeling student proficiency using graph neural networks",
+          "authors": [
+            "Hiromi Nakagawa",
+            "Yusuke Iwasawa",
+            "Yutaka Matsuo"
+          ],
+          "year": 2021,
+          "published": "2021-12-03",
+          "venue": "Web Intelligence",
+          "type": "journal-article",
+          "citation_count": 30,
+          "source_url": "https://doi.org/10.3233/web-210458",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 17,
+          "keyword_score": 8.0,
+          "selection_score": 12.2015
+        },
+        {
+          "doi": "10.1145/3706468.3706501",
+          "title": "Exploring Knowledge Tracing in Tutor-Student Dialogues using LLMs",
+          "authors": [
+            "Alexander Scarlatos",
+            "Ryan S. Baker",
+            "Andrew Lan"
+          ],
+          "year": 2025,
+          "published": "2025-03-03",
+          "venue": "Proceedings of the 15th International Learning Analytics and Knowledge Conference",
+          "type": "proceedings-article",
+          "citation_count": 32,
+          "source_url": "https://doi.org/10.1145/3706468.3706501",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 52,
+          "keyword_score": 8.0,
+          "selection_score": 11.9732
+        },
+        {
+          "doi": "10.1007/s40593-022-00297-z",
+          "title": "Interpreting Deep Learning Models for Knowledge Tracing",
+          "authors": [
+            "Yu Lu",
+            "Deliang Wang",
+            "Penghe Chen",
+            "Qinggang Meng",
+            "Shengquan Yu"
+          ],
+          "year": 2023,
+          "published": "2023-09-01",
+          "venue": "International Journal of Artificial Intelligence in Education",
+          "type": "journal-article",
+          "citation_count": 33,
+          "source_url": "https://doi.org/10.1007/s40593-022-00297-z",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 74,
+          "keyword_score": 8.0,
+          "selection_score": 11.8165
+        },
+        {
+          "doi": "10.1145/3539597.3575790",
+          "title": "Recent Advances on Deep Learning based Knowledge Tracing",
+          "authors": [
+            "Zitao Liu",
+            "Jiahao Chen",
+            "Weiqi Luo"
+          ],
+          "year": 2023,
+          "published": "2023-02-27",
+          "venue": "Proceedings of the Sixteenth ACM International Conference on Web Search and Data Mining",
+          "type": "proceedings-article",
+          "citation_count": 20,
+          "source_url": "https://doi.org/10.1145/3539597.3575790",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 40,
+          "keyword_score": 8.0,
+          "selection_score": 11.7747
+        },
+        {
+          "doi": "10.1007/s11280-022-01041-2",
+          "title": "Multi-type factors representation learning for deep learning-based knowledge tracing",
+          "authors": [
+            "Liangliang He",
+            "Jintao Tang",
+            "Xiao Li",
+            "Pancheng Wang",
+            "Feng Chen",
+            "Ting Wang"
+          ],
+          "year": 2022,
+          "published": "2022-05-01",
+          "venue": "World Wide Web",
+          "type": "journal-article",
+          "citation_count": 20,
+          "source_url": "https://doi.org/10.1007/s11280-022-01041-2",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 51,
+          "keyword_score": 8.0,
+          "selection_score": 11.6623
+        },
+        {
+          "doi": "10.52202/068431-1347",
+          "title": "PyKT: A Python Library to Benchmark Deep Learning Based Knowledge Tracing Models",
+          "authors": [
+            "Zitao Liu",
+            "Qiongqiong Liu",
+            "Jiahao Chen",
+            "Shuyan Huang",
+            "Jiliang Tang",
+            "Weiqi Luo"
+          ],
+          "year": 2022,
+          "published": "2022-01-01",
+          "venue": "Advances in Neural Information Processing Systems 35",
+          "type": "proceedings-article",
+          "citation_count": 16,
+          "source_url": "https://doi.org/10.52202/068431-1347",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 55,
+          "keyword_score": 8.0,
+          "selection_score": 11.5498
+        },
+        {
+          "doi": "10.1145/3506860.3506870",
+          "title": "Enhancing Programming Knowledge Tracing by Interacting Programming Skills and Student Code",
+          "authors": [
+            "Mengxia Zhu",
+            "Siqi Han",
+            "Peisen Yuan",
+            "Xuesong Lu"
+          ],
+          "year": 2022,
+          "published": "2022-03-21",
+          "venue": "LAK22: 12th International Learning Analytics and Knowledge Conference",
+          "type": "proceedings-article",
+          "citation_count": 14,
+          "source_url": "https://doi.org/10.1145/3506860.3506870",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 56,
+          "keyword_score": 8.0,
+          "selection_score": 11.4906
+        },
+        {
+          "doi": "10.1109/icme51207.2021.9428154",
+          "title": "Integrating Performance and Side Factors into Embeddings for Deep Learning-Based Knowledge Tracing",
+          "authors": [
+            "Liangliang He"
+          ],
+          "year": 2021,
+          "published": "2021-07-05",
+          "venue": "2021 IEEE International Conference on Multimedia and Expo (ICME)",
+          "type": "proceedings-article",
+          "citation_count": 4,
+          "source_url": "https://doi.org/10.1109/icme51207.2021.9428154",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 18,
+          "keyword_score": 8.0,
+          "selection_score": 11.3818
+        },
+        {
+          "doi": "10.18608/jla.2025.8557",
+          "title": "Integrating Option Tracing into Knowledge Tracing",
+          "authors": [
+            "Hai Li",
+            "Wanli Xing",
+            "Chenglu Li",
+            "Wangda Zhu",
+            "Simon Woodhead"
+          ],
+          "year": 2025,
+          "published": "2025-01-24",
+          "venue": "Journal of Learning Analytics",
+          "type": "journal-article",
+          "citation_count": 8,
+          "source_url": "https://doi.org/10.18608/jla.2025.8557",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 60,
+          "keyword_score": 8.0,
+          "selection_score": 11.3706
+        },
+        {
+          "doi": "10.1016/j.knosys.2024.112346",
+          "title": "Enhancing knowledge tracing with concept map and response disentanglement",
+          "authors": [
+            "Soonwook Park",
+            "Donghoon Lee",
+            "Hogun Park"
+          ],
+          "year": 2024,
+          "published": "2024-10-01",
+          "venue": "Knowledge-Based Systems",
+          "type": "journal-article",
+          "citation_count": 9,
+          "source_url": "https://doi.org/10.1016/j.knosys.2024.112346",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 70,
+          "keyword_score": 8.0,
+          "selection_score": 11.3381
+        },
+        {
+          "doi": "10.1109/icnc-fskd59587.2023.10280902",
+          "title": "Deep learning knowledge tracing based on behavioral features",
+          "authors": [
+            "Shuyan Wang",
+            "Yang Wang"
+          ],
+          "year": 2023,
+          "published": "2023-07-29",
+          "venue": "2023 19th International Conference on Natural Computation, Fuzzy Systems and Knowledge Discovery (ICNC-FSKD)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/icnc-fskd59587.2023.10280902",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 7,
+          "keyword_score": 8.0,
+          "selection_score": 11.3319
+        },
+        {
+          "doi": "10.1016/j.knosys.2024.112834",
+          "title": "Multi-Granularity Ensemble Interaction Graph Modeling for Knowledge Tracing",
+          "authors": [
+            "Jing Wang",
+            "Huifang Ma",
+            "Mengyuan Zhang",
+            "Lei Zhang",
+            "Liang Chang"
+          ],
+          "year": 2025,
+          "published": "2025-01-01",
+          "venue": "Knowledge-Based Systems",
+          "type": "journal-article",
+          "citation_count": 7,
+          "source_url": "https://doi.org/10.1016/j.knosys.2024.112834",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 68,
+          "keyword_score": 8.0,
+          "selection_score": 11.2882
+        },
+        {
+          "doi": "10.1145/3448139.3448149",
+          "title": "Clickstream Knowledge Tracing: Modeling How Students Answer Interactive Online Questions",
+          "authors": [
+            "Wai-Lun Chan",
+            "Dit-Yan Yeung"
+          ],
+          "year": 2021,
+          "published": "2021-04-12",
+          "venue": "LAK21: 11th International Learning Analytics and Knowledge Conference",
+          "type": "proceedings-article",
+          "citation_count": 9,
+          "source_url": "https://doi.org/10.1145/3448139.3448149",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 76,
+          "keyword_score": 8.0,
+          "selection_score": 11.1988
+        },
+        {
+          "doi": "10.1016/j.knosys.2024.112740",
+          "title": "Enhancing learning process modeling for session-aware knowledge tracing",
+          "authors": [
+            "Chunli Huang",
+            "Wenjun Jiang",
+            "Kenli Li",
+            "Jie Wu",
+            "Ji Zhang"
+          ],
+          "year": 2025,
+          "published": "2025-01-01",
+          "venue": "Knowledge-Based Systems",
+          "type": "journal-article",
+          "citation_count": 5,
+          "source_url": "https://doi.org/10.1016/j.knosys.2024.112740",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 62,
+          "keyword_score": 8.0,
+          "selection_score": 11.1862
+        },
+        {
+          "doi": "10.1038/s41598-025-23900-4",
+          "title": "Integrating Reinforcement Learning with Dynamic Knowledge Tracing for personalized learning path optimization",
+          "authors": [
+            "Zhiming Fu"
+          ],
+          "year": 2025,
+          "published": "2025-11-17",
+          "venue": "Scientific Reports",
+          "type": "journal-article",
+          "citation_count": 5,
+          "source_url": "https://doi.org/10.1038/s41598-025-23900-4",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 72,
+          "keyword_score": 8.0,
+          "selection_score": 11.1496
+        },
+        {
+          "doi": "10.1016/j.inffus.2025.103577",
+          "title": "LLM supporting knowledge tracing leveraging global subject and student specific knowledge graphs",
+          "authors": [
+            "Linqing Li",
+            "Zhifeng Wang",
+            "Joemon M. Jose",
+            "Xuri Ge"
+          ],
+          "year": 2026,
+          "published": "2026-02-01",
+          "venue": "Information Fusion",
+          "type": "journal-article",
+          "citation_count": 3,
+          "source_url": "https://doi.org/10.1016/j.inffus.2025.103577",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 57,
+          "keyword_score": 8.0,
+          "selection_score": 11.0719
+        },
+        {
+          "doi": "10.1016/j.knosys.2026.115715",
+          "title": "Dual-domain knowledge fusion for interpretable knowledge tracing",
+          "authors": [
+            "Tao Zhou",
+            "Guilin Li",
+            "Yanting Li",
+            "Renyue Zhang",
+            "Shenggen Ju"
+          ],
+          "year": 2026,
+          "published": "2026-05-01",
+          "venue": "Knowledge-Based Systems",
+          "type": "journal-article",
+          "citation_count": 3,
+          "source_url": "https://doi.org/10.1016/j.knosys.2026.115715",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 65,
+          "keyword_score": 8.0,
+          "selection_score": 11.0382
+        },
+        {
+          "doi": "10.1109/jcsse68839.2026.11596868",
+          "title": "Modeling Student Mastery in Calculus Using Knowledge Tracing Techniques",
+          "authors": [
+            "Pitchayuth Panich",
+            "Puntharee Roongprasert",
+            "Taweechai Nuntawisuttiwong",
+            "Keran Khan"
+          ],
+          "year": 2026,
+          "published": "2026-06-24",
+          "venue": "2026 23rd International Joint Conference on Computer Science and Software Engineering (JCSSE)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/jcsse68839.2026.11596868",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 15,
+          "keyword_score": 8.0,
+          "selection_score": 10.9728
+        },
+        {
+          "doi": "10.1109/isc266238.2025.11293279",
+          "title": "Deep Learning-Based Hybrid Model for Knowledge Tracing and Personalised E-Learning",
+          "authors": [
+            "Yamna Ahmed",
+            "Ikram Ur Rehman",
+            "Engie Bashir",
+            "Fehmida Hussain"
+          ],
+          "year": 2025,
+          "published": "2025-10-06",
+          "venue": "2025 IEEE International Smart Cities Conference (ISC2)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/isc266238.2025.11293279",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 14,
+          "keyword_score": 8.0,
+          "selection_score": 10.969
+        },
+        {
+          "doi": "10.1109/iraset68627.2026.11538648",
+          "title": "Modeling Student Knowledge with BKT and Deep LSTM-based Knowledge Tracing",
+          "authors": [
+            "Mohammed Jebbari",
+            "Mohamed Amine Ouassil",
+            "Mouaad Errami",
+            "Adel Deraoui",
+            "Bouchaib Cherradi",
+            "Abdelhadi Raihani"
+          ],
+          "year": 2026,
+          "published": "2026-05-14",
+          "venue": "2026 6th International Conference on Innovative Research in Applied Science, Engineering and Technology (IRASET)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/iraset68627.2026.11538648",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 19,
+          "keyword_score": 8.0,
+          "selection_score": 10.8577
+        },
+        {
+          "doi": "10.1109/icecai66283.2025.11170890",
+          "title": "DGKT: Denoising Student Knowledge states via Generative Diffusion for Robust Knowledge Tracing",
+          "authors": [
+            "Xinyu Nie",
+            "Yu Su"
+          ],
+          "year": 2025,
+          "published": "2025-06-20",
+          "venue": "2025 6th International Conference on Electronic Communication and Artificial Intelligence (ICECAI)",
+          "type": "proceedings-article",
+          "citation_count": 1,
+          "source_url": "https://doi.org/10.1109/icecai66283.2025.11170890",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 51,
+          "keyword_score": 8.0,
+          "selection_score": 10.7611
+        },
+        {
+          "doi": "10.1109/ccai61966.2024.10602966",
+          "title": "A Confusion-Enhanced Deep Learning Model for Knowledge Tracing",
+          "authors": [
+            "Ming Yin",
+            "Ruihe Huang"
+          ],
+          "year": 2024,
+          "published": "2024-05-24",
+          "venue": "2024 4th International Conference on Computer Communication and Artificial Intelligence (CCAI)",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1109/ccai61966.2024.10602966",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 20,
+          "keyword_score": 8.0,
+          "selection_score": 10.7544
+        },
+        {
+          "doi": "10.5220/0013275200003932",
+          "title": "Addressing Label Leakage in Knowledge Tracing Models",
+          "authors": [
+            "Yahya Badran",
+            "Christine Preisach"
+          ],
+          "year": 2025,
+          "published": "2025-01-01",
+          "venue": "Proceedings of the 17th International Conference on Computer Supported Education",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.5220/0013275200003932",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 29,
+          "keyword_score": 8.0,
+          "selection_score": 10.6428
+        },
+        {
+          "doi": "10.65161/recczvtiarhcf7ha7",
+          "title": "Improving the Efficiency of Knowledge Tracing Algorithms: LinSAKT",
+          "authors": [
+            "Izhan Ali"
+          ],
+          "year": 2026,
+          "published": "2026-02-23",
+          "venue": "Oxford Journal of Student Scholarship",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.65161/recczvtiarhcf7ha7",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 34,
+          "keyword_score": 8.0,
+          "selection_score": 10.626
+        },
+        {
+          "doi": "10.1145/3729605.3729620",
+          "title": "Deep Learning Based Knowledge Tracing: A Review of the Literature",
+          "authors": [
+            "Siyi Zhu",
+            "Wenjie Chen"
+          ],
+          "year": 2025,
+          "published": "2025-02-21",
+          "venue": "Proceedings of the 2025 International Conference on Big Data and Informatization Education",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1145/3729605.3729620",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 31,
+          "keyword_score": 8.0,
+          "selection_score": 10.6184
+        },
+        {
+          "doi": "10.1038/s41598-026-61166-6",
+          "title": "Personalized learning path recommendation for middle school students based on joint optimization of deep reinforcement learning and knowledge tracing",
+          "authors": [
+            "Jianxia Zhao",
+            "Jinsong Kuang",
+            "Shuangqing Deng",
+            "Rongrong Kuang",
+            "Zhiqiang Zhang"
+          ],
+          "year": 2026,
+          "published": "2026-07-10",
+          "venue": "Scientific Reports",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1038/s41598-026-61166-6",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 37,
+          "keyword_score": 8.0,
+          "selection_score": 10.5976
+        },
+        {
+          "doi": "10.1016/j.neucom.2025.131879",
+          "title": "A survey of deep learning based knowledge tracing from cognitive processing perspective",
+          "authors": [
+            "Huali Yang",
+            "Junjie Hu",
+            "Shengze Hu",
+            "Zhuoran Xu",
+            "Xinjia Ou",
+            "Jing Geng",
+            "Linxia Tang",
+            "Tao Huang"
+          ],
+          "year": 2026,
+          "published": "2026-01-01",
+          "venue": "Neurocomputing",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1016/j.neucom.2025.131879",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 61,
+          "keyword_score": 8.0,
+          "selection_score": 10.4521
+        },
+        {
+          "doi": "10.58459/icce.2023.945",
+          "title": "An Efficient and Generic Method for Interpreting Deep Learning based Knowledge Tracing Models",
+          "authors": [
+            "Deliang WANG",
+            "Yu Lu",
+            "Zhi ZHANG",
+            "Penghe CHEN"
+          ],
+          "year": 2023,
+          "published": "2023-12-04",
+          "venue": "International Conference on Computers in Education",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.58459/icce.2023.945",
+          "query_hits": [
+            "knowledge tracing deep learning"
+          ],
+          "best_query_rank": 41,
+          "keyword_score": 8.0,
+          "selection_score": 10.4447
+        },
+        {
+          "doi": "10.21125/edulearn.2025.0470",
+          "title": "ENHANCING KNOWLEDGE TRACING FOR STUDENT SUCCESS: THE ETRAINER APPROACH IN MODERN EDUCATION",
+          "authors": [
+            "Ernst Georg Haffner"
+          ],
+          "year": 2025,
+          "published": "2025-06-01",
+          "venue": "EDULEARN Proceedings",
+          "type": "proceedings-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.21125/edulearn.2025.0470",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 63,
+          "keyword_score": 8.0,
+          "selection_score": 10.404
+        },
+        {
+          "doi": "10.52845/cs/2025-5-3-1",
+          "title": "An QRHKT：An Enhanced Question Representation and Historical Performance Fusion model for Knowledge Tracing",
+          "authors": [
+            "Zhao Liu"
+          ],
+          "year": 2025,
+          "published": "2025-05-08",
+          "venue": "Research Review",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.52845/cs/2025-5-3-1",
+          "query_hits": [
+            "transformer knowledge tracing"
+          ],
+          "best_query_rank": 63,
+          "keyword_score": 8.0,
+          "selection_score": 10.404
+        },
+        {
+          "doi": "10.1016/j.ins.2025.123062",
+          "title": "Enhancing heterogeneous information networks through student interactions for knowledge tracing",
+          "authors": [
+            "Jie Gao",
+            "Luchuan Ma",
+            "Liqing Qiu"
+          ],
+          "year": 2026,
+          "published": "2026-04-01",
+          "venue": "Information Sciences",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.1016/j.ins.2025.123062",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 79,
+          "keyword_score": 8.0,
+          "selection_score": 10.39
+        },
+        {
+          "doi": "10.4028/www.scientific.net/amm.483.506",
+          "title": "Knowledge Tracing Modeling for Product Design Knowledge Management",
+          "authors": [
+            "Dong Min Zhang",
+            "Zi Chao Yin",
+            "Yu Chun Xu"
+          ],
+          "year": 2013,
+          "published": "2013-12-01",
+          "venue": "Applied Mechanics and Materials",
+          "type": "journal-article",
+          "citation_count": 0,
+          "source_url": "https://doi.org/10.4028/www.scientific.net/amm.483.506",
+          "query_hits": [
+            "Bayesian knowledge tracing student modeling"
+          ],
+          "best_query_rank": 74,
+          "keyword_score": 8.0,
+          "selection_score": 9.965
+        }
+      ]
+    }
+  }
+}

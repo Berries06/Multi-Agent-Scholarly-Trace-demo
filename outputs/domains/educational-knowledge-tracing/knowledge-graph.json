@@ -3196,10 +3196,12 @@
     "domain_id": "educational-knowledge-tracing",
     "domain_name": "教育知识追踪与个性化学习",
     "version": "2026-07-30",
-    "paper_count": 6,
+    "paper_count": 30,
+    "evidence_paper_count": 6,
+    "metadata_only_paper_count": 24,
     "description": "赛题场景对齐切片：追踪循环网络、记忆网络和注意力模型如何刻画学习者知识状态。",
     "query_example": "请比较 DKT、DKVMN、SAINT 与 AKT 的知识追踪路线，并为学习者生成循证学习建议。",
-    "corpus_type": "verified-metadata-and-abstract-derived knowledge cards",
-    "source_scope": "项目组依据会议官网、DOI 元数据和公开摘要撰写知识卡；未缓存论文全文，卡片证据只能证明本卡片中记录的摘要级命题。"
+    "corpus_type": "tiered scholarly corpus: evidence cards plus metadata-only retrieval records",
+    "source_scope": "6 篇经会议官网/DOI 与公开摘要整理的证据卡用于演示关系图；24 篇 Crossref DOI 元数据记录只用于书目检索，取得并解析全文前不得作为关系证据。"
   }
 }

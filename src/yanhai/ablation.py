@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Callable
@@ -12,6 +13,23 @@ from .models import Claim
 
 def _safe_divide(numerator: float, denominator: float) -> float:
     return numerator / denominator if denominator else 0.0
+
+
+def _wilson_interval(successes: int, total: int, z: float = 1.96) -> list[float]:
+    """Return a binomial Wilson 95% interval without pretending n is large."""
+    if total <= 0:
+        return [0.0, 0.0]
+    estimate = successes / total
+    denominator = 1 + (z * z / total)
+    centre = estimate + (z * z / (2 * total))
+    margin = z * math.sqrt(
+        (estimate * (1 - estimate) / total)
+        + (z * z / (4 * total * total))
+    )
+    return [
+        round(max(0.0, (centre - margin) / denominator), 3),
+        round(min(1.0, (centre + margin) / denominator), 3),
+    ]
 
 
 class DecisionAblation:
@@ -85,6 +103,7 @@ class DecisionAblation:
             "frozen_on": self.benchmark["frozen_on"],
             "scope": self.benchmark["scope"],
             "case_count": len(self.benchmark["cases"]),
+            "noise_protocol": self.benchmark.get("noise_protocol", {}),
             "variants": results,
             "comparison": {
                 "strongest_baseline": strongest_baseline["variant_id"],
@@ -114,9 +133,20 @@ class DecisionAblation:
                 ),
             },
             "warning": (
-                "结果来自 12 条人工整理、规则可见的小样本演示集，只证明工程机制按预期工作；"
-                "提交论文前必须在冻结人工金标准和真实模型输出上重跑。"
+                "结果来自 24 条分层压力测试，含低置信真阳性和有效 ID 语义错配；"
+                "95% 区间很宽，只能用于暴露机制与失败案例。关系证据覆盖率是"
+                "“无证据不入图”的结构性护栏，不是抽取正确率。提交论文前仍须在"
+                "独立双人标注金标准和真实模型输出上重跑。"
             ),
+            "metric_notes": {
+                "accepted_precision": "估计性指标；必须同时报告 TP/accepted 与 Wilson 95% 区间。",
+                "gold_recall": "估计性指标；needs_review 与 rejected 均按未保留计算。",
+                "unsupported_acceptance_rate": "估计性风险指标；越低越好。",
+                "evidence_coverage": (
+                    "结构性不变量：裁判禁止无有效 evidence_id 的命题进入 accepted；"
+                    "100% 只表示有引用，不表示引用语义正确。"
+                ),
+            },
         }
 
     def _claims(self) -> list[Claim]:
@@ -216,25 +246,44 @@ class DecisionAblation:
                 for ref in item.evidence_ids
             }
         )
+        precision_total = tp + fp
         return {
             "accepted_precision": round(precision, 3),
+            "accepted_precision_ci95": _wilson_interval(tp, precision_total),
             "gold_recall": round(recall, 3),
+            "gold_recall_ci95": _wilson_interval(tp, supported),
             "f1": round(f1, 3),
             "unsupported_acceptance_rate": round(
                 _safe_divide(fp, unsupported),
                 3,
             ),
+            "unsupported_acceptance_rate_ci95": _wilson_interval(
+                fp,
+                unsupported,
+            ),
             "evidence_coverage": round(
                 _safe_divide(evidence_complete, len(accepted)),
                 3,
             ),
+            "evidence_coverage_ci95": _wilson_interval(
+                evidence_complete,
+                len(accepted),
+            ),
+            "evidence_coverage_kind": "structural_guardrail",
             "verified_triple_yield": round(
                 _safe_divide(tp, paper_count),
                 3,
             ),
             "accepted_count": len(accepted),
+            "needs_review_count": sum(
+                item.status == "needs_review" for item in claims
+            ),
+            "rejected_count": sum(item.status == "rejected" for item in claims),
+            "gold_supported_count": supported,
+            "gold_unsupported_count": unsupported,
             "true_positive_count": tp,
             "false_positive_count": fp,
+            "false_negative_count": fn,
         }
 
     def _case_result(self, claim: Claim) -> dict[str, Any]:
@@ -252,4 +301,3 @@ class DecisionAblation:
                 == bool(gold_case["gold_supported"])
             ),
         }
-

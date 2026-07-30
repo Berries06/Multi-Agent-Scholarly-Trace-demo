@@ -1,8 +1,14 @@
 {
-  "benchmark_id": "track-a-decision-demo-v1",
+  "benchmark_id": "track-a-decision-noise-v2",
   "domain": "科学文献信息抽取与知识图谱构建",
   "frozen_on": "2026-07-29",
-  "scope": "12 条人工整理的小样本演示命题，只验证裁决管线能否按预设规则运行，不代表模型在公开基准上的科研性能。",
+  "scope": "24 条分层小样本压力测试：13 条支持命题、11 条不支持命题，包含低置信真阳性、语义错配但证据 ID 有效、缺失/错误证据、绝对化和类型方向错误。它用于暴露裁决链路的真实失败，不代表公开基准性能。",
+  "noise_protocol": {
+    "low_confidence_supported": ["B013", "B014"],
+    "valid_id_semantic_mismatch": ["B019", "B020"],
+    "structural_or_provenance_errors": ["B021", "B022", "B023", "B024"],
+    "design_note": "噪声通过输入置信度、证据语义错配和来源损坏注入；gold 标签不参与任何变体的决策。禁止为了得到好看的百分比改标签或阈值。"
+  },
   "cases": [
     {
       "claim_id": "B001",
@@ -135,7 +141,138 @@
       "evidence_ids": ["2024.emnlp-main.726"],
       "gold_supported": false,
       "error_type": "direction_error"
+    },
+    {
+      "claim_id": "B013",
+      "source": "GLiNER",
+      "relation": "uses",
+      "target": "bidirectional transformer",
+      "relation_type": "USES",
+      "base_confidence": 0.65,
+      "evidence_ids": ["2024.naacl-long.300"],
+      "gold_supported": true,
+      "error_type": "low_confidence_supported"
+    },
+    {
+      "claim_id": "B014",
+      "source": "ReSel",
+      "relation": "uses",
+      "target": "cross-modal entity graph",
+      "relation_type": "USES",
+      "base_confidence": 0.66,
+      "evidence_ids": ["2022.emnlp-main.46"],
+      "gold_supported": true,
+      "error_type": "low_confidence_supported"
+    },
+    {
+      "claim_id": "B015",
+      "source": "SciIE",
+      "relation": "uses",
+      "target": "contextualized span representations",
+      "relation_type": "USES",
+      "base_confidence": 0.84,
+      "evidence_ids": ["D18-1360"],
+      "gold_supported": true,
+      "error_type": "none"
+    },
+    {
+      "claim_id": "B016",
+      "source": "SciER",
+      "relation": "benchmarks",
+      "target": "full-text scientific information extraction",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.83,
+      "evidence_ids": ["2024.emnlp-main.726"],
+      "gold_supported": true,
+      "error_type": "none"
+    },
+    {
+      "claim_id": "B017",
+      "source": "SciNLP",
+      "relation": "benchmarks",
+      "target": "full-text scientific information extraction",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.81,
+      "evidence_ids": ["2025.emnlp-main.732"],
+      "gold_supported": true,
+      "error_type": "none"
+    },
+    {
+      "claim_id": "B018",
+      "source": "SciER",
+      "relation": "reports",
+      "target": "12k relations",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.86,
+      "evidence_ids": ["2024.emnlp-main.726"],
+      "gold_supported": true,
+      "error_type": "none"
+    },
+    {
+      "claim_id": "B019",
+      "source": "GLiNER",
+      "relation": "evaluates_on",
+      "target": "SciREX",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.84,
+      "evidence_ids": ["2024.naacl-long.300"],
+      "gold_supported": false,
+      "error_type": "valid_id_semantic_mismatch"
+    },
+    {
+      "claim_id": "B020",
+      "source": "ReSel",
+      "relation": "evaluates_on",
+      "target": "SciERC",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.83,
+      "evidence_ids": ["2022.emnlp-main.46"],
+      "gold_supported": false,
+      "error_type": "valid_id_semantic_mismatch"
+    },
+    {
+      "claim_id": "B021",
+      "source": "DyGIE++",
+      "relation": "proves",
+      "target": "factuality",
+      "relation_type": "SUPPORTS",
+      "base_confidence": 0.90,
+      "evidence_ids": ["D19-1585"],
+      "gold_supported": false,
+      "error_type": "overclaim"
+    },
+    {
+      "claim_id": "B022",
+      "source": "contextualized span representations",
+      "relation": "reports",
+      "target": "DyGIE++",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.84,
+      "evidence_ids": ["D19-1585"],
+      "gold_supported": false,
+      "error_type": "direction_and_type_error"
+    },
+    {
+      "claim_id": "B023",
+      "source": "GLiNER",
+      "relation": "evaluates_on",
+      "target": "SciREX",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.86,
+      "evidence_ids": ["10.1016-j.cageo.2017.12.007"],
+      "gold_supported": false,
+      "error_type": "metadata_only_evidence"
+    },
+    {
+      "claim_id": "B024",
+      "source": "SciIE",
+      "relation": "supports",
+      "target": "factuality",
+      "relation_type": "SUPPORTS",
+      "base_confidence": 0.88,
+      "evidence_ids": [],
+      "gold_supported": false,
+      "error_type": "missing_evidence"
     }
   ]
 }
-

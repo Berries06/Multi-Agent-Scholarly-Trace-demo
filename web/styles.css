@@ -1406,6 +1406,14 @@ td {
   border-left: 4px solid var(--teal);
 }
 
+.ablation-table td small {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.25;
+}
+
 .feedback-panel h2 {
   margin: 6px 0;
   font-family: Georgia, "Songti SC", serif;

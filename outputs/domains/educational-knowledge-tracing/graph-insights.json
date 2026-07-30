@@ -3,11 +3,13 @@
     "domain_id": "educational-knowledge-tracing",
     "domain_name": "教育知识追踪与个性化学习",
     "version": "2026-07-30",
-    "paper_count": 6,
+    "paper_count": 30,
+    "evidence_paper_count": 6,
+    "metadata_only_paper_count": 24,
     "description": "赛题场景对齐切片：追踪循环网络、记忆网络和注意力模型如何刻画学习者知识状态。",
     "query_example": "请比较 DKT、DKVMN、SAINT 与 AKT 的知识追踪路线，并为学习者生成循证学习建议。",
-    "corpus_type": "verified-metadata-and-abstract-derived knowledge cards",
-    "source_scope": "项目组依据会议官网、DOI 元数据和公开摘要撰写知识卡；未缓存论文全文，卡片证据只能证明本卡片中记录的摘要级命题。"
+    "corpus_type": "tiered scholarly corpus: evidence cards plus metadata-only retrieval records",
+    "source_scope": "6 篇经会议官网/DOI 与公开摘要整理的证据卡用于演示关系图；24 篇 Crossref DOI 元数据记录只用于书目检索，取得并解析全文前不得作为关系证据。"
   },
   "timeline": [
     {
@@ -29,6 +31,22 @@
       ]
     },
     {
+      "paper_id": "10.1145-2883851.2883885",
+      "year": 2016,
+      "title": "Sequencing educational content in classrooms using Bayesian knowledge tracing",
+      "source_url": "https://doi.org/10.1145/2883851.2883885",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1007-s11257-017-9193-2",
+      "year": 2017,
+      "title": "Bayesian knowledge tracing, logistic models, and beyond: an overview of learner modeling techniques",
+      "source_url": "https://doi.org/10.1007/s11257-017-9193-2",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
       "paper_id": "10.1145-3038912.3052580",
       "year": 2017,
       "title": "Dynamic Key-Value Memory Networks for Knowledge Tracing",
@@ -45,6 +63,78 @@
         "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1",
         "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0"
       ]
+    },
+    {
+      "paper_id": "10.1145-3051457.3053976",
+      "year": 2017,
+      "title": "Incorporating Rich Features into Deep Knowledge Tracing",
+      "source_url": "https://doi.org/10.1145/3051457.3053976",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1145-3051457.3053985",
+      "year": 2017,
+      "title": "Deep Knowledge Tracing On Programming Exercises",
+      "source_url": "https://doi.org/10.1145/3051457.3053985",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1016-j.knosys.2018.03.001",
+      "year": 2018,
+      "title": "A three learning states Bayesian knowledge tracing model",
+      "source_url": "https://doi.org/10.1016/j.knosys.2018.03.001",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1109-icdm.2018.00156",
+      "year": 2018,
+      "title": "Deep Knowledge Tracing and Dynamic Student Classification for Knowledge Tracing",
+      "source_url": "https://doi.org/10.1109/icdm.2018.00156",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1145-3231644.3231647",
+      "year": 2018,
+      "title": "Addressing two problems in deep knowledge tracing via prediction-consistent regularization",
+      "source_url": "https://doi.org/10.1145/3231644.3231647",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1145-3303772.3303786",
+      "year": 2019,
+      "title": "Knowledge Query Network for Knowledge Tracing",
+      "source_url": "https://doi.org/10.1145/3303772.3303786",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1145-3303772.3303830",
+      "year": 2019,
+      "title": "Deep Knowledge Tracing and Engagement with MOOCs",
+      "source_url": "https://doi.org/10.1145/3303772.3303830",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1145-3350546.3352513",
+      "year": 2019,
+      "title": "Graph-based Knowledge Tracing: Modeling Student Proficiency Using Graph Neural Network",
+      "source_url": "https://doi.org/10.1145/3350546.3352513",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1609-aaai.v33i01.3301750",
+      "year": 2019,
+      "title": "Knowledge Tracing Machines: Factorization Machines for Knowledge Tracing",
+      "source_url": "https://doi.org/10.1609/aaai.v33i01.3301750",
+      "contributions": [],
+      "evidence_ids": []
     },
     {
       "paper_id": "10.1007-978-3-030-52240-7_13",
@@ -102,6 +192,30 @@
       ]
     },
     {
+      "paper_id": "10.1145-3448139.3448170",
+      "year": 2021,
+      "title": "Variational Deep Knowledge Tracing for Language Learning",
+      "source_url": "https://doi.org/10.1145/3448139.3448170",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1016-j.knosys.2022.110036",
+      "year": 2022,
+      "title": "A survey on deep learning based knowledge tracing",
+      "source_url": "https://doi.org/10.1016/j.knosys.2022.110036",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1609-aaai.v36i11.21560",
+      "year": 2022,
+      "title": "Interpretable Knowledge Tracing: Simple and Efficient Student Modeling with Causal Relations",
+      "source_url": "https://doi.org/10.1609/aaai.v36i11.21560",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
       "paper_id": "neurips-2022-pykt",
       "year": 2022,
       "title": "pyKT: A Python Library to Benchmark Deep Learning based Knowledge Tracing Models",
@@ -119,6 +233,86 @@
         "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1",
         "evidence:neurips-2022-pykt:e29e8d943c26ff:0"
       ]
+    },
+    {
+      "paper_id": "10.1007-s10489-022-03621-1",
+      "year": 2023,
+      "title": "What is wrong with deep knowledge tracing? Attention-based knowledge tracing",
+      "source_url": "https://doi.org/10.1007/s10489-022-03621-1",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1007-s40593-022-00297-z",
+      "year": 2023,
+      "title": "Interpreting Deep Learning Models for Knowledge Tracing",
+      "source_url": "https://doi.org/10.1007/s40593-022-00297-z",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1109-tlt.2023.3254544",
+      "year": 2023,
+      "title": "Dynamic Cognitive Diagnosis: An Educational Priors-Enhanced Deep Knowledge Tracing Perspective",
+      "source_url": "https://doi.org/10.1109/tlt.2023.3254544",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1145-3543507.3583255",
+      "year": 2023,
+      "title": "Tracing Knowledge Instead of Patterns: Stable Knowledge Tracing with Diagnostic Transformer",
+      "source_url": "https://doi.org/10.1145/3543507.3583255",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1145-3580595",
+      "year": 2023,
+      "title": "Fine-Grained Interaction Modeling with Multi-Relational Transformer for Knowledge Tracing",
+      "source_url": "https://doi.org/10.1145/3580595",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1007-s11257-023-09389-4",
+      "year": 2024,
+      "title": "Twenty-five years of Bayesian knowledge tracing: a systematic review",
+      "source_url": "https://doi.org/10.1007/s11257-023-09389-4",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1016-j.eswa.2024.124451",
+      "year": 2024,
+      "title": "Meta-path structured graph pre-training for improving knowledge tracing in intelligent tutoring",
+      "source_url": "https://doi.org/10.1016/j.eswa.2024.124451",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1016-j.knosys.2023.111300",
+      "year": 2024,
+      "title": "HiTSKT: A hierarchical transformer model for session-aware knowledge tracing",
+      "source_url": "https://doi.org/10.1016/j.knosys.2023.111300",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1109-tlt.2023.3336240",
+      "year": 2024,
+      "title": "OPKT: Enhancing Knowledge Tracing With Optimized Pretraining Mechanisms in Intelligent Tutoring",
+      "source_url": "https://doi.org/10.1109/tlt.2023.3336240",
+      "contributions": [],
+      "evidence_ids": []
+    },
+    {
+      "paper_id": "10.1109-tlt.2023.3346671",
+      "year": 2024,
+      "title": "Deep Knowledge Tracing Incorporating a Hypernetwork With Independent Student and Item Networks",
+      "source_url": "https://doi.org/10.1109/tlt.2023.3346671",
+      "contributions": [],
+      "evidence_ids": []
     }
   ],
   "research_ideas": [
