@@ -15,6 +15,7 @@ documents = ["docling>=2.70", "pypdf>=5.0"]
 
 [project.scripts]
 yanhai = "yanhai.server:main"
+yanhai-qt = "yanhai.qt_app:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

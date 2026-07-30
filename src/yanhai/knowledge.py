@@ -117,8 +117,19 @@ class KnowledgeBase:
     def _tokens(text: str) -> set[str]:
         lowered = text.lower()
         terms = set(re.findall(r"[a-z0-9][a-z0-9-]+|[\u4e00-\u9fff]{2,}", lowered))
+        # The standard library regex treats a complete Chinese sentence as one
+        # token. Character n-grams keep the offline demo query-sensitive without
+        # adding a tokenizer dependency. Formal experiments can replace this
+        # with a domain tokenizer through the retrieval adapter.
+        for run in re.findall(r"[\u4e00-\u9fff]{2,}", lowered):
+            for width in (2, 3, 4, 5, 6):
+                terms.update(
+                    run[index : index + width]
+                    for index in range(max(0, len(run) - width + 1))
+                )
         for key, aliases in QUERY_ALIASES.items():
             if key in text:
+                terms.add(key)
                 terms.update(aliases)
                 for alias in aliases:
                     terms.update(
@@ -135,16 +146,12 @@ class KnowledgeBase:
         profile: LearnerProfile,
         blind_spots: list[str],
         limit: int = 8,
+        information_gain: bool = False,
     ) -> list[Paper]:
-        terms = self._tokens(
+        query_terms = self._tokens(query)
+        context_terms = self._tokens(
             " ".join(
-                [
-                    query,
-                    profile.goal,
-                    *profile.interests,
-                    *blind_spots,
-                    *profile.required_concepts,
-                ]
+                [profile.goal, *profile.interests, *blind_spots, *profile.required_concepts]
             )
         )
         scored: list[tuple[float, Paper]] = []
@@ -152,12 +159,48 @@ class KnowledgeBase:
             haystack = " ".join(
                 [paper.title, paper.summary, *paper.categories, *paper.concepts]
             ).lower()
-            score = sum(2.0 if term in paper.concepts else 1.0 for term in terms if term in haystack)
+            if information_gain:
+                query_score = sum(
+                    3.0 if term in paper.concepts else 1.5
+                    for term in query_terms
+                    if term in haystack
+                )
+                context_score = sum(
+                    0.8 if term in paper.concepts else 0.35
+                    for term in context_terms
+                    if term in haystack
+                )
+                novelty_bonus = 0.15 * len(set(paper.concepts) - context_terms)
+                score = query_score + context_score + novelty_bonus
+            else:
+                terms = query_terms | context_terms
+                score = sum(
+                    2.0 if term in paper.concepts else 1.0
+                    for term in terms
+                    if term in haystack
+                )
             score += 0.01 * (paper.year - 2020)
             scored.append((score, paper))
         scored.sort(key=lambda item: (item[0], item[1].year), reverse=True)
-        selected = [paper for score, paper in scored if score > 0][:limit]
-        return selected or [paper for _, paper in scored[:limit]]
+        selected: list[Paper] = []
+        seen: set[str] = set()
+        for score, paper in scored:
+            if score <= 0 or paper.paper_id in seen:
+                continue
+            selected.append(paper)
+            seen.add(paper.paper_id)
+            if len(selected) >= limit:
+                break
+        if selected:
+            return selected
+        for _, paper in scored:
+            if paper.paper_id in seen:
+                continue
+            selected.append(paper)
+            seen.add(paper.paper_id)
+            if len(selected) >= limit:
+                break
+        return selected
 
     def candidate_relations(self, paper_ids: set[str], limit: int = 8) -> list[dict[str, Any]]:
         graph_candidates = self.candidate_graph_relations(paper_ids, limit=limit)
@@ -221,11 +264,16 @@ class KnowledgeBase:
         )
         return candidates[:limit]
 
-    def graph_for_claims(self, claims: list[dict[str, Any]]) -> dict[str, Any]:
+    def graph_for_claims(
+        self,
+        claims: list[dict[str, Any]],
+        *,
+        include_provenance: bool = False,
+    ) -> dict[str, Any]:
         nodes: dict[str, dict[str, str]] = {}
         edges: list[dict[str, Any]] = []
         for claim in claims:
-            if claim["status"] == "rejected":
+            if claim["status"] in {"rejected", "abstained"}:
                 continue
             source_id = f"concept:{claim['source']}"
             target_id = f"concept:{claim['target']}"
@@ -271,6 +319,38 @@ class KnowledgeBase:
                         "evidence_ids": [paper_id],
                     }
                 )
+            if include_provenance:
+                for span in claim.get("evidence_spans", []):
+                    span_id = f"span:{span['sentence_id']}"
+                    nodes[span_id] = {
+                        "id": span_id,
+                        "label": span["text"],
+                        "kind": "evidence_span",
+                    }
+                    edges.append(
+                        {
+                            "source": span["paper_id"],
+                            "target": span_id,
+                            "label": "contains",
+                            "status": "accepted",
+                            "confidence": 1.0,
+                            "evidence_ids": [span["paper_id"]],
+                        }
+                    )
+                    edges.append(
+                        {
+                            "source": span_id,
+                            "target": source_id,
+                            "label": span["stance"],
+                            "status": (
+                                "review"
+                                if span["stance"] == "contradict"
+                                else claim["status"]
+                            ),
+                            "confidence": claim["judge_score"],
+                            "evidence_ids": [span["paper_id"]],
+                        }
+                    )
         return {"nodes": list(nodes.values()), "edges": edges}
 
     def extracted_paper_graph(self) -> dict[str, Any]:

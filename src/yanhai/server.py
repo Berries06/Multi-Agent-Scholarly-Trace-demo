@@ -32,9 +32,10 @@ from .harness import (
 )
 from .online_rag import OnlineRAG
 from .orchestrator import DEFAULT_QUERY, ScholarlyTraceOrchestrator
+from .resources import project_root
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = project_root()
 WEB_ROOT = PROJECT_ROOT / "web"
 
 

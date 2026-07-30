@@ -1,3 +1,8 @@
+const appScriptPath = new URL(document.currentScript.src).pathname;
+const APP_BASE = appScriptPath.endsWith("/app.js")
+  ? appScriptPath.slice(0, -"/app.js".length)
+  : "";
+
 const state = {
   domains: [],
   selectedDomainId: "scientific-ie-kg",
@@ -33,6 +38,8 @@ function showRuntimeError(message = "") {
 }
 
 async function requestJson(path, options = {}, timeoutMs = 15000) {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const requestUrl = `${APP_BASE}${normalizedPath}`;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   const headers = new Headers(options.headers || {});
@@ -41,7 +48,7 @@ async function requestJson(path, options = {}, timeoutMs = 15000) {
     headers.set("Content-Type", "application/json");
   }
   try {
-    const response = await fetch(path, {
+    const response = await fetch(requestUrl, {
       ...options,
       headers,
       signal: controller.signal,
@@ -358,6 +365,7 @@ function renderGraph(payload) {
   const positions = new Map();
   const rowConfig = {
     paper: { y: 70, start: 65, end: 835 },
+    evidence_span: { y: 150, start: 65, end: 835 },
     concept: { y: 225, start: 90, end: 810 },
     outcome: { y: 365, start: 90, end: 810 },
   };
@@ -421,12 +429,12 @@ function renderGraph(payload) {
     .filter((node) => positions.has(node.id))
     .map((node) => {
       const position = positions.get(node.id);
-      const radius = node.kind === "paper" ? 11 : 15;
+      const radius = node.kind === "paper" || node.kind === "evidence_span" ? 9 : 15;
       return `
         <g class="graph-node">
           <circle cx="${position.x}" cy="${position.y}" r="${radius}" fill="${colors[node.kind]}" />
           <text x="${position.x}" y="${position.y + 31}">
-            ${escapeHtml(truncate(node.label, node.kind === "paper" ? 15 : 18))}
+            ${escapeHtml(truncate(node.label, ["paper", "evidence_span"].includes(node.kind) ? 15 : 18))}
           </text>
         </g>
       `;
@@ -484,6 +492,7 @@ function renderClaims(result) {
         accepted: "通过",
         needs_review: "复核",
         rejected: "拒绝",
+        abstained: "拒答",
       }[claim.status];
       return `
         <tr>

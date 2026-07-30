@@ -1,0 +1,10 @@
+{
+  "slug": "05_workload_scaling",
+  "title": "离线工作负载扩张测试",
+  "purpose": "复制 mock 文献行形成不同扫描规模，验证探针、吞吐脚本和结果格式可扩张。",
+  "presets": ["full", "legacy"],
+  "case_ids": ["M001", "M005"],
+  "data_multipliers": [1, 10, 50],
+  "repetitions": 5,
+  "primary_metrics": ["知识库扫描行数", "本地总耗时", "结果稳定性", "方案开销差异"]
+}

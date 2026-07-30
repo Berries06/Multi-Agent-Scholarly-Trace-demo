@@ -167,6 +167,5 @@ class OrchestratorTests(unittest.TestCase):
         self.assertEqual(9, report["case_count"])
         self.assertTrue(all(report["thresholds"].values()))
 
-
 if __name__ == "__main__":
     unittest.main()

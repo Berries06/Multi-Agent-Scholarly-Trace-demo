@@ -1,0 +1,9 @@
+{
+  "slug": "01_core_ablation",
+  "title": "核心创新机制消融对比",
+  "purpose": "在相同 mock case 上比较完整链路、旧链路和各单因素关闭版本。",
+  "presets": ["full", "legacy", "no_critic", "no_judge", "no_provenance", "no_debate", "no_falsification", "no_tournament", "no_knowledge_tracing"],
+  "case_ids": ["M001", "M002", "M004", "M006", "M007"],
+  "repetitions": 2,
+  "primary_metrics": ["压力命题拦截率", "预期概念覆盖", "句级溯源覆盖", "批判覆盖"]
+}
