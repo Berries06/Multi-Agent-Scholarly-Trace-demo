@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from .extraction import SchemaGuidedExtractor
+from .corpus import VerticalCorpus
 from .models import LearnerProfile, Paper
 
 
@@ -13,19 +13,98 @@ QUERY_ALIASES = {
     "多智能体": ("multi-agent", "agent", "debate", "collaboration"),
     "科研": ("scientific", "research", "scholarly"),
     "幻觉": ("hallucination", "factuality", "grounding"),
-    "知识图谱": ("knowledge graph", "evidence", "retrieval"),
+    "知识图谱": ("knowledge graph", "graph rag", "graphrag"),
     "争议": ("debate", "critique", "conflict"),
     "蓝海": ("discovery", "gap", "uncertainty"),
     "溯源": ("traceability", "citation", "evidence"),
+    "材料": ("materials", "crystal", "property prediction"),
+    "晶体": ("crystal", "crystal graph", "stable materials"),
+    "知识追踪": ("knowledge tracing", "student performance", "mastery"),
+    "学习者": ("learner", "student", "personalized learning"),
 }
 
 
 class KnowledgeBase:
-    def __init__(self, root: Path) -> None:
+    def __init__(self, root: Path, domain_id: str | None = None) -> None:
         self.root = root
-        self.papers = self._load_papers(root / "papers.json")
+        self.legacy_papers = self._load_papers(root / "papers.json")
+        vertical_base = root.parent / "vertical_kb"
+        registry_path = vertical_base / "registry.json"
+        if registry_path.exists():
+            registry = json.loads(registry_path.read_text(encoding="utf-8"))
+        else:
+            registry = {
+                "default_domain_id": "scientific-ie-kg",
+                "domains": [
+                    {
+                        "domain_id": "scientific-ie-kg",
+                        "path": ".",
+                    }
+                ],
+            }
+        self.default_domain_id = str(registry["default_domain_id"])
+        self.domain_configs = {
+            str(item["domain_id"]): dict(item)
+            for item in registry.get("domains", [])
+        }
+        selected_domain_id = domain_id or self.default_domain_id
+        if selected_domain_id not in self.domain_configs:
+            raise KeyError(f"Unknown domain: {selected_domain_id}")
+        self.selected_domain_id = selected_domain_id
+        selected_config = self.domain_configs[selected_domain_id]
+        vertical_root = (
+            vertical_base / str(selected_config.get("path", "."))
+        ).resolve()
+        resolved_base = vertical_base.resolve()
+        if vertical_root != resolved_base and resolved_base not in vertical_root.parents:
+            raise ValueError("Vertical corpus path must stay inside data/vertical_kb.")
+        self.vertical_corpus = VerticalCorpus(
+            vertical_root,
+            root / "extraction_schema.json",
+        )
+        # Expansion slices are strictly isolated. The default slice keeps the
+        # earlier multi-agent reading list for backward-compatible demos/tests.
+        if selected_domain_id == self.default_domain_id:
+            vertical_ids = {
+                paper.paper_id for paper in self.vertical_corpus.papers
+            }
+            self.papers = [
+                *self.vertical_corpus.papers,
+                *(
+                    paper
+                    for paper in self.legacy_papers
+                    if paper.paper_id not in vertical_ids
+                ),
+            ]
+        else:
+            self.papers = list(self.vertical_corpus.papers)
         self.relations = self._load_json(root / "relations.json")
         self.paper_by_id = {paper.paper_id: paper for paper in self.papers}
+        self.schema = self.vertical_corpus.extractor.schema
+        self.entity_type_by_name: dict[str, str] = {}
+        for concept in self.schema["concepts"]:
+            for name in {concept["canonical"], *concept.get("aliases", [])}:
+                self.entity_type_by_name[name.casefold()] = concept["entity_type"]
+        self._extracted_graph: dict[str, Any] | None = None
+
+    @property
+    def domain(self) -> dict[str, Any]:
+        metadata = dict(self.domain_configs[self.selected_domain_id])
+        metadata.pop("path", None)
+        return {**metadata, **self.vertical_corpus.domain}
+
+    def list_domain_configs(self) -> list[dict[str, Any]]:
+        return [
+            {
+                **{
+                    key: value
+                    for key, value in config.items()
+                    if key != "path"
+                },
+                "is_default": domain_id == self.default_domain_id,
+            }
+            for domain_id, config in self.domain_configs.items()
+        ]
 
     @staticmethod
     def _load_json(path: Path) -> list[dict[str, Any]]:
@@ -41,6 +120,13 @@ class KnowledgeBase:
         for key, aliases in QUERY_ALIASES.items():
             if key in text:
                 terms.update(aliases)
+                for alias in aliases:
+                    terms.update(
+                        re.findall(
+                            r"[a-z0-9][a-z0-9-]+|[\u4e00-\u9fff]{2,}",
+                            alias.casefold(),
+                        )
+                    )
         return terms
 
     def search(
@@ -74,6 +160,9 @@ class KnowledgeBase:
         return selected or [paper for _, paper in scored[:limit]]
 
     def candidate_relations(self, paper_ids: set[str], limit: int = 8) -> list[dict[str, Any]]:
+        graph_candidates = self.candidate_graph_relations(paper_ids, limit=limit)
+        if graph_candidates:
+            return graph_candidates
         candidates = [
             relation
             for relation in self.relations
@@ -81,6 +170,53 @@ class KnowledgeBase:
         ]
         candidates.sort(
             key=lambda relation: (float(relation["confidence"]), len(relation["evidence_ids"])),
+            reverse=True,
+        )
+        return candidates[:limit]
+
+    def candidate_graph_relations(
+        self,
+        paper_ids: set[str],
+        limit: int = 8,
+    ) -> list[dict[str, Any]]:
+        payload = self.extracted_paper_graph()
+        entity_by_id = {
+            item["entity_id"]: item for item in payload["entities"]
+        }
+        evidence_by_id = {
+            item["evidence_id"]: item for item in payload["evidence"]
+        }
+        candidates: list[dict[str, Any]] = []
+        for relation in payload["relations"]:
+            relation_paper_ids = {
+                evidence_by_id[evidence_id]["paper_id"]
+                for evidence_id in relation["evidence_ids"]
+                if evidence_id in evidence_by_id
+            }
+            if not relation_paper_ids.intersection(paper_ids):
+                continue
+            source = entity_by_id[relation["source_id"]]
+            target = entity_by_id[relation["target_id"]]
+            candidates.append(
+                {
+                    "source": source["canonical_name"],
+                    "source_type": source["entity_type"],
+                    "relation": relation["relation_type"].lower(),
+                    "target": target["canonical_name"],
+                    "target_type": target["entity_type"],
+                    "relation_type": relation["relation_type"],
+                    "confidence": relation["confidence"],
+                    "evidence_ids": relation["evidence_ids"],
+                    "upstream_status": relation["status"],
+                    "extraction_method": relation["extraction_method"],
+                }
+            )
+        candidates.sort(
+            key=lambda item: (
+                item["upstream_status"] == "accepted",
+                float(item["confidence"]),
+                len(item["evidence_ids"]),
+            ),
             reverse=True,
         )
         return candidates[:limit]
@@ -114,7 +250,10 @@ class KnowledgeBase:
                 }
             )
             for paper_id in claim["evidence_ids"]:
-                paper = self.paper_by_id[paper_id]
+                resolved_paper_id = self.paper_id_for_evidence(paper_id)
+                if resolved_paper_id not in self.paper_by_id:
+                    continue
+                paper = self.paper_by_id[resolved_paper_id]
                 nodes[paper_id] = {
                     "id": paper_id,
                     "label": paper.title,
@@ -134,5 +273,74 @@ class KnowledgeBase:
 
     def extracted_paper_graph(self) -> dict[str, Any]:
         """Build the evidence-first graph produced from paper text, not curated triples."""
-        extractor = SchemaGuidedExtractor.from_path(self.root / "extraction_schema.json")
-        return extractor.extract_papers(self.papers).to_dict()
+        if self._extracted_graph is None:
+            self._extracted_graph = self.vertical_corpus.extraction_dict()
+        return self._extracted_graph
+
+    def paper_id_for_evidence(self, evidence_id: str) -> str:
+        if evidence_id.startswith("evidence:"):
+            parts = evidence_id.split(":")
+            return parts[1] if len(parts) > 1 else evidence_id
+        return evidence_id
+
+    def evidence_is_valid(self, evidence_id: str) -> bool:
+        if evidence_id in self.paper_by_id:
+            return True
+        return evidence_id in self.vertical_corpus.evidence_index()
+
+    def evidence_details(self, evidence_ids: list[str]) -> list[dict[str, Any]]:
+        index = self.vertical_corpus.evidence_index()
+        details: list[dict[str, Any]] = []
+        for evidence_id in evidence_ids:
+            if evidence_id in index:
+                details.append(index[evidence_id])
+                continue
+            paper = self.paper_by_id.get(evidence_id)
+            if paper:
+                details.append(
+                    {
+                        "evidence_id": evidence_id,
+                        "paper_id": paper.paper_id,
+                        "section_id": "paper-level",
+                        "text": paper.summary,
+                        "char_start": 0,
+                        "char_end": len(paper.summary),
+                    }
+                )
+        return details
+
+    def evidence_for_entity(self, entity_name: str) -> list[dict[str, Any]]:
+        """Return traceable spans for an extracted canonical entity."""
+        normalized = entity_name.casefold()
+        payload = self.extracted_paper_graph()
+        evidence_index = {
+            item["evidence_id"]: item for item in payload["evidence"]
+        }
+        evidence_ids = {
+            mention["evidence_id"]
+            for entity in payload["entities"]
+            if entity["canonical_name"].casefold() == normalized
+            for mention in entity["mentions"]
+        }
+        return [
+            evidence_index[evidence_id]
+            for evidence_id in sorted(evidence_ids)
+            if evidence_id in evidence_index
+        ]
+
+    def entity_type_for_name(self, name: str) -> str:
+        return self.entity_type_by_name.get(name.casefold(), "")
+
+    def relation_types_are_valid(
+        self,
+        relation_type: str,
+        source_type: str,
+        target_type: str,
+    ) -> bool:
+        constraints = self.schema.get("relation_constraints", {}).get(relation_type)
+        if not constraints:
+            return relation_type in self.schema["relation_types"]
+        return (
+            source_type in constraints.get("source", [])
+            and target_type in constraints.get("target", [])
+        )

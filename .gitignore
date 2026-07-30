@@ -3,6 +3,12 @@ __pycache__/
 .pytest_cache/
 .venv/
 .env
-outputs/*
-!outputs/.gitkeep
+*.env
+!*.env.example
+!deploy/*.env.example
+outputs/*.json
+outputs/*.db
+outputs/*.log
+outputs/*.jsonl
+papers/**/*.pdf
 tmp/

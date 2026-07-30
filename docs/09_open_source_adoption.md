@@ -1,14 +1,18 @@
 # 开源项目筛选与采纳记录
 
-检索日期：2026-07-26。Star 数为检索时 GitHub 页面快照，只用于说明社区成熟度，不作为技术优越性的证据。
+检索复核日期：2026-07-30。Star 数为检索时 GitHub 页面快照，只用于说明社区成熟度，不作为技术优越性的证据。
 
 ## 1. 筛选结果
 
 | 项目 | 快照热度 | 许可证 | 与本项目的关系 | 决策 |
 |---|---:|---|---|---|
-| [docling-project/docling](https://github.com/docling-project/docling) | 63.8k stars | MIT | PDF 版面、阅读顺序、表格、公式、OCR 和统一文档对象 | 主采纳 |
-| [microsoft/graphrag](https://github.com/microsoft/graphrag) | 34.8k stars | MIT | 非结构化文本到实体图、社区及全局查询 | 主采纳 |
-| [zjunlp/DeepKE](https://github.com/zjunlp/DeepKE) | 4.4k stars | MIT | 实体、关系、属性、事件；低资源、文档级、中英双语抽取 | 主采纳 |
+| [docling-project/docling](https://github.com/docling-project/docling) | 约 63.9k stars | MIT | PDF 版面、阅读顺序、表格、公式、OCR 和统一文档对象 | 主采纳 |
+| [microsoft/graphrag](https://github.com/microsoft/graphrag) | 约 35.0k stars | MIT | 非结构化文本到实体图、社区及全局查询 | 主采纳 |
+| [zjunlp/DeepKE](https://github.com/zjunlp/DeepKE) | 约 4.5k stars | MIT | 实体、关系、属性、事件；低资源、文档级、中英双语抽取 | 主采纳 |
+| [kermitt2/grobid](https://github.com/kermitt2/grobid) | 约 5.0k stars | Apache-2.0 | 科学论文 TEI、元数据、章节、行内引文和参考文献链接 | 下一阶段解析对照 |
+| [urchade/GLiNER](https://github.com/urchade/GLiNER) | 约 3.5k stars | Apache-2.0（权重另核） | 开放类型、轻量实体识别 | 首选模型升级 |
+| [zjunlp/OneKE](https://github.com/zjunlp/OneKE) | 约 0.2k stars | MIT | schema、抽取与反思分层的知识抽取框架 | 借鉴结构，暂不整包集成 |
+| [jackboyla/GLiREL](https://github.com/jackboyla/GLiREL) | 约 0.3k stars | CC BY-NC-SA 4.0 | 开放关系零样本抽取 | 仅研究评估，不进入商业发行 |
 | [neo4j-labs/llm-graph-builder](https://github.com/neo4j-labs/llm-graph-builder) | 5.0k stars | Apache-2.0 | 文件入图、Neo4j、向量/图查询、实体去重和来源元数据 | 评估后暂缓 |
 
 暂缓 Neo4j Graph Builder 不是否定其价值，而是当前核心风险在抽取质量而非图数据库界面；过早引入 Neo4j、LangChain 和前后端部署会扩大依赖面。等 Pilot 数据的实体融合与关系质量达标后再接 Neo4j。
@@ -44,12 +48,14 @@
 采纳：
 
 - 将已接收关系组织成实体社区，为全局问题与领域摘要预留接口。
+- 对齐 BYOG 数据契约：本项目 `entities / relations / evidence / communities` 分别映射到 GraphRAG `entities / relationships / text_units / communities`。
+- 借鉴查询分工：论文检索采用广度覆盖路线，实体机制分析采用深度证据路径，Idea 发现采用社区起点加局部追问的 DRIFT-like 路线。
 - 图边保留来源证据、置信度和状态，索引前先做实体融合和关系裁决。
 - 把索引成本、提示词适配和全局/局部查询效果列入实验，而非默认宣称 GraphRAG 更好。
 
-落地文件：`src/yanhai/extraction.py` 中的社区与图导出结构、`outputs/extracted_graph.json`。
+落地文件：`src/yanhai/extraction.py`、`src/yanhai/graph_rag.py`、`config/graphrag_routes.json`、`docs/14_intent_driven_graphrag.md`。
 
-当前限制：当前社区算法是无外部依赖的连通分量基线；正式实验需与 Leiden 社区、纯向量 RAG 和 Microsoft GraphRAG 对照。
+当前限制：当前社区算法是无外部依赖的连通分量基线，广度/深度遍历也不是微软官方 Global/Local Search 实现。正式实验需通过 BYOG 接入 Leiden 社区、community reports 和 embeddings，并与纯向量 RAG、官方 Microsoft GraphRAG 做同一测试集对照。
 
 ## 3. 代码与许可证边界
 

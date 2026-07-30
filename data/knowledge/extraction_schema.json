@@ -20,6 +20,7 @@
     "CONTRADICTS": "证据与结论冲突",
     "EXTENDS": "方法扩展既有方法",
     "ADDRESSES": "方法针对任务或问题",
+    "BENCHMARKS": "数据集或基准用于评价任务",
     "RELATED_TO": "同一证据片段内的待复核关联"
   },
   "concepts": [
@@ -92,8 +93,375 @@
       "canonical": "scientific literature",
       "entity_type": "DOMAIN",
       "aliases": ["scientific literature", "scholarly articles", "research papers", "科研文献", "学术论文"]
+    },
+    {
+      "canonical": "scientific information extraction",
+      "entity_type": "TASK",
+      "aliases": ["scientific information extraction", "SciIE task", "科学信息抽取", "科研信息抽取"]
+    },
+    {
+      "canonical": "scientific knowledge graph construction",
+      "entity_type": "TASK",
+      "aliases": ["scientific knowledge graph construction", "scientific knowledge graph", "科研知识图谱构建"]
+    },
+    {
+      "canonical": "entity extraction",
+      "entity_type": "TASK",
+      "aliases": ["entity extraction", "entity recognition", "实体抽取", "实体识别"]
+    },
+    {
+      "canonical": "relation extraction",
+      "entity_type": "TASK",
+      "aliases": ["relation extraction", "关系抽取"]
+    },
+    {
+      "canonical": "document-level information extraction",
+      "entity_type": "TASK",
+      "aliases": ["document-level information extraction", "document level IE", "文档级信息抽取"]
+    },
+    {
+      "canonical": "n-ary relation extraction",
+      "entity_type": "TASK",
+      "aliases": ["n-ary relation extraction", "N-ary relation extraction", "N 元关系抽取"]
+    },
+    {
+      "canonical": "full-text scientific information extraction",
+      "entity_type": "TASK",
+      "aliases": ["full-text scientific information extraction", "full-text extraction", "全文科学信息抽取"]
+    },
+    {
+      "canonical": "open-type entity recognition",
+      "entity_type": "TASK",
+      "aliases": ["open-type entity recognition", "open type NER", "开放类型实体识别"]
+    },
+    {
+      "canonical": "zero-shot relation extraction",
+      "entity_type": "TASK",
+      "aliases": ["zero-shot relation extraction", "zero shot relation extraction", "零样本关系抽取"]
+    },
+    {
+      "canonical": "zero-shot extraction",
+      "entity_type": "TASK",
+      "aliases": ["zero-shot extraction", "zero shot extraction", "零样本抽取"]
+    },
+    {
+      "canonical": "coreference",
+      "entity_type": "TASK",
+      "aliases": ["coreference", "coreference resolution", "共指", "共指消解"]
+    },
+    {
+      "canonical": "SciERC",
+      "entity_type": "DATASET",
+      "aliases": ["SciERC"]
+    },
+    {
+      "canonical": "SciREX",
+      "entity_type": "DATASET",
+      "aliases": ["SciREX"]
+    },
+    {
+      "canonical": "SciER",
+      "entity_type": "DATASET",
+      "aliases": ["SciER"]
+    },
+    {
+      "canonical": "SciNLP",
+      "entity_type": "DATASET",
+      "aliases": ["SciNLP"]
+    },
+    {
+      "canonical": "DyGIE++",
+      "entity_type": "METHOD",
+      "aliases": ["DyGIE++", "DyGIE"]
+    },
+    {
+      "canonical": "SciIE",
+      "entity_type": "METHOD",
+      "aliases": ["SciIE"]
+    },
+    {
+      "canonical": "ReSel",
+      "entity_type": "METHOD",
+      "aliases": ["ReSel"]
+    },
+    {
+      "canonical": "GLiNER",
+      "entity_type": "METHOD",
+      "aliases": ["GLiNER"]
+    },
+    {
+      "canonical": "GLiREL",
+      "entity_type": "METHOD",
+      "aliases": ["GLiREL"]
+    },
+    {
+      "canonical": "contextualized span representations",
+      "entity_type": "METHOD",
+      "aliases": ["contextualized span representations", "shared span representations", "上下文跨度表示"]
+    },
+    {
+      "canonical": "bidirectional transformer",
+      "entity_type": "METHOD",
+      "aliases": ["bidirectional transformer", "双向 Transformer"]
+    },
+    {
+      "canonical": "text-table evidence",
+      "entity_type": "METHOD",
+      "aliases": ["text-table evidence", "text and tables", "文本表格证据"]
+    },
+    {
+      "canonical": "cross-modal entity graph",
+      "entity_type": "METHOD",
+      "aliases": ["cross-modal entity graph", "cross-modal entity correlation graph", "跨模态实体图"]
+    },
+    {
+      "canonical": "open relation schema",
+      "entity_type": "METHOD",
+      "aliases": ["open relation schema", "开放关系模式"]
+    },
+    {
+      "canonical": "out-of-distribution evaluation",
+      "entity_type": "METRIC",
+      "aliases": ["out-of-distribution evaluation", "OOD evaluation", "分布外评测"]
+    },
+    {
+      "canonical": "106 full-text papers",
+      "entity_type": "METRIC",
+      "aliases": ["106 full-text papers", "106 篇全文"]
+    },
+    {
+      "canonical": "24k entities",
+      "entity_type": "METRIC",
+      "aliases": ["24k entities", "24,000 entities", "24000 entities", "超过 24k 实体"]
+    },
+    {
+      "canonical": "12k relations",
+      "entity_type": "METRIC",
+      "aliases": ["12k relations", "12,000 relations", "12000 relations", "超过 12k 关系"]
+    },
+    {
+      "canonical": "NLP knowledge graph",
+      "entity_type": "FINDING",
+      "aliases": ["NLP knowledge graph", "fine-grained NLP knowledge graph", "NLP 知识图谱"]
+    },
+    {
+      "canonical": "crystal graph convolutional neural network",
+      "entity_type": "METHOD",
+      "aliases": ["CGCNN", "crystal graph convolutional neural network", "晶体图卷积神经网络"]
+    },
+    {
+      "canonical": "MEGNet",
+      "entity_type": "METHOD",
+      "aliases": ["MEGNet", "Materials Graph Network"]
+    },
+    {
+      "canonical": "M3GNet",
+      "entity_type": "METHOD",
+      "aliases": ["M3GNet"]
+    },
+    {
+      "canonical": "GNoME",
+      "entity_type": "METHOD",
+      "aliases": ["GNoME", "Graph Networks for Materials Exploration"]
+    },
+    {
+      "canonical": "graph neural network",
+      "entity_type": "METHOD",
+      "aliases": ["graph neural network", "graph networks", "GNN", "图神经网络"]
+    },
+    {
+      "canonical": "active learning",
+      "entity_type": "METHOD",
+      "aliases": ["active learning", "主动学习"]
+    },
+    {
+      "canonical": "density functional theory",
+      "entity_type": "METHOD",
+      "aliases": ["density functional theory", "DFT", "密度泛函理论"]
+    },
+    {
+      "canonical": "three-body interactions",
+      "entity_type": "METHOD",
+      "aliases": ["three-body interactions", "三体相互作用"]
+    },
+    {
+      "canonical": "global state attributes",
+      "entity_type": "METHOD",
+      "aliases": ["global state attributes", "global state", "全局状态属性"]
+    },
+    {
+      "canonical": "Materials Project",
+      "entity_type": "DATASET",
+      "aliases": ["Materials Project", "材料项目数据库"]
+    },
+    {
+      "canonical": "material property prediction",
+      "entity_type": "TASK",
+      "aliases": ["material property prediction", "materials property prediction", "材料性质预测"]
+    },
+    {
+      "canonical": "stable material discovery",
+      "entity_type": "TASK",
+      "aliases": ["stable material discovery", "materials discovery", "稳定材料发现", "材料发现"]
+    },
+    {
+      "canonical": "interatomic potential learning",
+      "entity_type": "TASK",
+      "aliases": ["interatomic potential learning", "interatomic potential", "原子间势学习"]
+    },
+    {
+      "canonical": "crystal structure relaxation",
+      "entity_type": "TASK",
+      "aliases": ["crystal structure relaxation", "structure relaxation", "晶体结构弛豫"]
+    },
+    {
+      "canonical": "2.2 million stable structures",
+      "entity_type": "METRIC",
+      "aliases": ["2.2 million stable structures", "2.2 million structures", "220 万个稳定结构"]
+    },
+    {
+      "canonical": "381,000 new stable structures",
+      "entity_type": "METRIC",
+      "aliases": ["381,000 new stable structures", "381k new stable structures", "38.1 万个新稳定结构"]
+    },
+    {
+      "canonical": "736 experimental structures",
+      "entity_type": "METRIC",
+      "aliases": ["736 experimental structures", "736 structures", "736 个实验结构"]
+    },
+    {
+      "canonical": "knowledge tracing",
+      "entity_type": "TASK",
+      "aliases": ["knowledge tracing", "KT", "知识追踪"]
+    },
+    {
+      "canonical": "learner performance prediction",
+      "entity_type": "TASK",
+      "aliases": ["learner performance prediction", "student performance prediction", "学习表现预测"]
+    },
+    {
+      "canonical": "Deep Knowledge Tracing",
+      "entity_type": "METHOD",
+      "aliases": ["Deep Knowledge Tracing", "DKT", "深度知识追踪"]
+    },
+    {
+      "canonical": "recurrent neural network",
+      "entity_type": "METHOD",
+      "aliases": ["recurrent neural network", "RNN", "循环神经网络"]
+    },
+    {
+      "canonical": "DKVMN",
+      "entity_type": "METHOD",
+      "aliases": ["DKVMN", "Dynamic Key-Value Memory Network"]
+    },
+    {
+      "canonical": "key-value memory network",
+      "entity_type": "METHOD",
+      "aliases": ["key-value memory network", "key-value memory", "键值记忆网络"]
+    },
+    {
+      "canonical": "SAINT",
+      "entity_type": "METHOD",
+      "aliases": ["SAINT"]
+    },
+    {
+      "canonical": "self-attention",
+      "entity_type": "METHOD",
+      "aliases": ["self-attention", "self attention", "自注意力"]
+    },
+    {
+      "canonical": "AKT",
+      "entity_type": "METHOD",
+      "aliases": ["AKT", "Attentive Knowledge Tracing"]
+    },
+    {
+      "canonical": "monotonic attention",
+      "entity_type": "METHOD",
+      "aliases": ["monotonic attention", "单调注意力"]
+    },
+    {
+      "canonical": "Rasch model",
+      "entity_type": "METHOD",
+      "aliases": ["Rasch model", "Rasch regularization", "Rasch 模型"]
+    },
+    {
+      "canonical": "pyKT",
+      "entity_type": "METHOD",
+      "aliases": ["pyKT"]
+    },
+    {
+      "canonical": "standardized preprocessing",
+      "entity_type": "METHOD",
+      "aliases": ["standardized preprocessing", "统一预处理"]
+    },
+    {
+      "canonical": "ASSISTments",
+      "entity_type": "DATASET",
+      "aliases": ["ASSISTments", "ASSISTments dataset"]
+    },
+    {
+      "canonical": "EdNet",
+      "entity_type": "DATASET",
+      "aliases": ["EdNet", "EdNet dataset"]
+    },
+    {
+      "canonical": "label leakage",
+      "entity_type": "LIMITATION",
+      "aliases": ["label leakage", "标签泄漏"]
+    },
+    {
+      "canonical": "784,309 learners",
+      "entity_type": "METRIC",
+      "aliases": ["784,309 students", "784,309 learners", "784309 students", "784,309 名学习者"]
+    },
+    {
+      "canonical": "131 million interactions",
+      "entity_type": "METRIC",
+      "aliases": ["131 million interactions", "131,441,538 interactions", "1.31 亿次交互"]
     }
   ],
+  "relation_constraints": {
+    "IMPROVES": {
+      "source": ["METHOD"],
+      "target": ["TASK", "METRIC", "FINDING"]
+    },
+    "ENABLES": {
+      "source": ["METHOD", "DATASET"],
+      "target": ["TASK", "FINDING"]
+    },
+    "USES": {
+      "source": ["METHOD"],
+      "target": ["METHOD", "DATASET"]
+    },
+    "EVALUATES_ON": {
+      "source": ["METHOD"],
+      "target": ["DATASET"]
+    },
+    "REPORTS": {
+      "source": ["METHOD", "DATASET"],
+      "target": ["METRIC", "FINDING"]
+    },
+    "SUPPORTS": {
+      "source": ["METHOD", "DATASET", "FINDING"],
+      "target": ["TASK", "FINDING", "METRIC"]
+    },
+    "CONTRADICTS": {
+      "source": ["FINDING"],
+      "target": ["FINDING"]
+    },
+    "EXTENDS": {
+      "source": ["METHOD"],
+      "target": ["METHOD"]
+    },
+    "ADDRESSES": {
+      "source": ["METHOD"],
+      "target": ["TASK"]
+    },
+    "BENCHMARKS": {
+      "source": ["DATASET"],
+      "target": ["TASK"]
+    }
+  },
   "relation_patterns": [
     {
       "relation_type": "IMPROVES",
@@ -109,7 +477,7 @@
     },
     {
       "relation_type": "EVALUATES_ON",
-      "triggers": ["evaluate on", "evaluated on", "benchmark", "在数据集", "评测"]
+      "triggers": ["evaluate on", "evaluates on", "evaluated on", "在数据集上", "在……上评测"]
     },
     {
       "relation_type": "REPORTS",
@@ -130,6 +498,10 @@
     {
       "relation_type": "ADDRESSES",
       "triggers": ["address", "addresses", "solve", "target", "针对", "解决", "缓解"]
+    },
+    {
+      "relation_type": "BENCHMARKS",
+      "triggers": ["benchmark", "benchmarks", "基准", "评测任务"]
     }
   ]
 }

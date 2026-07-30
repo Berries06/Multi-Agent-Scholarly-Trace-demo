@@ -7,6 +7,187 @@ from .knowledge import KnowledgeBase
 from .models import Claim, LearnerProfile, Paper
 
 
+class IntentPerceptionAgent:
+    name = "用户意图感知 Agent"
+    _signals = {
+        "literature_retrieval": (
+            "检索",
+            "搜索",
+            "查找",
+            "推荐",
+            "论文",
+            "文献",
+            "综述",
+            "有哪些",
+            "retrieve",
+            "search",
+            "recommend",
+            "paper",
+            "literature",
+        ),
+        "analysis_reasoning": (
+            "分析",
+            "推理",
+            "为什么",
+            "如何",
+            "机制",
+            "比较",
+            "关系",
+            "路径",
+            "脉络",
+            "演化",
+            "影响",
+            "analyze",
+            "reason",
+            "why",
+            "how",
+            "compare",
+            "mechanism",
+        ),
+        "idea_discovery": (
+            "idea",
+            "想法",
+            "创新",
+            "空白",
+            "蓝海",
+            "研究方向",
+            "选题",
+            "假设",
+            "新颖",
+            "gap",
+            "novel",
+            "hypothesis",
+        ),
+    }
+    _routes = {
+        "literature_retrieval": (
+            "graph_breadth",
+            "论文检索 / 领域探索",
+            "优先扩大概念与论文覆盖面。",
+        ),
+        "analysis_reasoning": (
+            "graph_depth",
+            "分析推理 / 机制追踪",
+            "优先保留多跳路径与逐边证据。",
+        ),
+        "idea_discovery": (
+            "hybrid_drift",
+            "研究 Idea / 空白发现",
+            "先用社区信息扩展起点，再深挖局部缺失边。",
+        ),
+    }
+
+    def perceive(self, query: str) -> dict[str, Any]:
+        lowered = query.casefold().strip()
+        matched: dict[str, list[str]] = {}
+        scores: dict[str, float] = {}
+        for intent, signals in self._signals.items():
+            hits = [signal for signal in signals if signal in lowered]
+            matched[intent] = hits
+            scores[intent] = float(len(hits))
+
+        if not any(scores.values()):
+            scores["literature_retrieval"] = 1.0
+            matched["literature_retrieval"] = ["默认领域探索"]
+        priority = {
+            "idea_discovery": 3,
+            "analysis_reasoning": 2,
+            "literature_retrieval": 1,
+        }
+        primary = max(
+            scores,
+            key=lambda item: (scores[item], priority[item]),
+        )
+        route, label, strategy = self._routes[primary]
+        total = sum(scores.values())
+        top_score = scores[primary]
+        confidence = min(
+            0.98,
+            0.55 + 0.12 * top_score + 0.08 * top_score / max(1.0, total),
+        )
+        secondary = [
+            intent
+            for intent, score in sorted(
+                scores.items(),
+                key=lambda item: item[1],
+                reverse=True,
+            )
+            if intent != primary and score > 0
+        ]
+        return {
+            "agent": self.name,
+            "primary_intent": primary,
+            "secondary_intents": secondary,
+            "label": label,
+            "confidence": round(confidence, 3),
+            "route": route,
+            "strategy": strategy,
+            "matched_signals": matched[primary],
+            "score_breakdown": {
+                key: round(value, 3) for key, value in scores.items()
+            },
+            "fallback_used": matched[primary] == ["默认领域探索"],
+        }
+
+
+class PaperKnowledgeExtractionAgent:
+    name = "论文知识抽取 Agent"
+
+    def inspect_index(
+        self,
+        kb: KnowledgeBase,
+        papers: list[Paper],
+    ) -> dict[str, Any]:
+        payload = kb.extracted_paper_graph()
+        paper_ids = {paper.paper_id for paper in papers}
+        evidence = [
+            item
+            for item in payload["evidence"]
+            if item["paper_id"] in paper_ids
+        ]
+        evidence_ids = {item["evidence_id"] for item in evidence}
+        entities = [
+            item
+            for item in payload["entities"]
+            if any(
+                mention["evidence_id"] in evidence_ids
+                for mention in item["mentions"]
+            )
+        ]
+        relations = [
+            item
+            for item in payload["relations"]
+            if set(item["evidence_ids"]).intersection(evidence_ids)
+        ]
+        return {
+            "agent": self.name,
+            "status": "completed",
+            "execution_mode": "reuse-versioned-index",
+            "input_papers": len(papers),
+            "evidence_spans": len(evidence),
+            "knowledge_concepts": len(entities),
+            "candidate_relations": len(relations),
+            "accepted_relations": sum(
+                item["status"] == "accepted" for item in relations
+            ),
+            "evidence_coverage": (
+                sum(bool(item["evidence_ids"]) for item in relations)
+                / len(relations)
+                if relations
+                else 1.0
+            ),
+            "current_model": "schema-guided-pattern + canonical normalization",
+            "planned_models": [
+                "GLiNER / SciBERT span encoder for entities",
+                "GLiREL / OneKE for relation candidates",
+                "SciFact-style verifier before graph write",
+            ],
+            "graph_write_policy": (
+                "抽取 Agent 只能生成 proposed 候选；批判者与裁判通过后才能写入 accepted 图。"
+            ),
+        }
+
+
 class DiagnosisAgent:
     name = "学情诊断 Agent"
 
@@ -76,7 +257,19 @@ class ProposerAgent:
                 target=relation["target"],
                 relation_type=relation["relation_type"],
                 base_confidence=float(relation["confidence"]),
+                source_type=relation.get(
+                    "source_type", kb.entity_type_for_name(relation["source"])
+                ),
+                target_type=relation.get(
+                    "target_type", kb.entity_type_for_name(relation["target"])
+                ),
                 evidence_ids=list(relation["evidence_ids"]),
+                proposal_reason=(
+                    "从论文证据跨度中识别到 schema 允许的实体对与触发模式。"
+                ),
+                model_route=relation.get(
+                    "extraction_method", "curated-relation-baseline"
+                ),
             )
             for index, relation in enumerate(relations, start=1)
         ]
@@ -88,6 +281,10 @@ class ProposerAgent:
                 target="零幻觉科研结论",
                 relation_type="speculative",
                 base_confidence=0.42,
+                source_type="METHOD",
+                target_type="FINDING",
+                proposal_reason="用于验证批判者能否拦截无证据绝对化命题。",
+                model_route="pressure-test",
             )
         )
         return claims
@@ -98,8 +295,11 @@ class CriticAgent:
 
     def critique(self, claims: list[Claim], kb: KnowledgeBase) -> list[Claim]:
         for claim in claims:
+            claim.criticisms = []
             invalid_ids = [
-                paper_id for paper_id in claim.evidence_ids if paper_id not in kb.paper_by_id
+                evidence_id
+                for evidence_id in claim.evidence_ids
+                if not kb.evidence_is_valid(evidence_id)
             ]
             if not claim.evidence_ids:
                 claim.criticisms.append("缺少可追溯证据，不能进入最终资源。")
@@ -107,8 +307,32 @@ class CriticAgent:
                 claim.criticisms.append(f"证据 ID 不存在：{', '.join(invalid_ids)}。")
             if len(claim.evidence_ids) == 1:
                 claim.criticisms.append("当前仅有单一来源，需保留外部有效性限制。")
-            if claim.relation in {"guarantees", "proves"}:
+            if claim.relation.casefold() in {"guarantees", "proves"}:
                 claim.criticisms.append("使用绝对化谓词，结论强度超过现有证据。")
+            if claim.relation_type == "RELATED_TO":
+                claim.criticisms.append("同句共现不能直接证明语义关系，需要人工复核。")
+            source_type = claim.source_type or kb.entity_type_for_name(claim.source)
+            target_type = claim.target_type or kb.entity_type_for_name(claim.target)
+            if not kb.relation_types_are_valid(
+                claim.relation_type,
+                source_type,
+                target_type,
+            ):
+                claim.criticisms.append(
+                    f"关系类型约束不匹配：{source_type or '?'} "
+                    f"-{claim.relation_type}-> {target_type or '?'}。"
+                )
+            span_evidence = [
+                item
+                for item in kb.evidence_details(claim.evidence_ids)
+                if item["evidence_id"].startswith("evidence:")
+            ]
+            if span_evidence and not any(
+                claim.source.casefold() in item["text"].casefold()
+                and claim.target.casefold() in item["text"].casefold()
+                for item in span_evidence
+            ):
+                claim.criticisms.append("证据跨度没有同时覆盖关系两端实体。")
             if claim.base_confidence < 0.7:
                 claim.criticisms.append("候选置信度低于高保真阈值。")
             if not claim.criticisms:
@@ -122,27 +346,65 @@ class JudgeAgent:
     def adjudicate(self, claims: list[Claim], kb: KnowledgeBase) -> list[Claim]:
         for claim in claims:
             valid_evidence = [
-                paper_id for paper_id in claim.evidence_ids if paper_id in kb.paper_by_id
+                evidence_id
+                for evidence_id in claim.evidence_ids
+                if kb.evidence_is_valid(evidence_id)
             ]
-            evidence_bonus = min(0.08, 0.04 * len(valid_evidence))
-            corroboration_bonus = 0.04 if len(valid_evidence) >= 2 else 0.0
+            evidence_bonus = min(0.10, 0.05 * len(valid_evidence))
+            distinct_sources = {
+                kb.paper_id_for_evidence(evidence_id) for evidence_id in valid_evidence
+            }
+            corroboration_bonus = 0.05 if len(distinct_sources) >= 2 else 0.0
             penalty = 0.0
             if not valid_evidence:
                 penalty += 0.45
-            if claim.relation in {"guarantees", "proves"}:
-                penalty += 0.20
+            if claim.relation.casefold() in {"guarantees", "proves"}:
+                penalty += 0.45
             if claim.base_confidence < 0.7:
                 penalty += 0.08
+            if any(
+                marker in criticism
+                for criticism in claim.criticisms
+                for marker in (
+                    "不存在",
+                    "不匹配",
+                    "没有同时覆盖",
+                    "同句共现",
+                )
+            ):
+                penalty += 0.32
+            claim.score_breakdown = {
+                "proposer_confidence": claim.base_confidence,
+                "evidence_bonus": evidence_bonus,
+                "corroboration_bonus": corroboration_bonus,
+                "risk_penalty": -penalty,
+            }
             claim.judge_score = max(
                 0.0,
                 min(0.99, claim.base_confidence + evidence_bonus + corroboration_bonus - penalty),
             )
-            if claim.judge_score >= 0.78 and valid_evidence:
+            blocking = any(
+                marker in criticism
+                for criticism in claim.criticisms
+                for marker in (
+                    "缺少可追溯证据",
+                    "不存在",
+                    "绝对化",
+                    "不匹配",
+                    "没有同时覆盖",
+                )
+            )
+            if claim.judge_score >= 0.78 and valid_evidence and not blocking:
                 claim.status = "accepted"
             elif claim.judge_score >= 0.58 and valid_evidence:
-                claim.status = "review"
+                claim.status = "needs_review"
             else:
                 claim.status = "rejected"
+            claim.judge_reason = (
+                f"基础分 {claim.base_confidence:.2f}，证据奖励 "
+                f"{evidence_bonus + corroboration_bonus:.2f}，风险惩罚 "
+                f"{penalty:.2f}；输出 {claim.status}。"
+            )
         return claims
 
 
@@ -177,6 +439,25 @@ class ResourceAgent:
             }
             for claim in accepted[:3]
         ]
+        focus_evidence = {
+            concept: kb.evidence_for_entity(concept)
+            for concept in profile.required_concepts
+        }
+        for concept, evidence_items in focus_evidence.items():
+            if not evidence_items:
+                continue
+            sections.append(
+                {
+                    "heading": f"画像重点：{concept}",
+                    "body": (
+                        f"该概念命中了垂直知识库中的 {len(evidence_items)} 个原文片段；"
+                        "学习资源仅引用命中内容，不把实体共现自动升级为关系。"
+                    ),
+                    "citations": [
+                        item["evidence_id"] for item in evidence_items[:2]
+                    ],
+                }
+            )
         guide_steps = [
             {
                 "step": 1,
@@ -219,13 +500,15 @@ class ResourceAgent:
                 "answer": 1,
             },
         ]
-        covered_concepts = sorted(
-            {
-                concept
-                for claim in accepted
-                for concept in (claim.source, claim.target)
-            }
-        )
+        accepted_concepts = {
+            concept
+            for claim in accepted
+            for concept in (claim.source, claim.target)
+        }
+        entity_grounded_focus = {
+            concept for concept, items in focus_evidence.items() if items
+        }
+        covered_concepts = sorted(accepted_concepts | entity_grounded_focus)
         return {
             "briefing": {
                 "title": f"{profile.name}的多智能体科研推理导读",
@@ -249,4 +532,9 @@ class ResourceAgent:
                 "evidence_ids": citations[:3],
             },
             "covered_concepts": covered_concepts,
+            "coverage_provenance": {
+                concept: [item["evidence_id"] for item in items[:3]]
+                for concept, items in focus_evidence.items()
+                if items
+            },
         }

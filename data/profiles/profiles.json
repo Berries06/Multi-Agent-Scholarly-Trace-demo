@@ -5,8 +5,8 @@
     "persona": "刚进入实验室的人工智能本科生",
     "education": "本科二年级",
     "role": "科研入门学习者",
-    "goal": "理解多智能体如何降低科研问答幻觉，并完成一个最小复现实验",
-    "interests": ["多智能体", "知识图谱", "科研问答"],
+    "goal": "理解论文中的方法、任务和数据集如何形成可追溯知识图谱，并完成一个最小抽取实验",
+    "interests": ["论文信息抽取", "知识图谱", "证据溯源"],
     "knowledge_scores": {
       "文献检索": 58,
       "知识图谱": 42,
@@ -16,7 +16,7 @@
     },
     "preferred_style": "图示 + 分步示例",
     "expected_difficulty": 1,
-    "required_concepts": ["多智能体辩论", "证据约束检索", "角色扮演协作"],
+    "required_concepts": ["GLiNER", "SciREX", "entity extraction"],
     "synthetic": true
   },
   {
@@ -25,8 +25,8 @@
     "persona": "从材料学转向 AI for Science 的硕士生",
     "education": "硕士一年级",
     "role": "跨学科研究者",
-    "goal": "设计可审计的多智能体科研发现流程并识别可发表的研究空白",
-    "interests": ["科研发现", "多智能体", "蓝海"],
+    "goal": "比较全文科学信息抽取路线，并利用证据图谱识别可验证的研究空白",
+    "interests": ["全文信息抽取", "证据图谱", "研究想法"],
     "knowledge_scores": {
       "文献检索": 82,
       "知识图谱": 64,
@@ -36,7 +36,7 @@
     },
     "preferred_style": "论文对比 + 研究任务",
     "expected_difficulty": 3,
-    "required_concepts": ["多智能体辩论", "原则约束协作", "多视角追问"],
+    "required_concepts": ["DyGIE++", "SciER", "relation extraction"],
     "synthetic": true
   },
   {
@@ -45,8 +45,8 @@
     "persona": "需要追踪技术路线的企业研发情报分析师",
     "education": "工程硕士",
     "role": "企业技术情报",
-    "goal": "快速判断多智能体科研工具的技术成熟度、争议与迁移风险",
-    "interests": ["技术演化", "争议", "溯源"],
+    "goal": "追踪科学知识抽取模型的技术演化、证据充分性和跨领域迁移风险",
+    "interests": ["技术演化", "分布外评测", "证据审计"],
     "knowledge_scores": {
       "文献检索": 90,
       "知识图谱": 84,
@@ -56,7 +56,7 @@
     },
     "preferred_style": "指标看板 + 风险清单",
     "expected_difficulty": 4,
-    "required_concepts": ["证据约束检索", "可编程对话编排", "多智能体科研 RAG"],
+    "required_concepts": ["SciER", "GLiREL", "out-of-distribution evaluation"],
     "synthetic": true
   }
 ]

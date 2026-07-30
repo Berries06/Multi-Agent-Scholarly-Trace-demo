@@ -1,0 +1,259 @@
+{
+  "domain": {
+    "domain_id": "materials-discovery-gnn",
+    "domain_name": "材料发现与图神经网络",
+    "version": "2026-07-30",
+    "paper_count": 5,
+    "description": "跨学科技术情报切片：追踪晶体图网络、通用势函数与主动学习材料发现路线。",
+    "query_example": "请沿知识图谱分析图神经网络如何用于材料性质预测与稳定材料发现，并推荐关键论文。",
+    "corpus_type": "verified-metadata-and-abstract-derived knowledge cards",
+    "source_scope": "项目组依据期刊官网、DOI 元数据和公开摘要撰写中文知识卡；未缓存论文全文，卡片证据只能证明本卡片中记录的摘要级命题。"
+  },
+  "timeline": [
+    {
+      "paper_id": "10.1063-1.4812323",
+      "year": 2013,
+      "title": "Commentary: The Materials Project: A Materials Genome Approach to Accelerating Materials Innovation",
+      "source_url": "https://doi.org/10.1063/1.4812323",
+      "contributions": [
+        "Materials Project BENCHMARKS material property prediction",
+        "Materials Project ENABLES stable material discovery",
+        "density functional theory USES Materials Project"
+      ],
+      "evidence_ids": [
+        "evidence:10.1063-1.4812323:7a104738973573:0",
+        "evidence:10.1063-1.4812323:7a104738973573:1",
+        "evidence:10.1063-1.4812323:7a104738973573:2"
+      ]
+    },
+    {
+      "paper_id": "10.1103-PhysRevLett.120.145301",
+      "year": 2018,
+      "title": "Crystal Graph Convolutional Neural Networks for an Accurate and Interpretable Prediction of Material Properties",
+      "source_url": "https://doi.org/10.1103/PhysRevLett.120.145301",
+      "contributions": [
+        "crystal graph convolutional neural network ADDRESSES material property prediction",
+        "crystal graph convolutional neural network EVALUATES_ON Materials Project",
+        "crystal graph convolutional neural network IMPROVES material property prediction",
+        "crystal graph convolutional neural network USES graph neural network"
+      ],
+      "evidence_ids": [
+        "evidence:10.1103-PhysRevLett.120.145301:90f0f88bf84f2b:0",
+        "evidence:10.1103-PhysRevLett.120.145301:bfbaf8b2d1cdf9:0",
+        "evidence:10.1103-PhysRevLett.120.145301:bfbaf8b2d1cdf9:1",
+        "evidence:10.1103-PhysRevLett.120.145301:e29e8d943c26ff:0"
+      ]
+    },
+    {
+      "paper_id": "10.1021-acs.chemmater.9b01294",
+      "year": 2019,
+      "title": "Graph Networks as a Universal Machine Learning Framework for Molecules and Crystals",
+      "source_url": "https://doi.org/10.1021/acs.chemmater.9b01294",
+      "contributions": [
+        "MEGNet ADDRESSES material property prediction",
+        "MEGNet EVALUATES_ON Materials Project",
+        "MEGNet USES global state attributes",
+        "MEGNet USES graph neural network"
+      ],
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:90f0f88bf84f2b:0",
+        "evidence:10.1021-acs.chemmater.9b01294:bfbaf8b2d1cdf9:0",
+        "evidence:10.1021-acs.chemmater.9b01294:bfbaf8b2d1cdf9:1",
+        "evidence:10.1021-acs.chemmater.9b01294:bfbaf8b2d1cdf9:2",
+        "evidence:10.1021-acs.chemmater.9b01294:e29e8d943c26ff:0"
+      ]
+    },
+    {
+      "paper_id": "10.1038-s43588-022-00349-3",
+      "year": 2022,
+      "title": "A Universal Graph Deep Learning Interatomic Potential for the Periodic Table",
+      "source_url": "https://doi.org/10.1038/s43588-022-00349-3",
+      "contributions": [
+        "M3GNet ADDRESSES interatomic potential learning",
+        "M3GNet ENABLES crystal structure relaxation",
+        "M3GNet EVALUATES_ON Materials Project",
+        "M3GNet USES graph neural network"
+      ],
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:90f0f88bf84f2b:0",
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:0",
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:1",
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:2",
+        "evidence:10.1038-s43588-022-00349-3:e29e8d943c26ff:0"
+      ]
+    },
+    {
+      "paper_id": "10.1038-s41586-023-06735-9",
+      "year": 2023,
+      "title": "Scaling Deep Learning for Materials Discovery",
+      "source_url": "https://doi.org/10.1038/s41586-023-06735-9",
+      "contributions": [
+        "GNoME ADDRESSES stable material discovery",
+        "GNoME REPORTS 2.2 million stable structures",
+        "GNoME REPORTS 381,000 new stable structures",
+        "GNoME REPORTS 736 experimental structures"
+      ],
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:0",
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:1",
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:2",
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:3",
+        "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:0",
+        "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:1",
+        "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:2"
+      ]
+    }
+  ],
+  "research_ideas": [
+    {
+      "idea_id": "gap-01",
+      "title": "在 Materials Project 上系统评测 GNoME",
+      "hypothesis": "GNoME 已用于“stable material discovery”，而 Materials Project 也用于该任务；图中尚无二者的 EVALUATES_ON 边，可设计统一实验验证其领域适配性。",
+      "graph_basis": [
+        "GNoME -ADDRESSES-> stable material discovery",
+        "Materials Project -ENABLES-> stable material discovery",
+        "缺失：GNoME -EVALUATES_ON-> Materials Project"
+      ],
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:3",
+        "evidence:10.1063-1.4812323:7a104738973573:2"
+      ],
+      "novelty_status": "unverified",
+      "next_check": "联网检索同任务论文，并由裁判比较既有工作与拟议实验差异。"
+    }
+  ],
+  "graph_context": {
+    "query": "请沿知识图谱分析图神经网络如何用于材料性质预测与稳定材料发现，并推荐关键论文。",
+    "generator_route": {
+      "demo": "deterministic-graph-gap-miner",
+      "planned_model": "Qwen/Qwen2.5-7B-Instruct",
+      "constraint": "模型只能重写或扩展图谱候选，必须保留 graph_basis 与 evidence_ids。"
+    },
+    "facts": [
+      {
+        "triple": [
+          "GNoME",
+          "USES",
+          "graph neural network"
+        ],
+        "evidence_ids": [
+          "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "triple": [
+          "crystal graph convolutional neural network",
+          "EVALUATES_ON",
+          "Materials Project"
+        ],
+        "evidence_ids": [
+          "evidence:10.1103-PhysRevLett.120.145301:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "triple": [
+          "GNoME",
+          "USES",
+          "active learning"
+        ],
+        "evidence_ids": [
+          "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "triple": [
+          "crystal graph convolutional neural network",
+          "USES",
+          "graph neural network"
+        ],
+        "evidence_ids": [
+          "evidence:10.1103-PhysRevLett.120.145301:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "triple": [
+          "M3GNet",
+          "ENABLES",
+          "crystal structure relaxation"
+        ],
+        "evidence_ids": [
+          "evidence:10.1038-s43588-022-00349-3:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "triple": [
+          "GNoME",
+          "USES",
+          "density functional theory"
+        ],
+        "evidence_ids": [
+          "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:2"
+        ]
+      },
+      {
+        "triple": [
+          "GNoME",
+          "REPORTS",
+          "2.2 million stable structures"
+        ],
+        "evidence_ids": [
+          "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "triple": [
+          "Materials Project",
+          "BENCHMARKS",
+          "material property prediction"
+        ],
+        "evidence_ids": [
+          "evidence:10.1063-1.4812323:7a104738973573:1"
+        ]
+      },
+      {
+        "triple": [
+          "crystal graph convolutional neural network",
+          "ADDRESSES",
+          "material property prediction"
+        ],
+        "evidence_ids": [
+          "evidence:10.1103-PhysRevLett.120.145301:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "triple": [
+          "MEGNet",
+          "EVALUATES_ON",
+          "Materials Project"
+        ],
+        "evidence_ids": [
+          "evidence:10.1021-acs.chemmater.9b01294:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "triple": [
+          "M3GNet",
+          "ADDRESSES",
+          "interatomic potential learning"
+        ],
+        "evidence_ids": [
+          "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:2"
+        ]
+      },
+      {
+        "triple": [
+          "M3GNet",
+          "USES",
+          "three-body interactions"
+        ],
+        "evidence_ids": [
+          "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:1"
+        ]
+      }
+    ]
+  },
+  "warnings": [
+    "研究想法由缺失边和跨论文路径生成，只是待验证假设。",
+    "新颖性必须再经过联网文献检索与人工评审，不能由图结构单独证明。"
+  ]
+}

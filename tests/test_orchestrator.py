@@ -22,21 +22,37 @@ class OrchestratorTests(unittest.TestCase):
         self.assertEqual(3, len(profiles))
         self.assertTrue(all(profile["synthetic"] for profile in profiles))
 
-    def test_complete_six_agent_trace_is_returned(self) -> None:
+    def test_only_three_core_decision_agents_are_in_the_trace(self) -> None:
         result = self.orchestrator.run("undergraduate_ai")
-        roles = {step["role"] for step in result["agent_trace"]}
-        self.assertEqual(6, len(result["agent_trace"]))
-        self.assertEqual(9, len(result["claims"]))
+        self.assertEqual(3, len(result["agent_trace"]))
         self.assertEqual(
-            {
-                "画像分析",
-                "证据召回",
-                "关联提出",
-                "反证与约束",
-                "置信裁决",
-                "资源编排",
-            },
-            roles,
+            {"关联提出", "反证与约束", "置信裁决"},
+            {step["role"] for step in result["agent_trace"]},
+        )
+        self.assertEqual(3, result["core_method"]["agent_count"])
+        self.assertEqual(5, result["core_method"]["system_agent_count"])
+        self.assertEqual(2, len(result["specialist_agent_trace"]))
+        self.assertEqual(3, len(result["service_trace"]))
+
+    def test_intent_and_extraction_specialists_are_exposed(self) -> None:
+        result = self.orchestrator.run(
+            "undergraduate_ai",
+            "分析 GLiNER 如何支持实体抽取",
+        )
+        specialist_roles = {
+            item["role"] for item in result["specialist_agent_trace"]
+        }
+        self.assertEqual(
+            {"论文解析与知识建图", "意图识别与检索路由"},
+            specialist_roles,
+        )
+        self.assertEqual(
+            "graph_depth",
+            result["graph_retrieval"]["retrieval_plan"]["route"],
+        )
+        self.assertEqual(
+            result["graph_retrieval"]["answer"],
+            result["assistant_response"],
         )
 
     def test_unsupported_absolute_claim_is_rejected(self) -> None:
@@ -53,21 +69,30 @@ class OrchestratorTests(unittest.TestCase):
             claim for claim in result["claims"] if claim["status"] == "accepted"
         ]
         self.assertGreater(len(accepted), 0)
-        self.assertTrue(all(claim["evidence_ids"] for claim in accepted))
         self.assertTrue(
             all(
-                paper_id in self.orchestrator.kb.paper_by_id
+                self.orchestrator.kb.evidence_is_valid(evidence_id)
                 for claim in accepted
-                for paper_id in claim["evidence_ids"]
+                for evidence_id in claim["evidence_ids"]
             )
         )
 
-    def test_three_resource_types_are_generated(self) -> None:
-        resources = self.orchestrator.run("undergraduate_ai")["resources"]
+    def test_three_resource_types_and_grounded_profile_focus_are_generated(
+        self,
+    ) -> None:
+        result = self.orchestrator.run("undergraduate_ai")
+        resources = result["resources"]
         self.assertIn("briefing", resources)
         self.assertIn("practical_guide", resources)
         self.assertIn("quiz", resources)
         self.assertGreaterEqual(len(resources["quiz"]["items"]), 2)
+        self.assertEqual(
+            set(result["profile"]["interests"]).intersection(
+                {"论文信息抽取", "知识图谱", "证据溯源"}
+            ),
+            {"论文信息抽取", "知识图谱", "证据溯源"},
+        )
+        self.assertTrue(resources["coverage_provenance"])
 
     def test_feedback_changes_target_difficulty(self) -> None:
         hard = self.orchestrator.run_with_feedback(
@@ -79,10 +104,43 @@ class OrchestratorTests(unittest.TestCase):
         self.assertEqual(2, hard["diagnosis"]["target_difficulty"])
         self.assertEqual(4, easy["diagnosis"]["target_difficulty"])
 
-    def test_graph_contains_evidence_nodes_and_edges(self) -> None:
-        graph = self.orchestrator.run("graduate_cross_domain")["graph"]
+    def test_extracted_graph_contains_paper_evidence_entity_chain(self) -> None:
+        graph = self.orchestrator.run("graduate_cross_domain")[
+            "knowledge_graph"
+        ]["graph"]
         self.assertTrue(any(node["kind"] == "paper" for node in graph["nodes"]))
-        self.assertTrue(any(edge["label"] == "evidence" for edge in graph["edges"]))
+        self.assertTrue(any(node["kind"] == "evidence" for node in graph["nodes"]))
+        self.assertTrue(any(edge["label"] == "CONTAINS" for edge in graph["edges"]))
+        self.assertTrue(any(edge["label"] == "MENTIONS" for edge in graph["edges"]))
+
+    def test_ablation_and_graph_ideas_are_exposed(self) -> None:
+        result = self.orchestrator.run("graduate_cross_domain")
+        variants = {
+            item["variant_id"]: item for item in result["ablation"]["variants"]
+        }
+        self.assertEqual(
+            {
+                "rule_program",
+                "single_pass",
+                "homogeneous_vote",
+                "evidence_triad",
+            },
+            set(variants),
+        )
+        self.assertGreater(
+            variants["evidence_triad"]["metrics"]["accepted_precision"],
+            variants["single_pass"]["metrics"]["accepted_precision"],
+        )
+        self.assertGreaterEqual(
+            len(result["graph_insights"]["research_ideas"]),
+            1,
+        )
+        self.assertTrue(
+            all(
+                idea["novelty_status"] == "unverified"
+                for idea in result["graph_insights"]["research_ideas"]
+            )
+        )
 
     def test_engineering_thresholds_pass(self) -> None:
         report = evaluate_orchestrator(self.orchestrator)

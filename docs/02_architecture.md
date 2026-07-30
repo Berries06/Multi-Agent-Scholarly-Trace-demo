@@ -4,58 +4,81 @@
 
 ```mermaid
 flowchart LR
-    A["合成/脱敏学习者画像"] --> B["学情诊断 Agent"]
-    K["科研文献知识库"] --> C["证据检索 Agent"]
-    B --> C
-    C --> D["提出者 Agent"]
-    D --> E["批判者 Agent"]
-    E --> F["裁判 Agent"]
-    F --> G["个性化资源 Agent"]
-    G --> H["导读 + 实操 + 测评"]
-    H --> I["学习反馈"]
-    I --> B
-    F --> J["动态知识图谱"]
+    W["Web / API"] --> HZ["可靠 Harness<br/>校验·幂等·超时·有界并发"]
+    HZ --> Q["用户意图感知 Agent"]
+    HZ --> X
+    P["垂直论文 PDF / 证据卡"] --> X["结构解析服务"]
+    X --> E["论文知识抽取 Agent"]
+    E --> C["实体与关系候选"]
+    C --> A1["提出者 Agent"]
+    A1 --> A2["批判者 Agent"]
+    A2 --> A3["裁判 Agent"]
+    A3 -->|accepted| KG["可追溯知识图谱"]
+    A3 -->|needs_review| HR["人工复核"]
+    KG --> B["graph_breadth<br/>领域与论文广度检索"]
+    KG --> DQ["graph_depth<br/>多跳证据推理"]
+    KG --> DR["hybrid_drift<br/>社区起点与缺失边"]
+    Q -->|信息检索| B
+    Q -->|分析推理| DQ
+    Q -->|研究 Idea| DR
+    KG --> L["论文技术脉络"]
+    KG --> I["缺失边研究 Idea"]
+    U["合成/脱敏学习者画像"] --> D["画像诊断服务"]
+    D --> R["个性化资源服务"]
+    KG --> R
+    R --> F["难度反馈"]
+    F --> D
+    HZ --> O["JSON 日志 / Metrics / Run Journal"]
 ```
+
+系统共有 5 个协同角色：论文知识抽取、用户意图感知属于前置专职 Agent；提出者、批判者、裁判属于核心决策 Agent。结构解析、画像诊断、图检索、存储和资源生成是可替换的普通服务。
 
 ## 2. 可审计数据协议
 
-每次运行输出以下对象：
+每次运行输出：
 
-- `profile`：学习者背景、知识点得分、目标与偏好；
-- `diagnosis`：准备度、知识盲区、目标难度和匹配度；
-- `agent_trace`：各 Agent 的输入摘要、输出摘要和状态；
-- `claims`：候选关联、证据文献、批判意见、裁决分数与状态；
-- `graph`：参与本轮推理的节点和边；
+- `profile / diagnosis`：画像输入与难度诊断；
+- `papers`：本轮召回论文；
+- `agent_trace`：3 个核心 Agent 的摘要、状态与耗时；
+- `specialist_agent_trace`：论文知识抽取与用户意图感知的可解释中间数据；
+- `service_trace`：画像、检索、资源 3 项辅助服务；
+- `claims`：候选、实体类型、证据、批判项、裁决分解和状态；
+- `knowledge_graph`：论文、原文跨度、实体、关系、社区与质量审计；
+- `graph_insights`：按年份的技术脉络、图谱上下文和待验证 Idea；
+- `graph_retrieval`：意图、检索计划、纯知识概念子图、多跳路径、社区、论文推荐与回答骨架；
 - `resources`：定制导读、复现实操和分阶测评；
-- `report`：盲区、难度曲线和学习路径；
-- `metrics`：幻觉率代理、适配准确率和知识覆盖率。
+- `ablation`：同一冻结候选池上的四组对比；
+- `metrics`：画像适配等工程回归指标。
 
-所有进入最终资源的知识结论必须至少满足：
-
-1. 存在知识库关系；
-2. 至少有一篇可追溯来源；
-3. 通过批判者检查；
-4. 裁判分数达到阈值；
-5. 资源中保留来源 ID。
+正式入图关系至少满足：证据 ID 存在、跨度覆盖两端实体、关系类型满足 schema、无阻断性批判项、裁判达到接收阈值。
 
 ## 3. 技术选型
 
-基础版采用 Python 标准库 + 原生 HTML/CSS/JavaScript：
+- 基础运行：Python 标准库 + 原生 HTML/CSS/JavaScript，现场可离线运行。
+- 图谱：JSON 作为交换协议，SQLite 作为本地可查询存储。
+- 图检索：`graph_breadth / graph_depth / hybrid_drift` 离线基线；未来通过 Microsoft GraphRAG BYOG 接入 Local/Global/DRIFT。
+- 文档：Markdown 规则解析基线，可选 Docling；GROBID 作为科学文献解析对照。
+- 候选模型：GLiNER/GLiREL、DyGIE++、DeepKE/OneKE、Qwen2.5 provider。
+- 验证：schema/跨度规则 + SciFact/MultiVerS 科学主张验证路线。
+- 联网：OpenAlex 只扩展候选；未完成本地解析和裁决的联网记录不能入图。
+- 测试：`unittest`，默认不要求安装第三方包。
+- 后端 Harness：Python 标准库 HTTP 服务 + 有界执行池；请求/运行 ID、稳定错误体、幂等、deadline、OpenAlex 重试熔断和健康/就绪探针。
 
-- 不依赖外部 API，比赛现场可离线运行；
-- 不依赖数据库，JSON 数据便于审查和提交；
-- 核心编排器与 UI 解耦，后续可替换为 CAMEL、LangGraph 或自研调度器；
-- 知识库访问通过单一接口，后续可替换为向量库与 Neo4j；
-- 测试使用 `unittest`，无需安装额外包。
+## 4. 状态与边界
 
-## 4. 后续替换接口
+```text
+proposed -> accepted | needs_review | rejected
+```
 
-| 当前模块 | 后续能力 |
-| --- | --- |
-| 关键词检索 | 稀疏 + 稠密混合检索、重排器 |
-| 人工关系切片 | 领域实体关系抽取与专家审核 |
-| 规则提出者 | 结构化输出的大模型 Agent |
-| 规则批判者 | 反证检索、NLI、一致性检查 |
-| 加权裁判 | 校准模型、专家反馈学习 |
-| JSON 图谱 | Neo4j / NebulaGraph |
-| 单机 HTTP | FastAPI + PostgreSQL + 任务队列 |
+- `accepted`：可进入下游资源，但仍保留外部有效性说明；
+- `needs_review`：普通共现、低置信或证据有限，进入人工队列；
+- `rejected`：证据缺失、类型不匹配、跨度不足或绝对化强断言；
+- Idea 使用独立 `novelty_status=unverified`，不能与 accepted 事实混用。
+
+## 5. 部署边界
+
+- 默认仅监听 `127.0.0.1`，避免 `localhost` 的 IPv4/IPv6解析差异；
+- 非回环地址没有 Token 时拒绝启动；
+- 所有耗时任务进入固定 worker/queue 容量，过载返回 429；
+- 详细状态通过 `/api/health`、`/api/ready` 和 `/api/metrics` 查看；
+- 当前状态是单进程竞赛 Demo，分布式状态、TLS、账号权限和集中可观测性仍属于生产化路线。

@@ -1,0 +1,40 @@
+{
+  "version": "2026-07-30",
+  "implementation": "graphrag-inspired-offline-baseline",
+  "official_runtime_integrated": false,
+  "graph_contract": {
+    "entities": "knowledge_graph.entities",
+    "relationships": "knowledge_graph.relations",
+    "text_units": "knowledge_graph.evidence",
+    "communities": "knowledge_graph.communities"
+  },
+  "intent_routes": {
+    "literature_retrieval": {
+      "current": "graph_breadth",
+      "microsoft_graphrag_analogue": "global_search",
+      "objective": "maximize paper and concept coverage"
+    },
+    "analysis_reasoning": {
+      "current": "graph_depth",
+      "microsoft_graphrag_analogue": "local_search",
+      "objective": "maximize evidence-grounded multi-hop path depth"
+    },
+    "idea_discovery": {
+      "current": "hybrid_drift",
+      "microsoft_graphrag_analogue": "drift_search",
+      "objective": "community priming plus local missing-edge discovery"
+    }
+  },
+  "migration_to_official_byog": {
+    "phase_1": "export entities, relationships and text_units with stable IDs",
+    "phase_2": "run create_communities and create_community_reports",
+    "phase_3": "generate entity_description, text_unit_text and community_full_content embeddings",
+    "phase_4": "replace route providers with official Local, Global and DRIFT query engines"
+  },
+  "sources": [
+    "https://github.com/microsoft/graphrag",
+    "https://microsoft.github.io/graphrag/index/byog/",
+    "https://microsoft.github.io/graphrag/query/overview/",
+    "https://microsoft.github.io/graphrag/config/yaml/"
+  ]
+}

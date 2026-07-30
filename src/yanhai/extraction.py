@@ -138,6 +138,18 @@ class ExtractionResult:
             }
             for paper in self.papers
         )
+        graph_nodes.extend(
+            {
+                "id": evidence.evidence_id,
+                "label": evidence.text,
+                "kind": "evidence",
+                "paper_id": evidence.paper_id,
+                "section_id": evidence.section_id,
+                "char_start": evidence.char_start,
+                "char_end": evidence.char_end,
+            }
+            for evidence in self.evidence
+        )
 
         graph_edges: list[dict[str, Any]] = []
         for relation in self.relations:
@@ -152,28 +164,33 @@ class ExtractionResult:
                     "evidence_ids": list(relation.evidence_ids),
                 }
             )
+        for evidence in self.evidence:
+            graph_edges.append(
+                {
+                    "id": _stable_id(
+                        "edge", evidence.paper_id, evidence.evidence_id, "CONTAINS"
+                    ),
+                    "source": f"paper:{evidence.paper_id}",
+                    "target": evidence.evidence_id,
+                    "label": "CONTAINS",
+                    "status": "accepted",
+                    "confidence": 1.0,
+                    "evidence_ids": [evidence.evidence_id],
+                }
+            )
         for entity in self.entities:
-            paper_ids = {
-                evidence_id.split(":")[1]
-                for evidence_id in (mention.evidence_id for mention in entity.mentions)
-                if evidence_id.startswith("evidence:")
-            }
-            for paper_id in sorted(paper_ids):
+            for mention in entity.mentions:
                 graph_edges.append(
                     {
-                        "id": _stable_id("edge", paper_id, entity.entity_id, "MENTIONS"),
-                        "source": f"paper:{paper_id}",
+                        "id": _stable_id(
+                            "edge", mention.evidence_id, entity.entity_id, "MENTIONS"
+                        ),
+                        "source": mention.evidence_id,
                         "target": entity.entity_id,
                         "label": "MENTIONS",
                         "status": "accepted",
                         "confidence": 1.0,
-                        "evidence_ids": sorted(
-                            {
-                                mention.evidence_id
-                                for mention in entity.mentions
-                                if mention.evidence_id.split(":")[1] == paper_id
-                            }
-                        ),
+                        "evidence_ids": [mention.evidence_id],
                     }
                 )
 
@@ -242,6 +259,44 @@ class PlainTextParser:
         )
 
 
+class PyPDFParser:
+    """Lightweight real-PDF parser that keeps page-level provenance.
+
+    Docling remains the structure-aware target parser. This fallback makes the
+    downloaded corpus immediately testable on CPU and records every extracted
+    span under a stable ``page-NNN`` section.
+    """
+
+    def parse(
+        self,
+        path: Path,
+        *,
+        paper_id: str | None = None,
+        source_url: str = "",
+        title: str = "",
+    ) -> ScientificDocument:
+        try:
+            from pypdf import PdfReader
+        except ImportError as exc:  # pragma: no cover - optional integration
+            raise RuntimeError(
+                "pypdf is not installed. Install the optional 'documents' "
+                "dependency before parsing local PDF files."
+            ) from exc
+
+        reader = PdfReader(str(path))
+        sections = {
+            f"page-{page_number:03d}": text
+            for page_number, page in enumerate(reader.pages, start=1)
+            if (text := (page.extract_text() or "").strip())
+        }
+        return ScientificDocument(
+            paper_id=paper_id or path.stem,
+            title=title or path.stem,
+            sections=sections,
+            source_url=source_url or str(path.resolve()),
+        )
+
+
 class DoclingParser:
     """Optional Docling adapter; the lightweight baseline has no hard dependency."""
 
@@ -276,6 +331,7 @@ class SchemaGuidedExtractor:
         self.accept_threshold = accept_threshold
         self.entity_types = set(schema["entity_types"])
         self.relation_types = set(schema["relation_types"])
+        self.relation_constraints = schema.get("relation_constraints", {})
         self.alias_entries: list[tuple[str, str, str]] = []
         for concept in schema["concepts"]:
             aliases = {concept["canonical"], *concept["aliases"]}
@@ -292,7 +348,14 @@ class SchemaGuidedExtractor:
 
     @staticmethod
     def _sentence_spans(text: str) -> Iterable[tuple[int, int, str]]:
-        for match in re.finditer(r"[^\n。！？!?;；]+(?:[。！？!?;；]|$)", text):
+        # Markdown evidence cards commonly contain one sentence per line without
+        # terminal punctuation. A plain ``$`` alternative only captures the last
+        # such line, silently dropping the rest of a section. Treat a newline as
+        # a sentence boundary while retaining stable document-relative offsets.
+        for match in re.finditer(
+            r"[^\n。！？!?;；]+(?:[。！？!?;；]+|(?=\n)|$)",
+            text,
+        ):
             sentence = match.group(0).strip()
             if sentence:
                 leading = len(match.group(0)) - len(match.group(0).lstrip())
@@ -343,8 +406,15 @@ class SchemaGuidedExtractor:
                         char_end=end,
                     )
                     seen_mentions: set[tuple[str, int, int]] = set()
+                    occupied_spans: list[tuple[int, int]] = []
                     for alias, canonical, entity_type in self.alias_entries:
                         for match in self._alias_pattern(alias).finditer(sentence):
+                            if any(
+                                match.start() < occupied_end
+                                and occupied_start < match.end()
+                                for occupied_start, occupied_end in occupied_spans
+                            ):
+                                continue
                             entity_id = _stable_id(
                                 "entity", entity_type, normalize_name(canonical)
                             )
@@ -377,6 +447,7 @@ class SchemaGuidedExtractor:
                             entity.aliases.add(match.group(0))
                             entity.mentions.append(mention)
                             mentions_by_evidence.setdefault(evidence_id, []).append(mention)
+                            occupied_spans.append((match.start(), match.end()))
 
         for entity in entities.values():
             distinct_evidence = {mention.evidence_id for mention in entity.mentions}
@@ -392,6 +463,12 @@ class SchemaGuidedExtractor:
             relation_type, matched_trigger = self._relation_type_for_sentence(evidence.text)
             ordered_mentions = sorted(first_mentions.values(), key=lambda item: item.char_start)
             for source_mention, target_mention in combinations(ordered_mentions, 2):
+                source_mention, target_mention = self._orient_pair(
+                    source_mention,
+                    target_mention,
+                    relation_type,
+                    entities,
+                )
                 key = (
                     source_mention.entity_id,
                     target_mention.entity_id,
@@ -441,6 +518,8 @@ class SchemaGuidedExtractor:
             },
             "quality": {
                 "paper_count": len(document_list),
+                "parsed_sentence_count": len(evidence_by_id),
+                "grounded_evidence_span_count": len(mentions_by_evidence),
                 "entity_count": len(entities),
                 "relation_count": len(relations),
                 "relation_evidence_coverage": round(
@@ -466,10 +545,43 @@ class SchemaGuidedExtractor:
             ],
             entities=sorted(entities.values(), key=lambda item: item.entity_id),
             relations=sorted(relations, key=lambda item: item.relation_id),
-            evidence=sorted(evidence_by_id.values(), key=lambda item: item.evidence_id),
+            # The graph stores evidence spans that ground at least one extracted
+            # entity. Parsed sentences without a schema mention remain a parser
+            # audit count rather than inflating the visible provenance graph.
+            evidence=sorted(
+                (
+                    evidence_by_id[evidence_id]
+                    for evidence_id in mentions_by_evidence
+                ),
+                key=lambda item: item.evidence_id,
+            ),
             communities=communities,
             audit=audit,
         )
+
+    def _orient_pair(
+        self,
+        source: EntityMention,
+        target: EntityMention,
+        relation_type: str,
+        entities: dict[str, ExtractedEntity],
+    ) -> tuple[EntityMention, EntityMention]:
+        constraints = self.relation_constraints.get(relation_type)
+        if not constraints:
+            return source, target
+        source_type = entities[source.entity_id].entity_type
+        target_type = entities[target.entity_id].entity_type
+        if (
+            source_type in constraints.get("source", [])
+            and target_type in constraints.get("target", [])
+        ):
+            return source, target
+        if (
+            target_type in constraints.get("source", [])
+            and source_type in constraints.get("target", [])
+        ):
+            return target, source
+        return source, target
 
     def _criticize(
         self,
@@ -484,6 +596,15 @@ class SchemaGuidedExtractor:
                 relation.criticisms.append("unknown_endpoint")
             if relation.relation_type not in self.relation_types:
                 relation.criticisms.append("out_of_schema_relation")
+            constraints = self.relation_constraints.get(relation.relation_type)
+            if constraints:
+                source_type = entities[relation.source_id].entity_type
+                target_type = entities[relation.target_id].entity_type
+                if (
+                    source_type not in constraints.get("source", [])
+                    or target_type not in constraints.get("target", [])
+                ):
+                    relation.criticisms.append("schema_type_mismatch")
             if not relation.evidence_ids:
                 relation.criticisms.append("missing_evidence")
             elif any(evidence_id not in evidence for evidence_id in relation.evidence_ids):
@@ -498,6 +619,7 @@ class SchemaGuidedExtractor:
             "out_of_schema_relation",
             "missing_evidence",
             "unknown_evidence",
+            "schema_type_mismatch",
         }
         for relation in relations:
             if fatal.intersection(relation.criticisms):

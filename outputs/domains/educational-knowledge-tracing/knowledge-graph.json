@@ -1,0 +1,3205 @@
+{
+  "schema_version": "0.1.0",
+  "papers": [
+    {
+      "paper_id": "neurips-2015-dkt",
+      "title": "Deep Knowledge Tracing",
+      "source_url": "https://proceedings.neurips.cc/paper/2015/hash/bac9162b47c56fc8a4d2a519803d51b3-Abstract.html"
+    },
+    {
+      "paper_id": "10.1145-3038912.3052580",
+      "title": "DKVMN",
+      "source_url": "https://doi.org/10.1145/3038912.3052580"
+    },
+    {
+      "paper_id": "10.1145-3386527.3405945",
+      "title": "SAINT",
+      "source_url": "https://doi.org/10.1145/3386527.3405945"
+    },
+    {
+      "paper_id": "10.1145-3394486.3403282",
+      "title": "AKT",
+      "source_url": "https://doi.org/10.1145/3394486.3403282"
+    },
+    {
+      "paper_id": "neurips-2022-pykt",
+      "title": "pyKT",
+      "source_url": "https://proceedings.neurips.cc/paper_files/paper/2022/hash/75ca2b23d9794f02a92449af65a57556-Abstract-Datasets_and_Benchmarks.html"
+    },
+    {
+      "paper_id": "10.1007-978-3-030-52240-7_13",
+      "title": "EdNet",
+      "source_url": "https://doi.org/10.1007/978-3-030-52240-7_13"
+    }
+  ],
+  "entities": [
+    {
+      "entity_id": "entity:174816bf4b9638",
+      "canonical_name": "784,309 learners",
+      "entity_type": "METRIC",
+      "aliases": [
+        "784,309 learners"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:9874ad96343df0",
+          "entity_id": "entity:174816bf4b9638",
+          "surface_form": "784,309 learners",
+          "evidence_id": "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0",
+          "char_start": 14,
+          "char_end": 30
+        }
+      ],
+      "confidence": 0.78
+    },
+    {
+      "entity_id": "entity:1d5bf967aa167a",
+      "canonical_name": "learner performance prediction",
+      "entity_type": "TASK",
+      "aliases": [
+        "learner performance prediction"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:38676f1c152d97",
+          "entity_id": "entity:1d5bf967aa167a",
+          "surface_form": "learner performance prediction",
+          "evidence_id": "evidence:neurips-2015-dkt:e29e8d943c26ff:0",
+          "char_start": 32,
+          "char_end": 62
+        },
+        {
+          "mention_id": "mention:7c443dcddb26dd",
+          "entity_id": "entity:1d5bf967aa167a",
+          "surface_form": "learner performance prediction",
+          "evidence_id": "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0",
+          "char_start": 15,
+          "char_end": 45
+        },
+        {
+          "mention_id": "mention:2503be19819d9e",
+          "entity_id": "entity:1d5bf967aa167a",
+          "surface_form": "learner performance prediction",
+          "evidence_id": "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0",
+          "char_start": 15,
+          "char_end": 45
+        },
+        {
+          "mention_id": "mention:e2d4feecd606d6",
+          "entity_id": "entity:1d5bf967aa167a",
+          "surface_form": "learner performance prediction",
+          "evidence_id": "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0",
+          "char_start": 13,
+          "char_end": 43
+        },
+        {
+          "mention_id": "mention:25a27e7f4b2313",
+          "entity_id": "entity:1d5bf967aa167a",
+          "surface_form": "learner performance prediction",
+          "evidence_id": "evidence:neurips-2022-pykt:e29e8d943c26ff:0",
+          "char_start": 36,
+          "char_end": 66
+        },
+        {
+          "mention_id": "mention:d146a77eb0ea0b",
+          "entity_id": "entity:1d5bf967aa167a",
+          "surface_form": "learner performance prediction",
+          "evidence_id": "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1",
+          "char_start": 14,
+          "char_end": 44
+        }
+      ],
+      "confidence": 0.98
+    },
+    {
+      "entity_id": "entity:4240c1d310ac5c",
+      "canonical_name": "Deep Knowledge Tracing",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Deep Knowledge Tracing"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:dc139e090f6191",
+          "entity_id": "entity:4240c1d310ac5c",
+          "surface_form": "Deep Knowledge Tracing",
+          "evidence_id": "evidence:neurips-2015-dkt:3c6de1b7dd9146:0",
+          "char_start": 0,
+          "char_end": 22
+        },
+        {
+          "mention_id": "mention:f41190ddb14684",
+          "entity_id": "entity:4240c1d310ac5c",
+          "surface_form": "Deep Knowledge Tracing",
+          "evidence_id": "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0",
+          "char_start": 0,
+          "char_end": 22
+        },
+        {
+          "mention_id": "mention:28d77696d0b2c3",
+          "entity_id": "entity:4240c1d310ac5c",
+          "surface_form": "Deep Knowledge Tracing",
+          "evidence_id": "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1",
+          "char_start": 0,
+          "char_end": 22
+        },
+        {
+          "mention_id": "mention:ba5f1f69becdb0",
+          "entity_id": "entity:4240c1d310ac5c",
+          "surface_form": "Deep Knowledge Tracing",
+          "evidence_id": "evidence:neurips-2015-dkt:90f0f88bf84f2b:0",
+          "char_start": 0,
+          "char_end": 22
+        },
+        {
+          "mention_id": "mention:fc6975394c7349",
+          "entity_id": "entity:4240c1d310ac5c",
+          "surface_form": "Deep Knowledge Tracing",
+          "evidence_id": "evidence:neurips-2015-dkt:e29e8d943c26ff:0",
+          "char_start": 0,
+          "char_end": 22
+        }
+      ],
+      "confidence": 0.94
+    },
+    {
+      "entity_id": "entity:6d6f6816404992",
+      "canonical_name": "131 million interactions",
+      "entity_type": "METRIC",
+      "aliases": [
+        "131 million interactions"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:0e0ea70990c812",
+          "entity_id": "entity:6d6f6816404992",
+          "surface_form": "131 million interactions",
+          "evidence_id": "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1",
+          "char_start": 14,
+          "char_end": 38
+        }
+      ],
+      "confidence": 0.78
+    },
+    {
+      "entity_id": "entity:7e75f1cd1f7c1d",
+      "canonical_name": "monotonic attention",
+      "entity_type": "METHOD",
+      "aliases": [
+        "monotonic attention"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:3ca34743970b0d",
+          "entity_id": "entity:7e75f1cd1f7c1d",
+          "surface_form": "monotonic attention",
+          "evidence_id": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0",
+          "char_start": 9,
+          "char_end": 28
+        }
+      ],
+      "confidence": 0.78
+    },
+    {
+      "entity_id": "entity:84cb18f0552d8f",
+      "canonical_name": "Rasch model",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Rasch model"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:cd9ee682985203",
+          "entity_id": "entity:84cb18f0552d8f",
+          "surface_form": "Rasch model",
+          "evidence_id": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1",
+          "char_start": 9,
+          "char_end": 20
+        }
+      ],
+      "confidence": 0.78
+    },
+    {
+      "entity_id": "entity:8cee637692da33",
+      "canonical_name": "ASSISTments",
+      "entity_type": "DATASET",
+      "aliases": [
+        "ASSISTments"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:31230ac4f185e5",
+          "entity_id": "entity:8cee637692da33",
+          "surface_form": "ASSISTments",
+          "evidence_id": "evidence:neurips-2015-dkt:90f0f88bf84f2b:0",
+          "char_start": 36,
+          "char_end": 47
+        },
+        {
+          "mention_id": "mention:c128b1f61a760a",
+          "entity_id": "entity:8cee637692da33",
+          "surface_form": "ASSISTments",
+          "evidence_id": "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0",
+          "char_start": 19,
+          "char_end": 30
+        },
+        {
+          "mention_id": "mention:17a50edd889735",
+          "entity_id": "entity:8cee637692da33",
+          "surface_form": "ASSISTments",
+          "evidence_id": "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0",
+          "char_start": 17,
+          "char_end": 28
+        },
+        {
+          "mention_id": "mention:979926066246f4",
+          "entity_id": "entity:8cee637692da33",
+          "surface_form": "ASSISTments",
+          "evidence_id": "evidence:neurips-2022-pykt:90f0f88bf84f2b:0",
+          "char_start": 18,
+          "char_end": 29
+        }
+      ],
+      "confidence": 0.9
+    },
+    {
+      "entity_id": "entity:8ff26de452ceb5",
+      "canonical_name": "knowledge tracing",
+      "entity_type": "TASK",
+      "aliases": [
+        "knowledge tracing"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:203a69b7e048d3",
+          "entity_id": "entity:8ff26de452ceb5",
+          "surface_form": "knowledge tracing",
+          "evidence_id": "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1",
+          "char_start": 33,
+          "char_end": 50
+        },
+        {
+          "mention_id": "mention:e7379be71a3505",
+          "entity_id": "entity:8ff26de452ceb5",
+          "surface_form": "knowledge tracing",
+          "evidence_id": "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1",
+          "char_start": 16,
+          "char_end": 33
+        },
+        {
+          "mention_id": "mention:a8d4f72ab4c3e9",
+          "entity_id": "entity:8ff26de452ceb5",
+          "surface_form": "knowledge tracing",
+          "evidence_id": "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1",
+          "char_start": 16,
+          "char_end": 33
+        },
+        {
+          "mention_id": "mention:f39b0bcc9ec329",
+          "entity_id": "entity:8ff26de452ceb5",
+          "surface_form": "knowledge tracing",
+          "evidence_id": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2",
+          "char_start": 14,
+          "char_end": 31
+        },
+        {
+          "mention_id": "mention:680f9d5b46cfe1",
+          "entity_id": "entity:8ff26de452ceb5",
+          "surface_form": "knowledge tracing",
+          "evidence_id": "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1",
+          "char_start": 15,
+          "char_end": 32
+        },
+        {
+          "mention_id": "mention:e771e12451d58f",
+          "entity_id": "entity:8ff26de452ceb5",
+          "surface_form": "knowledge tracing",
+          "evidence_id": "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0",
+          "char_start": 17,
+          "char_end": 34
+        }
+      ],
+      "confidence": 0.98
+    },
+    {
+      "entity_id": "entity:985ed1e631702c",
+      "canonical_name": "self-attention",
+      "entity_type": "METHOD",
+      "aliases": [
+        "self-attention"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:7cf60b3add7c72",
+          "entity_id": "entity:985ed1e631702c",
+          "surface_form": "self-attention",
+          "evidence_id": "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0",
+          "char_start": 11,
+          "char_end": 25
+        }
+      ],
+      "confidence": 0.78
+    },
+    {
+      "entity_id": "entity:a51359c6a5fc9f",
+      "canonical_name": "DKVMN",
+      "entity_type": "METHOD",
+      "aliases": [
+        "DKVMN"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:6d7d9033c237c3",
+          "entity_id": "entity:a51359c6a5fc9f",
+          "surface_form": "DKVMN",
+          "evidence_id": "evidence:10.1145-3038912.3052580:3c6de1b7dd9146:0",
+          "char_start": 0,
+          "char_end": 5
+        },
+        {
+          "mention_id": "mention:28e91886fec83e",
+          "entity_id": "entity:a51359c6a5fc9f",
+          "surface_form": "DKVMN",
+          "evidence_id": "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0",
+          "char_start": 0,
+          "char_end": 5
+        },
+        {
+          "mention_id": "mention:9f9408e21d9af7",
+          "entity_id": "entity:a51359c6a5fc9f",
+          "surface_form": "DKVMN",
+          "evidence_id": "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1",
+          "char_start": 0,
+          "char_end": 5
+        },
+        {
+          "mention_id": "mention:a53c92ab2d141c",
+          "entity_id": "entity:a51359c6a5fc9f",
+          "surface_form": "DKVMN",
+          "evidence_id": "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0",
+          "char_start": 0,
+          "char_end": 5
+        },
+        {
+          "mention_id": "mention:2ddc65dbaa02c5",
+          "entity_id": "entity:a51359c6a5fc9f",
+          "surface_form": "DKVMN",
+          "evidence_id": "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0",
+          "char_start": 0,
+          "char_end": 5
+        }
+      ],
+      "confidence": 0.94
+    },
+    {
+      "entity_id": "entity:a51a0ed9945eec",
+      "canonical_name": "recurrent neural network",
+      "entity_type": "METHOD",
+      "aliases": [
+        "recurrent neural network"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:ec09efb8aa7e51",
+          "entity_id": "entity:a51a0ed9945eec",
+          "surface_form": "recurrent neural network",
+          "evidence_id": "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0",
+          "char_start": 28,
+          "char_end": 52
+        }
+      ],
+      "confidence": 0.78
+    },
+    {
+      "entity_id": "entity:a6657da24524d2",
+      "canonical_name": "SAINT",
+      "entity_type": "METHOD",
+      "aliases": [
+        "SAINT"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:5a330237d455f1",
+          "entity_id": "entity:a6657da24524d2",
+          "surface_form": "SAINT",
+          "evidence_id": "evidence:10.1145-3386527.3405945:3c6de1b7dd9146:0",
+          "char_start": 0,
+          "char_end": 5
+        },
+        {
+          "mention_id": "mention:679d0fd64c4386",
+          "entity_id": "entity:a6657da24524d2",
+          "surface_form": "SAINT",
+          "evidence_id": "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0",
+          "char_start": 0,
+          "char_end": 5
+        },
+        {
+          "mention_id": "mention:9b09ad8e4c6a15",
+          "entity_id": "entity:a6657da24524d2",
+          "surface_form": "SAINT",
+          "evidence_id": "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1",
+          "char_start": 0,
+          "char_end": 5
+        },
+        {
+          "mention_id": "mention:b167e399c33aba",
+          "entity_id": "entity:a6657da24524d2",
+          "surface_form": "SAINT",
+          "evidence_id": "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0",
+          "char_start": 0,
+          "char_end": 5
+        },
+        {
+          "mention_id": "mention:b24d4b293d6bfa",
+          "entity_id": "entity:a6657da24524d2",
+          "surface_form": "SAINT",
+          "evidence_id": "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0",
+          "char_start": 0,
+          "char_end": 5
+        }
+      ],
+      "confidence": 0.94
+    },
+    {
+      "entity_id": "entity:a78b448be21fd7",
+      "canonical_name": "AKT",
+      "entity_type": "METHOD",
+      "aliases": [
+        "AKT"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:ff5102cfaa786a",
+          "entity_id": "entity:a78b448be21fd7",
+          "surface_form": "AKT",
+          "evidence_id": "evidence:10.1145-3394486.3403282:3c6de1b7dd9146:0",
+          "char_start": 0,
+          "char_end": 3
+        },
+        {
+          "mention_id": "mention:61329a8fce83de",
+          "entity_id": "entity:a78b448be21fd7",
+          "surface_form": "AKT",
+          "evidence_id": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0",
+          "char_start": 0,
+          "char_end": 3
+        },
+        {
+          "mention_id": "mention:4b9d80f4a4fdee",
+          "entity_id": "entity:a78b448be21fd7",
+          "surface_form": "AKT",
+          "evidence_id": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1",
+          "char_start": 0,
+          "char_end": 3
+        },
+        {
+          "mention_id": "mention:8c249ebf8e619e",
+          "entity_id": "entity:a78b448be21fd7",
+          "surface_form": "AKT",
+          "evidence_id": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2",
+          "char_start": 0,
+          "char_end": 3
+        },
+        {
+          "mention_id": "mention:5d58d811a6c8df",
+          "entity_id": "entity:a78b448be21fd7",
+          "surface_form": "AKT",
+          "evidence_id": "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0",
+          "char_start": 0,
+          "char_end": 3
+        },
+        {
+          "mention_id": "mention:51e3b7cfb9fbc3",
+          "entity_id": "entity:a78b448be21fd7",
+          "surface_form": "AKT",
+          "evidence_id": "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0",
+          "char_start": 0,
+          "char_end": 3
+        }
+      ],
+      "confidence": 0.98
+    },
+    {
+      "entity_id": "entity:b05b9402f99fe8",
+      "canonical_name": "standardized preprocessing",
+      "entity_type": "METHOD",
+      "aliases": [
+        "standardized preprocessing"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:b3a37f4307cf62",
+          "entity_id": "entity:b05b9402f99fe8",
+          "surface_form": "standardized preprocessing",
+          "evidence_id": "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0",
+          "char_start": 10,
+          "char_end": 36
+        },
+        {
+          "mention_id": "mention:40195ff6aa39b3",
+          "entity_id": "entity:b05b9402f99fe8",
+          "surface_form": "standardized preprocessing",
+          "evidence_id": "evidence:neurips-2022-pykt:e29e8d943c26ff:0",
+          "char_start": 0,
+          "char_end": 26
+        },
+        {
+          "mention_id": "mention:557c6752a80f59",
+          "entity_id": "entity:b05b9402f99fe8",
+          "surface_form": "standardized preprocessing",
+          "evidence_id": "evidence:neurips-2022-pykt:ae0b636f3a61fd:0",
+          "char_start": 0,
+          "char_end": 26
+        }
+      ],
+      "confidence": 0.86
+    },
+    {
+      "entity_id": "entity:d85aa34f9450ef",
+      "canonical_name": "label leakage",
+      "entity_type": "LIMITATION",
+      "aliases": [
+        "label leakage"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:908ca8702bdf0c",
+          "entity_id": "entity:d85aa34f9450ef",
+          "surface_form": "label leakage",
+          "evidence_id": "evidence:neurips-2022-pykt:ae0b636f3a61fd:0",
+          "char_start": 41,
+          "char_end": 54
+        }
+      ],
+      "confidence": 0.78
+    },
+    {
+      "entity_id": "entity:f40e669cb7552f",
+      "canonical_name": "key-value memory network",
+      "entity_type": "METHOD",
+      "aliases": [
+        "key-value memory network"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:fad43504bfe334",
+          "entity_id": "entity:f40e669cb7552f",
+          "surface_form": "key-value memory network",
+          "evidence_id": "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0",
+          "char_start": 11,
+          "char_end": 35
+        }
+      ],
+      "confidence": 0.78
+    },
+    {
+      "entity_id": "entity:fbd8be0a4d86f8",
+      "canonical_name": "EdNet",
+      "entity_type": "DATASET",
+      "aliases": [
+        "EdNet"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:5caf9d89c1c091",
+          "entity_id": "entity:fbd8be0a4d86f8",
+          "surface_form": "EdNet",
+          "evidence_id": "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0",
+          "char_start": 19,
+          "char_end": 24
+        },
+        {
+          "mention_id": "mention:7003a64c06ec14",
+          "entity_id": "entity:fbd8be0a4d86f8",
+          "surface_form": "EdNet",
+          "evidence_id": "evidence:neurips-2022-pykt:90f0f88bf84f2b:1",
+          "char_start": 18,
+          "char_end": 23
+        },
+        {
+          "mention_id": "mention:b2d58e7ce343e9",
+          "entity_id": "entity:fbd8be0a4d86f8",
+          "surface_form": "EdNet",
+          "evidence_id": "evidence:10.1007-978-3-030-52240-7_13:3c6de1b7dd9146:0",
+          "char_start": 0,
+          "char_end": 5
+        },
+        {
+          "mention_id": "mention:5ab46e55a6abbf",
+          "entity_id": "entity:fbd8be0a4d86f8",
+          "surface_form": "EdNet",
+          "evidence_id": "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0",
+          "char_start": 0,
+          "char_end": 5
+        },
+        {
+          "mention_id": "mention:97ca08b018012e",
+          "entity_id": "entity:fbd8be0a4d86f8",
+          "surface_form": "EdNet",
+          "evidence_id": "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1",
+          "char_start": 0,
+          "char_end": 5
+        },
+        {
+          "mention_id": "mention:6d23a108ebc4bb",
+          "entity_id": "entity:fbd8be0a4d86f8",
+          "surface_form": "EdNet",
+          "evidence_id": "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0",
+          "char_start": 0,
+          "char_end": 5
+        },
+        {
+          "mention_id": "mention:19a8aec0f61eff",
+          "entity_id": "entity:fbd8be0a4d86f8",
+          "surface_form": "EdNet",
+          "evidence_id": "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1",
+          "char_start": 0,
+          "char_end": 5
+        }
+      ],
+      "confidence": 0.99
+    },
+    {
+      "entity_id": "entity:fe8f29cb2ca75d",
+      "canonical_name": "pyKT",
+      "entity_type": "METHOD",
+      "aliases": [
+        "pyKT"
+      ],
+      "mentions": [
+        {
+          "mention_id": "mention:ac344729a8e48e",
+          "entity_id": "entity:fe8f29cb2ca75d",
+          "surface_form": "pyKT",
+          "evidence_id": "evidence:neurips-2022-pykt:3c6de1b7dd9146:0",
+          "char_start": 0,
+          "char_end": 4
+        },
+        {
+          "mention_id": "mention:371ed9e8f9018e",
+          "entity_id": "entity:fe8f29cb2ca75d",
+          "surface_form": "pyKT",
+          "evidence_id": "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0",
+          "char_start": 0,
+          "char_end": 4
+        },
+        {
+          "mention_id": "mention:a64ff2b8b7e3b6",
+          "entity_id": "entity:fe8f29cb2ca75d",
+          "surface_form": "pyKT",
+          "evidence_id": "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1",
+          "char_start": 0,
+          "char_end": 4
+        },
+        {
+          "mention_id": "mention:a488c9d9d05e47",
+          "entity_id": "entity:fe8f29cb2ca75d",
+          "surface_form": "pyKT",
+          "evidence_id": "evidence:neurips-2022-pykt:90f0f88bf84f2b:0",
+          "char_start": 0,
+          "char_end": 4
+        },
+        {
+          "mention_id": "mention:ba927335b00e91",
+          "entity_id": "entity:fe8f29cb2ca75d",
+          "surface_form": "pyKT",
+          "evidence_id": "evidence:neurips-2022-pykt:90f0f88bf84f2b:1",
+          "char_start": 0,
+          "char_end": 4
+        }
+      ],
+      "confidence": 0.94
+    }
+  ],
+  "relations": [
+    {
+      "relation_id": "relation:0a5363ef437d11",
+      "source_id": "entity:b05b9402f99fe8",
+      "target_id": "entity:d85aa34f9450ef",
+      "relation_type": "RELATED_TO",
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:ae0b636f3a61fd:0"
+      ],
+      "confidence": 0.62,
+      "status": "needs_review",
+      "criticisms": [
+        "generic_relation_requires_review"
+      ],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:0fde873d98b156",
+      "source_id": "entity:4240c1d310ac5c",
+      "target_id": "entity:a51a0ed9945eec",
+      "relation_type": "USES",
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:28835549fa108d",
+      "source_id": "entity:4240c1d310ac5c",
+      "target_id": "entity:1d5bf967aa167a",
+      "relation_type": "IMPROVES",
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:e29e8d943c26ff:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:3b079e541a1deb",
+      "source_id": "entity:a78b448be21fd7",
+      "target_id": "entity:84cb18f0552d8f",
+      "relation_type": "USES",
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:54c9f453ead0dc",
+      "source_id": "entity:a6657da24524d2",
+      "target_id": "entity:1d5bf967aa167a",
+      "relation_type": "IMPROVES",
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:5662a80e3b1995",
+      "source_id": "entity:a6657da24524d2",
+      "target_id": "entity:fbd8be0a4d86f8",
+      "relation_type": "EVALUATES_ON",
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:5a33f5cb287b6e",
+      "source_id": "entity:a51359c6a5fc9f",
+      "target_id": "entity:f40e669cb7552f",
+      "relation_type": "USES",
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:5c7933dc216b1c",
+      "source_id": "entity:a51359c6a5fc9f",
+      "target_id": "entity:8cee637692da33",
+      "relation_type": "EVALUATES_ON",
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:610927609b9d86",
+      "source_id": "entity:a51359c6a5fc9f",
+      "target_id": "entity:8ff26de452ceb5",
+      "relation_type": "ADDRESSES",
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:6a06d7ec74a4ca",
+      "source_id": "entity:a78b448be21fd7",
+      "target_id": "entity:7e75f1cd1f7c1d",
+      "relation_type": "USES",
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:6d6d15673bbed0",
+      "source_id": "entity:fbd8be0a4d86f8",
+      "target_id": "entity:8ff26de452ceb5",
+      "relation_type": "BENCHMARKS",
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:6e52aa62737af8",
+      "source_id": "entity:a6657da24524d2",
+      "target_id": "entity:985ed1e631702c",
+      "relation_type": "USES",
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:7fd653dc660874",
+      "source_id": "entity:fe8f29cb2ca75d",
+      "target_id": "entity:8ff26de452ceb5",
+      "relation_type": "ADDRESSES",
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:8566a6a3f5ed86",
+      "source_id": "entity:fbd8be0a4d86f8",
+      "target_id": "entity:174816bf4b9638",
+      "relation_type": "REPORTS",
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:88a991644a5fcb",
+      "source_id": "entity:fe8f29cb2ca75d",
+      "target_id": "entity:b05b9402f99fe8",
+      "relation_type": "USES",
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:8cf08e1144aefa",
+      "source_id": "entity:a78b448be21fd7",
+      "target_id": "entity:8ff26de452ceb5",
+      "relation_type": "ADDRESSES",
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:8d06c4f8c06f31",
+      "source_id": "entity:4240c1d310ac5c",
+      "target_id": "entity:8ff26de452ceb5",
+      "relation_type": "ADDRESSES",
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:90961eeae98894",
+      "source_id": "entity:fe8f29cb2ca75d",
+      "target_id": "entity:fbd8be0a4d86f8",
+      "relation_type": "EVALUATES_ON",
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:90f0f88bf84f2b:1"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:97bf7456cb1759",
+      "source_id": "entity:fe8f29cb2ca75d",
+      "target_id": "entity:8cee637692da33",
+      "relation_type": "EVALUATES_ON",
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:90f0f88bf84f2b:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:9a002e86260e9a",
+      "source_id": "entity:a51359c6a5fc9f",
+      "target_id": "entity:1d5bf967aa167a",
+      "relation_type": "IMPROVES",
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:9a2745658c77d2",
+      "source_id": "entity:b05b9402f99fe8",
+      "target_id": "entity:1d5bf967aa167a",
+      "relation_type": "IMPROVES",
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:e29e8d943c26ff:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:b679800e6a8b1d",
+      "source_id": "entity:a78b448be21fd7",
+      "target_id": "entity:1d5bf967aa167a",
+      "relation_type": "IMPROVES",
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:b9748913df5116",
+      "source_id": "entity:a6657da24524d2",
+      "target_id": "entity:8ff26de452ceb5",
+      "relation_type": "ADDRESSES",
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:d40064a875e325",
+      "source_id": "entity:fbd8be0a4d86f8",
+      "target_id": "entity:6d6f6816404992",
+      "relation_type": "REPORTS",
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:deaa6c241dae27",
+      "source_id": "entity:fbd8be0a4d86f8",
+      "target_id": "entity:1d5bf967aa167a",
+      "relation_type": "ENABLES",
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:eed7859e453577",
+      "source_id": "entity:a78b448be21fd7",
+      "target_id": "entity:8cee637692da33",
+      "relation_type": "EVALUATES_ON",
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    },
+    {
+      "relation_id": "relation:f6c359b9e3841a",
+      "source_id": "entity:4240c1d310ac5c",
+      "target_id": "entity:8cee637692da33",
+      "relation_type": "EVALUATES_ON",
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:90f0f88bf84f2b:0"
+      ],
+      "confidence": 0.78,
+      "status": "accepted",
+      "criticisms": [],
+      "extraction_method": "schema-guided-pattern"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "evidence:10.1007-978-3-030-52240-7_13:3c6de1b7dd9146:0",
+      "paper_id": "10.1007-978-3-030-52240-7_13",
+      "section_id": "title",
+      "sentence_index": 0,
+      "text": "EdNet",
+      "char_start": 0,
+      "char_end": 5
+    },
+    {
+      "evidence_id": "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0",
+      "paper_id": "10.1007-978-3-030-52240-7_13",
+      "section_id": "scale",
+      "sentence_index": 0,
+      "text": "EdNet reports 784,309 learners.",
+      "char_start": 0,
+      "char_end": 31
+    },
+    {
+      "evidence_id": "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1",
+      "paper_id": "10.1007-978-3-030-52240-7_13",
+      "section_id": "scale",
+      "sentence_index": 1,
+      "text": "EdNet reports 131 million interactions.",
+      "char_start": 32,
+      "char_end": 71
+    },
+    {
+      "evidence_id": "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0",
+      "paper_id": "10.1007-978-3-030-52240-7_13",
+      "section_id": "dataset",
+      "sentence_index": 0,
+      "text": "EdNet benchmarks knowledge tracing.",
+      "char_start": 0,
+      "char_end": 35
+    },
+    {
+      "evidence_id": "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1",
+      "paper_id": "10.1007-978-3-030-52240-7_13",
+      "section_id": "dataset",
+      "sentence_index": 1,
+      "text": "EdNet enables learner performance prediction.",
+      "char_start": 36,
+      "char_end": 81
+    },
+    {
+      "evidence_id": "evidence:10.1145-3038912.3052580:3c6de1b7dd9146:0",
+      "paper_id": "10.1145-3038912.3052580",
+      "section_id": "title",
+      "sentence_index": 0,
+      "text": "DKVMN",
+      "char_start": 0,
+      "char_end": 5
+    },
+    {
+      "evidence_id": "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0",
+      "paper_id": "10.1145-3038912.3052580",
+      "section_id": "evaluation",
+      "sentence_index": 0,
+      "text": "DKVMN evaluates on ASSISTments.",
+      "char_start": 0,
+      "char_end": 31
+    },
+    {
+      "evidence_id": "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0",
+      "paper_id": "10.1145-3038912.3052580",
+      "section_id": "method",
+      "sentence_index": 0,
+      "text": "DKVMN uses key-value memory network.",
+      "char_start": 0,
+      "char_end": 36
+    },
+    {
+      "evidence_id": "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1",
+      "paper_id": "10.1145-3038912.3052580",
+      "section_id": "method",
+      "sentence_index": 1,
+      "text": "DKVMN addresses knowledge tracing.",
+      "char_start": 37,
+      "char_end": 71
+    },
+    {
+      "evidence_id": "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0",
+      "paper_id": "10.1145-3038912.3052580",
+      "section_id": "finding",
+      "sentence_index": 0,
+      "text": "DKVMN improves learner performance prediction.",
+      "char_start": 0,
+      "char_end": 46
+    },
+    {
+      "evidence_id": "evidence:10.1145-3386527.3405945:3c6de1b7dd9146:0",
+      "paper_id": "10.1145-3386527.3405945",
+      "section_id": "title",
+      "sentence_index": 0,
+      "text": "SAINT",
+      "char_start": 0,
+      "char_end": 5
+    },
+    {
+      "evidence_id": "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0",
+      "paper_id": "10.1145-3386527.3405945",
+      "section_id": "evaluation",
+      "sentence_index": 0,
+      "text": "SAINT evaluates on EdNet.",
+      "char_start": 0,
+      "char_end": 25
+    },
+    {
+      "evidence_id": "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0",
+      "paper_id": "10.1145-3386527.3405945",
+      "section_id": "method",
+      "sentence_index": 0,
+      "text": "SAINT uses self-attention.",
+      "char_start": 0,
+      "char_end": 26
+    },
+    {
+      "evidence_id": "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1",
+      "paper_id": "10.1145-3386527.3405945",
+      "section_id": "method",
+      "sentence_index": 1,
+      "text": "SAINT addresses knowledge tracing.",
+      "char_start": 27,
+      "char_end": 61
+    },
+    {
+      "evidence_id": "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0",
+      "paper_id": "10.1145-3386527.3405945",
+      "section_id": "finding",
+      "sentence_index": 0,
+      "text": "SAINT improves learner performance prediction.",
+      "char_start": 0,
+      "char_end": 46
+    },
+    {
+      "evidence_id": "evidence:10.1145-3394486.3403282:3c6de1b7dd9146:0",
+      "paper_id": "10.1145-3394486.3403282",
+      "section_id": "title",
+      "sentence_index": 0,
+      "text": "AKT",
+      "char_start": 0,
+      "char_end": 3
+    },
+    {
+      "evidence_id": "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0",
+      "paper_id": "10.1145-3394486.3403282",
+      "section_id": "evaluation",
+      "sentence_index": 0,
+      "text": "AKT evaluates on ASSISTments.",
+      "char_start": 0,
+      "char_end": 29
+    },
+    {
+      "evidence_id": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0",
+      "paper_id": "10.1145-3394486.3403282",
+      "section_id": "method",
+      "sentence_index": 0,
+      "text": "AKT uses monotonic attention.",
+      "char_start": 0,
+      "char_end": 29
+    },
+    {
+      "evidence_id": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1",
+      "paper_id": "10.1145-3394486.3403282",
+      "section_id": "method",
+      "sentence_index": 1,
+      "text": "AKT uses Rasch model.",
+      "char_start": 30,
+      "char_end": 51
+    },
+    {
+      "evidence_id": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2",
+      "paper_id": "10.1145-3394486.3403282",
+      "section_id": "method",
+      "sentence_index": 2,
+      "text": "AKT addresses knowledge tracing.",
+      "char_start": 52,
+      "char_end": 84
+    },
+    {
+      "evidence_id": "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0",
+      "paper_id": "10.1145-3394486.3403282",
+      "section_id": "finding",
+      "sentence_index": 0,
+      "text": "AKT improves learner performance prediction.",
+      "char_start": 0,
+      "char_end": 44
+    },
+    {
+      "evidence_id": "evidence:neurips-2015-dkt:3c6de1b7dd9146:0",
+      "paper_id": "neurips-2015-dkt",
+      "section_id": "title",
+      "sentence_index": 0,
+      "text": "Deep Knowledge Tracing",
+      "char_start": 0,
+      "char_end": 22
+    },
+    {
+      "evidence_id": "evidence:neurips-2015-dkt:90f0f88bf84f2b:0",
+      "paper_id": "neurips-2015-dkt",
+      "section_id": "evaluation",
+      "sentence_index": 0,
+      "text": "Deep Knowledge Tracing evaluates on ASSISTments.",
+      "char_start": 0,
+      "char_end": 48
+    },
+    {
+      "evidence_id": "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0",
+      "paper_id": "neurips-2015-dkt",
+      "section_id": "method",
+      "sentence_index": 0,
+      "text": "Deep Knowledge Tracing uses recurrent neural network.",
+      "char_start": 0,
+      "char_end": 53
+    },
+    {
+      "evidence_id": "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1",
+      "paper_id": "neurips-2015-dkt",
+      "section_id": "method",
+      "sentence_index": 1,
+      "text": "Deep Knowledge Tracing addresses knowledge tracing.",
+      "char_start": 54,
+      "char_end": 105
+    },
+    {
+      "evidence_id": "evidence:neurips-2015-dkt:e29e8d943c26ff:0",
+      "paper_id": "neurips-2015-dkt",
+      "section_id": "finding",
+      "sentence_index": 0,
+      "text": "Deep Knowledge Tracing improves learner performance prediction.",
+      "char_start": 0,
+      "char_end": 63
+    },
+    {
+      "evidence_id": "evidence:neurips-2022-pykt:3c6de1b7dd9146:0",
+      "paper_id": "neurips-2022-pykt",
+      "section_id": "title",
+      "sentence_index": 0,
+      "text": "pyKT",
+      "char_start": 0,
+      "char_end": 4
+    },
+    {
+      "evidence_id": "evidence:neurips-2022-pykt:90f0f88bf84f2b:0",
+      "paper_id": "neurips-2022-pykt",
+      "section_id": "evaluation",
+      "sentence_index": 0,
+      "text": "pyKT evaluates on ASSISTments.",
+      "char_start": 0,
+      "char_end": 30
+    },
+    {
+      "evidence_id": "evidence:neurips-2022-pykt:90f0f88bf84f2b:1",
+      "paper_id": "neurips-2022-pykt",
+      "section_id": "evaluation",
+      "sentence_index": 1,
+      "text": "pyKT evaluates on EdNet.",
+      "char_start": 31,
+      "char_end": 55
+    },
+    {
+      "evidence_id": "evidence:neurips-2022-pykt:ae0b636f3a61fd:0",
+      "paper_id": "neurips-2022-pykt",
+      "section_id": "limitation",
+      "sentence_index": 0,
+      "text": "standardized preprocessing is related to label leakage and requires explicit audit.",
+      "char_start": 0,
+      "char_end": 83
+    },
+    {
+      "evidence_id": "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0",
+      "paper_id": "neurips-2022-pykt",
+      "section_id": "method",
+      "sentence_index": 0,
+      "text": "pyKT uses standardized preprocessing.",
+      "char_start": 0,
+      "char_end": 37
+    },
+    {
+      "evidence_id": "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1",
+      "paper_id": "neurips-2022-pykt",
+      "section_id": "method",
+      "sentence_index": 1,
+      "text": "pyKT addresses knowledge tracing.",
+      "char_start": 38,
+      "char_end": 71
+    },
+    {
+      "evidence_id": "evidence:neurips-2022-pykt:e29e8d943c26ff:0",
+      "paper_id": "neurips-2022-pykt",
+      "section_id": "finding",
+      "sentence_index": 0,
+      "text": "standardized preprocessing improves learner performance prediction.",
+      "char_start": 0,
+      "char_end": 67
+    }
+  ],
+  "communities": [
+    {
+      "community_id": "community:114d9a057a63fa",
+      "member_ids": [
+        "entity:174816bf4b9638",
+        "entity:1d5bf967aa167a",
+        "entity:4240c1d310ac5c",
+        "entity:6d6f6816404992",
+        "entity:7e75f1cd1f7c1d",
+        "entity:84cb18f0552d8f",
+        "entity:8cee637692da33",
+        "entity:8ff26de452ceb5",
+        "entity:985ed1e631702c",
+        "entity:a51359c6a5fc9f",
+        "entity:a51a0ed9945eec",
+        "entity:a6657da24524d2",
+        "entity:a78b448be21fd7",
+        "entity:b05b9402f99fe8",
+        "entity:f40e669cb7552f",
+        "entity:fbd8be0a4d86f8",
+        "entity:fe8f29cb2ca75d"
+      ],
+      "summary": "131 million interactions、784,309 learners、AKT、ASSISTments、DKVMN、Deep Knowledge Tracing、EdNet、Rasch model、SAINT、key-value memory network、knowledge tracing、learner performance prediction、monotonic attention、pyKT、recurrent neural network、self-attention、standardized preprocessing",
+      "size": 17
+    },
+    {
+      "community_id": "community:8a897518ffdd50",
+      "member_ids": [
+        "entity:d85aa34f9450ef"
+      ],
+      "summary": "label leakage",
+      "size": 1
+    }
+  ],
+  "audit": {
+    "proposer": {
+      "method": "schema-guided-pattern",
+      "candidate_relations": 27
+    },
+    "critic": {
+      "schema_checked": true,
+      "evidence_checked": true,
+      "flagged_relations": 1
+    },
+    "judge": {
+      "accept_threshold": 0.72,
+      "accepted_relations": 26,
+      "review_relations": 1,
+      "rejected_relations": 0
+    },
+    "quality": {
+      "paper_count": 6,
+      "parsed_sentence_count": 39,
+      "grounded_evidence_span_count": 33,
+      "entity_count": 18,
+      "relation_count": 27,
+      "relation_evidence_coverage": 1.0
+    }
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "entity:174816bf4b9638",
+        "label": "784,309 learners",
+        "kind": "metric",
+        "confidence": 0.78
+      },
+      {
+        "id": "entity:1d5bf967aa167a",
+        "label": "learner performance prediction",
+        "kind": "task",
+        "confidence": 0.98
+      },
+      {
+        "id": "entity:4240c1d310ac5c",
+        "label": "Deep Knowledge Tracing",
+        "kind": "method",
+        "confidence": 0.94
+      },
+      {
+        "id": "entity:6d6f6816404992",
+        "label": "131 million interactions",
+        "kind": "metric",
+        "confidence": 0.78
+      },
+      {
+        "id": "entity:7e75f1cd1f7c1d",
+        "label": "monotonic attention",
+        "kind": "method",
+        "confidence": 0.78
+      },
+      {
+        "id": "entity:84cb18f0552d8f",
+        "label": "Rasch model",
+        "kind": "method",
+        "confidence": 0.78
+      },
+      {
+        "id": "entity:8cee637692da33",
+        "label": "ASSISTments",
+        "kind": "dataset",
+        "confidence": 0.9
+      },
+      {
+        "id": "entity:8ff26de452ceb5",
+        "label": "knowledge tracing",
+        "kind": "task",
+        "confidence": 0.98
+      },
+      {
+        "id": "entity:985ed1e631702c",
+        "label": "self-attention",
+        "kind": "method",
+        "confidence": 0.78
+      },
+      {
+        "id": "entity:a51359c6a5fc9f",
+        "label": "DKVMN",
+        "kind": "method",
+        "confidence": 0.94
+      },
+      {
+        "id": "entity:a51a0ed9945eec",
+        "label": "recurrent neural network",
+        "kind": "method",
+        "confidence": 0.78
+      },
+      {
+        "id": "entity:a6657da24524d2",
+        "label": "SAINT",
+        "kind": "method",
+        "confidence": 0.94
+      },
+      {
+        "id": "entity:a78b448be21fd7",
+        "label": "AKT",
+        "kind": "method",
+        "confidence": 0.98
+      },
+      {
+        "id": "entity:b05b9402f99fe8",
+        "label": "standardized preprocessing",
+        "kind": "method",
+        "confidence": 0.86
+      },
+      {
+        "id": "entity:d85aa34f9450ef",
+        "label": "label leakage",
+        "kind": "limitation",
+        "confidence": 0.78
+      },
+      {
+        "id": "entity:f40e669cb7552f",
+        "label": "key-value memory network",
+        "kind": "method",
+        "confidence": 0.78
+      },
+      {
+        "id": "entity:fbd8be0a4d86f8",
+        "label": "EdNet",
+        "kind": "dataset",
+        "confidence": 0.99
+      },
+      {
+        "id": "entity:fe8f29cb2ca75d",
+        "label": "pyKT",
+        "kind": "method",
+        "confidence": 0.94
+      },
+      {
+        "id": "paper:neurips-2015-dkt",
+        "label": "Deep Knowledge Tracing",
+        "kind": "paper",
+        "source_url": "https://proceedings.neurips.cc/paper/2015/hash/bac9162b47c56fc8a4d2a519803d51b3-Abstract.html"
+      },
+      {
+        "id": "paper:10.1145-3038912.3052580",
+        "label": "DKVMN",
+        "kind": "paper",
+        "source_url": "https://doi.org/10.1145/3038912.3052580"
+      },
+      {
+        "id": "paper:10.1145-3386527.3405945",
+        "label": "SAINT",
+        "kind": "paper",
+        "source_url": "https://doi.org/10.1145/3386527.3405945"
+      },
+      {
+        "id": "paper:10.1145-3394486.3403282",
+        "label": "AKT",
+        "kind": "paper",
+        "source_url": "https://doi.org/10.1145/3394486.3403282"
+      },
+      {
+        "id": "paper:neurips-2022-pykt",
+        "label": "pyKT",
+        "kind": "paper",
+        "source_url": "https://proceedings.neurips.cc/paper_files/paper/2022/hash/75ca2b23d9794f02a92449af65a57556-Abstract-Datasets_and_Benchmarks.html"
+      },
+      {
+        "id": "paper:10.1007-978-3-030-52240-7_13",
+        "label": "EdNet",
+        "kind": "paper",
+        "source_url": "https://doi.org/10.1007/978-3-030-52240-7_13"
+      },
+      {
+        "id": "evidence:10.1007-978-3-030-52240-7_13:3c6de1b7dd9146:0",
+        "label": "EdNet",
+        "kind": "evidence",
+        "paper_id": "10.1007-978-3-030-52240-7_13",
+        "section_id": "title",
+        "char_start": 0,
+        "char_end": 5
+      },
+      {
+        "id": "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0",
+        "label": "EdNet reports 784,309 learners.",
+        "kind": "evidence",
+        "paper_id": "10.1007-978-3-030-52240-7_13",
+        "section_id": "scale",
+        "char_start": 0,
+        "char_end": 31
+      },
+      {
+        "id": "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1",
+        "label": "EdNet reports 131 million interactions.",
+        "kind": "evidence",
+        "paper_id": "10.1007-978-3-030-52240-7_13",
+        "section_id": "scale",
+        "char_start": 32,
+        "char_end": 71
+      },
+      {
+        "id": "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0",
+        "label": "EdNet benchmarks knowledge tracing.",
+        "kind": "evidence",
+        "paper_id": "10.1007-978-3-030-52240-7_13",
+        "section_id": "dataset",
+        "char_start": 0,
+        "char_end": 35
+      },
+      {
+        "id": "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1",
+        "label": "EdNet enables learner performance prediction.",
+        "kind": "evidence",
+        "paper_id": "10.1007-978-3-030-52240-7_13",
+        "section_id": "dataset",
+        "char_start": 36,
+        "char_end": 81
+      },
+      {
+        "id": "evidence:10.1145-3038912.3052580:3c6de1b7dd9146:0",
+        "label": "DKVMN",
+        "kind": "evidence",
+        "paper_id": "10.1145-3038912.3052580",
+        "section_id": "title",
+        "char_start": 0,
+        "char_end": 5
+      },
+      {
+        "id": "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0",
+        "label": "DKVMN evaluates on ASSISTments.",
+        "kind": "evidence",
+        "paper_id": "10.1145-3038912.3052580",
+        "section_id": "evaluation",
+        "char_start": 0,
+        "char_end": 31
+      },
+      {
+        "id": "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0",
+        "label": "DKVMN uses key-value memory network.",
+        "kind": "evidence",
+        "paper_id": "10.1145-3038912.3052580",
+        "section_id": "method",
+        "char_start": 0,
+        "char_end": 36
+      },
+      {
+        "id": "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1",
+        "label": "DKVMN addresses knowledge tracing.",
+        "kind": "evidence",
+        "paper_id": "10.1145-3038912.3052580",
+        "section_id": "method",
+        "char_start": 37,
+        "char_end": 71
+      },
+      {
+        "id": "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0",
+        "label": "DKVMN improves learner performance prediction.",
+        "kind": "evidence",
+        "paper_id": "10.1145-3038912.3052580",
+        "section_id": "finding",
+        "char_start": 0,
+        "char_end": 46
+      },
+      {
+        "id": "evidence:10.1145-3386527.3405945:3c6de1b7dd9146:0",
+        "label": "SAINT",
+        "kind": "evidence",
+        "paper_id": "10.1145-3386527.3405945",
+        "section_id": "title",
+        "char_start": 0,
+        "char_end": 5
+      },
+      {
+        "id": "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0",
+        "label": "SAINT evaluates on EdNet.",
+        "kind": "evidence",
+        "paper_id": "10.1145-3386527.3405945",
+        "section_id": "evaluation",
+        "char_start": 0,
+        "char_end": 25
+      },
+      {
+        "id": "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0",
+        "label": "SAINT uses self-attention.",
+        "kind": "evidence",
+        "paper_id": "10.1145-3386527.3405945",
+        "section_id": "method",
+        "char_start": 0,
+        "char_end": 26
+      },
+      {
+        "id": "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1",
+        "label": "SAINT addresses knowledge tracing.",
+        "kind": "evidence",
+        "paper_id": "10.1145-3386527.3405945",
+        "section_id": "method",
+        "char_start": 27,
+        "char_end": 61
+      },
+      {
+        "id": "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0",
+        "label": "SAINT improves learner performance prediction.",
+        "kind": "evidence",
+        "paper_id": "10.1145-3386527.3405945",
+        "section_id": "finding",
+        "char_start": 0,
+        "char_end": 46
+      },
+      {
+        "id": "evidence:10.1145-3394486.3403282:3c6de1b7dd9146:0",
+        "label": "AKT",
+        "kind": "evidence",
+        "paper_id": "10.1145-3394486.3403282",
+        "section_id": "title",
+        "char_start": 0,
+        "char_end": 3
+      },
+      {
+        "id": "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0",
+        "label": "AKT evaluates on ASSISTments.",
+        "kind": "evidence",
+        "paper_id": "10.1145-3394486.3403282",
+        "section_id": "evaluation",
+        "char_start": 0,
+        "char_end": 29
+      },
+      {
+        "id": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0",
+        "label": "AKT uses monotonic attention.",
+        "kind": "evidence",
+        "paper_id": "10.1145-3394486.3403282",
+        "section_id": "method",
+        "char_start": 0,
+        "char_end": 29
+      },
+      {
+        "id": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1",
+        "label": "AKT uses Rasch model.",
+        "kind": "evidence",
+        "paper_id": "10.1145-3394486.3403282",
+        "section_id": "method",
+        "char_start": 30,
+        "char_end": 51
+      },
+      {
+        "id": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2",
+        "label": "AKT addresses knowledge tracing.",
+        "kind": "evidence",
+        "paper_id": "10.1145-3394486.3403282",
+        "section_id": "method",
+        "char_start": 52,
+        "char_end": 84
+      },
+      {
+        "id": "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0",
+        "label": "AKT improves learner performance prediction.",
+        "kind": "evidence",
+        "paper_id": "10.1145-3394486.3403282",
+        "section_id": "finding",
+        "char_start": 0,
+        "char_end": 44
+      },
+      {
+        "id": "evidence:neurips-2015-dkt:3c6de1b7dd9146:0",
+        "label": "Deep Knowledge Tracing",
+        "kind": "evidence",
+        "paper_id": "neurips-2015-dkt",
+        "section_id": "title",
+        "char_start": 0,
+        "char_end": 22
+      },
+      {
+        "id": "evidence:neurips-2015-dkt:90f0f88bf84f2b:0",
+        "label": "Deep Knowledge Tracing evaluates on ASSISTments.",
+        "kind": "evidence",
+        "paper_id": "neurips-2015-dkt",
+        "section_id": "evaluation",
+        "char_start": 0,
+        "char_end": 48
+      },
+      {
+        "id": "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0",
+        "label": "Deep Knowledge Tracing uses recurrent neural network.",
+        "kind": "evidence",
+        "paper_id": "neurips-2015-dkt",
+        "section_id": "method",
+        "char_start": 0,
+        "char_end": 53
+      },
+      {
+        "id": "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1",
+        "label": "Deep Knowledge Tracing addresses knowledge tracing.",
+        "kind": "evidence",
+        "paper_id": "neurips-2015-dkt",
+        "section_id": "method",
+        "char_start": 54,
+        "char_end": 105
+      },
+      {
+        "id": "evidence:neurips-2015-dkt:e29e8d943c26ff:0",
+        "label": "Deep Knowledge Tracing improves learner performance prediction.",
+        "kind": "evidence",
+        "paper_id": "neurips-2015-dkt",
+        "section_id": "finding",
+        "char_start": 0,
+        "char_end": 63
+      },
+      {
+        "id": "evidence:neurips-2022-pykt:3c6de1b7dd9146:0",
+        "label": "pyKT",
+        "kind": "evidence",
+        "paper_id": "neurips-2022-pykt",
+        "section_id": "title",
+        "char_start": 0,
+        "char_end": 4
+      },
+      {
+        "id": "evidence:neurips-2022-pykt:90f0f88bf84f2b:0",
+        "label": "pyKT evaluates on ASSISTments.",
+        "kind": "evidence",
+        "paper_id": "neurips-2022-pykt",
+        "section_id": "evaluation",
+        "char_start": 0,
+        "char_end": 30
+      },
+      {
+        "id": "evidence:neurips-2022-pykt:90f0f88bf84f2b:1",
+        "label": "pyKT evaluates on EdNet.",
+        "kind": "evidence",
+        "paper_id": "neurips-2022-pykt",
+        "section_id": "evaluation",
+        "char_start": 31,
+        "char_end": 55
+      },
+      {
+        "id": "evidence:neurips-2022-pykt:ae0b636f3a61fd:0",
+        "label": "standardized preprocessing is related to label leakage and requires explicit audit.",
+        "kind": "evidence",
+        "paper_id": "neurips-2022-pykt",
+        "section_id": "limitation",
+        "char_start": 0,
+        "char_end": 83
+      },
+      {
+        "id": "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0",
+        "label": "pyKT uses standardized preprocessing.",
+        "kind": "evidence",
+        "paper_id": "neurips-2022-pykt",
+        "section_id": "method",
+        "char_start": 0,
+        "char_end": 37
+      },
+      {
+        "id": "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1",
+        "label": "pyKT addresses knowledge tracing.",
+        "kind": "evidence",
+        "paper_id": "neurips-2022-pykt",
+        "section_id": "method",
+        "char_start": 38,
+        "char_end": 71
+      },
+      {
+        "id": "evidence:neurips-2022-pykt:e29e8d943c26ff:0",
+        "label": "standardized preprocessing improves learner performance prediction.",
+        "kind": "evidence",
+        "paper_id": "neurips-2022-pykt",
+        "section_id": "finding",
+        "char_start": 0,
+        "char_end": 67
+      }
+    ],
+    "edges": [
+      {
+        "id": "relation:0a5363ef437d11",
+        "source": "entity:b05b9402f99fe8",
+        "target": "entity:d85aa34f9450ef",
+        "label": "RELATED_TO",
+        "status": "needs_review",
+        "confidence": 0.62,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:ae0b636f3a61fd:0"
+        ]
+      },
+      {
+        "id": "relation:0fde873d98b156",
+        "source": "entity:4240c1d310ac5c",
+        "target": "entity:a51a0ed9945eec",
+        "label": "USES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "relation:28835549fa108d",
+        "source": "entity:4240c1d310ac5c",
+        "target": "entity:1d5bf967aa167a",
+        "label": "IMPROVES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "relation:3b079e541a1deb",
+        "source": "entity:a78b448be21fd7",
+        "target": "entity:84cb18f0552d8f",
+        "label": "USES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "relation:54c9f453ead0dc",
+        "source": "entity:a6657da24524d2",
+        "target": "entity:1d5bf967aa167a",
+        "label": "IMPROVES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "relation:5662a80e3b1995",
+        "source": "entity:a6657da24524d2",
+        "target": "entity:fbd8be0a4d86f8",
+        "label": "EVALUATES_ON",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "relation:5a33f5cb287b6e",
+        "source": "entity:a51359c6a5fc9f",
+        "target": "entity:f40e669cb7552f",
+        "label": "USES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "relation:5c7933dc216b1c",
+        "source": "entity:a51359c6a5fc9f",
+        "target": "entity:8cee637692da33",
+        "label": "EVALUATES_ON",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "relation:610927609b9d86",
+        "source": "entity:a51359c6a5fc9f",
+        "target": "entity:8ff26de452ceb5",
+        "label": "ADDRESSES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "relation:6a06d7ec74a4ca",
+        "source": "entity:a78b448be21fd7",
+        "target": "entity:7e75f1cd1f7c1d",
+        "label": "USES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "relation:6d6d15673bbed0",
+        "source": "entity:fbd8be0a4d86f8",
+        "target": "entity:8ff26de452ceb5",
+        "label": "BENCHMARKS",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0"
+        ]
+      },
+      {
+        "id": "relation:6e52aa62737af8",
+        "source": "entity:a6657da24524d2",
+        "target": "entity:985ed1e631702c",
+        "label": "USES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "relation:7fd653dc660874",
+        "source": "entity:fe8f29cb2ca75d",
+        "target": "entity:8ff26de452ceb5",
+        "label": "ADDRESSES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "relation:8566a6a3f5ed86",
+        "source": "entity:fbd8be0a4d86f8",
+        "target": "entity:174816bf4b9638",
+        "label": "REPORTS",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0"
+        ]
+      },
+      {
+        "id": "relation:88a991644a5fcb",
+        "source": "entity:fe8f29cb2ca75d",
+        "target": "entity:b05b9402f99fe8",
+        "label": "USES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "relation:8cf08e1144aefa",
+        "source": "entity:a78b448be21fd7",
+        "target": "entity:8ff26de452ceb5",
+        "label": "ADDRESSES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2"
+        ]
+      },
+      {
+        "id": "relation:8d06c4f8c06f31",
+        "source": "entity:4240c1d310ac5c",
+        "target": "entity:8ff26de452ceb5",
+        "label": "ADDRESSES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "relation:90961eeae98894",
+        "source": "entity:fe8f29cb2ca75d",
+        "target": "entity:fbd8be0a4d86f8",
+        "label": "EVALUATES_ON",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:90f0f88bf84f2b:1"
+        ]
+      },
+      {
+        "id": "relation:97bf7456cb1759",
+        "source": "entity:fe8f29cb2ca75d",
+        "target": "entity:8cee637692da33",
+        "label": "EVALUATES_ON",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "relation:9a002e86260e9a",
+        "source": "entity:a51359c6a5fc9f",
+        "target": "entity:1d5bf967aa167a",
+        "label": "IMPROVES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "relation:9a2745658c77d2",
+        "source": "entity:b05b9402f99fe8",
+        "target": "entity:1d5bf967aa167a",
+        "label": "IMPROVES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "relation:b679800e6a8b1d",
+        "source": "entity:a78b448be21fd7",
+        "target": "entity:1d5bf967aa167a",
+        "label": "IMPROVES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "relation:b9748913df5116",
+        "source": "entity:a6657da24524d2",
+        "target": "entity:8ff26de452ceb5",
+        "label": "ADDRESSES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "relation:d40064a875e325",
+        "source": "entity:fbd8be0a4d86f8",
+        "target": "entity:6d6f6816404992",
+        "label": "REPORTS",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1"
+        ]
+      },
+      {
+        "id": "relation:deaa6c241dae27",
+        "source": "entity:fbd8be0a4d86f8",
+        "target": "entity:1d5bf967aa167a",
+        "label": "ENABLES",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1"
+        ]
+      },
+      {
+        "id": "relation:eed7859e453577",
+        "source": "entity:a78b448be21fd7",
+        "target": "entity:8cee637692da33",
+        "label": "EVALUATES_ON",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "relation:f6c359b9e3841a",
+        "source": "entity:4240c1d310ac5c",
+        "target": "entity:8cee637692da33",
+        "label": "EVALUATES_ON",
+        "status": "accepted",
+        "confidence": 0.78,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:8d2896c6a000bf",
+        "source": "paper:10.1007-978-3-030-52240-7_13",
+        "target": "evidence:10.1007-978-3-030-52240-7_13:3c6de1b7dd9146:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:3c6de1b7dd9146:0"
+        ]
+      },
+      {
+        "id": "edge:dabe44cc686ec8",
+        "source": "paper:10.1007-978-3-030-52240-7_13",
+        "target": "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0"
+        ]
+      },
+      {
+        "id": "edge:101876f78bb1af",
+        "source": "paper:10.1007-978-3-030-52240-7_13",
+        "target": "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1"
+        ]
+      },
+      {
+        "id": "edge:46070b0e822980",
+        "source": "paper:10.1007-978-3-030-52240-7_13",
+        "target": "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0"
+        ]
+      },
+      {
+        "id": "edge:127190a70b68ae",
+        "source": "paper:10.1007-978-3-030-52240-7_13",
+        "target": "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1"
+        ]
+      },
+      {
+        "id": "edge:d16b61793b7953",
+        "source": "paper:10.1145-3038912.3052580",
+        "target": "evidence:10.1145-3038912.3052580:3c6de1b7dd9146:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:3c6de1b7dd9146:0"
+        ]
+      },
+      {
+        "id": "edge:65127daba87431",
+        "source": "paper:10.1145-3038912.3052580",
+        "target": "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:15c454a724fc4c",
+        "source": "paper:10.1145-3038912.3052580",
+        "target": "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:1d98c7c2eab9a6",
+        "source": "paper:10.1145-3038912.3052580",
+        "target": "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:c8814fe2e3f175",
+        "source": "paper:10.1145-3038912.3052580",
+        "target": "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:238d7d7f3330ce",
+        "source": "paper:10.1145-3386527.3405945",
+        "target": "evidence:10.1145-3386527.3405945:3c6de1b7dd9146:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:3c6de1b7dd9146:0"
+        ]
+      },
+      {
+        "id": "edge:6ce1fa6512539b",
+        "source": "paper:10.1145-3386527.3405945",
+        "target": "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:4bd81da91f565a",
+        "source": "paper:10.1145-3386527.3405945",
+        "target": "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:fc4c4acf34f36f",
+        "source": "paper:10.1145-3386527.3405945",
+        "target": "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:df3349ffe66bca",
+        "source": "paper:10.1145-3386527.3405945",
+        "target": "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:a4182d24b749f1",
+        "source": "paper:10.1145-3394486.3403282",
+        "target": "evidence:10.1145-3394486.3403282:3c6de1b7dd9146:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:3c6de1b7dd9146:0"
+        ]
+      },
+      {
+        "id": "edge:8faf4ec75004a4",
+        "source": "paper:10.1145-3394486.3403282",
+        "target": "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:50fc578ff2d8ee",
+        "source": "paper:10.1145-3394486.3403282",
+        "target": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:1bbf9067edd44d",
+        "source": "paper:10.1145-3394486.3403282",
+        "target": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:d83600f1b0dff7",
+        "source": "paper:10.1145-3394486.3403282",
+        "target": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2"
+        ]
+      },
+      {
+        "id": "edge:7152c658355be2",
+        "source": "paper:10.1145-3394486.3403282",
+        "target": "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:7fe63a8b95f8d6",
+        "source": "paper:neurips-2015-dkt",
+        "target": "evidence:neurips-2015-dkt:3c6de1b7dd9146:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:3c6de1b7dd9146:0"
+        ]
+      },
+      {
+        "id": "edge:c722252820489a",
+        "source": "paper:neurips-2015-dkt",
+        "target": "evidence:neurips-2015-dkt:90f0f88bf84f2b:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:700c990ee7ed5f",
+        "source": "paper:neurips-2015-dkt",
+        "target": "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:e045f169854f9a",
+        "source": "paper:neurips-2015-dkt",
+        "target": "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:6183c4f3a1dc94",
+        "source": "paper:neurips-2015-dkt",
+        "target": "evidence:neurips-2015-dkt:e29e8d943c26ff:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:1566701bb18a21",
+        "source": "paper:neurips-2022-pykt",
+        "target": "evidence:neurips-2022-pykt:3c6de1b7dd9146:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:3c6de1b7dd9146:0"
+        ]
+      },
+      {
+        "id": "edge:4407f0500226f5",
+        "source": "paper:neurips-2022-pykt",
+        "target": "evidence:neurips-2022-pykt:90f0f88bf84f2b:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:0a6ddb1501a0fb",
+        "source": "paper:neurips-2022-pykt",
+        "target": "evidence:neurips-2022-pykt:90f0f88bf84f2b:1",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:90f0f88bf84f2b:1"
+        ]
+      },
+      {
+        "id": "edge:8ff7c56cff0b14",
+        "source": "paper:neurips-2022-pykt",
+        "target": "evidence:neurips-2022-pykt:ae0b636f3a61fd:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:ae0b636f3a61fd:0"
+        ]
+      },
+      {
+        "id": "edge:d9c84aebf4cfd1",
+        "source": "paper:neurips-2022-pykt",
+        "target": "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:3fc1845bfa5cc2",
+        "source": "paper:neurips-2022-pykt",
+        "target": "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:02c66d1bcce4aa",
+        "source": "paper:neurips-2022-pykt",
+        "target": "evidence:neurips-2022-pykt:e29e8d943c26ff:0",
+        "label": "CONTAINS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:e5b3373cd49d51",
+        "source": "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0",
+        "target": "entity:174816bf4b9638",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0"
+        ]
+      },
+      {
+        "id": "edge:a4a1bc13663cb1",
+        "source": "evidence:neurips-2015-dkt:e29e8d943c26ff:0",
+        "target": "entity:1d5bf967aa167a",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:528af15cced76c",
+        "source": "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0",
+        "target": "entity:1d5bf967aa167a",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:925bbc30aa8b35",
+        "source": "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0",
+        "target": "entity:1d5bf967aa167a",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:897fbc6233dfdc",
+        "source": "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0",
+        "target": "entity:1d5bf967aa167a",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:3e2ae04e34c0f4",
+        "source": "evidence:neurips-2022-pykt:e29e8d943c26ff:0",
+        "target": "entity:1d5bf967aa167a",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:c1c9e9f33aed63",
+        "source": "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1",
+        "target": "entity:1d5bf967aa167a",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1"
+        ]
+      },
+      {
+        "id": "edge:b7e48cd1a5cf42",
+        "source": "evidence:neurips-2015-dkt:3c6de1b7dd9146:0",
+        "target": "entity:4240c1d310ac5c",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:3c6de1b7dd9146:0"
+        ]
+      },
+      {
+        "id": "edge:6022affb82060c",
+        "source": "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0",
+        "target": "entity:4240c1d310ac5c",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:f1392de13d83e6",
+        "source": "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1",
+        "target": "entity:4240c1d310ac5c",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:650ea25c6fb9d2",
+        "source": "evidence:neurips-2015-dkt:90f0f88bf84f2b:0",
+        "target": "entity:4240c1d310ac5c",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:267e52019aa75f",
+        "source": "evidence:neurips-2015-dkt:e29e8d943c26ff:0",
+        "target": "entity:4240c1d310ac5c",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:d9c5918651d2e3",
+        "source": "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1",
+        "target": "entity:6d6f6816404992",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1"
+        ]
+      },
+      {
+        "id": "edge:5a43263ceeb0d0",
+        "source": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0",
+        "target": "entity:7e75f1cd1f7c1d",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:dd71ea7dc551a9",
+        "source": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1",
+        "target": "entity:84cb18f0552d8f",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:83ee2259eababc",
+        "source": "evidence:neurips-2015-dkt:90f0f88bf84f2b:0",
+        "target": "entity:8cee637692da33",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:66b8efb44d4fe6",
+        "source": "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0",
+        "target": "entity:8cee637692da33",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:635dcc0551ab2c",
+        "source": "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0",
+        "target": "entity:8cee637692da33",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:6916b56a4ed264",
+        "source": "evidence:neurips-2022-pykt:90f0f88bf84f2b:0",
+        "target": "entity:8cee637692da33",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:d07482f1aa7463",
+        "source": "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1",
+        "target": "entity:8ff26de452ceb5",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:c95002ad7e8cde",
+        "source": "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1",
+        "target": "entity:8ff26de452ceb5",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:4c9bd5a2bdd52d",
+        "source": "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1",
+        "target": "entity:8ff26de452ceb5",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:a5fac34d1de9e8",
+        "source": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2",
+        "target": "entity:8ff26de452ceb5",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2"
+        ]
+      },
+      {
+        "id": "edge:b1067d14595d4d",
+        "source": "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1",
+        "target": "entity:8ff26de452ceb5",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:91060f5c5503e5",
+        "source": "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0",
+        "target": "entity:8ff26de452ceb5",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0"
+        ]
+      },
+      {
+        "id": "edge:ae4a4d6b5ee226",
+        "source": "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0",
+        "target": "entity:985ed1e631702c",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:f921313ba53270",
+        "source": "evidence:10.1145-3038912.3052580:3c6de1b7dd9146:0",
+        "target": "entity:a51359c6a5fc9f",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:3c6de1b7dd9146:0"
+        ]
+      },
+      {
+        "id": "edge:db615c78526678",
+        "source": "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0",
+        "target": "entity:a51359c6a5fc9f",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:2fe8884a1fd1b8",
+        "source": "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1",
+        "target": "entity:a51359c6a5fc9f",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:f36de408106a5b",
+        "source": "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0",
+        "target": "entity:a51359c6a5fc9f",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:8e8a102a198349",
+        "source": "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0",
+        "target": "entity:a51359c6a5fc9f",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:76560108e03047",
+        "source": "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0",
+        "target": "entity:a51a0ed9945eec",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:52696fd18974ae",
+        "source": "evidence:10.1145-3386527.3405945:3c6de1b7dd9146:0",
+        "target": "entity:a6657da24524d2",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:3c6de1b7dd9146:0"
+        ]
+      },
+      {
+        "id": "edge:c0dd2aa1fc1e87",
+        "source": "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0",
+        "target": "entity:a6657da24524d2",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:1c34b08160ca64",
+        "source": "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1",
+        "target": "entity:a6657da24524d2",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:bda88b04616b6b",
+        "source": "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0",
+        "target": "entity:a6657da24524d2",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:d9b813665a4b6e",
+        "source": "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0",
+        "target": "entity:a6657da24524d2",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:f6bcbf9f591038",
+        "source": "evidence:10.1145-3394486.3403282:3c6de1b7dd9146:0",
+        "target": "entity:a78b448be21fd7",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:3c6de1b7dd9146:0"
+        ]
+      },
+      {
+        "id": "edge:4e379eac2597f5",
+        "source": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0",
+        "target": "entity:a78b448be21fd7",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:b525eb3bd343d6",
+        "source": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1",
+        "target": "entity:a78b448be21fd7",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:6c8cc5fd237089",
+        "source": "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2",
+        "target": "entity:a78b448be21fd7",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2"
+        ]
+      },
+      {
+        "id": "edge:f83e9a63a59af9",
+        "source": "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0",
+        "target": "entity:a78b448be21fd7",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:3543747a3af3ae",
+        "source": "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0",
+        "target": "entity:a78b448be21fd7",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:4009fcdd8c619d",
+        "source": "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0",
+        "target": "entity:b05b9402f99fe8",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:5265203fb0b2ef",
+        "source": "evidence:neurips-2022-pykt:e29e8d943c26ff:0",
+        "target": "entity:b05b9402f99fe8",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "id": "edge:287eb963247ec0",
+        "source": "evidence:neurips-2022-pykt:ae0b636f3a61fd:0",
+        "target": "entity:b05b9402f99fe8",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:ae0b636f3a61fd:0"
+        ]
+      },
+      {
+        "id": "edge:2651dbbd331d8f",
+        "source": "evidence:neurips-2022-pykt:ae0b636f3a61fd:0",
+        "target": "entity:d85aa34f9450ef",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:ae0b636f3a61fd:0"
+        ]
+      },
+      {
+        "id": "edge:82bae18e643c5d",
+        "source": "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0",
+        "target": "entity:f40e669cb7552f",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:a877d6be98c391",
+        "source": "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0",
+        "target": "entity:fbd8be0a4d86f8",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:5d44ee1afdcb18",
+        "source": "evidence:neurips-2022-pykt:90f0f88bf84f2b:1",
+        "target": "entity:fbd8be0a4d86f8",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:90f0f88bf84f2b:1"
+        ]
+      },
+      {
+        "id": "edge:5cac2be2891d59",
+        "source": "evidence:10.1007-978-3-030-52240-7_13:3c6de1b7dd9146:0",
+        "target": "entity:fbd8be0a4d86f8",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:3c6de1b7dd9146:0"
+        ]
+      },
+      {
+        "id": "edge:c221d0d358eef6",
+        "source": "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0",
+        "target": "entity:fbd8be0a4d86f8",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0"
+        ]
+      },
+      {
+        "id": "edge:e540df66e0101e",
+        "source": "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1",
+        "target": "entity:fbd8be0a4d86f8",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1"
+        ]
+      },
+      {
+        "id": "edge:ebb1408f262412",
+        "source": "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0",
+        "target": "entity:fbd8be0a4d86f8",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0"
+        ]
+      },
+      {
+        "id": "edge:cd9ac21a60dbbb",
+        "source": "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1",
+        "target": "entity:fbd8be0a4d86f8",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1"
+        ]
+      },
+      {
+        "id": "edge:63981760a9712a",
+        "source": "evidence:neurips-2022-pykt:3c6de1b7dd9146:0",
+        "target": "entity:fe8f29cb2ca75d",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:3c6de1b7dd9146:0"
+        ]
+      },
+      {
+        "id": "edge:95c2a01eba6c34",
+        "source": "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0",
+        "target": "entity:fe8f29cb2ca75d",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "id": "edge:970ec78bbd75d5",
+        "source": "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1",
+        "target": "entity:fe8f29cb2ca75d",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "id": "edge:a9ff5ab4dde449",
+        "source": "evidence:neurips-2022-pykt:90f0f88bf84f2b:0",
+        "target": "entity:fe8f29cb2ca75d",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:90f0f88bf84f2b:0"
+        ]
+      },
+      {
+        "id": "edge:63ac382dba67be",
+        "source": "evidence:neurips-2022-pykt:90f0f88bf84f2b:1",
+        "target": "entity:fe8f29cb2ca75d",
+        "label": "MENTIONS",
+        "status": "accepted",
+        "confidence": 1.0,
+        "evidence_ids": [
+          "evidence:neurips-2022-pykt:90f0f88bf84f2b:1"
+        ]
+      }
+    ]
+  },
+  "domain": {
+    "domain_id": "educational-knowledge-tracing",
+    "domain_name": "教育知识追踪与个性化学习",
+    "version": "2026-07-30",
+    "paper_count": 6,
+    "description": "赛题场景对齐切片：追踪循环网络、记忆网络和注意力模型如何刻画学习者知识状态。",
+    "query_example": "请比较 DKT、DKVMN、SAINT 与 AKT 的知识追踪路线，并为学习者生成循证学习建议。",
+    "corpus_type": "verified-metadata-and-abstract-derived knowledge cards",
+    "source_scope": "项目组依据会议官网、DOI 元数据和公开摘要撰写知识卡；未缓存论文全文，卡片证据只能证明本卡片中记录的摘要级命题。"
+  }
+}

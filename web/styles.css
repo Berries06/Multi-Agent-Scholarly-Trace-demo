@@ -115,6 +115,11 @@ button {
   box-shadow: 0 0 0 4px rgba(100, 212, 163, 0.12);
 }
 
+.status-dot.error {
+  background: #ef8b72;
+  box-shadow: 0 0 0 4px rgba(239, 139, 114, 0.14);
+}
+
 .challenge-id {
   margin-left: 10px;
   padding-left: 20px;
@@ -208,6 +213,61 @@ main {
   padding: 30px 24px;
   background: #eef0e9;
   border-right: 1px solid var(--line);
+}
+
+.domain-label,
+.query-label {
+  display: block;
+  margin-top: 15px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.domain-select {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px 38px 12px 12px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  background: var(--surface);
+  border: 1px solid #c8d1cb;
+}
+
+.domain-select:focus {
+  border-color: var(--teal);
+  outline: 2px solid rgba(8, 127, 120, 0.16);
+}
+
+.domain-description {
+  min-height: 44px;
+  margin: 9px 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.domain-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+
+.domain-stats span {
+  padding: 4px 6px;
+  color: var(--teal-dark);
+  font-size: 9px;
+  font-weight: 800;
+  background: #dcebe5;
+}
+
+.learner-section-label {
+  padding-top: 23px;
+  border-top: 1px solid #d8ddd8;
 }
 
 .profile-list {
@@ -323,6 +383,16 @@ textarea:focus {
   line-height: 1.6;
 }
 
+.runtime-error {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  color: #8b382d;
+  font-size: 11px;
+  line-height: 1.55;
+  background: #f8e4de;
+  border-left: 3px solid var(--coral);
+}
+
 .results-panel {
   min-width: 0;
   padding: 32px;
@@ -394,7 +464,12 @@ textarea:focus {
 
 .result-content {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 22px;
+}
+
+.result-content > * {
+  min-width: 0;
 }
 
 .metric-strip {
@@ -404,6 +479,7 @@ textarea:focus {
 }
 
 .metric-strip article {
+  min-width: 0;
   min-height: 120px;
   padding: 22px;
   color: #edf3ef;
@@ -474,8 +550,76 @@ textarea:focus {
 
 .agent-trace {
   display: grid;
-  grid-template-columns: repeat(6, minmax(130px, 1fr));
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 18px;
   overflow-x: auto;
+}
+
+.specialist-agent-trace {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.specialist-card {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.7fr) 1fr auto;
+  align-items: center;
+  gap: 18px;
+  padding: 15px;
+  background: #edf4f1;
+  border: 1px solid #cadbd5;
+}
+
+.specialist-card span,
+.specialist-card strong {
+  display: block;
+}
+
+.specialist-card span {
+  color: var(--teal-dark);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.specialist-card strong {
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+.specialist-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.specialist-card small {
+  color: var(--teal-dark);
+  font-family: Consolas, monospace;
+  font-size: 9px;
+}
+
+.triad-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.triad-divider::after {
+  height: 1px;
+  flex: 1;
+  content: "";
+  background: var(--line);
+}
+
+.triad-divider span {
+  color: var(--ink);
+  font-weight: 800;
 }
 
 .trace-step {
@@ -581,6 +725,192 @@ textarea:focus {
   width: 100%;
   min-width: 680px;
   min-height: 390px;
+}
+
+.retrieval-plan {
+  display: grid;
+  grid-template-columns: 0.75fr 0.65fr 1.4fr;
+  margin-bottom: 18px;
+  background: var(--ink);
+}
+
+.retrieval-plan > div {
+  min-width: 0;
+  min-height: 112px;
+  padding: 18px;
+  color: #f5f1e7;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.retrieval-plan > div:last-child {
+  border-right: 0;
+}
+
+.retrieval-plan span {
+  display: block;
+  color: #a9bfbd;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.retrieval-plan strong {
+  display: block;
+  margin-top: 8px;
+  color: #f4d89a;
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 17px;
+  overflow-wrap: anywhere;
+}
+
+.retrieval-plan p {
+  margin: 8px 0 0;
+  color: #c6d4d1;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.graph-rag-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.7fr);
+  gap: 18px;
+}
+
+.concept-graph-wrap {
+  position: relative;
+  overflow-x: auto;
+  background: #f7f6ef;
+  border: 1px solid #e2e0d7;
+}
+
+.concept-legend {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  left: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.concept-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.concept-legend i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.concept-method {
+  background: var(--teal);
+}
+
+.concept-task {
+  background: var(--blue);
+}
+
+.concept-dataset {
+  background: var(--amber);
+}
+
+.concept-seed {
+  background: transparent;
+  border: 2px solid var(--coral);
+}
+
+.query-concept-graph {
+  min-width: 680px;
+  min-height: 420px;
+}
+
+.concept-edge {
+  stroke: #aebbb7;
+  stroke-width: 1.4;
+}
+
+.concept-edge-label {
+  fill: #758588;
+  font-size: 8px;
+  text-anchor: middle;
+}
+
+.concept-node circle:not(.seed-ring) {
+  stroke: white;
+  stroke-width: 3;
+}
+
+.concept-node .seed-ring {
+  fill: none;
+  stroke: var(--coral);
+  stroke-width: 2;
+  stroke-dasharray: 3 3;
+}
+
+.concept-node text {
+  fill: var(--ink);
+  font-size: 9px;
+  font-weight: 750;
+  text-anchor: middle;
+}
+
+.graph-rag-grid aside {
+  min-width: 0;
+}
+
+.graph-rag-grid aside h3 {
+  margin: 0 0 10px;
+  font-size: 12px;
+}
+
+.graph-rag-grid aside h3:not(:first-child) {
+  margin-top: 20px;
+}
+
+.graph-paper-recommendations {
+  display: grid;
+  gap: 7px;
+}
+
+.graph-paper-recommendations a {
+  display: grid;
+  gap: 5px;
+  padding: 10px;
+  color: inherit;
+  background: #f4f2e9;
+  border-left: 3px solid var(--teal);
+  text-decoration: none;
+}
+
+.graph-paper-recommendations a:hover {
+  background: #e9f2ee;
+}
+
+.graph-paper-recommendations span,
+.graph-paper-recommendations small {
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.graph-paper-recommendations strong {
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.graph-followups {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
 }
 
 .graph-edge {
@@ -769,9 +1099,184 @@ td {
   background: #f7ead3;
 }
 
+.verdict.needs_review {
+  color: #91611d;
+  background: #f7ead3;
+}
+
 .verdict.rejected {
   color: #a54737;
   background: #f6e1db;
+}
+
+.evidence-snippet,
+.judge-reason {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.scope-warning {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.featured-row {
+  background: #eef6f1;
+  box-shadow: inset 3px 0 var(--teal);
+}
+
+.method-tag,
+.unverified-tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 3px 6px;
+  color: var(--teal-dark);
+  font-size: 9px;
+  font-weight: 800;
+  background: #dceee8;
+}
+
+.insight-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 22px;
+}
+
+.literature-timeline {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.literature-timeline li {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 14px;
+  padding: 12px 0;
+  border-top: 1px solid #e7e4dc;
+}
+
+.literature-timeline time {
+  color: var(--teal-dark);
+  font-family: Georgia, serif;
+  font-size: 17px;
+}
+
+.literature-timeline a {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.literature-timeline a:hover {
+  color: var(--teal);
+}
+
+.literature-timeline p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.research-ideas {
+  display: grid;
+  gap: 11px;
+}
+
+.idea-card {
+  padding: 15px;
+  background: #f7f6ef;
+  border: 1px solid #e3e0d5;
+}
+
+.idea-card .unverified-tag {
+  margin-left: 0;
+  color: #8a5b17;
+  background: #f4e5c8;
+}
+
+.idea-card h3 {
+  margin: 9px 0 6px;
+  font-size: 14px;
+}
+
+.idea-card p,
+.idea-card details {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.idea-card details {
+  margin-top: 9px;
+}
+
+.idea-card ul {
+  margin-bottom: 0;
+  padding-left: 20px;
+}
+
+.secondary-button {
+  padding: 10px 13px;
+  color: var(--teal-dark);
+  font-weight: 800;
+  background: #e2f0eb;
+  border: 1px solid #b9d5cd;
+  cursor: pointer;
+}
+
+.secondary-button:hover {
+  color: white;
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
+.secondary-button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.rag-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.rag-result {
+  display: grid;
+  gap: 7px;
+  padding: 13px;
+  color: inherit;
+  background: #f7f6ef;
+  border: 1px solid #e1dfd5;
+  text-decoration: none;
+}
+
+.rag-result:hover {
+  border-color: var(--teal);
+}
+
+.rag-result span,
+.rag-result small {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.rag-result strong {
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .resource-tabs {
@@ -933,6 +1438,11 @@ td {
   border-color: var(--teal);
 }
 
+.feedback-actions button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
 footer {
   display: flex;
   justify-content: space-between;
@@ -952,6 +1462,16 @@ footer {
     padding: 22px;
   }
 
+  .agent-trace {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    overflow-x: visible;
+  }
+
+  .trace-step {
+    min-width: 0;
+  }
+
   .metric-strip {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -961,7 +1481,20 @@ footer {
   }
 
   .analysis-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .insight-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .graph-rag-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .specialist-card {
     grid-template-columns: 1fr;
+    gap: 8px;
   }
 }
 
@@ -997,6 +1530,17 @@ footer {
 
   .metric-strip {
     grid-template-columns: 1fr;
+  }
+
+  .specialist-agent-trace,
+  .retrieval-plan {
+    grid-template-columns: 1fr;
+  }
+
+  .retrieval-plan > div {
+    min-height: auto;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   }
 
   .metric-strip article {

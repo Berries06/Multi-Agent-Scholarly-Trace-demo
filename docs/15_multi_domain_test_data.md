@@ -1,0 +1,92 @@
+# 多领域知识库与赛题测试数据验收说明
+
+更新日期：2026-07-30
+
+## 1. 本轮交付结论
+
+Demo 已从单一领域扩展为 3 个可切换垂直领域，并生成 3 个领域 × 3 组差异化合成画像 = 9 组完整样例。每组样例包含：
+
+1. 输入：`domain_id`、查询和完整学习者画像；
+2. 中间数据：论文知识抽取 Agent、意图 Agent、提出者—批判者—裁判轨迹、候选命题与图检索路径；
+3. 输出：个性化导读、实操指南、测评、学习路径、回答骨架和证据图谱。
+
+机器可读文件为 `data/examples/complete_demo_cases.json`，字段映射保存在每个 case 的 `contract` 中。
+
+## 2. 领域选择方法
+
+这里没有把“随机”写成无法复现的口号。由于候选领域总体、抽样框和随机种子此前均未定义，本轮采用目的性分层选择，并在 `data/vertical_kb/registry.json` 固化选择口径：
+
+| 领域 | 选择理由 | 场景价值 |
+|---|---|---|
+| 科学文献信息抽取与知识图谱 | 项目核心技术问题 | 验证论文解析、实体关系抽取和证据溯源 |
+| 材料发现与图神经网络 | 跨学科且图结构天然重要 | 展示技术演化追踪、企业技术情报和跨领域推荐 |
+| 教育知识追踪与个性化学习 | 直接对齐学习者画像与资源生成赛题 | 展示模型路线比较和个性化学习建议 |
+
+选择不是统计意义上的随机样本，不能用这 3 个领域推断系统对所有学科的平均性能。
+
+## 3. 规模与图谱验收
+
+| 领域 ID | 同行评审论文 | 解析句段 | 有实体证据跨度 | 规范实体 | 候选关系 | 关系证据覆盖 |
+|---|---:|---:|---:|---:|---:|---:|
+| `scientific-ie-kg` | 8 | 52 | 47 | 31 | 40 | 100% |
+| `materials-discovery-gnn` | 5 | 35 | 28 | 17 | 24 | 100% |
+| `educational-knowledge-tracing` | 6 | 39 | 33 | 18 | 27 | 100% |
+| **合计** | **19** | **126** | **108** | **66** | **91** | **100%** |
+
+“候选关系”表示 schema 规则生成并进入提出—批判—裁判流程的边，不代表 91 条均已由领域专家判真。100% 只表示每条关系都有可回指的本地卡片证据跨度，不表示抽取精确率为 100%。
+
+## 4. 来源核验与边界
+
+### 4.1 科学信息抽取
+
+8 篇论文均来自 [ACL Anthology](https://aclanthology.org/)，本地 manifest 保存论文页、PDF URL 和证据卡路径。知识卡为项目组释义，不等同于论文逐字原文。
+
+### 4.2 材料发现
+
+- CGCNN：[Physical Review Letters DOI](https://doi.org/10.1103/PhysRevLett.120.145301)
+- MEGNet：[Chemistry of Materials DOI](https://doi.org/10.1021/acs.chemmater.9b01294)
+- M3GNet：[Nature Computational Science](https://www.nature.com/articles/s43588-022-00349-3)
+- GNoME：[Nature](https://www.nature.com/articles/s41586-023-06735-9)
+- Materials Project：[APL Materials DOI](https://doi.org/10.1063/1.4812323)
+
+### 4.3 教育知识追踪
+
+- DKT：[NeurIPS 2015 官方论文页](https://proceedings.neurips.cc/paper/2015/hash/bac9162b47c56fc8a4d2a519803d51b3-Abstract.html)
+- DKVMN：[ACM DOI](https://doi.org/10.1145/3038912.3052580)
+- SAINT：[ACM DOI](https://doi.org/10.1145/3386527.3405945)
+- AKT：[KDD 2020 官方记录](https://www.kdd.org/kdd2020/accepted-papers/view/context-aware-attentive-knowledge-tracing.html)
+- pyKT：[NeurIPS 2022 官方论文页](https://proceedings.neurips.cc/paper_files/paper/2022/hash/75ca2b23d9794f02a92449af65a57556-Abstract-Datasets_and_Benchmarks.html)
+- EdNet：[Springer DOI](https://doi.org/10.1007/978-3-030-52240-7_13)
+
+两个新增领域没有把知识卡伪装成已下载全文：paper records 明确设置 `source_acquired=false` 和 `source_verified_against_original=false`。当前证据级别是“官网/DOI 元数据与公开摘要的项目组释义”。正式论文实验前应合法取得全文，重新解析，并由双人标注构造金标准。
+
+## 5. 赛题条款映射
+
+| 条款 | 本 Demo 证据 | 状态 |
+|---|---|---|
+| 至少 1 个垂直领域专业知识库切片 | 3 个领域、19 篇论文知识卡、3 套 JSON/SQLite 图谱 | 已满足 Demo 级 |
+| 不少于 2 组差异化学习者初始学情 | 3 组合成画像：本科科研入门、跨学科硕士、企业技术情报 | 已满足 |
+| 输入画像特征 | `input_snapshot.learner_profile` | 已满足 |
+| 多智能体协同决策中间数据 | `specialist_agent_trace`、`agent_trace`、`claims`、`graph_retrieval` | 已满足 |
+| 最终个性化学习资源 | `resources`、`report`、`assistant_response` | 已满足 |
+| 完整输入输出示例 | 9 个 case | 已满足 |
+
+## 6. 现场演示路径
+
+1. 打开 `http://127.0.0.1:8765/`；
+2. 在左侧依次选择三个领域，观察默认研究任务、论文数和版本变化；
+3. 每个领域任选一位学习者，点击“启动协同推理”；
+4. 展示知识抽取 Agent 的概念/证据统计、意图路由、三智能体裁决、概念图和推荐论文；
+5. 切换另一位学习者，展示难度曲线和最终资源发生变化；
+6. 强调新增领域是摘要知识卡切片，尚不是全文人工金标准。
+
+## 7. 自动验收
+
+```powershell
+$env:PYTHONPATH="src"
+python scripts/build_demo_assets.py
+python -m unittest discover -s tests -v
+python scripts/smoke_test_backend.py
+```
+
+测试覆盖领域注册、每领域论文数量、同行评审标记、证据端点、关系证据覆盖、API 领域隔离和前端所需的 `/api/domains` 契约。

@@ -1,4 +1,6 @@
 const state = {
+  domains: [],
+  selectedDomainId: "scientific-ie-kg",
   profiles: [],
   selectedProfileId: "undergraduate_ai",
   result: null,
@@ -17,16 +19,56 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-async function requestJson(path, options = {}) {
-  const response = await fetch(path, {
-    headers: { "Content-Type": "application/json" },
-    ...options,
-  });
-  const payload = await response.json();
-  if (!response.ok) {
-    throw new Error(payload.error || "请求失败");
+function idempotencyKey(prefix) {
+  const suffix =
+    globalThis.crypto?.randomUUID?.() ||
+    `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  return `${prefix}-${suffix}`;
+}
+
+function showRuntimeError(message = "") {
+  const container = $("#runtime-error");
+  container.textContent = message;
+  container.hidden = !message;
+}
+
+async function requestJson(path, options = {}, timeoutMs = 15000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  const headers = new Headers(options.headers || {});
+  headers.set("X-Request-ID", `web-${idempotencyKey("request")}`.slice(0, 120));
+  if (options.body && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
   }
-  return payload;
+  try {
+    const response = await fetch(path, {
+      ...options,
+      headers,
+      signal: controller.signal,
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const apiError = payload.error;
+      const message =
+        typeof apiError === "object"
+          ? `${apiError.message || "请求失败"}（${apiError.code || response.status}）`
+          : apiError || `请求失败（HTTP ${response.status}）`;
+      throw new Error(message);
+    }
+    payload._transport = {
+      requestId: response.headers.get("X-Request-ID"),
+      runId: response.headers.get("X-Run-ID"),
+      replayed: response.headers.get("Idempotency-Replayed") === "true",
+    };
+    return payload;
+  } catch (error) {
+    if (error.name === "AbortError") {
+      throw new Error(`请求超过 ${Math.round(timeoutMs / 1000)} 秒，已安全中止`);
+    }
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 function renderProfiles() {
@@ -54,26 +96,59 @@ function renderProfiles() {
   });
 }
 
+function renderDomains() {
+  const select = $("#domain-select");
+  select.innerHTML = state.domains
+    .map(
+      (domain) => `
+        <option value="${escapeHtml(domain.domain_id)}" ${
+          domain.domain_id === state.selectedDomainId ? "selected" : ""
+        }>
+          ${escapeHtml(domain.domain_name)}
+        </option>
+      `,
+    )
+    .join("");
+  const selected = state.domains.find(
+    (domain) => domain.domain_id === state.selectedDomainId,
+  );
+  if (!selected) return;
+  $("#domain-description").textContent = selected.description;
+  $("#domain-stats").innerHTML = `
+    <span>${selected.paper_count} 篇论文</span>
+    <span>版本 ${escapeHtml(selected.version)}</span>
+    <span>${selected.is_default ? "核心领域" : "扩展领域"}</span>
+  `;
+}
+
 function percent(value) {
   return `${Number(value).toFixed(value % 1 ? 1 : 0)}%`;
 }
 
 function renderMetrics(result) {
+  const triad = result.ablation.variants.find(
+    (item) => item.variant_id === "evidence_triad",
+  ).metrics;
+  const quality = result.knowledge_graph.audit.quality;
   $("#metric-hallucination").textContent = percent(
-    result.metrics.hallucination_proxy_rate,
+    triad.accepted_precision * 100,
   );
   $("#metric-adaptation").textContent = percent(
-    result.metrics.adaptation_accuracy,
+    triad.unsupported_acceptance_rate * 100,
   );
   $("#metric-coverage").textContent = percent(
-    result.metrics.knowledge_coverage_rate,
+    quality.relation_evidence_coverage * 100,
   );
+  $("#metric-graph-scale").innerHTML =
+    `<b>${quality.paper_count}</b> 论文 · <b>${quality.entity_count}</b> 实体<br /><b>${quality.relation_count}</b> 候选关系`;
 }
 
 function renderTrace(result) {
   const trace = result.agent_trace;
+  const runId = result.observability?.run_id || result._transport?.runId;
+  const runLabel = runId ? ` · ${runId.slice(0, 12)}` : "";
   $("#trace-summary").textContent =
-    `${trace.length} 个固定 Agent · ${trace.reduce((sum, item) => sum + item.duration_ms, 0)} ms`;
+    `${result.domain.domain_name} · ${result.core_method.system_agent_count} 个协同角色 / ${trace.length} 个决策 Agent${runLabel}`;
   $("#agent-trace").innerHTML = trace
     .map(
       (item, index) => `
@@ -88,16 +163,186 @@ function renderTrace(result) {
     .join("");
 }
 
+function renderSpecialists(result) {
+  $("#specialist-agent-trace").innerHTML = result.specialist_agent_trace
+    .map((item) => {
+      const details = item.details;
+      const badge =
+        item.role === "意图识别与检索路由"
+          ? `${details.route} · ${percent(details.confidence * 100)}`
+          : `${details.knowledge_concepts} 概念 · ${details.evidence_spans} 证据`;
+      return `
+        <article class="specialist-card">
+          <div>
+            <span>${escapeHtml(item.role)}</span>
+            <strong>${escapeHtml(item.agent)}</strong>
+          </div>
+          <p>${escapeHtml(item.summary)}</p>
+          <small>${escapeHtml(badge)}</small>
+        </article>
+      `;
+    })
+    .join("");
+}
+
 function truncate(text, length = 18) {
   return text.length > length ? `${text.slice(0, length)}…` : text;
 }
 
-function renderGraph(graph) {
-  const svg = $("#knowledge-graph");
+function renderConceptGraph(payload) {
+  const svg = $("#query-concept-graph");
+  const nodes = payload.nodes.slice(0, 18);
+  const visibleIds = new Set(nodes.map((node) => node.id));
   const groups = {
-    paper: graph.nodes.filter((node) => node.kind === "paper"),
-    concept: graph.nodes.filter((node) => node.kind === "concept"),
-    outcome: graph.nodes.filter((node) => node.kind === "outcome"),
+    method: nodes.filter((node) => node.entity_type === "METHOD"),
+    task: nodes.filter((node) => node.entity_type === "TASK"),
+    support: nodes.filter(
+      (node) => !["METHOD", "TASK"].includes(node.entity_type),
+    ),
+  };
+  const rowConfig = {
+    method: { y: 75, start: 75, end: 825 },
+    task: { y: 220, start: 75, end: 825 },
+    support: { y: 360, start: 75, end: 825 },
+  };
+  const positions = new Map();
+  Object.entries(groups).forEach(([kind, items]) => {
+    const config = rowConfig[kind];
+    items.forEach((node, index) => {
+      const span =
+        items.length > 1 ? (config.end - config.start) / (items.length - 1) : 0;
+      positions.set(node.id, {
+        x: items.length === 1 ? 450 : config.start + span * index,
+        y: config.y,
+      });
+    });
+  });
+  const edges = payload.edges
+    .filter(
+      (edge) =>
+        visibleIds.has(edge.source) &&
+        visibleIds.has(edge.target) &&
+        positions.has(edge.source) &&
+        positions.has(edge.target),
+    )
+    .slice(0, 24)
+    .map((edge) => {
+      const source = positions.get(edge.source);
+      const target = positions.get(edge.target);
+      return `
+        <g>
+          <line class="concept-edge" x1="${source.x}" y1="${source.y}" x2="${target.x}" y2="${target.y}" />
+          <text class="concept-edge-label" x="${(source.x + target.x) / 2}" y="${(source.y + target.y) / 2 - 5}">${escapeHtml(edge.label)}</text>
+        </g>
+      `;
+    })
+    .join("");
+  const colors = {
+    METHOD: "#087f78",
+    TASK: "#3d6c8f",
+    DATASET: "#d79232",
+    METRIC: "#9a7048",
+    FINDING: "#8b5d9b",
+    LIMITATION: "#c96148",
+    DOMAIN: "#60767b",
+  };
+  const renderedNodes = nodes
+    .filter((node) => positions.has(node.id))
+    .map((node) => {
+      const position = positions.get(node.id);
+      return `
+        <g class="concept-node ${node.is_seed ? "seed" : ""}">
+          ${node.is_seed ? `<circle class="seed-ring" cx="${position.x}" cy="${position.y}" r="22" />` : ""}
+          <circle cx="${position.x}" cy="${position.y}" r="${node.is_seed ? 15 : 12}" fill="${colors[node.entity_type] || "#60767b"}" />
+          <text x="${position.x}" y="${position.y + 31}">${escapeHtml(truncate(node.label, 17))}</text>
+        </g>
+      `;
+    })
+    .join("");
+  svg.innerHTML = `${edges}${renderedNodes}`;
+}
+
+function renderGraphRetrieval(result) {
+  const retrieval = result.graph_retrieval;
+  const intent = retrieval.intent;
+  const plan = retrieval.retrieval_plan;
+  $("#intent-label").textContent =
+    `${intent.label} · ${percent(intent.confidence * 100)}`;
+  $("#retrieval-route").textContent =
+    `${plan.route} ↔ ${retrieval.implementation.official_analogue}`;
+  $("#retrieval-reason").textContent = plan.reason;
+  $("#retrieval-scale").textContent =
+    `${plan.visited_concepts} 概念 · ${plan.selected_relationships} 关系`;
+  $("#retrieval-seeds").textContent =
+    `种子：${retrieval.seed_entities.map((item) => item.label).join("、") || "高连接概念回退"}`;
+  $("#graph-answer-summary").textContent = retrieval.answer.summary;
+  renderConceptGraph(retrieval.concept_subgraph);
+  $("#graph-paper-recommendations").innerHTML = retrieval.recommended_papers
+    .slice(0, 5)
+    .map(
+      (paper, index) => `
+        <a href="${escapeHtml(paper.source_url)}" target="_blank" rel="noreferrer">
+          <span>${String(index + 1).padStart(2, "0")} · ${paper.year}</span>
+          <strong>${escapeHtml(paper.title)}</strong>
+          <small>${escapeHtml(paper.recommendation_reason)}</small>
+        </a>
+      `,
+    )
+    .join("");
+  $("#graph-followups").innerHTML = retrieval.answer.follow_up_questions
+    .map((question) => `<li>${escapeHtml(question)}</li>`)
+    .join("");
+}
+
+function renderGraph(payload) {
+  const svg = $("#knowledge-graph");
+  const entityById = new Map(
+    payload.entities.map((entity) => [entity.entity_id, entity]),
+  );
+  const evidenceById = new Map(
+    payload.evidence.map((evidence) => [evidence.evidence_id, evidence]),
+  );
+  const acceptedRelations = payload.relations
+    .filter((relation) => relation.status === "accepted")
+    .slice(0, 12);
+  const entityIds = new Set(
+    acceptedRelations.flatMap((relation) => [
+      relation.source_id,
+      relation.target_id,
+    ]),
+  );
+  const paperIds = [
+    ...new Set(
+      acceptedRelations.flatMap((relation) =>
+        relation.evidence_ids
+          .map((id) => evidenceById.get(id)?.paper_id)
+          .filter(Boolean),
+      ),
+    ),
+  ].slice(0, 8);
+  const nodes = [
+    ...paperIds.map((paperId) => {
+      const paper = payload.papers.find((item) => item.paper_id === paperId);
+      return {
+        id: `paper:${paperId}`,
+        label: paper?.title || paperId,
+        kind: "paper",
+      };
+    }),
+    ...[...entityIds].map((id) => {
+      const entity = entityById.get(id);
+      const type = entity?.entity_type || "FINDING";
+      return {
+        id,
+        label: entity?.canonical_name || id,
+        kind: ["METHOD", "DATASET"].includes(type) ? "concept" : "outcome",
+      };
+    }),
+  ];
+  const groups = {
+    paper: nodes.filter((node) => node.kind === "paper"),
+    concept: nodes.filter((node) => node.kind === "concept"),
+    outcome: nodes.filter((node) => node.kind === "outcome"),
   };
   const positions = new Map();
   const rowConfig = {
@@ -116,7 +361,30 @@ function renderGraph(graph) {
     });
   });
 
-  const edges = graph.edges
+  const relationEdges = acceptedRelations.map((relation) => ({
+    source: relation.source_id,
+    target: relation.target_id,
+    label: relation.relation_type,
+  }));
+  const evidenceEdges = acceptedRelations.flatMap((relation) =>
+    relation.evidence_ids
+      .map((id) => evidenceById.get(id)?.paper_id)
+      .filter((paperId) => paperIds.includes(paperId))
+      .map((paperId) => ({
+        source: `paper:${paperId}`,
+        target: relation.source_id,
+        label: "evidence",
+      })),
+  );
+  const uniqueEdges = [
+    ...new Map(
+      [...relationEdges, ...evidenceEdges].map((edge) => [
+        `${edge.source}|${edge.target}|${edge.label}`,
+        edge,
+      ]),
+    ).values(),
+  ];
+  const edges = uniqueEdges
     .filter((edge) => positions.has(edge.source) && positions.has(edge.target))
     .map((edge) => {
       const source = positions.get(edge.source);
@@ -138,7 +406,7 @@ function renderGraph(graph) {
     .join("");
 
   const colors = { paper: "#3d6c8f", concept: "#087f78", outcome: "#d79232" };
-  const nodes = graph.nodes
+  const renderedNodes = nodes
     .filter((node) => positions.has(node.id))
     .map((node) => {
       const position = positions.get(node.id);
@@ -153,7 +421,7 @@ function renderGraph(graph) {
       `;
     })
     .join("");
-  svg.innerHTML = `${edges}${nodes}`;
+  svg.innerHTML = `${edges}${renderedNodes}`;
 }
 
 function renderReport(result) {
@@ -197,9 +465,13 @@ function renderClaims(result) {
         .slice(0, 2)
         .map(escapeHtml)
         .join("<br />");
+      const span = result.evidence_details[claim.claim_id]?.[0];
+      const evidenceSnippet = span
+        ? `<small class="evidence-snippet">${escapeHtml(span.paper_id)} · ${escapeHtml(span.section_id)}<br />“${escapeHtml(truncate(span.text, 74))}”</small>`
+        : "";
       const label = {
         accepted: "通过",
-        review: "复核",
+        needs_review: "复核",
         rejected: "拒绝",
       }[claim.status];
       return `
@@ -207,15 +479,113 @@ function renderClaims(result) {
           <td>
             <span class="claim-main">${escapeHtml(claim.source)} ${escapeHtml(claim.relation)} ${escapeHtml(claim.target)}</span>
           </td>
-          <td>${evidence}</td>
+          <td>${evidence}${evidenceSnippet}</td>
           <td>${criticism}</td>
           <td>
             <span class="verdict ${claim.status}">${label} · ${percent(claim.judge_score * 100)}</span>
+            <small class="judge-reason">${escapeHtml(claim.judge_reason)}</small>
           </td>
         </tr>
       `;
     })
     .join("");
+}
+
+function renderAblation(result) {
+  const ablation = result.ablation;
+  $("#ablation-gain").textContent =
+    `较最佳基线精确率 +${ablation.comparison.accepted_precision_gain_pp.toFixed(1)} pp`;
+  $("#ablation-table").innerHTML = ablation.variants
+    .map((variant) => {
+      const metrics = variant.metrics;
+      const featured = variant.variant_id === "evidence_triad";
+      return `
+        <tr class="${featured ? "featured-row" : ""}">
+          <td><strong>${escapeHtml(variant.label)}</strong>${featured ? '<span class="method-tag">本项目</span>' : ""}</td>
+          <td>${percent(metrics.accepted_precision * 100)}</td>
+          <td>${percent(metrics.gold_recall * 100)}</td>
+          <td>${percent(metrics.unsupported_acceptance_rate * 100)}</td>
+          <td>${percent(metrics.evidence_coverage * 100)}</td>
+        </tr>
+      `;
+    })
+    .join("");
+  $("#ablation-warning").textContent = ablation.warning;
+}
+
+function renderInsights(result) {
+  const timeline = result.graph_insights.timeline.filter(
+    (item) => item.contributions.length,
+  );
+  $("#literature-timeline").innerHTML = timeline
+    .map(
+      (item) => `
+        <li>
+          <time>${item.year}</time>
+          <div>
+            <a href="${escapeHtml(item.source_url)}" target="_blank" rel="noreferrer">${escapeHtml(item.title)}</a>
+            <p>${item.contributions.map(escapeHtml).join("<br />")}</p>
+          </div>
+        </li>
+      `,
+    )
+    .join("");
+  const ideas = result.graph_insights.research_ideas;
+  $("#research-ideas").innerHTML = ideas.length
+    ? ideas
+        .map(
+          (idea) => `
+            <article class="idea-card">
+              <span class="unverified-tag">新颖性未验证</span>
+              <h3>${escapeHtml(idea.title)}</h3>
+              <p>${escapeHtml(idea.hypothesis)}</p>
+              <details>
+                <summary>查看图谱推理依据</summary>
+                <ul>${idea.graph_basis.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+              </details>
+            </article>
+          `,
+        )
+        .join("")
+    : '<p class="scope-warning">当前子图没有满足约束的缺失边候选。</p>';
+}
+
+async function runOnlineRag() {
+  const button = $("#online-rag-button");
+  button.disabled = true;
+  button.textContent = "正在检索 OpenAlex…";
+  try {
+    const payload = await requestJson("/api/online-rag", {
+      method: "POST",
+      headers: { "Idempotency-Key": idempotencyKey("online-rag") },
+      body: JSON.stringify({
+        domain_id: state.selectedDomainId,
+        query: $("#research-query").value.trim(),
+        limit: 5,
+        allow_network: true,
+      }),
+    }, 20000);
+    $("#online-rag-status").textContent = payload.warning;
+    $("#online-rag-results").innerHTML = payload.results.length
+      ? payload.results
+          .map(
+            (paper) => `
+              <a class="rag-result" href="${escapeHtml(paper.source_url)}" target="_blank" rel="noreferrer">
+                <span>${paper.year || "—"} · ${escapeHtml(paper.venue || "来源待核验")}</span>
+                <strong>${escapeHtml(paper.title)}</strong>
+                <small>${escapeHtml(paper.status)}</small>
+              </a>
+            `,
+          )
+          .join("")
+      : '<p class="scope-warning">未返回候选；本地垂直知识库仍可离线运行。</p>';
+  } catch (error) {
+    $("#online-rag-status").textContent =
+      `联网检索失败：${error.message}。本地垂直知识库不受影响。`;
+  } finally {
+    button.disabled = false;
+    button.textContent = "重新联网扩展";
+  }
 }
 
 function renderBriefing(resources) {
@@ -304,10 +674,14 @@ function renderResult(result) {
   $("#empty-state").hidden = true;
   $("#result-content").hidden = false;
   renderMetrics(result);
+  renderSpecialists(result);
   renderTrace(result);
-  renderGraph(result.graph);
+  renderGraphRetrieval(result);
+  renderGraph(result.knowledge_graph);
   renderReport(result);
   renderClaims(result);
+  renderAblation(result);
+  renderInsights(result);
   renderResource();
   $("#feedback-decision").textContent =
     result.feedback?.decision || "反馈会触发下一轮难度与解释策略更新。";
@@ -318,10 +692,13 @@ async function runFlow() {
   const original = button.innerHTML;
   button.disabled = true;
   button.innerHTML = "<span>智能体协同中…</span><span>•••</span>";
+  showRuntimeError();
   try {
     const result = await requestJson("/api/run", {
       method: "POST",
+      headers: { "Idempotency-Key": idempotencyKey("run") },
       body: JSON.stringify({
+        domain_id: state.selectedDomainId,
         profile_id: state.selectedProfileId,
         query: $("#research-query").value.trim(),
       }),
@@ -329,7 +706,7 @@ async function runFlow() {
     renderResult(result);
     $("#result-content").scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (error) {
-    window.alert(`运行失败：${error.message}`);
+    showRuntimeError(`运行失败：${error.message}`);
   } finally {
     button.disabled = false;
     button.innerHTML = original;
@@ -338,10 +715,17 @@ async function runFlow() {
 
 async function sendFeedback(feedback) {
   if (!state.result) return;
+  const buttons = $$(".feedback-actions button");
+  buttons.forEach((button) => {
+    button.disabled = true;
+  });
+  showRuntimeError();
   try {
     const result = await requestJson("/api/feedback", {
       method: "POST",
+      headers: { "Idempotency-Key": idempotencyKey("feedback") },
       body: JSON.stringify({
+        domain_id: state.selectedDomainId,
         profile_id: state.selectedProfileId,
         query: $("#research-query").value.trim(),
         feedback,
@@ -349,21 +733,53 @@ async function sendFeedback(feedback) {
     });
     renderResult(result);
   } catch (error) {
-    window.alert(`反馈更新失败：${error.message}`);
+    showRuntimeError(`反馈更新失败：${error.message}`);
+  } finally {
+    buttons.forEach((button) => {
+      button.disabled = false;
+    });
   }
 }
 
 async function initialize() {
   try {
-    const payload = await requestJson("/api/profiles");
-    state.profiles = payload.profiles;
+    const [health, profiles, domains] = await Promise.all([
+      requestJson("/api/health", {}, 5000),
+      requestJson("/api/profiles", {}, 5000),
+      requestJson("/api/domains", {}, 5000),
+    ]);
+    $("#backend-status").textContent =
+      `后端在线 · ${health.domains} 个领域 / ${health.papers} 篇论文 · ${health.system_agents} 协同角色`;
+    $("#hero-domain-count").textContent = health.domains;
+    $("#hero-paper-count").textContent = health.papers;
+    state.domains = domains.domains;
+    state.selectedDomainId = domains.default_domain_id;
+    renderDomains();
+    state.profiles = profiles.profiles;
     renderProfiles();
   } catch (error) {
+    $(".status-dot").classList.add("error");
+    $("#backend-status").textContent = "后端不可用";
+    showRuntimeError(`初始化失败：${error.message}`);
     $("#profile-list").innerHTML =
       `<p class="privacy-note">画像加载失败：${escapeHtml(error.message)}</p>`;
   }
 
+  $("#domain-select").addEventListener("change", (event) => {
+    state.selectedDomainId = event.target.value;
+    const selected = state.domains.find(
+      (domain) => domain.domain_id === state.selectedDomainId,
+    );
+    if (selected?.query_example) {
+      $("#research-query").value = selected.query_example;
+    }
+    state.result = null;
+    $("#result-content").hidden = true;
+    $("#empty-state").hidden = false;
+    renderDomains();
+  });
   $("#run-button").addEventListener("click", runFlow);
+  $("#online-rag-button").addEventListener("click", runOnlineRag);
   $$(".tab-button").forEach((button) => {
     button.addEventListener("click", () => {
       state.activeTab = button.dataset.tab;

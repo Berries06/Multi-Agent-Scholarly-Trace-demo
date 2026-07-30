@@ -1,0 +1,333 @@
+{
+  "domain": {
+    "domain_id": "scientific-ie-kg",
+    "domain_name": "科学文献信息抽取与知识图谱构建",
+    "version": "2026-07-29",
+    "paper_count": 8,
+    "description": "项目核心领域：从科研论文抽取实体、关系与证据跨度，并构建可审计知识图谱。",
+    "query_example": "如何从科学论文中抽取可追溯知识图谱，并利用图谱理解技术脉络和生成研究想法？",
+    "corpus_type": "peer-reviewed-paper knowledge cards with locally indexed PDFs",
+    "source_scope": "知识卡为项目组释义；ACL Anthology 链接和本地 PDF 用于来源追溯，卡片文字不等同于论文逐字原文。"
+  },
+  "timeline": [
+    {
+      "paper_id": "D18-1360",
+      "year": 2018,
+      "title": "Multi-Task Identification of Entities, Relations, and Coreference for Scientific Knowledge Graph Construction",
+      "source_url": "https://aclanthology.org/D18-1360/",
+      "contributions": [
+        "SciERC BENCHMARKS entity extraction",
+        "SciERC BENCHMARKS relation extraction",
+        "SciERC BENCHMARKS scientific information extraction",
+        "SciIE SUPPORTS scientific knowledge graph construction"
+      ],
+      "evidence_ids": [
+        "evidence:D18-1360:76f747de912e86:0",
+        "evidence:D18-1360:76f747de912e86:1",
+        "evidence:D18-1360:76f747de912e86:2",
+        "evidence:D18-1360:bfbaf8b2d1cdf9:0",
+        "evidence:D18-1360:bfbaf8b2d1cdf9:1"
+      ]
+    },
+    {
+      "paper_id": "D19-1585",
+      "year": 2019,
+      "title": "Entity, Relation, and Event Extraction with Contextualized Span Representations",
+      "source_url": "https://aclanthology.org/D19-1585/",
+      "contributions": [
+        "DyGIE++ ADDRESSES scientific information extraction",
+        "DyGIE++ EVALUATES_ON SciERC",
+        "DyGIE++ USES contextualized span representations",
+        "contextualized span representations IMPROVES relation extraction"
+      ],
+      "evidence_ids": [
+        "evidence:D19-1585:bfbaf8b2d1cdf9:0",
+        "evidence:D19-1585:bfbaf8b2d1cdf9:1",
+        "evidence:D19-1585:bfbaf8b2d1cdf9:2",
+        "evidence:D19-1585:e29e8d943c26ff:0"
+      ]
+    },
+    {
+      "paper_id": "2020.acl-main.670",
+      "year": 2020,
+      "title": "SciREX: A Challenge Dataset for Document-Level Information Extraction",
+      "source_url": "https://aclanthology.org/2020.acl-main.670/",
+      "contributions": [
+        "SciREX BENCHMARKS document-level information extraction",
+        "SciREX BENCHMARKS n-ary relation extraction"
+      ],
+      "evidence_ids": [
+        "evidence:2020.acl-main.670:76f747de912e86:0",
+        "evidence:2020.acl-main.670:76f747de912e86:1"
+      ]
+    },
+    {
+      "paper_id": "2022.emnlp-main.46",
+      "year": 2022,
+      "title": "ReSel: N-ary Relation Extraction from Scientific Text and Tables by Learning to Retrieve and Select",
+      "source_url": "https://aclanthology.org/2022.emnlp-main.46/",
+      "contributions": [
+        "ReSel ADDRESSES n-ary relation extraction",
+        "ReSel USES cross-modal entity graph",
+        "ReSel USES text-table evidence",
+        "text-table evidence IMPROVES n-ary relation extraction"
+      ],
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:0",
+        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:1",
+        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:2",
+        "evidence:2022.emnlp-main.46:e29e8d943c26ff:0"
+      ]
+    },
+    {
+      "paper_id": "2024.emnlp-main.726",
+      "year": 2024,
+      "title": "SciER: An Entity and Relation Extraction Dataset for Datasets, Methods, and Tasks in Scientific Documents",
+      "source_url": "https://aclanthology.org/2024.emnlp-main.726/",
+      "contributions": [
+        "SciER BENCHMARKS full-text scientific information extraction",
+        "SciER REPORTS 106 full-text papers",
+        "SciER REPORTS 12k relations",
+        "SciER REPORTS 24k entities"
+      ],
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:0",
+        "evidence:2024.emnlp-main.726:76f747de912e86:1",
+        "evidence:2024.emnlp-main.726:76f747de912e86:2",
+        "evidence:2024.emnlp-main.726:76f747de912e86:3"
+      ]
+    },
+    {
+      "paper_id": "2024.naacl-long.300",
+      "year": 2024,
+      "title": "GLiNER: Generalist Model for Named Entity Recognition using Bidirectional Transformer",
+      "source_url": "https://aclanthology.org/2024.naacl-long.300/",
+      "contributions": [
+        "GLiNER ADDRESSES entity extraction",
+        "GLiNER ADDRESSES open-type entity recognition",
+        "GLiNER SUPPORTS zero-shot extraction",
+        "GLiNER USES bidirectional transformer"
+      ],
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:0",
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:1",
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:2",
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:3"
+      ]
+    },
+    {
+      "paper_id": "2025.emnlp-main.732",
+      "year": 2025,
+      "title": "SciNLP: A Domain-Specific Benchmark for Full-Text Scientific Entity and Relation Extraction in NLP",
+      "source_url": "https://aclanthology.org/2025.emnlp-main.732/",
+      "contributions": [
+        "SciNLP BENCHMARKS full-text scientific information extraction",
+        "SciNLP SUPPORTS NLP knowledge graph"
+      ],
+      "evidence_ids": [
+        "evidence:2025.emnlp-main.732:76f747de912e86:0",
+        "evidence:2025.emnlp-main.732:76f747de912e86:1"
+      ]
+    },
+    {
+      "paper_id": "2025.naacl-long.418",
+      "year": 2025,
+      "title": "GLiREL - Generalist Model for Zero-Shot Relation Extraction",
+      "source_url": "https://aclanthology.org/2025.naacl-long.418/",
+      "contributions": [
+        "GLiREL ADDRESSES relation extraction",
+        "GLiREL ADDRESSES zero-shot relation extraction",
+        "GLiREL USES open relation schema"
+      ],
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:0",
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:1",
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:2"
+      ]
+    }
+  ],
+  "research_ideas": [
+    {
+      "idea_id": "gap-01",
+      "title": "在 SciERC 上系统评测 GLiNER",
+      "hypothesis": "GLiNER 已用于“entity extraction”，而 SciERC 也用于该任务；图中尚无二者的 EVALUATES_ON 边，可设计统一实验验证其领域适配性。",
+      "graph_basis": [
+        "GLiNER -ADDRESSES-> entity extraction",
+        "SciERC -BENCHMARKS-> entity extraction",
+        "缺失：GLiNER -EVALUATES_ON-> SciERC"
+      ],
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:2",
+        "evidence:D18-1360:76f747de912e86:1"
+      ],
+      "novelty_status": "unverified",
+      "next_check": "联网检索同任务论文，并由裁判比较既有工作与拟议实验差异。"
+    },
+    {
+      "idea_id": "gap-02",
+      "title": "在 SciREX 上系统评测 ReSel",
+      "hypothesis": "ReSel 已用于“n-ary relation extraction”，而 SciREX 也用于该任务；图中尚无二者的 EVALUATES_ON 边，可设计统一实验验证其领域适配性。",
+      "graph_basis": [
+        "ReSel -ADDRESSES-> n-ary relation extraction",
+        "SciREX -BENCHMARKS-> n-ary relation extraction",
+        "缺失：ReSel -EVALUATES_ON-> SciREX"
+      ],
+      "evidence_ids": [
+        "evidence:2020.acl-main.670:76f747de912e86:1",
+        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:0"
+      ],
+      "novelty_status": "unverified",
+      "next_check": "联网检索同任务论文，并由裁判比较既有工作与拟议实验差异。"
+    },
+    {
+      "idea_id": "gap-03",
+      "title": "在 SciERC 上系统评测 GLiREL",
+      "hypothesis": "GLiREL 已用于“relation extraction”，而 SciERC 也用于该任务；图中尚无二者的 EVALUATES_ON 边，可设计统一实验验证其领域适配性。",
+      "graph_basis": [
+        "GLiREL -ADDRESSES-> relation extraction",
+        "SciERC -BENCHMARKS-> relation extraction",
+        "缺失：GLiREL -EVALUATES_ON-> SciERC"
+      ],
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:1",
+        "evidence:D18-1360:76f747de912e86:2"
+      ],
+      "novelty_status": "unverified",
+      "next_check": "联网检索同任务论文，并由裁判比较既有工作与拟议实验差异。"
+    }
+  ],
+  "graph_context": {
+    "query": "如何从科学论文中抽取可追溯知识图谱，并利用图谱理解技术脉络和生成研究想法？",
+    "generator_route": {
+      "demo": "deterministic-graph-gap-miner",
+      "planned_model": "Qwen/Qwen2.5-7B-Instruct",
+      "constraint": "模型只能重写或扩展图谱候选，必须保留 graph_basis 与 evidence_ids。"
+    },
+    "facts": [
+      {
+        "triple": [
+          "SciERC",
+          "BENCHMARKS",
+          "entity extraction"
+        ],
+        "evidence_ids": [
+          "evidence:D18-1360:76f747de912e86:1"
+        ]
+      },
+      {
+        "triple": [
+          "SciIE",
+          "SUPPORTS",
+          "scientific knowledge graph construction"
+        ],
+        "evidence_ids": [
+          "evidence:D18-1360:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "triple": [
+          "ReSel",
+          "ADDRESSES",
+          "n-ary relation extraction"
+        ],
+        "evidence_ids": [
+          "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "triple": [
+          "GLiNER",
+          "ADDRESSES",
+          "open-type entity recognition"
+        ],
+        "evidence_ids": [
+          "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "triple": [
+          "SciER",
+          "BENCHMARKS",
+          "full-text scientific information extraction"
+        ],
+        "evidence_ids": [
+          "evidence:2024.emnlp-main.726:76f747de912e86:0"
+        ]
+      },
+      {
+        "triple": [
+          "SciERC",
+          "BENCHMARKS",
+          "scientific information extraction"
+        ],
+        "evidence_ids": [
+          "evidence:D18-1360:76f747de912e86:0"
+        ]
+      },
+      {
+        "triple": [
+          "DyGIE++",
+          "EVALUATES_ON",
+          "SciERC"
+        ],
+        "evidence_ids": [
+          "evidence:D19-1585:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "triple": [
+          "GLiREL",
+          "ADDRESSES",
+          "zero-shot relation extraction"
+        ],
+        "evidence_ids": [
+          "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "triple": [
+          "SciNLP",
+          "BENCHMARKS",
+          "full-text scientific information extraction"
+        ],
+        "evidence_ids": [
+          "evidence:2025.emnlp-main.732:76f747de912e86:0"
+        ]
+      },
+      {
+        "triple": [
+          "SciNLP",
+          "SUPPORTS",
+          "NLP knowledge graph"
+        ],
+        "evidence_ids": [
+          "evidence:2025.emnlp-main.732:76f747de912e86:1"
+        ]
+      },
+      {
+        "triple": [
+          "GLiNER",
+          "ADDRESSES",
+          "entity extraction"
+        ],
+        "evidence_ids": [
+          "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:2"
+        ]
+      },
+      {
+        "triple": [
+          "SciER",
+          "REPORTS",
+          "24k entities"
+        ],
+        "evidence_ids": [
+          "evidence:2024.emnlp-main.726:76f747de912e86:2"
+        ]
+      }
+    ]
+  },
+  "warnings": [
+    "研究想法由缺失边和跨论文路径生成，只是待验证假设。",
+    "新颖性必须再经过联网文献检索与人工评审，不能由图结构单独证明。"
+  ]
+}

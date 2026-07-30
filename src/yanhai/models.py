@@ -94,8 +94,14 @@ class Claim:
     target: str
     relation_type: str
     base_confidence: float
+    source_type: str = ""
+    target_type: str = ""
     evidence_ids: list[str] = field(default_factory=list)
     criticisms: list[str] = field(default_factory=list)
+    proposal_reason: str = ""
+    judge_reason: str = ""
+    model_route: str = "schema-guided-pattern"
+    score_breakdown: dict[str, float] = field(default_factory=dict)
     judge_score: float = 0.0
     status: str = "proposed"
 
@@ -106,9 +112,17 @@ class Claim:
             "relation": self.relation,
             "target": self.target,
             "relation_type": self.relation_type,
+            "source_type": self.source_type,
+            "target_type": self.target_type,
             "base_confidence": round(self.base_confidence, 3),
             "evidence_ids": list(self.evidence_ids),
             "criticisms": list(self.criticisms),
+            "proposal_reason": self.proposal_reason,
+            "judge_reason": self.judge_reason,
+            "model_route": self.model_route,
+            "score_breakdown": {
+                key: round(value, 3) for key, value in self.score_breakdown.items()
+            },
             "judge_score": round(self.judge_score, 3),
             "status": self.status,
         }

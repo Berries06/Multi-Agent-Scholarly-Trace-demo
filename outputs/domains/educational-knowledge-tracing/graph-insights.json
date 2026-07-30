@@ -1,0 +1,238 @@
+{
+  "domain": {
+    "domain_id": "educational-knowledge-tracing",
+    "domain_name": "教育知识追踪与个性化学习",
+    "version": "2026-07-30",
+    "paper_count": 6,
+    "description": "赛题场景对齐切片：追踪循环网络、记忆网络和注意力模型如何刻画学习者知识状态。",
+    "query_example": "请比较 DKT、DKVMN、SAINT 与 AKT 的知识追踪路线，并为学习者生成循证学习建议。",
+    "corpus_type": "verified-metadata-and-abstract-derived knowledge cards",
+    "source_scope": "项目组依据会议官网、DOI 元数据和公开摘要撰写知识卡；未缓存论文全文，卡片证据只能证明本卡片中记录的摘要级命题。"
+  },
+  "timeline": [
+    {
+      "paper_id": "neurips-2015-dkt",
+      "year": 2015,
+      "title": "Deep Knowledge Tracing",
+      "source_url": "https://proceedings.neurips.cc/paper/2015/hash/bac9162b47c56fc8a4d2a519803d51b3-Abstract.html",
+      "contributions": [
+        "Deep Knowledge Tracing ADDRESSES knowledge tracing",
+        "Deep Knowledge Tracing EVALUATES_ON ASSISTments",
+        "Deep Knowledge Tracing IMPROVES learner performance prediction",
+        "Deep Knowledge Tracing USES recurrent neural network"
+      ],
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:90f0f88bf84f2b:0",
+        "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0",
+        "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1",
+        "evidence:neurips-2015-dkt:e29e8d943c26ff:0"
+      ]
+    },
+    {
+      "paper_id": "10.1145-3038912.3052580",
+      "year": 2017,
+      "title": "Dynamic Key-Value Memory Networks for Knowledge Tracing",
+      "source_url": "https://doi.org/10.1145/3038912.3052580",
+      "contributions": [
+        "DKVMN ADDRESSES knowledge tracing",
+        "DKVMN EVALUATES_ON ASSISTments",
+        "DKVMN IMPROVES learner performance prediction",
+        "DKVMN USES key-value memory network"
+      ],
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0",
+        "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0",
+        "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1",
+        "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0"
+      ]
+    },
+    {
+      "paper_id": "10.1007-978-3-030-52240-7_13",
+      "year": 2020,
+      "title": "EdNet: A Large-Scale Hierarchical Dataset in Education",
+      "source_url": "https://doi.org/10.1007/978-3-030-52240-7_13",
+      "contributions": [
+        "EdNet BENCHMARKS knowledge tracing",
+        "EdNet ENABLES learner performance prediction",
+        "EdNet REPORTS 131 million interactions",
+        "EdNet REPORTS 784,309 learners"
+      ],
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0",
+        "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1",
+        "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0",
+        "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1"
+      ]
+    },
+    {
+      "paper_id": "10.1145-3386527.3405945",
+      "year": 2020,
+      "title": "Towards an Appropriate Query, Key, and Value Computation for Knowledge Tracing",
+      "source_url": "https://doi.org/10.1145/3386527.3405945",
+      "contributions": [
+        "SAINT ADDRESSES knowledge tracing",
+        "SAINT EVALUATES_ON EdNet",
+        "SAINT IMPROVES learner performance prediction",
+        "SAINT USES self-attention"
+      ],
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0",
+        "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0",
+        "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1",
+        "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0"
+      ]
+    },
+    {
+      "paper_id": "10.1145-3394486.3403282",
+      "year": 2020,
+      "title": "Context-Aware Attentive Knowledge Tracing",
+      "source_url": "https://doi.org/10.1145/3394486.3403282",
+      "contributions": [
+        "AKT ADDRESSES knowledge tracing",
+        "AKT EVALUATES_ON ASSISTments",
+        "AKT IMPROVES learner performance prediction",
+        "AKT USES Rasch model"
+      ],
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0",
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0",
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1",
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2",
+        "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0"
+      ]
+    },
+    {
+      "paper_id": "neurips-2022-pykt",
+      "year": 2022,
+      "title": "pyKT: A Python Library to Benchmark Deep Learning based Knowledge Tracing Models",
+      "source_url": "https://proceedings.neurips.cc/paper_files/paper/2022/hash/75ca2b23d9794f02a92449af65a57556-Abstract-Datasets_and_Benchmarks.html",
+      "contributions": [
+        "pyKT ADDRESSES knowledge tracing",
+        "pyKT EVALUATES_ON ASSISTments",
+        "pyKT EVALUATES_ON EdNet",
+        "pyKT USES standardized preprocessing"
+      ],
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:90f0f88bf84f2b:0",
+        "evidence:neurips-2022-pykt:90f0f88bf84f2b:1",
+        "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0",
+        "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1",
+        "evidence:neurips-2022-pykt:e29e8d943c26ff:0"
+      ]
+    }
+  ],
+  "research_ideas": [
+    {
+      "idea_id": "gap-01",
+      "title": "在 EdNet 上系统评测 DKVMN",
+      "hypothesis": "DKVMN 已用于“knowledge tracing”，而 EdNet 也用于该任务；图中尚无二者的 EVALUATES_ON 边，可设计统一实验验证其领域适配性。",
+      "graph_basis": [
+        "DKVMN -ADDRESSES-> knowledge tracing",
+        "EdNet -BENCHMARKS-> knowledge tracing",
+        "缺失：DKVMN -EVALUATES_ON-> EdNet"
+      ],
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0",
+        "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1"
+      ],
+      "novelty_status": "unverified",
+      "next_check": "联网检索同任务论文，并由裁判比较既有工作与拟议实验差异。"
+    },
+    {
+      "idea_id": "gap-02",
+      "title": "在 EdNet 上系统评测 AKT",
+      "hypothesis": "AKT 已用于“knowledge tracing”，而 EdNet 也用于该任务；图中尚无二者的 EVALUATES_ON 边，可设计统一实验验证其领域适配性。",
+      "graph_basis": [
+        "AKT -ADDRESSES-> knowledge tracing",
+        "EdNet -BENCHMARKS-> knowledge tracing",
+        "缺失：AKT -EVALUATES_ON-> EdNet"
+      ],
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0",
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2"
+      ],
+      "novelty_status": "unverified",
+      "next_check": "联网检索同任务论文，并由裁判比较既有工作与拟议实验差异。"
+    },
+    {
+      "idea_id": "gap-03",
+      "title": "在 EdNet 上系统评测 Deep Knowledge Tracing",
+      "hypothesis": "Deep Knowledge Tracing 已用于“knowledge tracing”，而 EdNet 也用于该任务；图中尚无二者的 EVALUATES_ON 边，可设计统一实验验证其领域适配性。",
+      "graph_basis": [
+        "Deep Knowledge Tracing -ADDRESSES-> knowledge tracing",
+        "EdNet -BENCHMARKS-> knowledge tracing",
+        "缺失：Deep Knowledge Tracing -EVALUATES_ON-> EdNet"
+      ],
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0",
+        "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1"
+      ],
+      "novelty_status": "unverified",
+      "next_check": "联网检索同任务论文，并由裁判比较既有工作与拟议实验差异。"
+    }
+  ],
+  "graph_context": {
+    "query": "请比较 DKT、DKVMN、SAINT 与 AKT 的知识追踪路线，并为学习者生成循证学习建议。",
+    "generator_route": {
+      "demo": "deterministic-graph-gap-miner",
+      "planned_model": "Qwen/Qwen2.5-7B-Instruct",
+      "constraint": "模型只能重写或扩展图谱候选，必须保留 graph_basis 与 evidence_ids。"
+    },
+    "facts": [
+      {
+        "triple": [
+          "AKT",
+          "USES",
+          "Rasch model"
+        ],
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1"
+        ]
+      },
+      {
+        "triple": [
+          "AKT",
+          "USES",
+          "monotonic attention"
+        ],
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0"
+        ]
+      },
+      {
+        "triple": [
+          "AKT",
+          "ADDRESSES",
+          "knowledge tracing"
+        ],
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2"
+        ]
+      },
+      {
+        "triple": [
+          "AKT",
+          "IMPROVES",
+          "learner performance prediction"
+        ],
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0"
+        ]
+      },
+      {
+        "triple": [
+          "AKT",
+          "EVALUATES_ON",
+          "ASSISTments"
+        ],
+        "evidence_ids": [
+          "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0"
+        ]
+      }
+    ]
+  },
+  "warnings": [
+    "研究想法由缺失边和跨论文路径生成，只是待验证假设。",
+    "新颖性必须再经过联网文献检索与人工评审，不能由图结构单独证明。"
+  ]
+}

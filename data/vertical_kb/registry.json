@@ -1,0 +1,28 @@
+{
+  "version": "2026-07-30",
+  "default_domain_id": "scientific-ie-kg",
+  "selection_method": "目的性分层抽样：选择项目核心方法、跨学科技术情报和个性化学习三个互补领域；不是随机统计样本。",
+  "domains": [
+    {
+      "domain_id": "scientific-ie-kg",
+      "path": ".",
+      "domain_name": "科学文献信息抽取与知识图谱构建",
+      "description": "项目核心领域：从科研论文抽取实体、关系与证据跨度，并构建可审计知识图谱。",
+      "query_example": "如何从科学论文中抽取可追溯知识图谱，并利用图谱理解技术脉络和生成研究想法？"
+    },
+    {
+      "domain_id": "materials-discovery-gnn",
+      "path": "domains/materials-discovery-gnn",
+      "domain_name": "材料发现与图神经网络",
+      "description": "跨学科技术情报切片：追踪晶体图网络、通用势函数与主动学习材料发现路线。",
+      "query_example": "请沿知识图谱分析图神经网络如何用于材料性质预测与稳定材料发现，并推荐关键论文。"
+    },
+    {
+      "domain_id": "educational-knowledge-tracing",
+      "path": "domains/educational-knowledge-tracing",
+      "domain_name": "教育知识追踪与个性化学习",
+      "description": "赛题场景对齐切片：追踪循环网络、记忆网络和注意力模型如何刻画学习者知识状态。",
+      "query_example": "请比较 DKT、DKVMN、SAINT 与 AKT 的知识追踪路线，并为学习者生成循证学习建议。"
+    }
+  ]
+}

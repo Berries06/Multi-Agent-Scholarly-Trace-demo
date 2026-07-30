@@ -1,0 +1,141 @@
+{
+  "benchmark_id": "track-a-decision-demo-v1",
+  "domain": "科学文献信息抽取与知识图谱构建",
+  "frozen_on": "2026-07-29",
+  "scope": "12 条人工整理的小样本演示命题，只验证裁决管线能否按预设规则运行，不代表模型在公开基准上的科研性能。",
+  "cases": [
+    {
+      "claim_id": "B001",
+      "source": "DyGIE++",
+      "relation": "uses",
+      "target": "contextualized span representations",
+      "relation_type": "USES",
+      "base_confidence": 0.87,
+      "evidence_ids": ["D19-1585"],
+      "gold_supported": true,
+      "error_type": "none"
+    },
+    {
+      "claim_id": "B002",
+      "source": "DyGIE++",
+      "relation": "evaluates_on",
+      "target": "SciERC",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.82,
+      "evidence_ids": ["D19-1585"],
+      "gold_supported": true,
+      "error_type": "none"
+    },
+    {
+      "claim_id": "B003",
+      "source": "SciREX",
+      "relation": "benchmarks",
+      "target": "document-level information extraction",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.86,
+      "evidence_ids": ["2020.acl-main.670"],
+      "gold_supported": true,
+      "error_type": "none"
+    },
+    {
+      "claim_id": "B004",
+      "source": "ReSel",
+      "relation": "uses",
+      "target": "text-table evidence",
+      "relation_type": "USES",
+      "base_confidence": 0.84,
+      "evidence_ids": ["2022.emnlp-main.46"],
+      "gold_supported": true,
+      "error_type": "none"
+    },
+    {
+      "claim_id": "B005",
+      "source": "SciER",
+      "relation": "reports",
+      "target": "24k entities",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.90,
+      "evidence_ids": ["2024.emnlp-main.726"],
+      "gold_supported": true,
+      "error_type": "none"
+    },
+    {
+      "claim_id": "B006",
+      "source": "GLiNER",
+      "relation": "addresses",
+      "target": "open-type entity recognition",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.82,
+      "evidence_ids": ["2024.naacl-long.300"],
+      "gold_supported": true,
+      "error_type": "none"
+    },
+    {
+      "claim_id": "B007",
+      "source": "GLiREL",
+      "relation": "addresses",
+      "target": "zero-shot relation extraction",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.81,
+      "evidence_ids": ["2025.naacl-long.418"],
+      "gold_supported": true,
+      "error_type": "none"
+    },
+    {
+      "claim_id": "B008",
+      "source": "SciER",
+      "relation": "guarantees",
+      "target": "perfect out-of-distribution extraction",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.91,
+      "evidence_ids": ["2024.emnlp-main.726"],
+      "gold_supported": false,
+      "error_type": "overclaim"
+    },
+    {
+      "claim_id": "B009",
+      "source": "GraphRAG",
+      "relation": "proves",
+      "target": "scientific novelty",
+      "relation_type": "SUPPORTS",
+      "base_confidence": 0.88,
+      "evidence_ids": [],
+      "gold_supported": false,
+      "error_type": "missing_evidence"
+    },
+    {
+      "claim_id": "B010",
+      "source": "GLiNER",
+      "relation": "evaluates_on",
+      "target": "SciREX",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.79,
+      "evidence_ids": ["unknown-paper"],
+      "gold_supported": false,
+      "error_type": "unknown_evidence"
+    },
+    {
+      "claim_id": "B011",
+      "source": "multi-agent debate",
+      "relation": "guarantees",
+      "target": "zero hallucination",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.93,
+      "evidence_ids": ["2305.14325"],
+      "gold_supported": false,
+      "error_type": "overclaim"
+    },
+    {
+      "claim_id": "B012",
+      "source": "24k entities",
+      "relation": "reports",
+      "target": "SciER",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": ["2024.emnlp-main.726"],
+      "gold_supported": false,
+      "error_type": "direction_error"
+    }
+  ]
+}
+
