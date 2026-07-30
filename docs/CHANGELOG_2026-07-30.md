@@ -166,3 +166,9 @@ Smoke 检查覆盖：
 - `RUN_DEMO.bat`、`STOP_DEMO.bat` 改为纯 ASCII 控制文本，避免旧版 `cmd.exe` 把 UTF-8 中文错误提示误解析成命令。
 - 浏览器启动改为 ShellExecute + Explorer 两级尝试；若均被安全策略拦截，后端继续运行，窗口保留并显示手动地址。
 - 新增 `OPEN_DEMO.url` 作为备用入口，并纳入交付 ZIP。
+
+## 最终提交包仓库入口（2026-07-31）
+
+- README 首屏增加公开仓库、`main` 最新版和提交历史入口。
+- ZIP 根目录新增 `GITHUB_REPOSITORY.url`，教授无需在长文档中搜索即可打开源码。
+- 打包脚本将仓库快捷方式列为必需文件，缺失时拒绝生成不完整提交包。

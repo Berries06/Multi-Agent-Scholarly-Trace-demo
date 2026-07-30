@@ -27,6 +27,8 @@ dist/yanhai-demo-windows.zip
 
 压缩包包含运行所需的 `src/`、`web/`、`data/`、`config/`、启动脚本、文档和测试；不包含 `.git`、当前运行日志、PID 文件或本机缓存。
 
+压缩包根目录还包含 `GITHUB_REPOSITORY.url`。评审双击即可打开公开源码仓库的默认 `main` 分支；README 顶部也提供仓库、最新版和提交历史三个入口。
+
 ## 3. 接收者如何运行
 
 ### Windows 双击方式（推荐）

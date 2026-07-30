@@ -21,6 +21,7 @@ $items = @(
     "RUN_DEMO.bat",
     "STOP_DEMO.bat",
     "OPEN_DEMO.url",
+    "GITHUB_REPOSITORY.url",
     "Dockerfile",
     "docker-compose.yml",
     "config",
