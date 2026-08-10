@@ -22,10 +22,19 @@ PROVIDER_REGISTRY: dict[str, dict[str, Any]] = {
     "deepseek": {
         "id": "deepseek",
         "label": "DeepSeek",
-        "description": "使用 DeepSeek OpenAI-compatible Chat Completions 接口。",
+        "description": "使用自己的 DeepSeek API Key。",
         "default_model": "deepseek-v4-flash",
         "models": ["deepseek-v4-flash", "deepseek-v4-pro"],
         "requires_api_key": True,
+        "protocol": "openai_chat",
+    },
+    "free-deepseek": {
+        "id": "free-deepseek",
+        "label": "免费 DeepSeek (Flash)",
+        "description": "由服主提供的 DeepSeek Flash，无需自备 API Key，直接使用。",
+        "default_model": "deepseek-v4-flash",
+        "models": ["deepseek-v4-flash"],
+        "requires_api_key": False,
         "protocol": "openai_chat",
     },
     "openai": {
@@ -358,6 +367,7 @@ class OpenAIChatProvider(BaseProvider):
         super().__init__(config, transport)
         self.endpoint = {
             "deepseek": "https://api.deepseek.com/chat/completions",
+            "free-deepseek": "https://api.deepseek.com/chat/completions",
             "kimi": "https://api.moonshot.cn/v1/chat/completions",
         }[config.provider]
 
@@ -512,7 +522,7 @@ def create_provider(
 ) -> BaseProvider:
     if config.provider == "openai":
         return OpenAIResponsesProvider(config, transport)
-    if config.provider in {"deepseek", "kimi"}:
+    if config.provider in {"deepseek", "kimi", "free-deepseek"}:
         return OpenAIChatProvider(config, transport)
     if config.provider == "anthropic":
         return AnthropicMessagesProvider(config, transport)

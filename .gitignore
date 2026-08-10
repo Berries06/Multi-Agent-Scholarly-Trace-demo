@@ -15,3 +15,6 @@ outputs/*.pid
 papers/**/*.pdf
 tmp/
 dist/
+secret/
+secret/*
+!secret/.gitkeep

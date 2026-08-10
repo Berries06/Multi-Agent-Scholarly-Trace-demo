@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import http.client
 import json
+import os
 import threading
 import unittest
 from pathlib import Path
@@ -18,6 +19,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 class ServerIntegrationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
+        os.environ["YANHAI_REGISTRATION_OPEN"] = "1"
         cls._temporary_directory = TemporaryDirectory()
         config = RuntimeConfig(
             host="127.0.0.1",
@@ -71,6 +73,25 @@ class ServerIntegrationTests(unittest.TestCase):
         connection.close()
         return status, response_headers, response_payload
 
+    def authenticate(self, suffix: str = "itest") -> dict[str, str]:
+        """Register a user and return headers carrying the session cookie."""
+        status, headers, payload = self.request(
+            "POST",
+            "/api/auth/register",
+            {
+                "email": f"{suffix}@test.local",
+                "nickname": f"IT{suffix}",
+                "password": "test1234",
+            },
+        )
+        self.assertEqual(status, 201)
+        cookie = next(
+            item.split(";", 1)[0]
+            for item in headers["Set-Cookie"].split(", ")
+            if item.startswith("yanhai_session=")
+        )
+        return {"Cookie": cookie}
+
     def test_health_and_readiness_expose_stable_status(self) -> None:
         health_status, health_headers, health = self.request(
             "GET",
@@ -109,7 +130,10 @@ class ServerIntegrationTests(unittest.TestCase):
                 "profile_id": "graduate_cross_domain",
                 "query": "图神经网络如何用于稳定材料发现？",
             },
-            {"Idempotency-Key": "materials-domain-run-123"},
+            {
+                "Idempotency-Key": "materials-domain-run-123",
+                **self.authenticate("domain"),
+            },
         )
         self.assertEqual(run_status, 200)
         self.assertEqual(
@@ -133,7 +157,8 @@ class ServerIntegrationTests(unittest.TestCase):
             "profile_id": "undergraduate_ai",
             "query": "如何用知识图谱理解科研论文脉络？",
         }
-        headers = {"Idempotency-Key": "server-test-key-123"}
+        auth = self.authenticate("runidem")
+        headers = {"Idempotency-Key": "server-test-key-123", **auth}
         first_status, first_headers, first = self.request(
             "POST",
             "/api/run",
@@ -157,7 +182,8 @@ class ServerIntegrationTests(unittest.TestCase):
         self.assertIn("request_id", first["observability"])
 
     def test_reusing_idempotency_key_for_new_payload_is_a_conflict(self) -> None:
-        headers = {"Idempotency-Key": "conflict-test-key-123"}
+        auth = self.authenticate("conflict")
+        headers = {"Idempotency-Key": "conflict-test-key-123", **auth}
         self.request(
             "POST",
             "/api/run",
@@ -175,7 +201,8 @@ class ServerIntegrationTests(unittest.TestCase):
         self.assertFalse(payload["error"]["retryable"])
 
     def test_metrics_include_route_status_and_idempotency_event(self) -> None:
-        headers = {"Idempotency-Key": "metrics-test-key-123"}
+        auth = self.authenticate("metrics")
+        headers = {"Idempotency-Key": "metrics-test-key-123", **auth}
         payload = {"profile_id": "undergraduate_ai", "query": "metrics-query"}
         self.request("POST", "/api/run", payload, headers)
         self.request("POST", "/api/run", payload, headers)
@@ -186,6 +213,7 @@ class ServerIntegrationTests(unittest.TestCase):
         self.assertEqual(metrics["openalex_circuit"]["state"], "closed")
 
     def test_malformed_json_uses_stable_error_envelope(self) -> None:
+        auth = self.authenticate("badjson")
         connection = http.client.HTTPConnection(
             "127.0.0.1",
             self.port,
@@ -198,6 +226,7 @@ class ServerIntegrationTests(unittest.TestCase):
             headers={
                 "Content-Type": "application/json",
                 "Content-Length": "1",
+                **auth,
             },
         )
         response = connection.getresponse()

@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import mimetypes
+import os
 import re
 import signal
 import socket
@@ -15,6 +16,7 @@ from concurrent.futures import (
     TimeoutError as FutureTimeoutError,
 )
 from http import HTTPStatus
+from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, Callable
@@ -32,11 +34,41 @@ from .harness import (
 )
 from .online_rag import OnlineRAG
 from .orchestrator import DEFAULT_QUERY, ScholarlyTraceOrchestrator
-from .resources import project_root
+from .providers import ProviderConfig, ProviderError, create_provider, list_providers
+from .resources import database_path, project_root
+from .storage import AppRepository
 
 
 PROJECT_ROOT = project_root()
 WEB_ROOT = PROJECT_ROOT / "web"
+REPOSITORY = AppRepository(database_path())
+
+
+def _load_server_api_key() -> str:
+    """Read the server-managed DeepSeek API key, used by the free option."""
+    key_path = PROJECT_ROOT / "secret" / "DeepSeekAPI.txt"
+    if key_path.exists():
+        return key_path.read_text(encoding="utf-8").strip()
+    return ""
+
+
+SERVER_API_KEY = _load_server_api_key()
+
+
+def _registration_open() -> bool:
+    return os.environ.get("YANHAI_REGISTRATION_OPEN", "0") == "1"
+
+
+def _server_provider_for_user(
+    user: dict[str, Any] | None,
+    payload: dict[str, Any] | None,
+) -> ProviderConfig:
+    """For 'free-deepseek', inject the server-managed DeepSeek Flash key."""
+    raw = dict(payload or {})
+    if raw.get("provider") == "free-deepseek" and user is not None:
+        raw["api_key"] = SERVER_API_KEY
+        raw["provider"] = "deepseek"
+    return ProviderConfig.from_payload(raw)
 
 
 class ServerBusyError(RuntimeError):
@@ -81,6 +113,7 @@ class DemoApplication:
         self.capacity = threading.BoundedSemaphore(
             config.max_workers + config.max_queued_tasks
         )
+        self.repository = REPOSITORY
 
     def execute(
         self,
@@ -316,8 +349,44 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
             return supplied
         return f"req_{uuid.uuid4().hex[:20]}"
 
+    def _session_token(self) -> str | None:
+        raw = self.headers.get("Cookie", "")
+        cookie = SimpleCookie()
+        try:
+            cookie.load(raw)
+        except Exception:
+            return None
+        morsel = cookie.get("yanhai_session")
+        return morsel.value if morsel else None
+
+    def _current_user(self, *, required: bool = False) -> dict[str, Any] | None:
+        user = self.application.repository.user_for_token(self._session_token())
+        if required and user is None:
+            raise PermissionError("请先注册或登录。")
+        return user
+
+    @staticmethod
+    def _cookie_header(token: str, *, clear: bool = False) -> str:
+        path = os.environ.get("YANHAI_COOKIE_PATH", "/")
+        secure = (
+            "; Secure"
+            if os.environ.get("YANHAI_COOKIE_SECURE", "0") == "1"
+            else ""
+        )
+        if clear:
+            return (
+                f"yanhai_session=; Path={path}; Max-Age=0; HttpOnly; "
+                f"SameSite=Lax{secure}"
+            )
+        return (
+            f"yanhai_session={token}; Path={path}; Max-Age=1209600; "
+            f"HttpOnly; SameSite=Lax{secure}"
+        )
+
     def _authorized(self, route: str) -> bool:
         if route in {"/api/health", "/api/ready"}:
+            return True
+        if route.startswith("/api/auth/"):
             return True
         if not route.startswith("/api/"):
             return True
@@ -431,6 +500,13 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
                 }
             )
             return
+        if route == "/api/auth/me":
+            user = self._current_user()
+            self._send_json({"authenticated": user is not None, "user": user})
+            return
+        if route == "/api/auth/status":
+            self._send_json({"registration_open": _registration_open()})
+            return
         if route == "/api/profiles":
             self._send_json(
                 {"profiles": app.orchestrator.list_profiles()}
@@ -478,6 +554,54 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
         self._send_static(route)
 
     def _dispatch_post(self, route: str) -> None:
+        if route == "/api/auth/register":
+            if not _registration_open():
+                self._send_json(
+                    {"error": "当前未开放公开注册，请联系服主。"},
+                    HTTPStatus.FORBIDDEN,
+                )
+                return
+            payload = self._read_json()
+            user = self.application.repository.register_user(
+                str(payload.get("email", "")),
+                str(payload.get("nickname", "")),
+                str(payload.get("password", "")),
+            )
+            token = self.application.repository.create_auth_session(
+                str(user["user_id"])
+            )
+            self._send_json(
+                {"authenticated": True, "user": user},
+                HTTPStatus.CREATED,
+                headers={"Set-Cookie": self._cookie_header(token)},
+            )
+            return
+        if route == "/api/auth/login":
+            payload = self._read_json()
+            user = self.application.repository.verify_login(
+                str(
+                    payload.get("identifier")
+                    or payload.get("email")
+                    or ""
+                ),
+                str(payload.get("password", "")),
+            )
+            token = self.application.repository.create_auth_session(
+                str(user["user_id"])
+            )
+            self._send_json(
+                {"authenticated": True, "user": user},
+                headers={"Set-Cookie": self._cookie_header(token)},
+            )
+            return
+        if route == "/api/auth/logout":
+            self.application.repository.revoke_auth_session(self._session_token())
+            self._send_json(
+                {"authenticated": False, "user": None},
+                headers={"Set-Cookie": self._cookie_header("", clear=True)},
+            )
+            return
+
         if route not in {
             "/api/run",
             "/api/feedback",
@@ -488,6 +612,13 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
                 status=HTTPStatus.NOT_FOUND,
                 code="route_not_found",
                 message="Unknown API route.",
+            )
+            return
+        if route in {"/api/run", "/api/feedback"} and self._current_user() is None:
+            self._send_api_error(
+                status=HTTPStatus.UNAUTHORIZED,
+                code="login_required",
+                message="请先注册或登录。",
             )
             return
         try:
@@ -515,6 +646,14 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
             return
 
         profile_id = str(payload.get("profile_id", "undergraduate_ai"))
+        if route in {"/api/run", "/api/feedback"}:
+            user = self._current_user()
+            if user is not None:
+                profile = self.application.repository.learner_profile(
+                    str(user["user_id"])
+                )
+                self.application.orchestrator.profiles[profile.profile_id] = profile
+                profile_id = profile.profile_id
         domain_id = str(
             payload.get("domain_id")
             or self.application.orchestrator.default_domain_id

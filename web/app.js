@@ -10,6 +10,8 @@ const state = {
   selectedProfileId: "undergraduate_ai",
   result: null,
   activeTab: "briefing",
+  user: null,
+  registrationOpen: false,
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -75,6 +77,97 @@ async function requestJson(path, options = {}, timeoutMs = 15000) {
     throw error;
   } finally {
     clearTimeout(timer);
+  }
+}
+
+function setAccountMessage(message, isError = false) {
+  const target = $("#account-message");
+  target.textContent = message;
+  target.className = "provider-test-status";
+  target.classList.toggle("error", isError);
+}
+
+function showAuthMode(mode) {
+  const registering = mode === "register";
+  $("#login-form").hidden = registering;
+  $("#register-form").hidden = !registering;
+  $("#show-login-button").classList.toggle("active", !registering);
+  $("#show-register-button").classList.toggle("active", registering);
+  $("#show-login-button").setAttribute("aria-selected", String(!registering));
+  $("#show-register-button").setAttribute("aria-selected", String(registering));
+  setAccountMessage("");
+  const focusTarget = registering ? $("#register-email") : $("#login-identifier");
+  window.setTimeout(() => focusTarget?.focus(), 0);
+}
+
+function renderAccount() {
+  const authenticated = Boolean(state.user);
+  $("#auth-view").hidden = authenticated;
+  $("#app-view").hidden = !authenticated;
+  if (authenticated) {
+    $("#account-status").textContent =
+      `${state.user.profile?.name || state.user.nickname || "用户"} · ${state.user.email} · 画像 v${state.user.profile_version}`;
+  } else {
+    $("#show-register-button").disabled = !state.registrationOpen;
+    $("#registration-status").textContent = state.registrationOpen
+      ? "注册只需要邮箱、昵称和密码，详细学习画像可在登录后完善。"
+      : "当前暂未开放新账号注册，已有用户仍可正常登录。";
+  }
+}
+
+async function registerAccount() {
+  const button = $("#register-button");
+  button.disabled = true;
+  try {
+    const payload = await requestJson("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify({
+        email: $("#register-email").value.trim(),
+        nickname: $("#register-nickname").value.trim(),
+        password: $("#register-password").value,
+      }),
+    });
+    state.user = payload.user;
+    setAccountMessage("");
+    renderAccount();
+    initialize();
+  } catch (error) {
+    setAccountMessage(`注册失败：${error.message}`, true);
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function loginAccount() {
+  const button = $("#login-button");
+  button.disabled = true;
+  try {
+    const payload = await requestJson("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({
+        identifier: $("#login-identifier").value.trim(),
+        password: $("#login-password").value,
+      }),
+    });
+    state.user = payload.user;
+    setAccountMessage("");
+    renderAccount();
+    initialize();
+  } catch (error) {
+    setAccountMessage(`登录失败：${error.message}`, true);
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function logoutAccount() {
+  try {
+    await requestJson("/api/auth/logout", { method: "POST", body: "{}" });
+    state.user = null;
+    setAccountMessage("已退出登录。");
+    renderAccount();
+  } catch (error) {
+    setAccountMessage(`退出失败：${error.message}`, true);
   }
 }
 
@@ -712,6 +805,10 @@ function renderResult(result) {
 }
 
 async function runFlow() {
+  if (!state.user) {
+    showRuntimeError("请先注册或登录后使用。");
+    return;
+  }
   const button = $("#run-button");
   const original = button.innerHTML;
   button.disabled = true;
@@ -765,13 +862,35 @@ async function sendFeedback(feedback) {
   }
 }
 
+let _initialized = false;
+
 async function initialize() {
+  if (_initialized) {
+    // 登录/注册后仅刷新数据与视图，不重复绑定事件
+    try {
+      const [profiles, authPayload] = await Promise.all([
+        requestJson("/api/profiles", {}, 5000),
+        requestJson("/api/auth/me", {}, 5000),
+      ]);
+      state.profiles = profiles.profiles;
+      state.user = authPayload.user;
+      renderProfiles();
+      renderAccount();
+    } catch (error) {
+      /* 保持当前状态 */
+    }
+    return;
+  }
+  _initialized = true;
   try {
-    const [health, profiles, domains] = await Promise.all([
-      requestJson("/api/health", {}, 5000),
-      requestJson("/api/profiles", {}, 5000),
-      requestJson("/api/domains", {}, 5000),
-    ]);
+    const [health, profiles, domains, authPayload, authStatusPayload] =
+      await Promise.all([
+        requestJson("/api/health", {}, 5000),
+        requestJson("/api/profiles", {}, 5000),
+        requestJson("/api/domains", {}, 5000),
+        requestJson("/api/auth/me", {}, 5000),
+        requestJson("/api/auth/status", {}, 5000),
+      ]);
     $("#backend-status").textContent =
       `后端在线 · ${health.domains} 个领域 / ${health.papers} 篇论文 · ${health.system_agents} 协同角色`;
     $("#hero-domain-count").textContent = health.domains;
@@ -780,7 +899,10 @@ async function initialize() {
     state.selectedDomainId = domains.default_domain_id;
     renderDomains();
     state.profiles = profiles.profiles;
+    state.user = authPayload.user;
+    state.registrationOpen = Boolean(authStatusPayload.registration_open);
     renderProfiles();
+    renderAccount();
   } catch (error) {
     $(".status-dot").classList.add("error");
     $("#backend-status").textContent = "后端不可用";
@@ -804,6 +926,19 @@ async function initialize() {
   });
   $("#run-button").addEventListener("click", runFlow);
   $("#online-rag-button").addEventListener("click", runOnlineRag);
+  $("#login-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    loginAccount();
+  });
+  $("#register-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    registerAccount();
+  });
+  $("#show-login-button").addEventListener("click", () => showAuthMode("login"));
+  $("#show-register-button").addEventListener("click", () => {
+    if (state.registrationOpen) showAuthMode("register");
+  });
+  $("#logout-button").addEventListener("click", logoutAccount);
   $$(".tab-button").forEach((button) => {
     button.addEventListener("click", () => {
       state.activeTab = button.dataset.tab;
