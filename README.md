@@ -247,7 +247,7 @@ python -m unittest discover -s tests -v
 python scripts/smoke_test_backend.py
 ```
 
-本地服务默认显式监听 IPv4 `127.0.0.1`。它为每次请求生成 request ID、为每次协同运行生成 run ID，并支持有界并发、任务 deadline、幂等重放、JSON 日志和 OpenAlex 重试熔断。容器及环境变量说明见 `docs/协作与运维/部署说明.md`；工程自检见 `docs/研发记录/后端可靠性自检.md`。
+本地服务默认显式监听 IPv4 `127.0.0.1`。它为每次请求生成 request ID、为每次协同运行生成 run ID，并支持有界并发、任务 deadline、幂等重放、JSON 日志和 OpenAlex 重试熔断。容器及环境变量说明见 `docs/协作与运维/部署说明.md`；工程自检见 `docs/变更记录/后端可靠性自检.md`。
 
 生成不含 Git 历史和运行日志的交付压缩包：
 
