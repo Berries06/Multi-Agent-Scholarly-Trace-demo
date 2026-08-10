@@ -73,14 +73,10 @@ button {
 }
 
 .brand-mark {
-  display: grid;
+  display: block;
   width: 38px;
   height: 38px;
-  place-items: center;
-  color: var(--ink);
-  font-family: Georgia, "Songti SC", serif;
-  font-size: 21px;
-  background: #c8e2d8;
+  object-fit: cover;
 }
 
 .brand strong,
