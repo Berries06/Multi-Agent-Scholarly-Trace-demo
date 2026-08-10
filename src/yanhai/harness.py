@@ -18,7 +18,7 @@ def utc_now() -> str:
 
 
 def structured_log(event: str, **fields: Any) -> None:
-    """Emit one machine-readable event without serializing secrets."""
+    """输出一条机器可读事件，且不序列化机密信息。"""
     payload = {"timestamp": utc_now(), "event": event, **fields}
     print(
         json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
@@ -306,7 +306,7 @@ class IdempotencyCache:
 
 
 class RunJournal:
-    """Append-only, privacy-minimized run summaries for recovery and audit."""
+    """只追加、最小化隐私的运行摘要，用于恢复与审计。"""
 
     def __init__(self, path: Path, *, max_bytes: int = 5_000_000) -> None:
         self.path = path

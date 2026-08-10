@@ -7,7 +7,7 @@ from .knowledge import KnowledgeBase
 
 
 class GraphInsightEngine:
-    """Derive auditable literature paths and unverified ideas from graph structure."""
+    """从图谱结构推导可审计的文献脉络与未验证的研究 Idea。"""
 
     def __init__(self, knowledge_base: KnowledgeBase) -> None:
         self.kb = knowledge_base

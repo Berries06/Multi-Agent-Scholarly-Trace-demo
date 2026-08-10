@@ -1,4 +1,4 @@
-"""Core package for the Yanhai scholarly trace demonstrator."""
+"""研海寻踪（Yanhai）科研溯源演示项目的核心包。"""
 
 from .orchestrator import ScholarlyTraceOrchestrator
 from .config import FeatureFlags, SystemConfig, get_preset, list_presets

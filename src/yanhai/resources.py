@@ -1,4 +1,4 @@
-"""Resolve project resources in source, deployed, and frozen builds."""
+"""在源码、部署与冻结（frozen）构建中解析项目资源。"""
 from __future__ import annotations
 
 import os
@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 def project_root() -> Path:
-    """Return the directory containing ``data`` and ``web`` resources."""
+    """返回包含 ``data`` 与 ``web`` 资源的项目根目录。"""
     configured = os.environ.get("YANHAI_PROJECT_ROOT")
     if configured:
         return Path(configured).expanduser().resolve()
@@ -20,7 +20,7 @@ def project_root() -> Path:
 
 
 def runtime_data_root() -> Path:
-    """Return the writable directory used for SQLite and other runtime state."""
+    """返回用于 SQLite 及其它运行时状态的可写目录。"""
     configured = os.environ.get("YANHAI_DATA_DIR")
     if configured:
         return Path(configured).expanduser().resolve()

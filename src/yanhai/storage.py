@@ -1,4 +1,4 @@
-"""SQLite persistence for accounts, learner profiles, evidence slices and studies."""
+"""账号、学习者画像、证据切片与研究记录的 SQLite 持久化。"""
 from __future__ import annotations
 
 import base64
@@ -166,7 +166,7 @@ GENERAL_DOMAIN = Domain(
 
 
 class DomainRouter:
-    """Deterministic, auditable domain routing for local knowledge slices."""
+    """对本地知识切片做确定性、可审计的领域路由。"""
 
     @staticmethod
     def _normalise(text: str) -> str:
@@ -228,10 +228,10 @@ class DomainRouter:
 
 
 class AppRepository:
-    """Thread-safe-by-connection SQLite repository.
+    """按连接保证线程安全的 SQLite 仓储。
 
-    A fresh connection is used per operation so the HTTP server can keep its
-    existing threaded request model. WAL mode permits readers during writes.
+    每次操作使用新连接，使 HTTP 服务能沿用其线程化请求模型；
+    WAL 模式允许在写入期间并行读取。
     """
 
     SCHEMA_VERSION = 2
@@ -1391,7 +1391,7 @@ class AppRepository:
 
 
 class LocalPaperLibrary:
-    """Small adapter used by the live pipeline to reuse accumulated evidence."""
+    """供实时流水线复用累积证据的小型适配器。"""
 
     source_id = "local_sqlite"
 

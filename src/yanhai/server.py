@@ -45,7 +45,7 @@ REPOSITORY = AppRepository(database_path())
 
 
 def _load_server_api_key() -> str:
-    """Read the server-managed DeepSeek API key, used by the free option."""
+    """读取服务端托管的 DeepSeek API Key，供免费选项使用。"""
     key_path = PROJECT_ROOT / "secret" / "DeepSeekAPI.txt"
     if key_path.exists():
         return key_path.read_text(encoding="utf-8").strip()
@@ -63,7 +63,7 @@ def _server_provider_for_user(
     user: dict[str, Any] | None,
     payload: dict[str, Any] | None,
 ) -> ProviderConfig:
-    """For 'free-deepseek', inject the server-managed DeepSeek Flash key."""
+    """对 free-deepseek 注入服务端托管的 DeepSeek Flash Key。"""
     raw = dict(payload or {})
     if raw.get("provider") == "free-deepseek" and user is not None:
         raw["api_key"] = SERVER_API_KEY
@@ -74,7 +74,7 @@ def _server_provider_for_user(
 def _live_timeout_seconds(
     provider_config: ProviderConfig | None,
 ) -> float | None:
-    """A live LLM pipeline needs more head-room than the deterministic path."""
+    """实时 LLM 流水线需要比确定性路径更宽裕的任务时限。"""
     if provider_config is None or provider_config.provider == "mock":
         return None
     return float(os.environ.get("YANHAI_LIVE_TASK_TIMEOUT_SECONDS", "300"))
@@ -89,7 +89,7 @@ class TaskDeadlineExceeded(TimeoutError):
 
 
 class DemoApplication:
-    """Bounded execution harness around the deterministic research pipeline."""
+    """围绕确定性科研流水线的有界执行框架（harness）。"""
 
     def __init__(
         self,
@@ -208,8 +208,8 @@ class DemoApplication:
 class ReliableThreadingHTTPServer(ThreadingHTTPServer):
     daemon_threads = True
     block_on_close = False
-    # On Windows, SO_REUSEADDR can allow multiple live processes to bind the
-    # same port and receive non-deterministic traffic. Fail fast instead.
+    # 在 Windows 上，SO_REUSEADDR 可能让多个进程绑定同一端口并收到不确定的流量，
+    # 这里改为快速失败。
     allow_reuse_address = False
     request_queue_size = 64
 
@@ -229,7 +229,7 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
         )
 
     def log_message(self, format: str, *args: object) -> None:
-        # BaseHTTPRequestHandler logs are replaced with structured request events.
+        # BaseHTTPRequestHandler 日志已替换为结构化请求事件。
         return
 
     def end_headers(self) -> None:

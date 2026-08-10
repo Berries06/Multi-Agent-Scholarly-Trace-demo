@@ -7,7 +7,7 @@ from typing import Any
 
 
 class KnowledgeGraphStore:
-    """Small SQLite persistence layer for the demo knowledge graph."""
+    """demo 知识图谱的小型 SQLite 持久化层。"""
 
     def __init__(self, path: Path) -> None:
         self.path = path

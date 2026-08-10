@@ -35,11 +35,10 @@ ROUTE_CONFIG = {
 
 
 class GraphRAGLiteEngine:
-    """Evidence-first, GraphRAG-inspired retrieval over the local concept graph.
+    """在本地概念图上做证据优先、受 GraphRAG 启发的检索。
 
-    This deliberately does not claim to be Microsoft's GraphRAG query engine.
-    It preserves compatible concepts (entities, relationships, text units and
-    communities) while keeping the competition demo offline and deterministic.
+    这里刻意不宣称是微软 GraphRAG 查询引擎：它保留兼容的概念
+    （实体、关系、text unit、社区），同时让竞赛 demo 保持离线且确定性。
     """
 
     def __init__(self, knowledge_base: KnowledgeBase) -> None:

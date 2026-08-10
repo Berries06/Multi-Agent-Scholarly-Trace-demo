@@ -6,10 +6,10 @@ from typing import Any
 
 @dataclass(slots=True, frozen=True)
 class FeatureFlags:
-    """Feature switches used by the demo and the experiment harness.
+    """demo 与实验框架使用的功能开关。
 
-    The legacy preset preserves the original six-agent behaviour. New research
-    mechanisms are opt-in so that an ablation never needs to edit business code.
+    legacy 预设保留原有六角色行为；新研究机制默认关闭、按需开启，
+    这样消融实验永远不需要改动业务代码。
     """
 
     critic: bool = True

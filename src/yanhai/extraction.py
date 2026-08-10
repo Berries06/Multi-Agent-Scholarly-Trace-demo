@@ -18,7 +18,7 @@ def _stable_id(prefix: str, *parts: str) -> str:
 
 
 def normalize_name(value: str) -> str:
-    """Return a stable comparison key without destroying Chinese characters."""
+    """返回稳定比较键，同时不破坏中文字符。"""
     value = unicodedata.normalize("NFKC", value).casefold()
     value = re.sub(r"[\s_\-/]+", " ", value)
     value = re.sub(r"[^\w\u4e00-\u9fff ]+", "", value)
@@ -207,7 +207,7 @@ class ExtractionResult:
 
 
 class PlainTextParser:
-    """Parse plain text/Markdown into the shared scientific-document contract."""
+    """把纯文本/Markdown 解析为统一的科学文档契约。"""
 
     _heading = re.compile(r"^\s{0,3}#{1,6}\s+(.+?)\s*$")
 
@@ -260,11 +260,10 @@ class PlainTextParser:
 
 
 class PyPDFParser:
-    """Lightweight real-PDF parser that keeps page-level provenance.
+    """轻量真实 PDF 解析器，保留页级来源。
 
-    Docling remains the structure-aware target parser. This fallback makes the
-    downloaded corpus immediately testable on CPU and records every extracted
-    span under a stable ``page-NNN`` section.
+    Docling 仍是面向结构的解析器目标；此回退让下载的语料可在 CPU 上立即测试，
+    并把每个抽取跨度记录在稳定的 ``page-NNN`` 章节下。
     """
 
     def parse(
@@ -298,7 +297,7 @@ class PyPDFParser:
 
 
 class DoclingParser:
-    """Optional Docling adapter; the lightweight baseline has no hard dependency."""
+    """可选的 Docling 适配器；轻量基线不强依赖它。"""
 
     def parse(self, path: Path, *, paper_id: str | None = None) -> ScientificDocument:
         try:
@@ -320,10 +319,10 @@ class DoclingParser:
 
 
 class SchemaGuidedExtractor:
-    """Evidence-first scientific entity/relation extraction baseline.
+    """以证据优先的科学实体/关系抽取基线。
 
-    It deliberately keeps extraction, criticism and adjudication separate so a
-    learned DeepKE/LLM proposer can replace only the proposal stage later.
+    它刻意将抽取、批判与裁决分离，这样后续用 DeepKE/LLM 提出者替换时，
+    只需替换提出阶段，而不影响其它环节。
     """
 
     def __init__(self, schema: dict[str, Any], *, accept_threshold: float = 0.72) -> None:
@@ -348,10 +347,9 @@ class SchemaGuidedExtractor:
 
     @staticmethod
     def _sentence_spans(text: str) -> Iterable[tuple[int, int, str]]:
-        # Markdown evidence cards commonly contain one sentence per line without
-        # terminal punctuation. A plain ``$`` alternative only captures the last
-        # such line, silently dropping the rest of a section. Treat a newline as
-        # a sentence boundary while retaining stable document-relative offsets.
+        # Markdown 证据卡通常每行一句且没有句末标点。若只用 ``$`` 匹配
+        # 只会捕获最后一行，静默丢弃该节其余内容。这里把换行当作句子边界，
+        # 同时保留稳定的文档相对偏移。
         for match in re.finditer(
             r"[^\n。！？!?;；]+(?:[。！？!?;；]+|(?=\n)|$)",
             text,
@@ -545,9 +543,8 @@ class SchemaGuidedExtractor:
             ],
             entities=sorted(entities.values(), key=lambda item: item.entity_id),
             relations=sorted(relations, key=lambda item: item.relation_id),
-            # The graph stores evidence spans that ground at least one extracted
-            # entity. Parsed sentences without a schema mention remain a parser
-            # audit count rather than inflating the visible provenance graph.
+            # 图谱只保存至少支撑一个已抽取实体的证据跨度；
+            # 未命中 schema 的解析句仅计入解析审计数，不虚增可见溯源图谱。
             evidence=sorted(
                 (
                     evidence_by_id[evidence_id]

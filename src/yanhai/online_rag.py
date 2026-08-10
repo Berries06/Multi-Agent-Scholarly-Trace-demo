@@ -28,7 +28,7 @@ def _abstract_from_index(index: dict[str, list[int]] | None) -> str:
 
 
 def _retrieval_query(query: str) -> str:
-    """Map the demo's Chinese task wording to OpenAlex search concepts."""
+    """把 demo 的中文任务表述映射为 OpenAlex 检索概念。"""
     if not re.search(r"[\u4e00-\u9fff]", query):
         return query
     terms = ["scientific literature"]
@@ -42,7 +42,7 @@ def _retrieval_query(query: str) -> str:
 
 
 class OnlineRAG:
-    """Optional OpenAlex candidate retrieval with an offline cache fallback."""
+    """可选的 OpenAlex 候选检索，带离线缓存回退。"""
 
     def __init__(
         self,

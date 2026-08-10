@@ -297,13 +297,12 @@ class ScholarlyTraceOrchestrator:
         domain_id: str | None = None,
         provider_config: ProviderConfig | None = None,
     ) -> dict[str, Any]:
-        """Run the deterministic offline baseline, or a live evidence-grounded LLM path.
+        """运行确定性的离线基线，或走实时、证据支撑的 LLM 路径。
 
-        When ``provider_config`` is missing or ``provider == "mock"``, the result is
-        the preserved deterministic pipeline with an ``offline_mock`` ``provider_run``
-        marker.  Otherwise a ``LiveResearchService`` is created against the selected
-        domain knowledge base and its evidence-grounded answer replaces the baseline
-        answer while the deterministic report, metrics and ablation are preserved.
+        当未提供 ``provider_config`` 或 ``provider == "mock"`` 时，结果为保留的
+        确定性流水线，并带 ``offline_mock`` 的 ``provider_run`` 标记。否则针对所选
+        领域知识库创建 ``LiveResearchService``，用其证据支撑的回答替换基线回答，
+        同时保留确定性的 report、metrics 与 ablation。
         """
         result = self.run(profile_id, query, 0, domain_id=domain_id)
         if provider_config is None or provider_config.provider == "mock":

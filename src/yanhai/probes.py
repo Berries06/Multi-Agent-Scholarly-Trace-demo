@@ -7,7 +7,7 @@ from typing import Any, Iterator
 
 
 class PerformanceProbe:
-    """Small dependency-free probe for reproducible offline experiments."""
+    """无依赖的小型探针，用于可复现的离线实验。"""
 
     def __init__(self, enabled: bool = True) -> None:
         self.enabled = enabled
