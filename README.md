@@ -247,7 +247,7 @@ python -m unittest discover -s tests -v
 python scripts/smoke_test_backend.py
 ```
 
-本地服务默认显式监听 IPv4 `127.0.0.1`。它为每次请求生成 request ID、为每次协同运行生成 run ID，并支持有界并发、任务 deadline、幂等重放、JSON 日志和 OpenAlex 重试熔断。容器及环境变量说明见 `docs/04_deployment.md`；工程自检见 `docs/13_backend_reliability_audit.md`。
+本地服务默认显式监听 IPv4 `127.0.0.1`。它为每次请求生成 request ID、为每次协同运行生成 run ID，并支持有界并发、任务 deadline、幂等重放、JSON 日志和 OpenAlex 重试熔断。容器及环境变量说明见 `docs/协作与运维/部署说明.md`；工程自检见 `docs/研发记录/后端可靠性自检.md`。
 
 生成不含 Git 历史和运行日志的交付压缩包：
 
@@ -255,7 +255,7 @@ python scripts/smoke_test_backend.py
 .\scripts\package_demo.ps1
 ```
 
-默认产物为 `dist/yanhai-demo-windows.zip`。是否需要公网域名、何时才值得封装 EXE，以及 Docker 备选运行方式见 `docs/16_demo_distribution.md`。
+默认产物为 `dist/yanhai-demo-windows.zip`。是否需要公网域名、何时才值得封装 EXE，以及 Docker 备选运行方式见 `docs/协作与运维/部署说明.md` 与 `docs/协作与运维/网站发布与维护.md`。
 
 单独调用意图驱动图检索：
 
@@ -302,7 +302,7 @@ python scripts/fetch_vertical_corpus.py
 | C（待填） | 实体链接、图谱与发现 | 跨论文融合、图版本、演化/争议/Idea 专家评测 |
 | D（待填） | 三智能体、实验与系统 | 消融、校准、API、前端、离线 APP 与复现 |
 
-完整责任边界和 12 周科研计划见 `docs/10_team_research_workplan.md`。
+完整责任边界和 12 周科研计划见 `docs/协作与运维/团队工作包与验收计划.md`。
 
 ## （十一）鸣谢
 
@@ -311,7 +311,7 @@ python scripts/fetch_vertical_corpus.py
 - [Docling](https://github.com/docling-project/docling)：统一文档解析 IR 与 PDF/表格处理路线。
 - [GROBID](https://github.com/kermitt2/grobid)：科学文献 TEI、元数据和引文解析路线。
 - [DeepKE](https://github.com/zjunlp/DeepKE) 与 [OneKE](https://github.com/zjunlp/OneKE)：知识抽取分层与 schema/extraction/reflection 思路。
-- [Microsoft GraphRAG](https://github.com/microsoft/graphrag)：采纳实体/关系/text units/communities 数据契约及 Local、Global、DRIFT 的查询分工；当前使用轻量兼容基线，官方 BYOG 接入路线见 `docs/14_intent_driven_graphrag.md`。
+- [Microsoft GraphRAG](https://github.com/microsoft/graphrag)：采纳实体/关系/text units/communities 数据契约及 Local、Global、DRIFT 的查询分工；当前使用轻量兼容基线，官方 BYOG 接入路线见 `docs/项目说明/系统架构.md`。
 - ACL Anthology、OpenAlex 及本仓库列出的论文作者。
 
 本项目借鉴架构思想，不宣称复制上游模型成果。引入任何代码、数据或权重前均需单独核验许可证。
@@ -326,8 +326,8 @@ python scripts/fetch_vertical_corpus.py
 
 关键延伸文档：
 
-- `docs/07_submission_and_paper_format.md`：申报书与论文格式
-- `docs/08_scientific_ie_kg_technical_route.md`：科学信息抽取与知识图谱技术路线
-- `docs/11_ablation_and_demo_protocol.md`：对比/消融与现场演示协议
-- `docs/12_literature_and_model_evidence.md`：论文、模型与开源选型证据
-- `docs/CHANGELOG_2026-07-29.md`：本次推进日志
+- `docs/协作与运维/申报书与论文写作规范.md`：申报书与论文格式
+- `docs/研发记录/科研信息抽取技术路线.md`：科学信息抽取与知识图谱技术路线
+- `docs/研发记录/实验设计与消融协议.md`：对比/消融与现场演示协议
+- `docs/研发记录/技术选型与文献证据.md`：论文、模型与开源选型证据
+- `docs/变更记录/CHANGELOG_2026-07-29.md`：本次推进日志
