@@ -74,26 +74,26 @@ flowchart LR
 
 前置专职 Agent（记录在 `specialist_agent_trace`）：
 
-| Agent | 职责 | 当前实现 |
-|---|---|---|
-| 论文知识抽取 Agent | 从论文正文生成实体、关系和主张候选 | 版本化 schema + 规则抽取 + 规范化；复用离线索引 |
-| 用户意图感知 Agent | 识别检索、分析、Idea 三类意图并选择图检索路线 | 可审计多标签词法基线 |
+| Agent              | 职责                                          | 当前实现                                        |
+| ------------------ | --------------------------------------------- | ----------------------------------------------- |
+| 论文知识抽取 Agent | 从论文正文生成实体、关系和主张候选            | 版本化 schema + 规则抽取 + 规范化；复用离线索引 |
+| 用户意图感知 Agent | 识别检索、分析、Idea 三类意图并选择图检索路线 | 可审计多标签词法基线                            |
 
 核心决策 Agent（记录在 `agent_trace`）：
 
-| Agent | 输入 | 当前实现 | 输出 |
-|---|---|---|---|
-| 提出者 | 论文证据跨度、schema、候选实体 | schema 约束触发模式 | 带实体/关系类型、证据 ID 和置信度的命题 |
-| 批判者 | 候选命题与原文证据 | 证据存在性、跨度覆盖、类型约束、绝对化与共现检查 | 阻断项、限制项与反证意见 |
-| 裁判 | 候选、批判项、证据来源 | 独立确定性校准规则 | `accepted / needs_review / rejected`、分数分解和理由 |
+| Agent  | 输入                           | 当前实现                                         | 输出                                                   |
+| ------ | ------------------------------ | ------------------------------------------------ | ------------------------------------------------------ |
+| 提出者 | 论文证据跨度、schema、候选实体 | schema 约束触发模式                              | 带实体/关系类型、证据 ID 和置信度的命题                |
+| 批判者 | 候选命题与原文证据             | 证据存在性、跨度覆盖、类型约束、绝对化与共现检查 | 阻断项、限制项与反证意见                               |
+| 裁判   | 候选、批判项、证据来源         | 独立确定性校准规则                               | `accepted / needs_review / rejected`、分数分解和理由 |
 
 ### 意图路由
 
-| 用户意图 | 当前路线 | 输出重点 |
-|---|---|---|
+| 用户意图           | 当前路线          | 输出重点                     |
+| ------------------ | ----------------- | ---------------------------- |
 | 信息检索、论文推荐 | `graph_breadth` | 概念社区、相关论文、证据理由 |
-| 分析推理、机制追踪 | `graph_depth` | 多跳路径、逐边证据、适用边界 |
-| 研究空白、Idea | `hybrid_drift` | 缺失边、追问、新颖性待验证 |
+| 分析推理、机制追踪 | `graph_depth`   | 多跳路径、逐边证据、适用边界 |
+| 研究空白、Idea     | `hybrid_drift`  | 缺失边、追问、新颖性待验证   |
 
 当前是 GraphRAG-inspired 离线基线，不是微软官方 GraphRAG runtime；官方 BYOG 接入路线见 [docs/项目说明/系统架构.md](docs/项目说明/系统架构.md)。
 
@@ -134,28 +134,28 @@ docs/                      项目说明、研发记录、协作与运维、变�
 
 ## API 一览
 
-| 方法 | 路径 | 说明 |
-|---|---|---|
-| GET | `/api/health` | 服务、垂直库和核心 Agent 状态 |
-| GET | `/api/ready` | 画像、语料、schema 与前端就绪状态 |
-| GET | `/api/metrics` | 请求、失败、延迟、事件与熔断状态 |
-| GET | `/api/profiles` | 3 组差异化画像 |
-| GET | `/api/domains` | 3 个可切换领域及默认查询 |
-| GET | `/api/providers` | 可用供应商、默认模型和协议 |
-| GET | `/api/knowledge-base` | 文献与关系切片 |
-| GET | `/api/extracted-graph` | 论文—证据—实体—关系图 |
-| GET | `/api/ablation` | 四组决策对比 |
-| GET | `/api/graph-insights` | 论文时间线与图谱 Idea |
-| GET | `/api/auth/me` | 当前会话用户 |
-| GET | `/api/auth/status` | 注册开关状态 |
-| POST | `/api/auth/register` | 注册（`YANHAI_REGISTRATION_OPEN=1` 时开放） |
-| POST | `/api/auth/login` | 邮箱或昵称登录 |
-| POST | `/api/auth/logout` | 退出并清除会话 |
-| POST | `/api/provider/test` | 用本次提交的 Key 做最小连接测试 |
-| POST | `/api/run` | 完整三智能体与个性化资源闭环 |
-| POST | `/api/feedback` | 根据难度反馈重跑 |
-| POST | `/api/graph-query` | 意图感知与概念图检索 |
-| POST | `/api/online-rag` | 可选 OpenAlex 候选扩展 |
+| 方法 | 路径                     | 说明                                          |
+| ---- | ------------------------ | --------------------------------------------- |
+| GET  | `/api/health`          | 服务、垂直库和核心 Agent 状态                 |
+| GET  | `/api/ready`           | 画像、语料、schema 与前端就绪状态             |
+| GET  | `/api/metrics`         | 请求、失败、延迟、事件与熔断状态              |
+| GET  | `/api/profiles`        | 3 组差异化画像                                |
+| GET  | `/api/domains`         | 3 个可切换领域及默认查询                      |
+| GET  | `/api/providers`       | 可用供应商、默认模型和协议                    |
+| GET  | `/api/knowledge-base`  | 文献与关系切片                                |
+| GET  | `/api/extracted-graph` | 论文—证据—实体—关系图                      |
+| GET  | `/api/ablation`        | 四组决策对比                                  |
+| GET  | `/api/graph-insights`  | 论文时间线与图谱 Idea                         |
+| GET  | `/api/auth/me`         | 当前会话用户                                  |
+| GET  | `/api/auth/status`     | 注册开关状态                                  |
+| POST | `/api/auth/register`   | 注册（`YANHAI_REGISTRATION_OPEN=1` 时开放） |
+| POST | `/api/auth/login`      | 邮箱或昵称登录                                |
+| POST | `/api/auth/logout`     | 退出并清除会话                                |
+| POST | `/api/provider/test`   | 用本次提交的 Key 做最小连接测试               |
+| POST | `/api/run`             | 完整三智能体与个性化资源闭环                  |
+| POST | `/api/feedback`        | 根据难度反馈重跑                              |
+| POST | `/api/graph-query`     | 意图感知与概念图检索                          |
+| POST | `/api/online-rag`      | 可选 OpenAlex 候选扩展                        |
 
 写请求（`/api/run`、`/api/feedback`）要求登录，会话由 `yanhai_session` Cookie 维持；登录用户的画像自动注入运行。单次请求示例：
 
@@ -168,12 +168,6 @@ POST /api/run
   "llm": { "provider": "free-deepseek", "model": "deepseek-v4-flash" }
 }
 ```
-
-## 使用效果图
-
-![研海寻踪首页](docs/assets/readme/demo-home.png)
-
-![研海寻踪运行结果](docs/assets/readme/demo-results.png)
 
 ## 工程规模
 
@@ -205,7 +199,7 @@ POST /api/run
 - 项目名称：研海寻踪：基于多智能体博弈推理的科研知识图谱发现系统
 - 赛题编号：XH-202630
 - 团队 / 指导教师 / 负责人：待填写
-- GitHub：<https://github.com/Beries06/Multi-Agent-Scholarly-Trace-demo>
+- GitHub：[https://github.com/Beries06/Multi-Agent-Scholarly-Trace-demo](https://github.com/Beries06/Multi-Agent-Scholarly-Trace-demo)
 
 四人团队按科研工作包分工，完整责任边界与 12 周计划见 [docs/协作与运维/团队工作包与验收计划.md](docs/协作与运维/团队工作包与验收计划.md)。
 
