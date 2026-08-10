@@ -8,6 +8,7 @@ const state = {
   selectedDomainId: "scientific-ie-kg",
   profiles: [],
   selectedProfileId: "undergraduate_ai",
+  selectedProvider: "mock",
   result: null,
   activeTab: "briefing",
   user: null,
@@ -113,6 +114,24 @@ function renderAccount() {
       ? "注册只需要邮箱、昵称和密码，详细学习画像可在登录后完善。"
       : "当前暂未开放新账号注册，已有用户仍可正常登录。";
   }
+  updateProviderDescription();
+}
+
+function updateProviderDescription() {
+  const select = $("#provider-select");
+  const description = $("#provider-description");
+  if (!select || !description) return;
+  const live = select.value === "free-deepseek";
+  if (!state.user) {
+    select.value = "mock";
+    state.selectedProvider = "mock";
+    description.textContent =
+      "请先登录；登录后可直接使用服主托管的免费 DeepSeek Flash，无需自备 API Key。";
+    return;
+  }
+  description.textContent = live
+    ? "由服主托管的 DeepSeek Flash 实时循证回答：规划检索 → 多源召回 → 批判裁判 → 个性化教学，结果带来源引用。"
+    : "保留原有确定性规则与本地知识库，不产生 API 费用，结果完全可复现。";
 }
 
 async function registerAccount() {
@@ -252,6 +271,62 @@ function renderMetrics(result) {
     `${triad.true_positive_count}/${triad.gold_supported_count} · 95% CI ${intervalPercent(triad.gold_recall_ci95)}`;
   $("#metric-graph-scale").innerHTML =
     `<b>${quality.paper_count}</b> 论文 · <b>${quality.entity_count}</b> 实体<br /><b>${quality.relation_count}</b> 候选关系 · 证据绑定 ${percent(quality.relation_evidence_coverage * 100)}（结构约束）`;
+}
+
+function renderProviderRun(result) {
+  const run = result.provider_run || {};
+  const block = $("#provider-run-block");
+  if (!block) return;
+  block.hidden = false;
+  const mode = run.mode || "offline_mock";
+  const live = mode === "live_llm";
+  const providerLabel = run.provider_label || run.provider || "离线规则引擎";
+  const model = run.model || "";
+  const usage = run.usage || {};
+  const warnings = run.warnings || [];
+  const status = live
+    ? "实时循证完成"
+    : "离线确定性结果";
+  const sourceLabel =
+    run.source_mode === "local_fallback"
+      ? "本地回退"
+      : run.source_mode === "no_relevant_sources"
+        ? "无相关来源"
+        : run.source_mode === "multi_source_live"
+          ? "多源实时检索"
+          : run.source_mode === "local_mock"
+            ? "本地知识库"
+            : (run.source_mode || "—");
+  const tokens =
+    usage.total_tokens != null
+      ? `${usage.total_tokens} tokens`
+      : "—";
+  const duration =
+    run.llm_duration_ms != null
+      ? `${run.llm_duration_ms}ms LLM`
+      : "";
+  block.innerHTML = `
+    <div class="block-heading">
+      <div>
+        <span class="section-label">运行模式</span>
+        <h2>${live ? "实时多智能体循证回答" : "确定性规则引擎回答"}</h2>
+      </div>
+      <span class="quiet-badge ${live ? "" : "offline-badge"}">${status}</span>
+    </div>
+    <div class="provider-run-meta">
+      <span>${escapeHtml(providerLabel)}</span>
+      ${model ? `<span>${escapeHtml(model)}</span>` : ""}
+      <span>${escapeHtml(sourceLabel)}</span>
+      <span>${tokens}</span>
+      ${duration ? `<span>${escapeHtml(duration)}</span>` : ""}
+    </div>
+    ${warnings.length
+      ? `<div class="provider-warnings">${warnings
+          .map((item) => escapeHtml(item))
+          .join("；")}</div>`
+      : ""}
+    ${live ? `<div class="live-answer-card"><span>循证回答摘要</span><p>${escapeHtml(String(result.answer || "")).slice(0, 400)}</p></div>` : ""}
+  `;
 }
 
 function renderTrace(result) {
@@ -791,6 +866,7 @@ function renderResult(result) {
   $("#empty-state").hidden = true;
   $("#result-content").hidden = false;
   renderMetrics(result);
+  renderProviderRun(result);
   renderSpecialists(result);
   renderTrace(result);
   renderGraphRetrieval(result);
@@ -812,18 +888,26 @@ async function runFlow() {
   const button = $("#run-button");
   const original = button.innerHTML;
   button.disabled = true;
-  button.innerHTML = "<span>智能体协同中…</span><span>•••</span>";
+  const live = state.selectedProvider !== "mock";
+  button.innerHTML = live
+    ? "<span>实时循证中（AI 多轮推理，约 1–5 分钟）…</span><span>•••</span>"
+    : "<span>智能体协同中…</span><span>•••</span>";
   showRuntimeError();
   try {
-    const result = await requestJson("/api/run", {
-      method: "POST",
-      headers: { "Idempotency-Key": idempotencyKey("run") },
-      body: JSON.stringify({
-        domain_id: state.selectedDomainId,
-        profile_id: state.selectedProfileId,
-        query: $("#research-query").value.trim(),
-      }),
-    });
+    const result = await requestJson(
+      "/api/run",
+      {
+        method: "POST",
+        headers: { "Idempotency-Key": idempotencyKey("run") },
+        body: JSON.stringify({
+          domain_id: state.selectedDomainId,
+          profile_id: state.selectedProfileId,
+          query: $("#research-query").value.trim(),
+          llm: { provider: state.selectedProvider },
+        }),
+      },
+      live ? 300000 : 15000,
+    );
     renderResult(result);
     $("#result-content").scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (error) {
@@ -923,6 +1007,10 @@ async function initialize() {
     $("#result-content").hidden = true;
     $("#empty-state").hidden = false;
     renderDomains();
+  });
+  $("#provider-select").addEventListener("change", (event) => {
+    state.selectedProvider = event.target.value;
+    updateProviderDescription();
   });
   $("#run-button").addEventListener("click", runFlow);
   $("#online-rag-button").addEventListener("click", runOnlineRag);

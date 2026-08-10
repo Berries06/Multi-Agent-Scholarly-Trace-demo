@@ -11,6 +11,7 @@ from tempfile import TemporaryDirectory
 from yanhai.harness import RunJournal, RuntimeConfig
 from yanhai.knowledge import KnowledgeBase
 from yanhai.server import create_server
+from yanhai.storage import AppRepository
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -29,6 +30,9 @@ class ServerIntegrationTests(unittest.TestCase):
             task_timeout_seconds=5.0,
         )
         cls.server = create_server(config, project_root=PROJECT_ROOT)
+        cls.server.application.repository = AppRepository(
+            Path(cls._temporary_directory.name) / "test.sqlite3"
+        )
         cls.server.application.journal = RunJournal(
             Path(cls._temporary_directory.name) / "run-journal.jsonl"
         )

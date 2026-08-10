@@ -71,6 +71,15 @@ def _server_provider_for_user(
     return ProviderConfig.from_payload(raw)
 
 
+def _live_timeout_seconds(
+    provider_config: ProviderConfig | None,
+) -> float | None:
+    """A live LLM pipeline needs more head-room than the deterministic path."""
+    if provider_config is None or provider_config.provider == "mock":
+        return None
+    return float(os.environ.get("YANHAI_LIVE_TASK_TIMEOUT_SECONDS", "300"))
+
+
 class ServerBusyError(RuntimeError):
     pass
 
@@ -397,6 +406,7 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
     def _handle_request(self, method: str) -> None:
         self.request_id = self._resolve_request_id()
         self.response_status = 500
+        self._active_timeout_seconds = None
         route = urlparse(self.path).path
         started = time.perf_counter()
         self.application.metrics.request_started()
@@ -556,17 +566,26 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
     def _dispatch_post(self, route: str) -> None:
         if route == "/api/auth/register":
             if not _registration_open():
-                self._send_json(
-                    {"error": "当前未开放公开注册，请联系服主。"},
-                    HTTPStatus.FORBIDDEN,
+                self._send_api_error(
+                    status=HTTPStatus.FORBIDDEN,
+                    code="registration_closed",
+                    message="当前未开放公开注册，请联系服主。",
                 )
                 return
             payload = self._read_json()
-            user = self.application.repository.register_user(
-                str(payload.get("email", "")),
-                str(payload.get("nickname", "")),
-                str(payload.get("password", "")),
-            )
+            try:
+                user = self.application.repository.register_user(
+                    str(payload.get("email", "")),
+                    str(payload.get("nickname", "")),
+                    str(payload.get("password", "")),
+                )
+            except ValueError as exc:
+                self._send_api_error(
+                    status=HTTPStatus.CONFLICT,
+                    code="registration_failed",
+                    message=str(exc),
+                )
+                return
             token = self.application.repository.create_auth_session(
                 str(user["user_id"])
             )
@@ -578,14 +597,22 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
             return
         if route == "/api/auth/login":
             payload = self._read_json()
-            user = self.application.repository.verify_login(
-                str(
-                    payload.get("identifier")
-                    or payload.get("email")
-                    or ""
-                ),
-                str(payload.get("password", "")),
-            )
+            try:
+                user = self.application.repository.verify_login(
+                    str(
+                        payload.get("identifier")
+                        or payload.get("email")
+                        or ""
+                    ),
+                    str(payload.get("password", "")),
+                )
+            except ValueError as exc:
+                self._send_api_error(
+                    status=HTTPStatus.UNAUTHORIZED,
+                    code="invalid_credentials",
+                    message=str(exc),
+                )
+                return
             token = self.application.repository.create_auth_session(
                 str(user["user_id"])
             )
@@ -789,7 +816,8 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
             "completed_at": utc_now(),
             "duration_ms": round(operation_ms, 2),
             "task_timeout_seconds": (
-                self.application.config.task_timeout_seconds
+                self._active_timeout_seconds
+                or self.application.config.task_timeout_seconds
             ),
         }
         self.application.record_run(
@@ -823,12 +851,21 @@ class DemoRequestHandler(BaseHTTPRequestHandler):
     ) -> dict[str, Any]:
         app = self.application
         if route == "/api/run":
+            provider_config = _server_provider_for_user(
+                self._current_user(),
+                payload.get("llm"),
+            )
+            self._active_timeout_seconds = _live_timeout_seconds(
+                provider_config
+            )
             return app.execute(
-                lambda: app.orchestrator.run(
+                lambda: app.orchestrator.run_with_provider(
                     profile_id,
                     query,
                     domain_id=domain_id,
-                )
+                    provider_config=provider_config,
+                ),
+                timeout_seconds=self._active_timeout_seconds,
             )
         if route == "/api/feedback":
             feedback = str(payload.get("feedback", "suitable"))

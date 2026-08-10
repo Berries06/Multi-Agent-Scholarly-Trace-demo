@@ -123,6 +123,17 @@
           <label class="query-label" for="research-query">本轮研究任务</label>
           <textarea id="research-query" rows="4">如何从科学论文中抽取可追溯知识图谱，并利用图谱理解技术脉络和生成研究想法？</textarea>
 
+          <div class="provider-controls">
+            <label class="query-label" for="provider-select">03 · 运行模式</label>
+            <select id="provider-select" class="domain-select" aria-describedby="provider-description">
+              <option value="mock">离线规则引擎（免费 · 本地确定性）</option>
+              <option value="free-deepseek">免费 DeepSeek Flash（服主提供 · 实时循证）</option>
+            </select>
+            <p id="provider-description" class="domain-description">
+              登录用户可直接使用服主托管的免费 DeepSeek Flash，无需自备 API Key。
+            </p>
+          </div>
+
           <button id="run-button" class="primary-button" type="button">
             <span>启动协同推理</span>
             <span aria-hidden="true">→</span>
@@ -168,6 +179,8 @@
                 <p id="metric-graph-scale">—</p>
               </article>
             </section>
+
+            <section id="provider-run-block" class="panel-block provider-run-block" hidden></section>
 
             <section class="panel-block">
               <div class="block-heading">

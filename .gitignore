@@ -12,6 +12,12 @@ outputs/*.db
 outputs/*.log
 outputs/*.jsonl
 outputs/*.pid
+# runtime DB & generated experiment artifacts (not source assets)
+outputs/runtime/
+outputs/experiments/
+*.sqlite3
+# packaged release artifacts
+release/
 papers/**/*.pdf
 tmp/
 dist/

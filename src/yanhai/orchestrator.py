@@ -18,7 +18,9 @@ from .ablation import DecisionAblation
 from .discovery import GraphInsightEngine
 from .graph_rag import GraphRAGLiteEngine
 from .knowledge import KnowledgeBase
+from .live_research import LiveResearchService
 from .models import AgentTrace, LearnerProfile
+from .providers import ProviderConfig, create_provider
 
 
 DEFAULT_QUERY = "如何从科学论文中抽取可追溯知识图谱，并利用图谱理解技术脉络和生成研究想法？"
@@ -287,6 +289,198 @@ class ScholarlyTraceOrchestrator:
             "metrics": metrics,
             "ablation": self.ablation.run(),
         }
+
+    def run_with_provider(
+        self,
+        profile_id: str,
+        query: str = DEFAULT_QUERY,
+        domain_id: str | None = None,
+        provider_config: ProviderConfig | None = None,
+    ) -> dict[str, Any]:
+        """Run the deterministic offline baseline, or a live evidence-grounded LLM path.
+
+        When ``provider_config`` is missing or ``provider == "mock"``, the result is
+        the preserved deterministic pipeline with an ``offline_mock`` ``provider_run``
+        marker.  Otherwise a ``LiveResearchService`` is created against the selected
+        domain knowledge base and its evidence-grounded answer replaces the baseline
+        answer while the deterministic report, metrics and ablation are preserved.
+        """
+        result = self.run(profile_id, query, 0, domain_id=domain_id)
+        if provider_config is None or provider_config.provider == "mock":
+            public = (
+                provider_config.public_dict()
+                if provider_config is not None
+                else {"provider": "mock", "provider_label": "离线规则引擎", "model": "deterministic"}
+            )
+            result["provider_run"] = {
+                **public,
+                "mode": "offline_mock",
+                "source_mode": "local_mock",
+                "source_counts": {
+                    "local_knowledge_base": len(result["papers"]),
+                },
+                "selected_paper_count": len(result["papers"]),
+                "calls": [],
+                "usage": {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0},
+                "llm_duration_ms": 0.0,
+                "retrieval_duration_ms": 0.0,
+                "warnings": [],
+                "api_key_persisted": False,
+            }
+            result["mock_baseline"] = {
+                "domain": (
+                    result["domain"]["domain_id"]
+                    if isinstance(result["domain"], dict)
+                    else str(result["domain"])
+                ),
+                "paper_count": len(result["papers"]),
+                "claim_count": len(result["claims"]),
+            }
+            return result
+
+        provider = create_provider(provider_config)
+        kb, _, _ = self._runtime(domain_id)
+        service = LiveResearchService(provider, provider_config, kb)
+        active_profile = self.profiles[profile_id]
+        live = service.run(query, active_profile, result["diagnosis"])
+        baseline_summary = {
+            "domain": (
+                result["domain"]["domain_id"]
+                if isinstance(result["domain"], dict)
+                else str(result["domain"])
+            ),
+            "paper_count": len(result["papers"]),
+            "claim_count": len(result["claims"]),
+            "preserved_as_provider": "mock",
+        }
+        result.update(
+            {
+                "answer": live["answer"],
+                "answer_sections": live["answer_sections"],
+                "papers": live["papers"],
+                "claims": live["claims"],
+                "resources": live["resources"],
+                "graph": live["graph"],
+                "provider_run": live["provider_run"],
+                "mock_baseline": baseline_summary,
+            }
+        )
+        result["agent_trace"] = self._live_trace(
+            result["agent_trace"],
+            live["provider_run"],
+            len(live["papers"]),
+            len(live["claims"]),
+        )
+        result["metrics"] = self._live_metrics(result)
+        return result
+
+    @staticmethod
+    def _live_trace(
+        baseline_trace: list[dict[str, Any]],
+        provider_run: dict[str, Any],
+        paper_count: int,
+        claim_count: int,
+    ) -> list[dict[str, Any]]:
+        learner = (
+            dict(baseline_trace[0])
+            if baseline_trace
+            else {
+                "agent": "学情诊断与学习规划 Agent",
+                "role": "学情诊断与学习规划",
+                "status": "completed",
+                "summary": "已形成结构化学习计划。",
+            }
+        )
+        calls = provider_run.get("calls", [])
+        call_by_role = {str(call.get("role")): call for call in calls}
+        evidence_duration = provider_run.get("retrieval_duration_ms", 0.0)
+        for role in ("检索规划", "证据提出"):
+            evidence_duration += float(
+                call_by_role.get(role, {}).get("duration_ms", 0.0)
+            )
+        evidence_status = (
+            "abstained"
+            if provider_run.get("evidence_status") == "insufficient"
+            else (
+                "degraded"
+                if provider_run.get("source_mode") == "local_fallback"
+                else "completed"
+            )
+        )
+        teaching_call = call_by_role.get("个性化教学与反馈", {})
+        return [
+            learner,
+            {
+                "agent": "证据检索与知识图谱 Agent",
+                "role": "证据检索与知识图谱构建",
+                "status": evidence_status,
+                "summary": (
+                    f"检索 {paper_count} 篇来源并形成 {claim_count} 条候选命题；"
+                    "批判、反证和来源核验作为内部策略执行。"
+                ),
+                "duration_ms": round(float(evidence_duration), 3),
+                "input_count": len(provider_run.get("search_queries", [])),
+                "output_count": claim_count,
+            },
+            {
+                "agent": "个性化教学与反馈 Agent",
+                "role": "个性化教学与反馈",
+                "status": "completed" if teaching_call else "abstained",
+                "summary": (
+                    "使用通过质量准入的知识生成导读、实操、测评和反馈问卷。"
+                    if teaching_call
+                    else "当前证据不足，未生成未经支持的教学资源。"
+                ),
+                "duration_ms": float(teaching_call.get("duration_ms", 0.0)),
+                "input_count": claim_count,
+                "output_count": 3 if teaching_call else 0,
+            },
+        ]
+
+    @classmethod
+    def _live_metrics(cls, result: dict[str, Any]) -> dict[str, Any]:
+        claims = result["claims"]
+        accepted = [claim for claim in claims if claim.get("status") == "accepted"]
+        unsupported = [
+            claim
+            for claim in accepted
+            if not claim.get("evidence_ids") or not claim.get("evidence_spans")
+        ]
+        hallucination_proxy = (
+            100 * len(unsupported) / len(accepted) if accepted else 100.0
+        )
+        supported = [
+            claim
+            for claim in claims
+            if claim.get("evidence_ids") and claim.get("evidence_spans")
+        ]
+        evidence_coverage = 100 * len(supported) / len(claims) if claims else 0.0
+        baseline = dict(result["metrics"])
+        baseline.update(
+            {
+                "hallucination_proxy_rate": round(hallucination_proxy, 1),
+                "adaptation_accuracy": baseline.get("adaptation_accuracy", 0.0),
+                "knowledge_coverage_rate": baseline.get("knowledge_coverage_rate", 0.0),
+                "accepted_claims": sum(
+                    claim.get("status") == "accepted" for claim in claims
+                ),
+                "review_claims": sum(
+                    claim.get("status") == "review" for claim in claims
+                ),
+                "rejected_claims": sum(
+                    claim.get("status") == "rejected" for claim in claims
+                ),
+                "abstained_claims": sum(
+                    claim.get("status") == "abstained" for claim in claims
+                ),
+                "evidence_id_coverage": round(evidence_coverage, 1),
+                "sentence_provenance_coverage": round(evidence_coverage, 1),
+                "metric_scope": (
+                    "实时 LLM 摘要上的工程代理指标；证据风险不是人工核验后的真实幻觉率。"
+                ),
+            }
+        )
+        return baseline
 
     def run_with_feedback(
         self,

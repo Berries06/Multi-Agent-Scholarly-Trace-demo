@@ -640,6 +640,11 @@ textarea:focus {
   border-left: 4px solid var(--teal);
 }
 
+.provider-run-block .offline-badge {
+  color: #8a5b1e;
+  background: #f7ead3;
+}
+
 .provider-run-meta {
   display: flex;
   flex-wrap: wrap;
