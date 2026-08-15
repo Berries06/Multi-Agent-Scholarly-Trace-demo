@@ -13,7 +13,6 @@ try:
         QComboBox,
         QHBoxLayout,
         QLabel,
-        QLineEdit,
         QMainWindow,
         QPlainTextEdit,
         QPushButton,
@@ -27,7 +26,6 @@ except ImportError:
         QComboBox,
         QHBoxLayout,
         QLabel,
-        QLineEdit,
         QMainWindow,
         QPlainTextEdit,
         QPushButton,
@@ -36,9 +34,7 @@ except ImportError:
     )
     from PyQt5.QtCore import QThread, QTimer, pyqtSignal
 
-from .config import list_presets
 from .orchestrator import DEFAULT_QUERY, ScholarlyTraceOrchestrator
-from .providers import ProviderConfig, list_providers
 from .resources import project_root
 
 PROJECT_ROOT = project_root()
@@ -55,22 +51,19 @@ def _format_result(result: dict[str, Any]) -> str:
     trace = result.get("agent_trace", [])
     metrics = result.get("metrics", {})
     resources = result.get("resources", {})
-    innovations = result.get("innovations", {})
-    perf = result.get("performance", {})
-    system_config = result.get("system_config", {})
-    provider_run = result.get("provider_run", {})
+    core_method = result.get("core_method", {})
 
     # ── 方案与画像 ──
     lines.append("=" * 60)
-    lines.append(f"方案：{system_config.get('label', '-')} ({system_config.get('name', '-')})")
+    lines.append(
+        "方案：当前三智能体裁决（"
+        + " / ".join(core_method.get("agents", ["提出者", "批判者", "裁判"]))
+        + "）"
+    )
     lines.append(f"画像：{profile.get('name', '-')} · {profile.get('education', '-')}")
     lines.append(f"角色：{profile.get('role', '-')}")
     lines.append(f"目标：{profile.get('goal', '-')}")
-    lines.append(
-        f"引擎：{provider_run.get('provider_label', '离线 Mock')} · "
-        f"{provider_run.get('model', 'offline-rules')}"
-    )
-    lines.append(f"来源模式：{provider_run.get('source_mode', 'local_mock')}")
+    lines.append(f"引擎：{core_method.get('current_provider', '离线规则与证据裁决')}")
     if result.get("answer"):
         lines.append("=" * 60)
         lines.append("【实时研究回答】")
@@ -148,44 +141,17 @@ def _format_result(result: dict[str, Any]) -> str:
         lines.append(f"  蓝海假设：{blue_ocean.get('hypothesis', '-')}")
         lines.append(f"  风险提示：{blue_ocean.get('caveat', '-')}")
 
-    # ── 创新机制 ──
-    falsification = innovations.get("falsification", {})
-    discovery = innovations.get("discovery", {})
-    hypotheses = innovations.get("hypotheses", [])
-    if falsification.get("rounds", 0):
+    # ── 图谱发现 ──
+    graph_insights = result.get("graph_insights", {})
+    research_ideas = graph_insights.get("research_ideas", [])
+    timeline = graph_insights.get("timeline", [])
+    if graph_insights:
         lines.append("=" * 60)
-        lines.append("【创新机制】")
-        lines.append(
-            f"  可证伪检查：{falsification.get('rounds', 0)} 轮，"
-            f"失败 {falsification.get('failed', 0)}，"
-            f"证据不足 {falsification.get('unresolved', 0)}"
-        )
-        lines.append(f"  辩论视角：{innovations.get('debate_view_count', 0)} 次")
-    if discovery:
-        gaps = discovery.get("research_gaps", [])
-        controversies = discovery.get("controversies", [])
-        lines.append(f"  研究空白：{len(gaps)} 个")
-        for g in gaps:
-            lines.append(f"    · {g.get('label', '')}: {g.get('description', '')}")
-        lines.append(f"  争议点：{len(controversies)} 个")
-        for c in controversies:
-            lines.append(f"    · {c.get('topic', '')}: {c.get('description', '')}")
-    if hypotheses:
-        lines.append("  蓝海假设排名：")
-        for h in hypotheses:
-            score = h.get("score")
-            score_text = "待验证" if score is None else f"{score:.0%}"
-            lines.append(
-                f"    #{h.get('rank', '?')} [{score_text}] {h.get('hypothesis', '')}"
-            )
-
-    # ── 性能 ──
-    if perf.get("total_ms") is not None:
-        lines.append("=" * 60)
-        lines.append(f"【性能】总计 {perf['total_ms']:.2f} ms")
-        for s in perf.get("stages", []):
-            lines.append(f"  {s.get('name', '-'):30s} {s.get('duration_ms', 0):.3f} ms")
-
+        lines.append("【图谱发现】")
+        lines.append(f"  技术时间线：{len(timeline)} 篇论文")
+        lines.append(f"  待验证 Idea：{len(research_ideas)} 个")
+        for idea in research_ideas:
+            lines.append(f"    · {idea.get('title', '')} [{idea.get('novelty_status', '')}]")
     return "\n".join(lines)
 
 
@@ -199,31 +165,24 @@ class RunWorker(QThread):
         orchestrator: ScholarlyTraceOrchestrator,
         profile_id: str,
         query: str,
-        preset: str,
-        provider_config: ProviderConfig,
         feedback: str | None = None,
     ):
         super().__init__()
         self.orchestrator = orchestrator
         self.profile_id = profile_id
         self.query = query
-        self.preset = preset
-        self.provider_config = provider_config
         self.feedback = feedback
 
     def run(self) -> None:
         try:
-            adjustments = {"too_hard": -1, "suitable": 0, "too_easy": 1}
-            result = self.orchestrator.run_with_provider(
-                self.profile_id,
-                self.query,
-                self.provider_config,
-                config=self.preset,
-                difficulty_adjustment=adjustments.get(self.feedback, 0),
-                feedback=self.feedback,
-            )
             if self.feedback:
-                result["feedback"] = {"signal": self.feedback}
+                result = self.orchestrator.run_with_feedback(
+                    self.profile_id,
+                    self.feedback,
+                    self.query,
+                )
+            else:
+                result = self.orchestrator.run(self.profile_id, self.query)
             self.finished.emit(result)
         except Exception as exc:
             self.error.emit(str(exc))
@@ -249,10 +208,6 @@ class MainWindow(QMainWindow):
         self.profile_combo = QComboBox()
         bar.addWidget(self.profile_combo)
 
-        bar.addWidget(QLabel("预设:"))
-        self.preset_combo = QComboBox()
-        bar.addWidget(self.preset_combo)
-
         bar.addWidget(QLabel("查询:"))
         self.query_edit = QPlainTextEdit()
         self.query_edit.setMaximumHeight(60)
@@ -264,26 +219,6 @@ class MainWindow(QMainWindow):
         bar.addWidget(self.run_btn)
 
         root.addLayout(bar)
-
-        provider_bar = QHBoxLayout()
-        provider_bar.addWidget(QLabel("AI 供应商:"))
-        self.provider_combo = QComboBox()
-        self.provider_combo.currentIndexChanged.connect(self._provider_changed)
-        provider_bar.addWidget(self.provider_combo)
-
-        provider_bar.addWidget(QLabel("模型 ID:"))
-        self.model_edit = QLineEdit()
-        provider_bar.addWidget(self.model_edit, stretch=1)
-
-        provider_bar.addWidget(QLabel("API Key:"))
-        self.api_key_edit = QLineEdit()
-        try:
-            self.api_key_edit.setEchoMode(QLineEdit.EchoMode.Password)
-        except AttributeError:
-            self.api_key_edit.setEchoMode(QLineEdit.Password)
-        self.api_key_edit.setPlaceholderText("仅本次运行使用，不落盘")
-        provider_bar.addWidget(self.api_key_edit, stretch=1)
-        root.addLayout(provider_bar)
 
         # ── 结果输出区 ──
         self.output = QPlainTextEdit()
@@ -303,50 +238,19 @@ class MainWindow(QMainWindow):
         root.addLayout(feedback_bar)
 
         # 初始加载
-        self._load_profiles_presets_and_providers()
-        self.output.setPlainText("就绪。选择画像和预设后点击「运行」。")
+        self._load_profiles()
+        self.output.setPlainText("就绪。选择画像后点击「运行」。")
 
-    def _load_profiles_presets_and_providers(self) -> None:
+    def _load_profiles(self) -> None:
         profiles = self.orchestrator.list_profiles()
         for p in profiles:
             self.profile_combo.addItem(f"{p['name']} · {p['education']}", p["profile_id"])
-        for preset in list_presets():
-            self.preset_combo.addItem(f"{preset['label']} ({preset['name']})", preset["name"])
-        idx = self.preset_combo.findData("full")
-        if idx >= 0:
-            self.preset_combo.setCurrentIndex(idx)
-        for provider in list_providers():
-            self.provider_combo.addItem(provider["label"], provider)
-        self._provider_changed()
-
-    def _provider_changed(self, *_args: object) -> None:
-        provider = self.provider_combo.currentData()
-        if not isinstance(provider, dict):
-            return
-        self.model_edit.setText(provider["default_model"])
-        requires_key = bool(provider["requires_api_key"])
-        self.api_key_edit.setEnabled(requires_key)
-        if not requires_key:
-            self.api_key_edit.clear()
 
     def _run(self, feedback: str | None = None) -> None:
         profile_id = self.profile_combo.currentData()
-        preset = self.preset_combo.currentData()
         query = self.query_edit.toPlainText().strip()
-        if not profile_id or not preset:
-            self.output.setPlainText("错误：请选择画像和预设。")
-            return
-        provider = self.provider_combo.currentData()
-        try:
-            provider_config = ProviderConfig.from_payload(
-                {
-                    "provider": provider["id"] if isinstance(provider, dict) else "mock",
-                    "model": self.model_edit.text().strip(),
-                    "api_key": self.api_key_edit.text().strip(),
-                }
-            )
-        except ValueError as exc:
-            self.output.setPlainText(f"错误：{exc}")
+        if not profile_id:
+            self.output.setPlainText("错误：请选择画像。")
             return
 
         self.run_btn.setEnabled(False)
@@ -356,8 +260,6 @@ class MainWindow(QMainWindow):
             self.orchestrator,
             profile_id,
             query,
-            preset,
-            provider_config,
             feedback,
         )
         self._worker.finished.connect(self._on_result)

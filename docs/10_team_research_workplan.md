@@ -37,7 +37,7 @@ VTY = 冻结测试集中“关系正确且证据跨度正确”的 accepted 三�
 | WP2 科学信息抽取 | schema 词典、触发词和同句共现 | GLiNER、GLiREL；SciBERT+DyGIE++；DeepKE/OneKE；Qwen2.5-7B-Instruct | 实体、文档级关系、实验 n 元组和证据跨度 | B |
 | WP3 实体链接与动态图谱 | 规范名精确合并；JSON 图；连通分量 | multilingual-e5-base；SPECTER2；FAISS；Neo4j；Leiden 社区 | 跨论文消歧、版本、冲突和演化关系 | C |
 | WP4 多智能体证据校验 | 3 个核心决策 Agent；3 项辅助服务；规则裁判 | Qwen2.5-7B-Instruct；SciFact verifier；Debate-Augmented RAG 思路 | 单次抽取 vs. 同质投票 vs. 提出/批判/裁判、置信校准、成本 | D |
-| WP5 应用与复现实验 | 原生 Web、Python HTTP 服务、47 项测试、四组消融 | 统一实验 CLI；MLflow 或轻量 JSON registry；可选 PyInstaller/PySide6 壳 | 数据冻结、实验复现、评审演示、失败恢复 | D 主责，全员集成 |
+| WP5 应用与复现实验 | 原生 Web、Python HTTP 服务、76 项测试、Track A 四组决策变体与六实验入口 | 统一实验 CLI；MLflow 或轻量 JSON registry；可选 PyInstaller/PySide6 壳 | 数据冻结、实验复现、评审演示、失败恢复 | D 主责，全员集成 |
 
 WP1–WP4 是科研核心；WP5 服务于复现和展示，不能挤占全文标注与抽取实验时间。
 

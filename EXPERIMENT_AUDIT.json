@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "audit_id": "2026-08-14_run01",
+  "completed_at": "2026-08-15T00:10:00+08:00",
+  "engineering_verdict": "PASS",
+  "empirical_claim_verdict": "WARN",
+  "review_independence": "same-family",
+  "acceptance_status": "provisional",
+  "reviewer_agent_id": "/root/p0_experiment_integrity_audit",
+  "review_rounds": [
+    {"round": 1, "verdict": "WARN", "trace_prefix": ".aris/traces/experiment-audit/2026-08-14_run01/001-integrity-review"},
+    {"round": 2, "verdict": "FAIL", "trace_prefix": ".aris/traces/experiment-audit/2026-08-14_run01/002-v2-patch-gate"},
+    {"round": 3, "verdict": "PASS", "trace_prefix": ".aris/traces/experiment-audit/2026-08-14_run01/003-v3-final-gate"}
+  ],
+  "claim_boundary": {
+    "accepted": "deterministic synthetic/self-supervised/simulation engineering regression",
+    "rejected": [
+      "real-world hallucination reduction",
+      "real model accuracy improvement",
+      "cross-domain generalization",
+      "production throughput"
+    ],
+    "missing_evaluation_types": ["real_gt", "human_eval"]
+  },
+  "experiments": [
+    {"slug": "01_core_ablation", "evaluation_type": "synthetic_proxy", "raw_rows": 192, "summary_rows": 4, "verification_status": "passed"},
+    {"slug": "02_provenance_falsification", "evaluation_type": "synthetic_proxy", "raw_rows": 66, "summary_rows": 2, "verification_status": "passed"},
+    {"slug": "03_dynamic_knowledge", "evaluation_type": "self_supervised_proxy", "raw_rows": 12, "summary_rows": 3, "verification_status": "passed"},
+    {"slug": "04_query_robustness", "evaluation_type": "synthetic_proxy", "raw_rows": 24, "summary_rows": 1, "verification_status": "passed"},
+    {"slug": "05_workload_scaling", "evaluation_type": "simulation_only", "raw_rows": 30, "summary_rows": 3, "verification_status": "passed", "timing_scope": "core_pipeline_excluding_decision_ablation"},
+    {"slug": "06_end_to_end_regression", "evaluation_type": "simulation_only", "raw_rows": 27, "summary_rows": 1, "verification_status": "passed"}
+  ],
+  "verification": {
+    "run_count": 6,
+    "claim_ceiling_propagation": "passed",
+    "receipt_status": "passed",
+    "receipt_hash_count_per_run": 5,
+    "fresh_read_only_verification": "passed",
+    "tests": 76,
+    "branch_coverage_percent": 82,
+    "ci_fail_under_percent": 75
+  },
+  "source_sha256": {
+    "tests/experiments/framework.py": "90ad8a5c59ab35415933ad7fe4a640db8452ecc54a02e839caf1e7966c603f6d",
+    "tests/experiments/run_all.py": "20b26077d36650b1f30bde40460e9fea983ca785a8025379682b2c4dcecc16f6",
+    "src/yanhai/ablation.py": "ccbb4aa0040de824de7d9c798a21db28a4261da8637fc5c4ec3e6f2c12a34431",
+    "src/yanhai/evaluation.py": "f378bacc057ba76025c986e1bb39f7345ce5a96b5fc68bdc2a8a08684fe9c3a9",
+    "src/yanhai/orchestrator.py": "c0ecab698acb9cd495152a374ecdca07ce63fb40072fa8be1839b10dc2b774d4",
+    "src/yanhai/agents.py": "9a2066cd6b222d7c25ceae5c79d1a193c1e00ce89fe6119fcba7f4dfe3c2034e",
+    "src/yanhai/archive/legacy_six_agent.py": "a80903559261a4847eba0e66d6b857adc15ce2b3ccb249120d85c798e6f8e225",
+    "data/evaluation/decision_benchmark.json": "4a623946a9708ef9d1395c55da709a284cac69adab8e2ff9411cdb0dcb694eff",
+    "tests/experiments/data/mock_benchmark.jsonl": "81263c6ba93ff1e69c6d10a093feb7deb7a1cdaddc9aff05732632b41cf2f524",
+    "tests/experiments/01_core_ablation/experiment.json": "1f399c1025248158ccb99d266e7b23b3931516038d2172bd58020b5e50914059",
+    "tests/experiments/02_provenance_falsification/experiment.json": "1dc3b825d163b12125d0c8677b23d61213c15fed2e09f794a1885a3208995c04",
+    "tests/experiments/03_dynamic_knowledge/experiment.json": "a2f523516ccb887a9b34b4c674049c8bcbf2ea80b554f71972d8a1a2a6f56c3d",
+    "tests/experiments/04_query_robustness/experiment.json": "8f6754e8387b66e9a97505bdc885cb5d320cf67ce220946573be7dab85abe3cb",
+    "tests/experiments/05_workload_scaling/experiment.json": "74a2bf99327243b79080b23e39eca2a3c1cbe54bf8c8cba06e9e9e6c96a8d807",
+    "tests/experiments/06_end_to_end_regression/experiment.json": "a23cfa161da8ff12b57a72e209360125cc0bbe5163336b928e4e5cc779032ea0"
+  },
+  "verification_receipt_sha256": {
+    "01_core_ablation": "b31a50ef8654d78ba42137576e32cddd0dc12aa577f42f0c66dd4e1e186c772d",
+    "02_provenance_falsification": "99e6f8a1d1bafabaa62c75ded05b30a5b6e252ae9895ba8471d9389b786a2f17",
+    "03_dynamic_knowledge": "d6b1706a4cc069f73c2514fa2b87883e37f2829cbf7640c1560cab525d521aa1",
+    "04_query_robustness": "1b3433a58edc1b43cea1f5c14308a5f4b44c254bf8e650444f9b618b318cee3d",
+    "05_workload_scaling": "a8c6d7558e2029a25ab240b3f6c70bddf5d65503428d3145a21974f9d39dc9d5",
+    "06_end_to_end_regression": "cc32a949855bf9395106f272da6264e89c2ca9b3d2cf3642897d782d4915aeb0"
+  }
+}

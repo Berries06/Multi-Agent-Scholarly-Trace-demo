@@ -2,6 +2,8 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
+.coverage
+.coverage.*
 .venv/
 .env
 *.env
@@ -14,4 +16,9 @@ outputs/*.jsonl
 outputs/*.pid
 papers/**/*.pdf
 tmp/
+.tmp/
 dist/
+outputs/experiments/
+outputs/experiment-dashboard.html
+.aris/traces/
+.aris/meta/events.jsonl

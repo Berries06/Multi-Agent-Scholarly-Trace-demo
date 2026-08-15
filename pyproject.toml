@@ -12,6 +12,7 @@ dependencies = []
 
 [project.optional-dependencies]
 documents = ["docling>=2.70", "pypdf>=5.0"]
+test = ["coverage[toml]>=7.6"]
 
 [project.scripts]
 yanhai = "yanhai.server:main"
@@ -22,3 +23,20 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.coverage.run]
+branch = true
+source = ["yanhai"]
+omit = [
+    "src/yanhai/archive/*",
+    "src/yanhai/qt_app.py",
+]
+
+[tool.coverage.report]
+fail_under = 75
+show_missing = true
+skip_covered = true
+exclude_also = [
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]

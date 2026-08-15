@@ -22,6 +22,9 @@ $items = @(
     "STOP_DEMO.bat",
     "OPEN_DEMO.url",
     "GITHUB_REPOSITORY.url",
+    "pyproject.toml",
+    "EXPERIMENT_AUDIT.md",
+    "EXPERIMENT_AUDIT.json",
     "Dockerfile",
     "docker-compose.yml",
     "config",
@@ -30,6 +33,7 @@ $items = @(
     "docs",
     "scripts",
     "src",
+    "submission_materials",
     "tests",
     "web"
 )
@@ -42,6 +46,21 @@ try {
         }
         Copy-Item -LiteralPath $source -Destination $stagingDirectory -Recurse
     }
+
+    $resolvedStagingDirectory = (Resolve-Path -LiteralPath $stagingDirectory).Path
+    $stagingPrefix = $resolvedStagingDirectory.TrimEnd('\') + '\'
+    $generatedCaches = @(
+        Get-ChildItem -LiteralPath $resolvedStagingDirectory -Directory -Recurse -Force |
+            Where-Object { $_.Name -eq "__pycache__" }
+    )
+    foreach ($cacheDirectory in $generatedCaches) {
+        $resolvedCacheDirectory = (Resolve-Path -LiteralPath $cacheDirectory.FullName).Path
+        if (-not $resolvedCacheDirectory.StartsWith($stagingPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+            throw "Refusing to remove a generated cache outside staging: $resolvedCacheDirectory"
+        }
+        Remove-Item -LiteralPath $resolvedCacheDirectory -Recurse -Force
+    }
+
     Compress-Archive `
         -Path (Join-Path $stagingDirectory "*") `
         -DestinationPath $OutputPath `

@@ -113,6 +113,8 @@ class ScholarlyTraceOrchestrator:
         query: str = DEFAULT_QUERY,
         difficulty_adjustment: int = 0,
         domain_id: str | None = None,
+        *,
+        include_ablation: bool = True,
     ) -> dict[str, Any]:
         if profile_id not in self.profiles:
             raise KeyError(f"Unknown profile: {profile_id}")
@@ -206,7 +208,7 @@ class ScholarlyTraceOrchestrator:
             "resource_match_score": diagnosis["resource_match_score"],
             "feedback_adjustment": difficulty_adjustment,
         }
-        return {
+        result = {
             "project": "研海寻踪",
             "domain": kb.domain,
             "query": query,
@@ -285,8 +287,10 @@ class ScholarlyTraceOrchestrator:
             "resources": resources,
             "report": report,
             "metrics": metrics,
-            "ablation": self.ablation.run(),
         }
+        if include_ablation:
+            result["ablation"] = self.ablation.run()
+        return result
 
     def run_with_feedback(
         self,
@@ -294,6 +298,8 @@ class ScholarlyTraceOrchestrator:
         feedback: str,
         query: str = DEFAULT_QUERY,
         domain_id: str | None = None,
+        *,
+        include_ablation: bool = True,
     ) -> dict[str, Any]:
         adjustments = {"too_hard": -1, "suitable": 0, "too_easy": 1}
         if feedback not in adjustments:
@@ -303,6 +309,7 @@ class ScholarlyTraceOrchestrator:
             query,
             adjustments[feedback],
             domain_id,
+            include_ablation=include_ablation,
         )
         result["feedback"] = {
             "signal": feedback,
