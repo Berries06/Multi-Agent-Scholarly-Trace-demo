@@ -30,16 +30,8 @@ import streamlit as st
 PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from yanhai.agents import (  # noqa: E402
-    CriticAgent,
-    DiagnosisAgent,
-    JudgeAgent,
-    ProposerAgent,
-    ResourceAgent,
-)
-from yanhai.extraction import PlainTextParser, SchemaGuidedExtractor  # noqa: E402
-from yanhai.fresh_kb import FreshPaperKB  # noqa: E402
-from yanhai.models import LearnerProfile, Paper  # noqa: E402
+from yanhai.fresh_pipeline import run_fresh_paper_pipeline  # noqa: E402
+from yanhai.models import LearnerProfile  # noqa: E402
 
 SCHEMA_PATH = PROJECT_ROOT / "data" / "knowledge" / "extraction_schema.json"
 PROFILES_PATH = PROJECT_ROOT / "data" / "profiles" / "profiles.json"
@@ -79,85 +71,14 @@ def run_pipeline(
     accept_threshold: float,
 ) -> dict[str, Any]:
     """执行完整流水线，返回分阶段中间量字典。"""
-    # 阶段 1：结构解析
-    document = PlainTextParser().parse_text(
-        text,
+    return run_fresh_paper_pipeline(
         paper_id=paper_id,
-        fallback_title=title or paper_id,
-        source_url="member-pasted-text",
+        title=title,
+        text=text,
+        profile=profile,
+        schema_path=SCHEMA_PATH,
+        accept_threshold=accept_threshold,
     )
-
-    # 阶段 2：实体/关系抽取
-    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
-    extraction = SchemaGuidedExtractor.from_path(
-        SCHEMA_PATH, accept_threshold=accept_threshold
-    ).extract_documents([document]).to_dict()
-
-    # 阶段 3：构造单篇论文知识库适配器与 Paper
-    kb = FreshPaperKB(extraction, schema)
-    paper = Paper(
-        paper_id=paper_id,
-        title=document.title,
-        authors=(),
-        year=2026,
-        published="",
-        categories=(),
-        summary="",
-        concepts=(),
-        source_url="member-pasted-text",
-    )
-
-    # 阶段 4：学情诊断（复用真实诊断 Agent）
-    diagnosis = DiagnosisAgent().diagnose(profile)
-
-    # 阶段 5：提出者
-    proposer = ProposerAgent()
-    claims = proposer.propose(kb, [paper])
-    proposed_claims = [claim.to_dict() for claim in claims]
-
-    # 阶段 6：批判者
-    claims = CriticAgent().critique(claims, kb)
-    critiqued_claims = [claim.to_dict() for claim in claims]
-
-    # 阶段 7：裁判
-    claims = JudgeAgent().adjudicate(claims, kb)
-    adjudicated_claims = [claim.to_dict() for claim in claims]
-
-    # 阶段 8：个性化资源
-    resources = ResourceAgent().generate(profile, diagnosis, claims, kb)
-
-    accepted = [claim for claim in claims if claim.status == "accepted"]
-    accepted_without_evidence = [claim for claim in accepted if not claim.evidence_ids]
-    return {
-        "fingerprint": {
-            "paper_id": paper_id,
-            "title": document.title,
-            "text_char_count": len(text),
-            "accept_threshold": accept_threshold,
-            "profile_id": profile.profile_id,
-            "schema_version": extraction["schema_version"],
-        },
-        "document": {
-            "paper_id": document.paper_id,
-            "title": document.title,
-            "sections": document.sections,
-        },
-        "extraction": extraction,
-        "diagnosis": diagnosis,
-        "proposed_claims": proposed_claims,
-        "critiqued_claims": critiqued_claims,
-        "adjudicated_claims": adjudicated_claims,
-        "resources": resources,
-        "summary": {
-            "entity_count": len(extraction["entities"]),
-            "candidate_relation_count": len(extraction["relations"]),
-            "claim_count": len(claims),
-            "accepted_count": len(accepted),
-            "rejected_count": sum(c.status == "rejected" for c in claims),
-            "needs_review_count": sum(c.status == "needs_review" for c in claims),
-            "accepted_without_evidence_count": len(accepted_without_evidence),
-        },
-    }
 
 
 def render_app() -> None:

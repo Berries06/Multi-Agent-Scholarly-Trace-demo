@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+from pathlib import Path
 from typing import Any, AsyncIterator
 
 from fastapi import FastAPI, HTTPException
@@ -20,6 +21,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
+from .fresh_pipeline import run_fresh_paper_pipeline
 from .orchestrator import ScholarlyTraceOrchestrator
 from .resources import project_root
 
@@ -45,6 +47,14 @@ class FeedbackRequest(BaseModel):
     feedback: str = Field(..., pattern="^(too_hard|suitable|too_easy)$")
     query: str = DEFAULT_QUERY
     domain_id: str | None = None
+
+
+class IngestPaperRequest(BaseModel):
+    paper_id: str = "member-paper-01"
+    title: str = ""
+    text: str
+    profile_id: str
+    accept_threshold: float = Field(0.72, ge=0.50, le=0.95)
 
 
 class ApiState:
@@ -144,6 +154,23 @@ def create_app() -> FastAPI:
             )
         except KeyError as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    @app.post("/api/ingest-paper")
+    def ingest_paper(payload: IngestPaperRequest) -> dict[str, Any]:
+        if payload.profile_id not in orchestrator.profiles:
+            raise HTTPException(
+                status_code=404, detail=f"Unknown profile: {payload.profile_id}"
+            )
+        profile = orchestrator.profiles[payload.profile_id]
+        schema_path = Path(project_root()) / "data" / "knowledge" / "extraction_schema.json"
+        return run_fresh_paper_pipeline(
+            paper_id=payload.paper_id,
+            title=payload.title,
+            text=payload.text,
+            profile=profile,
+            schema_path=schema_path,
+            accept_threshold=payload.accept_threshold,
+        )
 
     @app.post("/api/run/stream")
     async def run_stream(payload: RunRequest) -> StreamingResponse:
