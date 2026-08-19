@@ -343,8 +343,8 @@ class CriticAgent:
                 if item["evidence_id"].startswith("evidence:")
             ]
             if span_evidence and not any(
-                claim.source.casefold() in item["text"].casefold()
-                and claim.target.casefold() in item["text"].casefold()
+                kb.entity_mentioned_in_evidence(claim.source, item["evidence_id"])
+                and kb.entity_mentioned_in_evidence(claim.target, item["evidence_id"])
                 for item in span_evidence
             ):
                 claim.criticisms.append("证据跨度没有同时覆盖关系两端实体。")
