@@ -5,6 +5,10 @@ __pycache__/
 .coverage
 .coverage.*
 .venv/
+.venv-lab/
+.hf-lab-cache/
+node_modules/
+frontend/dist/
 .env
 *.env
 !*.env.example
