@@ -1,0 +1,84 @@
+{
+  "contract_version": 1,
+  "target": {
+    "provider": "tencent-cloud-china",
+    "billing": "pay-as-you-go",
+    "instance_family": "GN7",
+    "gpu": "1x NVIDIA T4 16 GiB",
+    "vcpu": 8,
+    "memory_gib": 32,
+    "system_disk_gib": 100,
+    "os": "Ubuntu 22.04 x86-64",
+    "region_rule": "prefer-the-same-region-as-snowsong.top"
+  },
+  "base": "ubuntu22.04+cuda12.8+miniforge26.3.2-2+python3.12.13",
+  "nvidia_driver": {
+    "minimum_linux_version": "570.26",
+    "acceptance_rule": "nvidia-smi and the seeded CUDA witness must both pass"
+  },
+  "system_pkgs": [
+    "ca-certificates",
+    "curl",
+    "git",
+    "openssh-client"
+  ],
+  "pip_phases": [
+    [
+      "torch==2.8.0",
+      "--index-url",
+      "https://download.pytorch.org/whl/cu128"
+    ],
+    [
+      "transformers==4.57.6",
+      "gliner==0.2.27",
+      "streamlit==1.60.0",
+      "huggingface-hub==0.36.2",
+      "tokenizers==0.22.2",
+      "sentencepiece==0.2.2"
+    ],
+    [
+      "torch==2.8.0",
+      "--index-url",
+      "https://download.pytorch.org/whl/cu128"
+    ]
+  ],
+  "env": {
+    "CUDA_VISIBLE_DEVICES": "0",
+    "HF_HOME": "/var/lib/yanhai-gliner/huggingface",
+    "MKL_NUM_THREADS": "8",
+    "OMP_NUM_THREADS": "8",
+    "OPENBLAS_NUM_THREADS": "8",
+    "TOKENIZERS_PARALLELISM": "false"
+  },
+  "run_commands": [
+    "sha256sum Miniforge3-26.3.2-2-Linux-x86_64.sh must equal 42260ffe3830fb953d5eee1bbb32229ff06aa7c3833c1ed7a9a0420a95685d94",
+    "/opt/miniforge3/bin/conda create --yes --prefix /opt/yanhai-gliner/venv python=3.12.13 pip=25.1.1"
+  ],
+  "weight_dirs": {
+    "gliner_small_v2_1": {
+      "gated": false,
+      "path": "/var/lib/yanhai-gliner/models/gliner_small-v2.1",
+      "source": "snapshot_download(repo_id='urchade/gliner_small-v2.1', local_dir=path), then gliner_entity_lab.load_model_bundle()"
+    }
+  },
+  "smoke": {
+    "cli_checks": [
+      "nvidia-smi"
+    ],
+    "gpu_tests": [
+      {
+        "cmd": "python -c \"import torch;torch.manual_seed(0);x=torch.randn(8,8,device='cuda');y=x@x;name=torch.cuda.get_device_name(0);checksum=float(y.abs().sum());assert y.shape==(8,8);assert 'T4' in name,name;assert checksum>0,checksum;print('WITNESS',tuple(y.shape),name,checksum)\"",
+        "expect": "^WITNESS \\(8, 8\\) .*T4 [1-9]"
+      }
+    ],
+    "import_names": [
+      "torch",
+      "transformers",
+      "gliner",
+      "streamlit",
+      "huggingface_hub",
+      "tokenizers",
+      "sentencepiece"
+    ]
+  }
+}

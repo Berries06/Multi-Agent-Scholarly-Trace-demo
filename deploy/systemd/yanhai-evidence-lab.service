@@ -1,0 +1,37 @@
+[Unit]
+Description=Yanhai shared evidence decision lab
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=yanhai-lab
+Group=yanhai-lab
+WorkingDirectory=/opt/yanhai-labs/evidence/current
+EnvironmentFile=/etc/yanhai-evidence-lab.env
+Environment=HOME=/var/lib/yanhai-evidence-lab
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONUNBUFFERED=1
+Environment=STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+ExecStart=/opt/yanhai-labs/evidence/venv/bin/python -m streamlit run /opt/yanhai-labs/evidence/current/shared_evidence_decision_lab.py --global.developmentMode false --server.address 127.0.0.1 --server.port 8501 --server.baseUrlPath AgentDemo/lab
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=20
+
+StateDirectory=yanhai-evidence-lab
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryMax=512M
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target
