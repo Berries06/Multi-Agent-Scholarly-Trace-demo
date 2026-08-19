@@ -1,4 +1,4 @@
-import type { Domain, Health, LearnerProfile, RunResult } from './types'
+import type { Domain, Health, IngestResult, LearnerProfile, RunResult } from './types'
 
 const jsonHeaders = { 'Content-Type': 'application/json' }
 
@@ -32,6 +32,22 @@ export interface RunPayload {
 
 export function runPipeline(payload: RunPayload): Promise<RunResult> {
   return request('/api/run', {
+    method: 'POST',
+    headers: jsonHeaders,
+    body: JSON.stringify(payload),
+  })
+}
+
+export interface IngestPayload {
+  paper_id: string
+  title: string
+  text: string
+  profile_id: string
+  accept_threshold: number
+}
+
+export function ingestPaper(payload: IngestPayload): Promise<IngestResult> {
+  return request('/api/ingest-paper', {
     method: 'POST',
     headers: jsonHeaders,
     body: JSON.stringify(payload),
