@@ -1,8 +1,8 @@
 # 研海寻踪 · 产品 Web 前端（React + Vite + TS + Ant Design + ECharts）
 
-统一的产品化前端，一个应用内包含两个标签页：
+统一的产品化前端，采用京东 JDGenie 式的「左侧边栏 + 聊天式主区 + 思考过程可视化」布局：
 
-- **产品演示**：选领域 + 画像 + 查询 → 多智能体调度轨迹、画像雷达图、裁决、资源（给评委看）；
+- **产品演示**：选领域 + 画像 + 提问 → 多智能体思考过程时间线、画像雷达图、裁决、资源（给评委看）；
 - **实验台（粘贴论文）**：粘贴论文正文 → 结构解析 → 实体/关系抽取 → 学情诊断 →
   三智能体裁决 → 个性化资源，逐层展示中间量（团队亲手验收，替代 Streamlit 实验台）。
 
@@ -30,10 +30,11 @@ frontend/
   vite.config.ts        Vite 配置 + /api 代理
   src/
     main.tsx            入口
-    App.tsx             顶栏 + 两个标签页（产品 / 实验台）
-    ProductPage.tsx     产品演示页（领域/画像/查询 → 运行）
+    App.tsx             侧边栏导航 + 顶栏 + 主题
+    theme.ts            AntD 主题（主题色/圆角）
+    ProductPage.tsx     产品演示页（领域/画像/提问 → 运行）
     LabPage.tsx         实验台页（粘贴论文 → 逐层中间量）
-    AgentTrace.tsx      多智能体调度轨迹（Steps）
+    AgentTrace.tsx      多智能体思考过程时间线（Timeline）
     DiagnosisRadar.tsx  学习者知识画像雷达图（ECharts）
     api.ts              typed fetch 客户端
     types.ts            API 类型

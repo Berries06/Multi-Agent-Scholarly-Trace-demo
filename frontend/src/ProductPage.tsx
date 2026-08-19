@@ -18,8 +18,8 @@ import {
 import type { ColumnsType } from 'antd/es/table'
 import AgentTrace from './AgentTrace'
 import DiagnosisRadar from './DiagnosisRadar'
-import { getDomains, getHealth, getProfiles, runPipeline } from './api'
-import type { Claim, Domain, Health, LearnerProfile, RunResult } from './types'
+import { getDomains, getProfiles, runPipeline } from './api'
+import type { Claim, Domain, LearnerProfile, RunResult } from './types'
 
 const { Text, Paragraph } = Typography
 
@@ -45,7 +45,6 @@ const claimColumns: ColumnsType<ClaimRow> = [
 export default function ProductPage() {
   const [domains, setDomains] = useState<Domain[]>([])
   const [profiles, setProfiles] = useState<LearnerProfile[]>([])
-  const [health, setHealth] = useState<Health | null>(null)
   const [domainId, setDomainId] = useState<string | undefined>()
   const [profileId, setProfileId] = useState<string | undefined>()
   const [query, setQuery] = useState('')
@@ -55,12 +54,11 @@ export default function ProductPage() {
 
   useEffect(() => {
     let cancelled = false
-    Promise.all([getDomains(), getProfiles(), getHealth()])
-      .then(([domainsData, profilesData, healthData]) => {
+    Promise.all([getDomains(), getProfiles()])
+      .then(([domainsData, profilesData]) => {
         if (cancelled) return
         setDomains(domainsData)
         setProfiles(profilesData)
-        setHealth(healthData)
         setDomainId(domainsData[0]?.domain_id)
         setProfileId(profilesData[0]?.profile_id)
         const example = domainsData[0]?.query_example
@@ -86,8 +84,7 @@ export default function ProductPage() {
     setLoading(true)
     setError(null)
     try {
-      const data = await runPipeline({ profile_id: profileId, query, domain_id: domainId })
-      setResult(data)
+      setResult(await runPipeline({ profile_id: profileId, query, domain_id: domainId }))
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
     } finally {
@@ -102,17 +99,15 @@ export default function ProductPage() {
     score: claim.judge_score,
   }))
 
+  const thinkingSteps = result
+    ? [...result.specialist_agent_trace, ...result.agent_trace]
+    : []
+
   return (
     <div>
-      <Paragraph type="secondary">
-        {health
-          ? `后端在线 · ${health.domain_count} 领域 · ${health.profile_count} 画像 · ${health.system_agents} Agent`
-          : '正在连接后端…'}
-      </Paragraph>
-
-      <Card>
-        <Row gutter={16} align="bottom">
-          <Col span={5}>
+      <Card title="问一个领域问题">
+        <Row gutter={12} align="bottom">
+          <Col span={4}>
             <Text>垂直领域</Text>
             <Select
               style={{ width: '100%' }}
@@ -130,13 +125,18 @@ export default function ProductPage() {
               onChange={(value: string) => setProfileId(value)}
             />
           </Col>
-          <Col span={11}>
-            <Text>查询 / 学习目标</Text>
-            <Input value={query} onChange={(e) => setQuery(e.target.value)} />
+          <Col span={12}>
+            <Text>你的问题</Text>
+            <Input.TextArea
+              rows={2}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="例如：分析图神经网络如何支持稳定材料发现"
+            />
           </Col>
           <Col span={3}>
             <Button type="primary" onClick={run} loading={loading} block>
-              运行
+              提交
             </Button>
           </Col>
         </Row>
@@ -155,6 +155,10 @@ export default function ProductPage() {
 
       {result && !loading && (
         <>
+          <Card title={`思考过程 · ${thinkingSteps.length} 个 Agent`} style={{ marginTop: 16 }}>
+            <AgentTrace steps={thinkingSteps} />
+          </Card>
+
           <Row gutter={16} style={{ marginTop: 16 }}>
             <Col span={6}>
               <Card><Statistic title="accepted 命题" value={result.metrics.accepted_claims} /></Card>
@@ -177,15 +181,11 @@ export default function ProductPage() {
               </Card>
             </Col>
             <Col span={14}>
-              <Card title="多智能体调度轨迹">
-                <AgentTrace steps={[...result.specialist_agent_trace, ...result.agent_trace]} />
+              <Card title="裁决命题">
+                <Table columns={claimColumns} dataSource={claimRows} pagination={false} size="small" />
               </Card>
             </Col>
           </Row>
-
-          <Card title="裁决命题" style={{ marginTop: 16 }}>
-            <Table columns={claimColumns} dataSource={claimRows} pagination={false} size="small" />
-          </Card>
 
           <Card title="个性化资源" style={{ marginTop: 16 }}>
             <Collapse

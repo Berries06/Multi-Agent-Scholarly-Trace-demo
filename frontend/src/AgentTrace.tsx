@@ -1,21 +1,26 @@
-import { Steps } from 'antd'
+import { Tag, Timeline, Typography } from 'antd'
 import type { AgentTraceStep } from './types'
 
-interface Props {
-  steps: AgentTraceStep[]
+const { Text } = Typography
+
+function statusColor(status: string): string {
+  if (status === 'completed') return 'green'
+  if (status === 'failed') return 'red'
+  return 'blue'
 }
 
-function stepStatus(status: string): 'finish' | 'process' | 'error' {
-  if (status === 'completed') return 'finish'
-  if (status === 'failed') return 'error'
-  return 'process'
-}
-
-export default function AgentTrace({ steps }: Props) {
+export default function AgentTrace({ steps }: { steps: AgentTraceStep[] }) {
   const items = steps.map((step) => ({
-    title: `${step.agent} · ${step.role}`,
-    description: step.summary,
-    status: stepStatus(step.status),
+    color: statusColor(step.status),
+    children: (
+      <div>
+        <Text strong>{step.agent}</Text>
+        <Tag style={{ marginLeft: 8 }} color={statusColor(step.status)}>
+          {step.role}
+        </Tag>
+        <div style={{ color: '#666', marginTop: 4 }}>{step.summary}</div>
+      </div>
+    ),
   }))
-  return <Steps direction="vertical" size="small" items={items} />
+  return <Timeline items={items} />
 }

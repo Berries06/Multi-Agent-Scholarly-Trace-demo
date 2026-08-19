@@ -18,6 +18,7 @@ import {
   Typography,
 } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
+import AgentTrace from './AgentTrace'
 import DiagnosisRadar from './DiagnosisRadar'
 import { getProfiles, ingestPaper } from './api'
 import type {
@@ -151,6 +152,41 @@ export default function LabPage() {
     confidence: e.confidence,
   }))
 
+  const thinkingSteps = result
+    ? [
+        {
+          agent: '论文知识抽取',
+          role: '结构解析 + 实体/关系抽取',
+          status: 'completed',
+          summary: `抽取 ${result.summary.entity_count} 个实体、${result.summary.candidate_relation_count} 条关系候选`,
+        },
+        {
+          agent: '学情诊断',
+          role: '画像 → 难度/盲区',
+          status: 'completed',
+          summary: `准备度 ${result.diagnosis.readiness_score}，目标难度 L${result.diagnosis.target_difficulty}`,
+        },
+        {
+          agent: '提出者',
+          role: '候选命题',
+          status: 'completed',
+          summary: `生成 ${result.proposed_claims.length} 条候选命题`,
+        },
+        {
+          agent: '批判者',
+          role: '反证与约束',
+          status: 'completed',
+          summary: '对每条命题做证据存在性、类型约束、跨度覆盖检查',
+        },
+        {
+          agent: '裁判',
+          role: '置信裁决',
+          status: 'completed',
+          summary: `accepted ${result.summary.accepted_count} / rejected ${result.summary.rejected_count}`,
+        },
+      ]
+    : []
+
   return (
     <div>
       <Paragraph type="secondary">
@@ -215,6 +251,10 @@ export default function LabPage() {
 
       {result && !loading && (
         <>
+          <Card title={`思考过程 · ${thinkingSteps.length} 个 Agent`} style={{ marginTop: 16 }}>
+            <AgentTrace steps={thinkingSteps} />
+          </Card>
+
           <Row gutter={16} style={{ marginTop: 16 }}>
             <Col span={6}>
               <Card><Statistic title="实体数" value={result.summary.entity_count} /></Card>
