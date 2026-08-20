@@ -21,7 +21,7 @@ class ProviderTests(unittest.TestCase):
     def test_four_remote_providers_and_mock_are_available(self) -> None:
         provider_ids = {item["id"] for item in list_providers()}
         self.assertEqual(
-            {"mock", "deepseek", "openai", "anthropic", "kimi"},
+            {"mock", "deepseek", "openai", "anthropic", "kimi", "zhipu", "qwen"},
             provider_ids,
         )
 

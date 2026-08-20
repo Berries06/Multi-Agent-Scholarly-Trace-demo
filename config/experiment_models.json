@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "description": "差距1对比实验的模型池。prices 单位：元 / 百万 token（约值，以官网为准）。",
+  "price_pages": {
+    "deepseek": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing",
+    "zhipu": "https://open.bigmodel.cn/pricing",
+    "qwen": "https://help.aliyun.com/zh/model-studio/billing-for-model-studio",
+    "kimi": "https://platform.moonshot.cn/docs/pricing/chat"
+  },
+  "prices": {
+    "deepseek:deepseek-chat": { "input": null, "output": null },
+    "deepseek:deepseek-reasoner": { "input": null, "output": null },
+    "zhipu:glm-4-flash": { "input": 0, "output": 0 },
+    "zhipu:glm-4.5": { "input": null, "output": null },
+    "zhipu:glm-4-plus": { "input": null, "output": null },
+    "qwen:qwen-turbo": { "input": null, "output": null },
+    "qwen:qwen-plus": { "input": null, "output": null },
+    "qwen:qwen-max": { "input": null, "output": null },
+    "kimi:moonshot-v1-8k": { "input": null, "output": null },
+    "kimi:kimi-k2": { "input": null, "output": null }
+  }
+}

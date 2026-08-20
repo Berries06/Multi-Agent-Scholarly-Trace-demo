@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import time
 from dataclasses import dataclass, field
@@ -52,6 +53,24 @@ PROVIDER_REGISTRY: dict[str, dict[str, Any]] = {
         "description": "使用 Kimi OpenAI-compatible Chat Completions 接口。",
         "default_model": "kimi-k3",
         "models": ["kimi-k3", "kimi-k2.7-code-highspeed", "kimi-k2.6"],
+        "requires_api_key": True,
+        "protocol": "openai_chat",
+    },
+    "zhipu": {
+        "id": "zhipu",
+        "label": "智谱 GLM",
+        "description": "使用智谱 GLM OpenAI-compatible Chat Completions 接口。",
+        "default_model": "glm-4-flash",
+        "models": ["glm-4-flash", "glm-4.5", "glm-4-plus"],
+        "requires_api_key": True,
+        "protocol": "openai_chat",
+    },
+    "qwen": {
+        "id": "qwen",
+        "label": "通义千问 Qwen",
+        "description": "使用阿里云百炼 DashScope OpenAI-compatible 接口。",
+        "default_model": "qwen-turbo",
+        "models": ["qwen-turbo", "qwen-plus", "qwen-max"],
         "requires_api_key": True,
         "protocol": "openai_chat",
     },
@@ -359,6 +378,8 @@ class OpenAIChatProvider(BaseProvider):
         self.endpoint = {
             "deepseek": "https://api.deepseek.com/chat/completions",
             "kimi": "https://api.moonshot.cn/v1/chat/completions",
+            "zhipu": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+            "qwen": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
         }[config.provider]
 
     def complete(
@@ -512,8 +533,30 @@ def create_provider(
 ) -> BaseProvider:
     if config.provider == "openai":
         return OpenAIResponsesProvider(config, transport)
-    if config.provider in {"deepseek", "kimi"}:
+    if config.provider in {"deepseek", "kimi", "zhipu", "qwen"}:
         return OpenAIChatProvider(config, transport)
     if config.provider == "anthropic":
         return AnthropicMessagesProvider(config, transport)
     raise ValueError("离线 Mock 不需要创建远程 Provider。")
+
+
+def load_config_from_env(provider: str, model: str | None = None) -> ProviderConfig:
+    """Build a ProviderConfig from environment variables.
+
+    API keys are read from ``<PROVIDER_UPPER>_API_KEY`` (e.g. ``ZHIPU_API_KEY``)
+    so they never enter source code or logs.
+    """
+    if provider not in PROVIDER_REGISTRY:
+        raise ProviderError(f"不支持的 AI 供应商：{provider}")
+    metadata = PROVIDER_REGISTRY[provider]
+    env_name = f"{provider.upper().replace('-', '_')}_API_KEY"
+    api_key = os.getenv(env_name, "").strip()
+    if metadata["requires_api_key"] and not api_key:
+        raise ProviderError(
+            f"缺少环境变量 {env_name}；请先把 API Key 写入项目 .env 文件。"
+        )
+    return ProviderConfig(
+        provider=provider,
+        model=model or metadata["default_model"],
+        api_key=api_key,
+    )
