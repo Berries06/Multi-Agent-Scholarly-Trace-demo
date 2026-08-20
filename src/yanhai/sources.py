@@ -601,3 +601,87 @@ class MultiSourceRetriever:
                 warnings=warnings,
             )
         return papers
+
+
+def search_multi_source(
+    query: str,
+    *,
+    limit: int = 8,
+    catalog_path: Path | None = None,
+    retriever: MultiSourceRetriever | None = None,
+) -> dict[str, Any]:
+    """多源学术检索（arXiv / Crossref / OpenAlex / 官方文档，可选 Semantic Scholar）。
+
+    各源并行、单源失败自动跳过；全部失败返回空结果与明确 warning。
+    联网结果只作为候选（status=candidate_requires_local_parsing），
+    完成本地解析与三智能体裁决前不得入图。
+    """
+    if retriever is None:
+        if catalog_path is None:
+            catalog_path = (
+                Path(__file__).resolve().parents[2]
+                / "data"
+                / "knowledge"
+                / "official_sources.json"
+            )
+        retriever = MultiSourceRetriever(catalog_path)
+    try:
+        papers = retriever.search([query], limit)
+    except Exception as exc:  # noqa: BLE001 - 网络边界，任何异常都优雅降级
+        return {
+            "query": query,
+            "source": "multi_source",
+            "results": [],
+            "network_used": False,
+            "warning": (
+                f"多源检索暂不可达（{type(exc).__name__}）。"
+                "联网结果只作候选，不能直接进入知识图谱。"
+            ),
+            "report": {"attempted_sources": [], "successful_sources": []},
+        }
+    report = retriever.last_report
+    if not report.successful_sources:
+        detail = "；".join(report.warnings) or "全部源失败"
+        return {
+            "query": query,
+            "source": "multi_source",
+            "results": [],
+            "network_used": False,
+            "warning": (
+                f"多源检索暂不可达（{detail}）。"
+                "联网结果只作候选，不能直接进入知识图谱。"
+            ),
+            "report": {
+                "attempted_sources": report.attempted_sources,
+                "successful_sources": [],
+            },
+        }
+    results = [
+        {
+            "paper_id": paper.paper_id,
+            "title": paper.title,
+            "year": paper.year,
+            "venue": paper.published,
+            "authors": list(paper.authors),
+            "summary": paper.summary[:600],
+            "source_url": paper.source_url,
+            "doi": paper.external_ids.get("doi", ""),
+            "authority_tier": paper.authority_tier,
+            "status": "candidate_requires_local_parsing",
+        }
+        for paper in papers
+    ]
+    return {
+        "query": query,
+        "source": "multi_source",
+        "results": results,
+        "network_used": True,
+        "warning": (
+            "联网结果只扩展候选；下载并完成证据抽取与三智能体裁决后才能入图。"
+        ),
+        "report": {
+            "attempted_sources": report.attempted_sources,
+            "successful_sources": report.successful_sources,
+            "warnings": report.warnings,
+        },
+    }

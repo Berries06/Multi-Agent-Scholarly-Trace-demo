@@ -25,6 +25,7 @@ from .extraction import PyPDFParser
 from .fresh_pipeline import run_fresh_document_pipeline, run_fresh_paper_pipeline
 from .orchestrator import ScholarlyTraceOrchestrator
 from .resources import project_root
+from .sources import search_multi_source
 
 DEFAULT_QUERY = (
     "如何从科学论文中抽取可追溯知识图谱，并利用图谱理解技术脉络和生成研究想法？"
@@ -56,6 +57,11 @@ class IngestPaperRequest(BaseModel):
     text: str
     profile_id: str
     accept_threshold: float = Field(0.72, ge=0.50, le=0.95)
+
+
+class SearchRequest(BaseModel):
+    query: str
+    limit: int = Field(8, ge=1, le=20)
 
 
 class ApiState:
@@ -131,6 +137,10 @@ def create_app() -> FastAPI:
     @app.post("/api/graph-query")
     def graph_query(payload: GraphQueryRequest) -> dict[str, Any]:
         return orchestrator.query_graph(payload.query, payload.domain_id)
+
+    @app.post("/api/online-rag")
+    def online_rag(payload: SearchRequest) -> dict[str, Any]:
+        return search_multi_source(payload.query, limit=payload.limit)
 
     @app.post("/api/run")
     def run(payload: RunRequest) -> dict[str, Any]:

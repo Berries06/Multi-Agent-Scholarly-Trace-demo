@@ -15,6 +15,7 @@ from yanhai.sources import (  # noqa: E402
     MultiSourceRetriever,
     OfficialDocsRetriever,
     OpenAlexRetriever,
+    search_multi_source,
 )
 
 
@@ -164,6 +165,40 @@ class SourceAdapterTests(unittest.TestCase):
         )
         results = retriever.search(["ESP32 portable audio amplifier I2S"], limit=5)
         self.assertEqual("official:guide", results[0].paper_id)
+
+    def test_search_multi_source_marks_candidates_and_reports_sources(self) -> None:
+        sample = paper(
+            "doi:sample",
+            "Sample Knowledge Graph Paper",
+            doi="10.5/sample",
+        )
+        retriever = MultiSourceRetriever(
+            PROJECT_ROOT / "data" / "knowledge" / "official_sources.json",
+            adapters=[StubAdapter("arxiv", [sample])],
+        )
+        result = search_multi_source(
+            "knowledge graph construction", retriever=retriever
+        )
+        self.assertEqual("multi_source", result["source"])
+        self.assertEqual(1, len(result["results"]))
+        self.assertEqual(
+            "candidate_requires_local_parsing", result["results"][0]["status"]
+        )
+        self.assertEqual(
+            ["arxiv"], result["report"]["successful_sources"]
+        )
+
+    def test_search_multi_source_degrades_when_all_sources_fail(self) -> None:
+        retriever = MultiSourceRetriever(
+            PROJECT_ROOT / "data" / "knowledge" / "official_sources.json",
+            adapters=[StubAdapter("arxiv")],
+        )
+        result = search_multi_source(
+            "knowledge graph construction", retriever=retriever
+        )
+        self.assertFalse(result["network_used"])
+        self.assertEqual([], result["results"])
+        self.assertIn("不可达", result["warning"])
 
 
 if __name__ == "__main__":
