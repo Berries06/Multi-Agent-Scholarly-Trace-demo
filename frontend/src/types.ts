@@ -78,6 +78,7 @@ export interface Resources {
 }
 
 export interface RunResult {
+  run_id?: string
   profile: LearnerProfile
   diagnosis: Diagnosis
   agent_trace: AgentTraceStep[]

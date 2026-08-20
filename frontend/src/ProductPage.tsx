@@ -177,7 +177,11 @@ export default function ProductPage() {
 
       {result && !loading && (
         <>
-          <Card title={`思考过程 · ${thinkingSteps.length} 个 Agent`} style={{ marginTop: 16 }}>
+          <Card
+            title={`思考过程 · ${thinkingSteps.length} 个 Agent`}
+            style={{ marginTop: 16 }}
+            extra={result.run_id ? <Tag>run_id: {result.run_id.slice(0, 12)}</Tag> : null}
+          >
             <AgentTrace steps={thinkingSteps} />
           </Card>
 
