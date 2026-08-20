@@ -6,7 +6,18 @@
 
 ## 2. Windows 一键启动
 
-交给其他人使用时，先完整解压，然后直接双击根目录：
+给评委/队友使用两个入口：
+
+| 入口 | 界面 | 端口 |
+|---|---|---|
+| `RUN_DEMO.bat` | 离线 Demo（零第三方依赖） | 8765 |
+| `SETUP_WEB.bat` → `RUN_WEB.bat` | **产品 Web 界面**（React + FastAPI，首次需联网装依赖） | 后端 8766 + 前端 5173 |
+
+产品 Web 栈说明见 `docs/项目说明/产品Web技术栈.md` 与 `frontend/README.md`：
+- 后端：`python -m uvicorn yanhai.api:app --host 127.0.0.1 --port 8766`（接口文档 `http://127.0.0.1:8766/docs`，新增 `/api/run/stream`、`/api/ingest-paper`、`/api/ingest-pdf`）；
+- 前端：`cd frontend && npm run dev`（`/api` 自动代理到 8766）。
+
+离线 Demo 入口：
 
 ```text
 RUN_DEMO.bat
