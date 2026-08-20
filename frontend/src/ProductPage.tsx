@@ -35,6 +35,7 @@ interface ClaimRow {
   claim: string
   status: string
   score: number
+  criticisms: string
 }
 
 function statusTag(status: string) {
@@ -47,6 +48,7 @@ const claimColumns: ColumnsType<ClaimRow> = [
   { title: '命题', dataIndex: 'claim', key: 'claim' },
   { title: '状态', dataIndex: 'status', key: 'status', render: statusTag },
   { title: '裁判分', dataIndex: 'score', key: 'score' },
+  { title: '批判项', dataIndex: 'criticisms', key: 'criticisms' },
 ]
 
 export default function ProductPage() {
@@ -119,6 +121,7 @@ export default function ProductPage() {
     claim: `${claim.source} -${claim.relation}-> ${claim.target}`,
     status: claim.status,
     score: claim.judge_score,
+    criticisms: claim.criticisms.join('；') || '—',
   }))
 
   const thinkingSteps = result
