@@ -98,6 +98,7 @@ export interface RunResult {
     learning_path: string[]
     resource_match_score: number
   }
+  evidence_details?: Record<string, EvidenceSpan[]>
   ablation?: { variants: unknown[] }
 }
 

@@ -210,8 +210,32 @@ export default function ProductPage() {
               </Card>
             </Col>
             <Col span={14}>
-              <Card title="裁决命题">
-                <Table columns={claimColumns} dataSource={claimRows} pagination={false} size="small" />
+              <Card title="裁决命题（点击行展开证据原文）">
+                <Table
+                  columns={claimColumns}
+                  dataSource={claimRows}
+                  pagination={false}
+                  size="small"
+                  expandable={{
+                    expandedRowRender: (row) => {
+                      const spans = result.evidence_details?.[row.key] ?? []
+                      if (!spans.length) return <Text type="secondary">无证据跨度</Text>
+                      return (
+                        <div>
+                          {spans.map((span) => (
+                            <div key={span.evidence_id} style={{ marginBottom: 6 }}>
+                              <Text strong>{span.evidence_id}</Text>
+                              <Text type="secondary">
+                                {' '}· {span.section_id} · 字符 [{span.char_start}, {span.char_end})
+                              </Text>
+                              <div style={{ color: '#334155' }}>{span.text}</div>
+                            </div>
+                          ))}
+                        </div>
+                      )
+                    },
+                  }}
+                />
               </Card>
             </Col>
           </Row>
