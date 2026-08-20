@@ -16,11 +16,12 @@ import {
   Table,
   Tag,
   Typography,
+  Upload,
 } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import AgentTrace from './AgentTrace'
 import DiagnosisRadar from './DiagnosisRadar'
-import { getProfiles, ingestPaper } from './api'
+import { getProfiles, ingestPaper, ingestPdf } from './api'
 import type {
   DecisionClaim,
   ExtractedEntity,
@@ -87,6 +88,7 @@ export default function LabPage() {
   const [title, setTitle] = useState('')
   const [text, setText] = useState(EXAMPLE_PAPER)
   const [threshold, setThreshold] = useState(0.72)
+  const [pdfFile, setPdfFile] = useState<File | null>(null)
   const [result, setResult] = useState<IngestResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -114,13 +116,24 @@ export default function LabPage() {
     setLoading(true)
     setError(null)
     try {
-      const data = await ingestPaper({
-        paper_id: paperId,
-        title,
-        text,
-        profile_id: profileId,
-        accept_threshold: threshold,
-      })
+      let data: IngestResult
+      if (pdfFile) {
+        data = await ingestPdf({
+          file: pdfFile,
+          profile_id: profileId,
+          paper_id: paperId,
+          title,
+          accept_threshold: threshold,
+        })
+      } else {
+        data = await ingestPaper({
+          paper_id: paperId,
+          title,
+          text,
+          profile_id: profileId,
+          accept_threshold: threshold,
+        })
+      }
       setResult(data)
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
@@ -229,8 +242,26 @@ export default function LabPage() {
             </Button>
           </Col>
         </Row>
+        <Upload.Dragger
+          accept=".pdf"
+          maxCount={1}
+          style={{ marginTop: 12 }}
+          beforeUpload={(file) => {
+            setPdfFile(file)
+            return false
+          }}
+          onRemove={() => setPdfFile(null)}
+          fileList={pdfFile ? [{ uid: 'pdf-1', name: pdfFile.name }] : []}
+        >
+          <Paragraph style={{ margin: 0 }}>
+            拖入或点击上传 PDF（≤5MB，需文本层；扫描版请先 OCR）
+          </Paragraph>
+          <Paragraph type="secondary" style={{ margin: 0 }}>
+            上传 PDF 后优先走 PDF 解析；否则使用下方粘贴的文本。
+          </Paragraph>
+        </Upload.Dragger>
         <TextArea
-          style={{ marginTop: 16 }}
+          style={{ marginTop: 12 }}
           rows={10}
           value={text}
           onChange={(e) => setText(e.target.value)}

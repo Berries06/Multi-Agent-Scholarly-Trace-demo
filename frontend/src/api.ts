@@ -65,3 +65,19 @@ export function ingestPaper(payload: IngestPayload): Promise<IngestResult> {
     body: JSON.stringify(payload),
   })
 }
+
+export function ingestPdf(payload: {
+  file: File
+  profile_id: string
+  paper_id: string
+  title: string
+  accept_threshold: number
+}): Promise<IngestResult> {
+  const form = new FormData()
+  form.append('file', payload.file)
+  form.append('profile_id', payload.profile_id)
+  form.append('paper_id', payload.paper_id)
+  form.append('title', payload.title)
+  form.append('accept_threshold', String(payload.accept_threshold))
+  return request('/api/ingest-pdf', { method: 'POST', body: form })
+}

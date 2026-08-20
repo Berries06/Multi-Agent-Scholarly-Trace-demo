@@ -16,12 +16,13 @@ import json
 from pathlib import Path
 from typing import Any, AsyncIterator
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
-from .fresh_pipeline import run_fresh_paper_pipeline
+from .extraction import PyPDFParser
+from .fresh_pipeline import run_fresh_document_pipeline, run_fresh_paper_pipeline
 from .orchestrator import ScholarlyTraceOrchestrator
 from .resources import project_root
 
@@ -170,6 +171,35 @@ def create_app() -> FastAPI:
             profile=profile,
             schema_path=schema_path,
             accept_threshold=payload.accept_threshold,
+        )
+
+    @app.post("/api/ingest-pdf")
+    def ingest_pdf(
+        file: UploadFile = File(...),
+        profile_id: str = Form(...),
+        paper_id: str = Form("uploaded-paper"),
+        title: str = Form(""),
+        accept_threshold: float = Form(0.72, ge=0.5, le=0.95),
+    ) -> dict[str, Any]:
+        if profile_id not in orchestrator.profiles:
+            raise HTTPException(
+                status_code=404, detail=f"Unknown profile: {profile_id}"
+            )
+        payload = file.file.read()
+        if len(payload) > 5_000_000:
+            raise HTTPException(status_code=413, detail="PDF 超过 5MB 限制。")
+        try:
+            document = PyPDFParser().parse_bytes(
+                payload, paper_id=paper_id, title=title
+            )
+        except RuntimeError as exc:
+            raise HTTPException(status_code=501, detail=str(exc)) from exc
+        schema_path = Path(project_root()) / "data" / "knowledge" / "extraction_schema.json"
+        return run_fresh_document_pipeline(
+            document=document,
+            profile=orchestrator.profiles[profile_id],
+            schema_path=schema_path,
+            accept_threshold=accept_threshold,
         )
 
     @app.post("/api/run/stream")

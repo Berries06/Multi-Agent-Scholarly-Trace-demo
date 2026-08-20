@@ -296,6 +296,39 @@ class PyPDFParser:
             source_url=source_url or str(path.resolve()),
         )
 
+    def parse_bytes(
+        self,
+        payload: bytes,
+        *,
+        paper_id: str | None = None,
+        source_url: str = "",
+        title: str = "",
+    ) -> ScientificDocument:
+        """Parse an uploaded PDF from memory; keeps page-level provenance."""
+        try:
+            from pypdf import PdfReader
+        except ImportError as exc:  # pragma: no cover - optional integration
+            raise RuntimeError(
+                "pypdf is not installed. Install the optional 'documents' "
+                "dependency before parsing PDF files."
+            ) from exc
+        import io
+
+        reader = PdfReader(io.BytesIO(payload))
+        sections = {
+            f"page-{page_number:03d}": text
+            for page_number, page in enumerate(reader.pages, start=1)
+            if (text := (page.extract_text() or "").strip())
+        }
+        if not sections:
+            raise RuntimeError("PDF 中没有可提取的文本层；扫描版请先 OCR。")
+        return ScientificDocument(
+            paper_id=paper_id or "uploaded-paper",
+            title=title or paper_id or "uploaded-paper",
+            sections=sections,
+            source_url=source_url or "member-uploaded-pdf",
+        )
+
 
 class DoclingParser:
     """Optional Docling adapter; the lightweight baseline has no hard dependency."""
