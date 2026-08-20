@@ -12,6 +12,7 @@ from yanhai.knowledge import KnowledgeBase  # noqa: E402
 from yanhai.llm_decision import LLMCritic, LLMJudge, hard_guard  # noqa: E402
 from yanhai.models import Claim  # noqa: E402
 from yanhai.providers import ProviderError  # noqa: E402
+from yanhai.semantic_check import check_semantic_strength  # noqa: E402
 
 
 class _FailingProvider:
@@ -103,6 +104,22 @@ class LLMFallbackTests(unittest.TestCase):
         self.assertTrue(
             any("未完成体悖论" in item for item in claim.criticisms)
         )
+
+
+class SemanticStrengthTests(unittest.TestCase):
+    def test_absolute_claim_is_danger(self) -> None:
+        result = check_semantic_strength("我们证明了该方法零幻觉")
+        self.assertEqual("danger", result["verdict"])
+        self.assertTrue(result["absolute_markers"])
+
+    def test_progressive_claim_is_warning(self) -> None:
+        result = check_semantic_strength("作者正在尝试改进该模型")
+        self.assertEqual("warning", result["verdict"])
+        self.assertTrue(result["progressive_markers"])
+
+    def test_plain_sentence_is_plain(self) -> None:
+        result = check_semantic_strength("该方法在 SciERC 上评测")
+        self.assertEqual("plain", result["verdict"])
 
 
 if __name__ == "__main__":
