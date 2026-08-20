@@ -8,6 +8,7 @@ returns every intermediate stage for transparent inspection.
 from __future__ import annotations
 
 import json
+import uuid
 from pathlib import Path
 from typing import Any
 
@@ -77,6 +78,7 @@ def run_fresh_paper_pipeline(
     accepted = [claim for claim in claims if claim.status == "accepted"]
     accepted_without_evidence = [claim for claim in accepted if not claim.evidence_ids]
     return {
+        "run_id": uuid.uuid4().hex,
         "fingerprint": {
             "paper_id": paper_id,
             "title": document.title,

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import time
+import uuid
 from pathlib import Path
 from typing import Any
 
@@ -150,7 +152,9 @@ class ScholarlyTraceOrchestrator:
                 break
         extraction = self.extraction_agent.inspect_index(kb, papers)
 
+        started = time.perf_counter()
         claims = self.proposer.propose(kb, papers)
+        proposer_ms = (time.perf_counter() - started) * 1000
         traces.append(
             AgentTrace(
                 agent=self.proposer.name,
@@ -160,11 +164,13 @@ class ScholarlyTraceOrchestrator:
                     f"从抽取图谱生成 {len(claims) - 1} 条候选关系，并加入 "
                     "1 条无证据压力测试命题。"
                 ),
-                duration_ms=203,
+                duration_ms=round(proposer_ms, 2),
             )
         )
 
+        started = time.perf_counter()
         claims = self.critic.critique(claims, kb)
+        critic_ms = (time.perf_counter() - started) * 1000
         flagged = sum(
             1
             for claim in claims
@@ -176,11 +182,13 @@ class ScholarlyTraceOrchestrator:
                 role="反证与约束",
                 status="completed",
                 summary=f"完成证据交叉检查，标记 {flagged} 条高风险命题。",
-                duration_ms=232,
+                duration_ms=round(critic_ms, 2),
             )
         )
 
+        started = time.perf_counter()
         claims = self.judge.adjudicate(claims, kb)
+        judge_ms = (time.perf_counter() - started) * 1000
         accepted = sum(claim.status == "accepted" for claim in claims)
         rejected = sum(claim.status == "rejected" for claim in claims)
         traces.append(
@@ -189,7 +197,7 @@ class ScholarlyTraceOrchestrator:
                 role="置信裁决",
                 status="completed",
                 summary=f"通过 {accepted} 条，拒绝 {rejected} 条；无证据强断言未进入资源。",
-                duration_ms=167,
+                duration_ms=round(judge_ms, 2),
             )
         )
 
@@ -209,6 +217,7 @@ class ScholarlyTraceOrchestrator:
             "feedback_adjustment": difficulty_adjustment,
         }
         result = {
+            "run_id": uuid.uuid4().hex,
             "project": "研海寻踪",
             "domain": kb.domain,
             "query": query,
