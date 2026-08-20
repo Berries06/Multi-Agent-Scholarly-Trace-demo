@@ -1,0 +1,2337 @@
+{
+  "benchmark_id": "generated-decision-cases-v1",
+  "domain": "scientific-ie-kg",
+  "frozen_on": "2026-08-20",
+  "scope": "L2 真实证据机制用例：从默认领域 accepted 关系程序化生成。标签由构造方式客观决定；positive 标签以规则抽取为基准，必须经 L3 人工抽查核验。不得在生成后修改标签；若人工推翻某条，写入 separate corrections 记录而非改文件。",
+  "generation": {
+    "seed": 20260819,
+    "source_relation_count": 28,
+    "generated_on": "2026-08-20T12:00:40.527105+00:00"
+  },
+  "cases": [
+    {
+      "source": "SciERC",
+      "target": "entity extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:004cf8e2608a81",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SciIE",
+      "target": "scientific knowledge graph construction",
+      "relation": "supports",
+      "relation_type": "SUPPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:075392088032ae",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "ReSel",
+      "target": "n-ary relation extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:23e21a11a00d95",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "GLiNER",
+      "target": "open-type entity recognition",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:2c537cc06b0c89",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SciER",
+      "target": "full-text scientific information extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:2c6b7d532ca5e9",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SciERC",
+      "target": "scientific information extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:2e477b0c978493",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "SciERC",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:407dd770265128",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "GLiREL",
+      "target": "zero-shot relation extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:4100d4a38aa535",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SciNLP",
+      "target": "full-text scientific information extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:53247fe168ddcb",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SciNLP",
+      "target": "NLP knowledge graph",
+      "relation": "supports",
+      "relation_type": "SUPPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:64956101c47eca",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "GLiNER",
+      "target": "entity extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:6505605e777886",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SciER",
+      "target": "24k entities",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:6a689da9853b43",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SciREX",
+      "target": "n-ary relation extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:715b4a62b1a4a2",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "contextualized span representations",
+      "target": "relation extraction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:78a0292f16899c",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "text-table evidence",
+      "target": "n-ary relation extraction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:7a8bbadc3acc82",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "GLiREL",
+      "target": "relation extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:85f55fa394e90a",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SciIE",
+      "target": "contextualized span representations",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:8c5be718d1b052",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SciER",
+      "target": "12k relations",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:91efcce0ca0032",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SciER",
+      "target": "106 full-text papers",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:9b99124040f0b0",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "GLiNER",
+      "target": "zero-shot extraction",
+      "relation": "supports",
+      "relation_type": "SUPPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:aba9a7d0f537ab",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "ReSel",
+      "target": "text-table evidence",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:b64bf55ef68530",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "GLiNER",
+      "target": "bidirectional transformer",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:c1878e7a71e1f2",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "scientific information extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:cba5d6d2ee7202",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "GLiREL",
+      "target": "open relation schema",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:d740dcba4b0d09",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "contextualized span representations",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:f0f0bd7808fe2e",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SciREX",
+      "target": "document-level information extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:f30445bd28c062",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SciERC",
+      "target": "relation extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:f838a9d9d6a593",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "ReSel",
+      "target": "cross-modal entity graph",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:faeaf99350da74",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SciERC",
+      "target": "entity extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:004cf8e2608a81",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SciIE",
+      "target": "scientific knowledge graph construction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:075392088032ae",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "ReSel",
+      "target": "n-ary relation extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:23e21a11a00d95",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "GLiNER",
+      "target": "open-type entity recognition",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:2c537cc06b0c89",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SciER",
+      "target": "full-text scientific information extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:2c6b7d532ca5e9",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SciERC",
+      "target": "scientific information extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:2e477b0c978493",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "SciERC",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D19-1585:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:407dd770265128",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "GLiREL",
+      "target": "zero-shot relation extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:4100d4a38aa535",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SciNLP",
+      "target": "full-text scientific information extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.emnlp-main.732:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:53247fe168ddcb",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SciNLP",
+      "target": "NLP knowledge graph",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.emnlp-main.732:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:64956101c47eca",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "GLiNER",
+      "target": "entity extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:6505605e777886",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SciER",
+      "target": "24k entities",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:6a689da9853b43",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SciREX",
+      "target": "n-ary relation extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2020.acl-main.670:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:715b4a62b1a4a2",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "contextualized span representations",
+      "target": "relation extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D19-1585:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:78a0292f16899c",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "text-table evidence",
+      "target": "n-ary relation extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:7a8bbadc3acc82",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "GLiREL",
+      "target": "relation extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:85f55fa394e90a",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SciIE",
+      "target": "contextualized span representations",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:8c5be718d1b052",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SciER",
+      "target": "12k relations",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:3"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:91efcce0ca0032",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SciER",
+      "target": "106 full-text papers",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:9b99124040f0b0",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "GLiNER",
+      "target": "zero-shot extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:3"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:aba9a7d0f537ab",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "ReSel",
+      "target": "text-table evidence",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:b64bf55ef68530",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "GLiNER",
+      "target": "bidirectional transformer",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:c1878e7a71e1f2",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "scientific information extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D19-1585:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:cba5d6d2ee7202",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "GLiREL",
+      "target": "open relation schema",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:d740dcba4b0d09",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "contextualized span representations",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D19-1585:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:f0f0bd7808fe2e",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SciREX",
+      "target": "document-level information extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2020.acl-main.670:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:f30445bd28c062",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SciERC",
+      "target": "relation extraction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:76f747de912e86:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:f838a9d9d6a593",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "ReSel",
+      "target": "cross-modal entity graph",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:faeaf99350da74",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SciERC",
+      "target": "entity extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:004cf8e2608a81",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SciIE",
+      "target": "scientific knowledge graph construction",
+      "relation": "supports",
+      "relation_type": "SUPPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:075392088032ae",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "ReSel",
+      "target": "n-ary relation extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:23e21a11a00d95",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "GLiNER",
+      "target": "open-type entity recognition",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:2c537cc06b0c89",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SciER",
+      "target": "full-text scientific information extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:2c6b7d532ca5e9",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SciERC",
+      "target": "scientific information extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:2e477b0c978493",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "SciERC",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D19-1585:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:407dd770265128",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "GLiREL",
+      "target": "zero-shot relation extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:4100d4a38aa535",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SciNLP",
+      "target": "full-text scientific information extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.emnlp-main.732:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:53247fe168ddcb",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SciNLP",
+      "target": "NLP knowledge graph",
+      "relation": "supports",
+      "relation_type": "SUPPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.emnlp-main.732:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:64956101c47eca",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "GLiNER",
+      "target": "entity extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:6505605e777886",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SciER",
+      "target": "24k entities",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:6a689da9853b43",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SciREX",
+      "target": "n-ary relation extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2020.acl-main.670:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:715b4a62b1a4a2",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "contextualized span representations",
+      "target": "relation extraction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D19-1585:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:78a0292f16899c",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "text-table evidence",
+      "target": "n-ary relation extraction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:7a8bbadc3acc82",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "GLiREL",
+      "target": "relation extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:85f55fa394e90a",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SciIE",
+      "target": "contextualized span representations",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:8c5be718d1b052",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SciER",
+      "target": "12k relations",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:3"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:91efcce0ca0032",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SciER",
+      "target": "106 full-text papers",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:9b99124040f0b0",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "GLiNER",
+      "target": "zero-shot extraction",
+      "relation": "supports",
+      "relation_type": "SUPPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:3"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:aba9a7d0f537ab",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "ReSel",
+      "target": "text-table evidence",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:b64bf55ef68530",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "GLiNER",
+      "target": "bidirectional transformer",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:c1878e7a71e1f2",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "scientific information extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D19-1585:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:cba5d6d2ee7202",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "GLiREL",
+      "target": "open relation schema",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:d740dcba4b0d09",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "contextualized span representations",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D19-1585:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:f0f0bd7808fe2e",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SciREX",
+      "target": "document-level information extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2020.acl-main.670:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:f30445bd28c062",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SciERC",
+      "target": "relation extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:76f747de912e86:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:f838a9d9d6a593",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "ReSel",
+      "target": "cross-modal entity graph",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:faeaf99350da74",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SciERC",
+      "target": "entity extraction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:004cf8e2608a81",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "SciIE",
+      "target": "scientific knowledge graph construction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:075392088032ae",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "ReSel",
+      "target": "n-ary relation extraction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:23e21a11a00d95",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "GLiNER",
+      "target": "open-type entity recognition",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:2c537cc06b0c89",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "SciER",
+      "target": "full-text scientific information extraction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:2c6b7d532ca5e9",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "SciERC",
+      "target": "scientific information extraction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:2e477b0c978493",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "SciERC",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D19-1585:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:407dd770265128",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "GLiREL",
+      "target": "zero-shot relation extraction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:4100d4a38aa535",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "SciNLP",
+      "target": "full-text scientific information extraction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.emnlp-main.732:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:53247fe168ddcb",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "SciNLP",
+      "target": "NLP knowledge graph",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.emnlp-main.732:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:64956101c47eca",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "GLiNER",
+      "target": "entity extraction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:6505605e777886",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "SciER",
+      "target": "24k entities",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:6a689da9853b43",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "SciREX",
+      "target": "n-ary relation extraction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2020.acl-main.670:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:715b4a62b1a4a2",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "contextualized span representations",
+      "target": "relation extraction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D19-1585:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:78a0292f16899c",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "text-table evidence",
+      "target": "n-ary relation extraction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:7a8bbadc3acc82",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "GLiREL",
+      "target": "relation extraction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:85f55fa394e90a",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "SciIE",
+      "target": "contextualized span representations",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:8c5be718d1b052",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "SciER",
+      "target": "12k relations",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:3"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:91efcce0ca0032",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "SciER",
+      "target": "106 full-text papers",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:9b99124040f0b0",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "GLiNER",
+      "target": "zero-shot extraction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:3"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:aba9a7d0f537ab",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "ReSel",
+      "target": "text-table evidence",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:b64bf55ef68530",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "GLiNER",
+      "target": "bidirectional transformer",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:c1878e7a71e1f2",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "scientific information extraction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D19-1585:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:cba5d6d2ee7202",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "GLiREL",
+      "target": "open relation schema",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:d740dcba4b0d09",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "contextualized span representations",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D19-1585:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:f0f0bd7808fe2e",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "SciREX",
+      "target": "document-level information extraction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2020.acl-main.670:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:f30445bd28c062",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "SciERC",
+      "target": "relation extraction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:76f747de912e86:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:f838a9d9d6a593",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "ReSel",
+      "target": "cross-modal entity graph",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:faeaf99350da74",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "SciERC",
+      "target": "entity extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:3"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:004cf8e2608a81",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SciIE",
+      "target": "scientific knowledge graph construction",
+      "relation": "supports",
+      "relation_type": "SUPPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:075392088032ae",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "ReSel",
+      "target": "n-ary relation extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D19-1585:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:23e21a11a00d95",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "GLiNER",
+      "target": "open-type entity recognition",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:2c537cc06b0c89",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SciER",
+      "target": "full-text scientific information extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:2c6b7d532ca5e9",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SciERC",
+      "target": "scientific information extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:2e477b0c978493",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "SciERC",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:407dd770265128",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "GLiREL",
+      "target": "zero-shot relation extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.emnlp-main.732:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:4100d4a38aa535",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SciNLP",
+      "target": "full-text scientific information extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2020.acl-main.670:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:53247fe168ddcb",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SciNLP",
+      "target": "NLP knowledge graph",
+      "relation": "supports",
+      "relation_type": "SUPPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2020.acl-main.670:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:64956101c47eca",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "GLiNER",
+      "target": "entity extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:6505605e777886",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SciER",
+      "target": "24k entities",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:6a689da9853b43",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SciREX",
+      "target": "n-ary relation extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D19-1585:ae0b636f3a61fd:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:715b4a62b1a4a2",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "contextualized span representations",
+      "target": "relation extraction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:78a0292f16899c",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "text-table evidence",
+      "target": "n-ary relation extraction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.emnlp-main.732:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:7a8bbadc3acc82",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "GLiREL",
+      "target": "relation extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2020.acl-main.670:a5a0d15d4ae8ea:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:85f55fa394e90a",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SciIE",
+      "target": "contextualized span representations",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2020.acl-main.670:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:8c5be718d1b052",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SciER",
+      "target": "12k relations",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:91efcce0ca0032",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SciER",
+      "target": "106 full-text papers",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.emnlp-main.732:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:9b99124040f0b0",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "GLiNER",
+      "target": "zero-shot extraction",
+      "relation": "supports",
+      "relation_type": "SUPPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2020.acl-main.670:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:aba9a7d0f537ab",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "ReSel",
+      "target": "text-table evidence",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:b64bf55ef68530",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "GLiNER",
+      "target": "bidirectional transformer",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:D18-1360:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:c1878e7a71e1f2",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "scientific information extraction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:cba5d6d2ee7202",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "GLiREL",
+      "target": "open relation schema",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:3"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:d740dcba4b0d09",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "DyGIE++",
+      "target": "contextualized span representations",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2020.acl-main.670:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:f0f0bd7808fe2e",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SciREX",
+      "target": "document-level information extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2024.emnlp-main.726:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:f30445bd28c062",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SciERC",
+      "target": "relation extraction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:3"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:f838a9d9d6a593",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "ReSel",
+      "target": "cross-modal entity graph",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:2025.emnlp-main.732:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:faeaf99350da74",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    }
+  ]
+}

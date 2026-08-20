@@ -135,7 +135,12 @@ def main() -> None:
         default="",
         help="逗号分隔的 provider:model 列表；缺 Key 的组合会跳过。",
     )
-    parser.add_argument("--max-cases", type=int, default=24)
+    parser.add_argument(
+        "--max-cases",
+        type=int,
+        default=0,
+        help="最多跑多少条案例；0 表示全量（默认）。仅用于快速冒烟。",
+    )
     parser.add_argument(
         "--cases",
         default="",
@@ -149,7 +154,11 @@ def main() -> None:
     kb = KnowledgeBase(PROJECT_ROOT / "data" / "knowledge")
     benchmark = load_benchmark(args.cases)
     abl = DecisionAblation(PROJECT_ROOT, kb, benchmark=benchmark)
-    case_limit = min(args.max_cases, len(benchmark["cases"]))
+    case_limit = (
+        len(benchmark["cases"])
+        if args.max_cases <= 0
+        else min(args.max_cases, len(benchmark["cases"]))
+    )
 
     price_path = PROJECT_ROOT / "config" / "experiment_models.json"
     prices = json.loads(price_path.read_text(encoding="utf-8")).get("prices", {})
@@ -229,10 +238,10 @@ def main() -> None:
     )
     _write_csv(out_root / "cases.csv", rows)
     (out_root / "REPORT.md").write_text(
-        _markdown(rows, skipped), encoding="utf-8"
+        _markdown(rows, skipped, benchmark, case_limit), encoding="utf-8"
     )
     print(f"results: {out_root}")
-    print(_markdown(rows, skipped))
+    print(_markdown(rows, skipped, benchmark, case_limit))
 
 
 def _estimate_cost(row: dict[str, Any], prices: dict[str, Any]) -> float | None:
@@ -310,13 +319,19 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
             )
 
 
-def _markdown(rows: list[dict[str, Any]], skipped: list[dict[str, str]]) -> str:
+def _markdown(
+    rows: list[dict[str, Any]],
+    skipped: list[dict[str, str]],
+    benchmark: dict[str, Any],
+    case_limit: int,
+) -> str:
+    scope = benchmark.get("scope") or "自定义案例集"
     lines = [
         "# 决策机制对比实验报告",
         "",
         f"生成时间（UTC）：{datetime.now(UTC).isoformat()}",
         "",
-        "> 结果来自 24 条冻结压力命题池，属合成初筛；最终结论必须回到双人标注金标准。",
+        f"> 案例集：{benchmark.get('benchmark_id', 'unknown')}（本次 {case_limit} 条）。{scope}",
         "",
         "| 组合 | 批判者 | 裁判 | 接收精确率 | Gold 召回 | 不支持接收率 | 调用 | in tokens | out tokens | 耗时 ms | 成本(约¥) |",
         "|---|---|---|---|---|---|---|---|---|---|---|",
