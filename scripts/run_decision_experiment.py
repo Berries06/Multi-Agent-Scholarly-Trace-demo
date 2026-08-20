@@ -146,12 +146,20 @@ def main() -> None:
         default="",
         help="可选：自定义案例集 JSON 路径（不传则用 24 条冻结压力命题）。字段与扩充方法见 docs/协作与运维/测试案例集扩充指南.md",
     )
+    parser.add_argument(
+        "--domain",
+        default="",
+        help="案例集所属领域 ID；留空=默认领域（与 --cases 对应的知识库一致）。",
+    )
     args = parser.parse_args()
 
     load_dotenv(PROJECT_ROOT / ".env")
     models = parse_models(args.models)
 
-    kb = KnowledgeBase(PROJECT_ROOT / "data" / "knowledge")
+    kb = KnowledgeBase(
+        PROJECT_ROOT / "data" / "knowledge",
+        args.domain or None,
+    )
     benchmark = load_benchmark(args.cases)
     abl = DecisionAblation(PROJECT_ROOT, kb, benchmark=benchmark)
     case_limit = (

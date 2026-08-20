@@ -86,9 +86,9 @@ def unrelated_evidence_id(
     return rng.choice(candidates)["evidence_id"]
 
 
-def generate(seed: int) -> tuple[dict[str, Any], dict[str, int]]:
+def generate(seed: int, domain_id: str | None = None) -> tuple[dict[str, Any], dict[str, int]]:
     schema = load_schema()
-    kb = KnowledgeBase(PROJECT_ROOT / "data" / "knowledge")
+    kb = KnowledgeBase(PROJECT_ROOT / "data" / "knowledge", domain_id)
     graph = kb.extracted_paper_graph()
     entities_by_id = {item["entity_id"]: item for item in graph["entities"]}
     evidence_by_id = {item["evidence_id"]: item for item in graph["evidence"]}
@@ -188,12 +188,16 @@ def generate(seed: int) -> tuple[dict[str, Any], dict[str, int]]:
             )
 
     cases.sort(key=lambda item: item["claim_id"])
+    cases_raw = json.dumps(
+        cases, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+    cases_sha256 = hashlib.sha256(cases_raw).hexdigest()
     payload = {
         "benchmark_id": "generated-decision-cases-v1",
         "domain": kb.selected_domain_id,
         "frozen_on": datetime.now(UTC).strftime("%Y-%m-%d"),
         "scope": (
-            "L2 真实证据机制用例：从默认领域 accepted 关系程序化生成。"
+            "L2 真实证据机制用例：从 accepted 关系程序化生成。"
             "标签由构造方式客观决定；positive 标签以规则抽取为基准，"
             "必须经 L3 人工抽查核验。不得在生成后修改标签；若人工推翻某条，"
             "写入 separate corrections 记录而非改文件。"
@@ -203,6 +207,7 @@ def generate(seed: int) -> tuple[dict[str, Any], dict[str, int]]:
             "source_relation_count": len(relations),
             "generated_on": datetime.now(UTC).isoformat(),
         },
+        "cases_sha256": cases_sha256,
         "cases": cases,
     }
     return payload, counts
@@ -211,6 +216,11 @@ def generate(seed: int) -> tuple[dict[str, Any], dict[str, int]]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", type=int, default=20260819)
+    parser.add_argument(
+        "--domain",
+        default="",
+        help="领域 ID；留空=默认领域（scientific-ie-kg）；all=三个领域各生成一份。",
+    )
     parser.add_argument(
         "--out",
         default=str(
@@ -222,27 +232,48 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    payload, counts = generate(args.seed)
-    out_path = Path(args.out)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    raw = json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
-    out_path.write_bytes(raw)
-    digest = hashlib.sha256(raw).hexdigest()
+    domains: list[str | None]
+    if args.domain == "all":
+        kb = KnowledgeBase(PROJECT_ROOT / "data" / "knowledge")
+        domains = [None, *[
+            str(config["domain_id"])
+            for config in kb.list_domain_configs()
+            if str(config["domain_id"]) != kb.default_domain_id
+        ]]
+    elif args.domain:
+        domains = [args.domain]
+    else:
+        domains = [None]
 
-    positive = counts.get("positive", 0)
-    negative = sum(v for k, v in counts.items() if k != "positive")
-    print(json.dumps(
-        {
-            "output": str(out_path),
-            "sha256": digest,
-            "case_count": len(payload["cases"]),
-            "positive": positive,
-            "negative": negative,
-            "by_type": counts,
-        },
-        ensure_ascii=False,
-        indent=2,
-    ))
+    reports = []
+    for domain_id in domains:
+        payload, counts = generate(args.seed, domain_id)
+        if domain_id:
+            out_path = (
+                PROJECT_ROOT
+                / "data"
+                / "evaluation"
+                / f"generated-decision-cases-v1-{domain_id}.json"
+            )
+        else:
+            out_path = Path(args.out)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        raw = json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
+        out_path.write_bytes(raw)
+        positive = counts.get("positive", 0)
+        negative = sum(v for k, v in counts.items() if k != "positive")
+        reports.append(
+            {
+                "domain": payload.get("domain"),
+                "output": str(out_path),
+                "cases_sha256": payload["cases_sha256"],
+                "case_count": len(payload["cases"]),
+                "positive": positive,
+                "negative": negative,
+                "by_type": counts,
+            }
+        )
+    print(json.dumps(reports, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

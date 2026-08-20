@@ -1,108 +1,33 @@
 {
   "benchmark_id": "generated-decision-cases-v1",
-  "domain": "scientific-ie-kg",
+  "domain": "materials-discovery-gnn",
   "frozen_on": "2026-08-20",
   "scope": "L2 真实证据机制用例：从 accepted 关系程序化生成。标签由构造方式客观决定；positive 标签以规则抽取为基准，必须经 L3 人工抽查核验。不得在生成后修改标签；若人工推翻某条，写入 separate corrections 记录而非改文件。",
   "generation": {
     "seed": 20260819,
-    "source_relation_count": 28,
-    "generated_on": "2026-08-20T12:54:45.062993+00:00"
+    "source_relation_count": 24,
+    "generated_on": "2026-08-20T12:54:45.094845+00:00"
   },
-  "cases_sha256": "5f6811243f7fe562abcebc0f7d65537415e452d2654f714319505bd2c8c37aea",
+  "cases_sha256": "5c25eeeb8a2f0f616cbc2b0f43a4efa2b552d0dad2a24bb7e985e80327d5aa9f",
   "cases": [
     {
-      "source": "SciERC",
-      "target": "entity extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
+      "source": "GNoME",
+      "target": "graph neural network",
+      "relation": "uses",
+      "relation_type": "USES",
       "base_confidence": 0.78,
       "evidence_ids": [],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-NOE-relation:004cf8e2608a81",
+      "claim_id": "L2-NOE-relation:136b7d5e4814d5",
       "gold_supported": false,
       "error_type": "no_evidence",
       "note": "同一三元组去掉全部证据"
     },
     {
-      "source": "SciIE",
-      "target": "scientific knowledge graph construction",
-      "relation": "supports",
-      "relation_type": "SUPPORTS",
-      "base_confidence": 0.78,
-      "evidence_ids": [],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-NOE-relation:075392088032ae",
-      "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
-    },
-    {
-      "source": "ReSel",
-      "target": "n-ary relation extraction",
-      "relation": "addresses",
-      "relation_type": "ADDRESSES",
-      "base_confidence": 0.78,
-      "evidence_ids": [],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-NOE-relation:23e21a11a00d95",
-      "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
-    },
-    {
-      "source": "GLiNER",
-      "target": "open-type entity recognition",
-      "relation": "addresses",
-      "relation_type": "ADDRESSES",
-      "base_confidence": 0.78,
-      "evidence_ids": [],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-NOE-relation:2c537cc06b0c89",
-      "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
-    },
-    {
-      "source": "SciER",
-      "target": "full-text scientific information extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
-      "base_confidence": 0.78,
-      "evidence_ids": [],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-NOE-relation:2c6b7d532ca5e9",
-      "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
-    },
-    {
-      "source": "SciERC",
-      "target": "scientific information extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
-      "base_confidence": 0.78,
-      "evidence_ids": [],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-NOE-relation:2e477b0c978493",
-      "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
-    },
-    {
-      "source": "DyGIE++",
-      "target": "SciERC",
+      "source": "crystal graph convolutional neural network",
+      "target": "Materials Project",
       "relation": "evaluates_on",
       "relation_type": "EVALUATES_ON",
       "base_confidence": 0.78,
@@ -110,74 +35,74 @@
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-NOE-relation:407dd770265128",
+      "claim_id": "L2-NOE-relation:291d6e4de649ab",
       "gold_supported": false,
       "error_type": "no_evidence",
       "note": "同一三元组去掉全部证据"
     },
     {
-      "source": "GLiREL",
-      "target": "zero-shot relation extraction",
-      "relation": "addresses",
-      "relation_type": "ADDRESSES",
+      "source": "GNoME",
+      "target": "active learning",
+      "relation": "uses",
+      "relation_type": "USES",
       "base_confidence": 0.78,
       "evidence_ids": [],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-NOE-relation:4100d4a38aa535",
+      "claim_id": "L2-NOE-relation:2a4f5dc9c8d753",
       "gold_supported": false,
       "error_type": "no_evidence",
       "note": "同一三元组去掉全部证据"
     },
     {
-      "source": "SciNLP",
-      "target": "full-text scientific information extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
+      "source": "crystal graph convolutional neural network",
+      "target": "graph neural network",
+      "relation": "uses",
+      "relation_type": "USES",
       "base_confidence": 0.78,
       "evidence_ids": [],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-NOE-relation:53247fe168ddcb",
+      "claim_id": "L2-NOE-relation:3253fcd1f0662a",
       "gold_supported": false,
       "error_type": "no_evidence",
       "note": "同一三元组去掉全部证据"
     },
     {
-      "source": "SciNLP",
-      "target": "NLP knowledge graph",
-      "relation": "supports",
-      "relation_type": "SUPPORTS",
+      "source": "M3GNet",
+      "target": "crystal structure relaxation",
+      "relation": "enables",
+      "relation_type": "ENABLES",
       "base_confidence": 0.78,
       "evidence_ids": [],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-NOE-relation:64956101c47eca",
+      "claim_id": "L2-NOE-relation:341751992ecca9",
       "gold_supported": false,
       "error_type": "no_evidence",
       "note": "同一三元组去掉全部证据"
     },
     {
-      "source": "GLiNER",
-      "target": "entity extraction",
-      "relation": "addresses",
-      "relation_type": "ADDRESSES",
+      "source": "GNoME",
+      "target": "density functional theory",
+      "relation": "uses",
+      "relation_type": "USES",
       "base_confidence": 0.78,
       "evidence_ids": [],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-NOE-relation:6505605e777886",
+      "claim_id": "L2-NOE-relation:3eef71b1153f1f",
       "gold_supported": false,
       "error_type": "no_evidence",
       "note": "同一三元组去掉全部证据"
     },
     {
-      "source": "SciER",
-      "target": "24k entities",
+      "source": "GNoME",
+      "target": "2.2 million stable structures",
       "relation": "reports",
       "relation_type": "REPORTS",
       "base_confidence": 0.78,
@@ -185,14 +110,14 @@
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-NOE-relation:6a689da9853b43",
+      "claim_id": "L2-NOE-relation:473fe4aa7fa7ab",
       "gold_supported": false,
       "error_type": "no_evidence",
       "note": "同一三元组去掉全部证据"
     },
     {
-      "source": "SciREX",
-      "target": "n-ary relation extraction",
+      "source": "Materials Project",
+      "target": "material property prediction",
       "relation": "benchmarks",
       "relation_type": "BENCHMARKS",
       "base_confidence": 0.78,
@@ -200,14 +125,119 @@
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-NOE-relation:715b4a62b1a4a2",
+      "claim_id": "L2-NOE-relation:69aaaa3da416ec",
       "gold_supported": false,
       "error_type": "no_evidence",
       "note": "同一三元组去掉全部证据"
     },
     {
-      "source": "contextualized span representations",
-      "target": "relation extraction",
+      "source": "crystal graph convolutional neural network",
+      "target": "material property prediction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:6ff239cff930d0",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "MEGNet",
+      "target": "Materials Project",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:76539aa384edf5",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "M3GNet",
+      "target": "interatomic potential learning",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:78699d9abf2755",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "M3GNet",
+      "target": "three-body interactions",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:8101c9dac49a4b",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "density functional theory",
+      "target": "Materials Project",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:83175b92d7ada9",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "GNoME",
+      "target": "stable material discovery",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:83739aedec797f",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "MEGNet",
+      "target": "graph neural network",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:8fded9d5374e18",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "crystal graph convolutional neural network",
+      "target": "material property prediction",
       "relation": "improves",
       "relation_type": "IMPROVES",
       "base_confidence": 0.78,
@@ -215,14 +245,59 @@
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-NOE-relation:78a0292f16899c",
+      "claim_id": "L2-NOE-relation:a36e4e79e2a644",
       "gold_supported": false,
       "error_type": "no_evidence",
       "note": "同一三元组去掉全部证据"
     },
     {
-      "source": "text-table evidence",
-      "target": "n-ary relation extraction",
+      "source": "MEGNet",
+      "target": "material property prediction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:a7f809192c04d5",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "GNoME",
+      "target": "736 experimental structures",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:b963a8da3ca532",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "M3GNet",
+      "target": "Materials Project",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:bbf8aa16645172",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "global state attributes",
+      "target": "material property prediction",
       "relation": "improves",
       "relation_type": "IMPROVES",
       "base_confidence": 0.78,
@@ -230,29 +305,14 @@
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-NOE-relation:7a8bbadc3acc82",
+      "claim_id": "L2-NOE-relation:cd6280005f8212",
       "gold_supported": false,
       "error_type": "no_evidence",
       "note": "同一三元组去掉全部证据"
     },
     {
-      "source": "GLiREL",
-      "target": "relation extraction",
-      "relation": "addresses",
-      "relation_type": "ADDRESSES",
-      "base_confidence": 0.78,
-      "evidence_ids": [],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-NOE-relation:85f55fa394e90a",
-      "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
-    },
-    {
-      "source": "SciIE",
-      "target": "contextualized span representations",
+      "source": "M3GNet",
+      "target": "graph neural network",
       "relation": "uses",
       "relation_type": "USES",
       "base_confidence": 0.78,
@@ -260,14 +320,44 @@
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-NOE-relation:8c5be718d1b052",
+      "claim_id": "L2-NOE-relation:de1f7a5ba3df63",
       "gold_supported": false,
       "error_type": "no_evidence",
       "note": "同一三元组去掉全部证据"
     },
     {
-      "source": "SciER",
-      "target": "12k relations",
+      "source": "MEGNet",
+      "target": "global state attributes",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:df8734afe45d70",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "Materials Project",
+      "target": "stable material discovery",
+      "relation": "enables",
+      "relation_type": "ENABLES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:e9f38d1da6361f",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "GNoME",
+      "target": "381,000 new stable structures",
       "relation": "reports",
       "relation_type": "REPORTS",
       "base_confidence": 0.78,
@@ -275,2061 +365,1639 @@
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-NOE-relation:91efcce0ca0032",
+      "claim_id": "L2-NOE-relation:ef15f48c8191f2",
       "gold_supported": false,
       "error_type": "no_evidence",
       "note": "同一三元组去掉全部证据"
     },
     {
-      "source": "SciER",
-      "target": "106 full-text papers",
-      "relation": "reports",
-      "relation_type": "REPORTS",
+      "source": "GNoME",
+      "target": "graph neural network",
+      "relation": "guarantees",
+      "relation_type": "speculative",
       "base_confidence": 0.78,
-      "evidence_ids": [],
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:0"
+      ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-NOE-relation:9b99124040f0b0",
+      "claim_id": "L2-OVC-relation:136b7d5e4814d5",
       "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
     },
     {
-      "source": "GLiNER",
-      "target": "zero-shot extraction",
-      "relation": "supports",
-      "relation_type": "SUPPORTS",
+      "source": "crystal graph convolutional neural network",
+      "target": "Materials Project",
+      "relation": "guarantees",
+      "relation_type": "speculative",
       "base_confidence": 0.78,
-      "evidence_ids": [],
+      "evidence_ids": [
+        "evidence:10.1103-PhysRevLett.120.145301:90f0f88bf84f2b:0"
+      ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-NOE-relation:aba9a7d0f537ab",
+      "claim_id": "L2-OVC-relation:291d6e4de649ab",
       "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
     },
     {
-      "source": "ReSel",
-      "target": "text-table evidence",
+      "source": "GNoME",
+      "target": "active learning",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:2a4f5dc9c8d753",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "crystal graph convolutional neural network",
+      "target": "graph neural network",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1103-PhysRevLett.120.145301:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:3253fcd1f0662a",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "M3GNet",
+      "target": "crystal structure relaxation",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:341751992ecca9",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "GNoME",
+      "target": "density functional theory",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:3eef71b1153f1f",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "GNoME",
+      "target": "2.2 million stable structures",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:473fe4aa7fa7ab",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "Materials Project",
+      "target": "material property prediction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1063-1.4812323:7a104738973573:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:69aaaa3da416ec",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "crystal graph convolutional neural network",
+      "target": "material property prediction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1103-PhysRevLett.120.145301:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:6ff239cff930d0",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "MEGNet",
+      "target": "Materials Project",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:76539aa384edf5",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "M3GNet",
+      "target": "interatomic potential learning",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:78699d9abf2755",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "M3GNet",
+      "target": "three-body interactions",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:8101c9dac49a4b",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "density functional theory",
+      "target": "Materials Project",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1063-1.4812323:7a104738973573:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:83175b92d7ada9",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "GNoME",
+      "target": "stable material discovery",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:3"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:83739aedec797f",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "MEGNet",
+      "target": "graph neural network",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:8fded9d5374e18",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "crystal graph convolutional neural network",
+      "target": "material property prediction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1103-PhysRevLett.120.145301:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:a36e4e79e2a644",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "MEGNet",
+      "target": "material property prediction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:a7f809192c04d5",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "GNoME",
+      "target": "736 experimental structures",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:b963a8da3ca532",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "M3GNet",
+      "target": "Materials Project",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:bbf8aa16645172",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "global state attributes",
+      "target": "material property prediction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:cd6280005f8212",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "M3GNet",
+      "target": "graph neural network",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:de1f7a5ba3df63",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "MEGNet",
+      "target": "global state attributes",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:df8734afe45d70",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "Materials Project",
+      "target": "stable material discovery",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1063-1.4812323:7a104738973573:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:e9f38d1da6361f",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "GNoME",
+      "target": "381,000 new stable structures",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:ef15f48c8191f2",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "GNoME",
+      "target": "graph neural network",
       "relation": "uses",
       "relation_type": "USES",
       "base_confidence": 0.78,
-      "evidence_ids": [],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-NOE-relation:b64bf55ef68530",
-      "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
-    },
-    {
-      "source": "GLiNER",
-      "target": "bidirectional transformer",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-NOE-relation:c1878e7a71e1f2",
-      "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
-    },
-    {
-      "source": "DyGIE++",
-      "target": "scientific information extraction",
-      "relation": "addresses",
-      "relation_type": "ADDRESSES",
-      "base_confidence": 0.78,
-      "evidence_ids": [],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-NOE-relation:cba5d6d2ee7202",
-      "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
-    },
-    {
-      "source": "GLiREL",
-      "target": "open relation schema",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-NOE-relation:d740dcba4b0d09",
-      "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
-    },
-    {
-      "source": "DyGIE++",
-      "target": "contextualized span representations",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-NOE-relation:f0f0bd7808fe2e",
-      "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
-    },
-    {
-      "source": "SciREX",
-      "target": "document-level information extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
-      "base_confidence": 0.78,
-      "evidence_ids": [],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-NOE-relation:f30445bd28c062",
-      "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
-    },
-    {
-      "source": "SciERC",
-      "target": "relation extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
-      "base_confidence": 0.78,
-      "evidence_ids": [],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-NOE-relation:f838a9d9d6a593",
-      "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
-    },
-    {
-      "source": "ReSel",
-      "target": "cross-modal entity graph",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-NOE-relation:faeaf99350da74",
-      "gold_supported": false,
-      "error_type": "no_evidence",
-      "note": "同一三元组去掉全部证据"
-    },
-    {
-      "source": "SciERC",
-      "target": "entity extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:D18-1360:76f747de912e86:1"
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:0"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-OVC-relation:004cf8e2608a81",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "SciIE",
-      "target": "scientific knowledge graph construction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:075392088032ae",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "ReSel",
-      "target": "n-ary relation extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:23e21a11a00d95",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "GLiNER",
-      "target": "open-type entity recognition",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:2c537cc06b0c89",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "SciER",
-      "target": "full-text scientific information extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:2c6b7d532ca5e9",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "SciERC",
-      "target": "scientific information extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:76f747de912e86:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:2e477b0c978493",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "DyGIE++",
-      "target": "SciERC",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D19-1585:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:407dd770265128",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "GLiREL",
-      "target": "zero-shot relation extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:4100d4a38aa535",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "SciNLP",
-      "target": "full-text scientific information extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.emnlp-main.732:76f747de912e86:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:53247fe168ddcb",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "SciNLP",
-      "target": "NLP knowledge graph",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.emnlp-main.732:76f747de912e86:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:64956101c47eca",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "GLiNER",
-      "target": "entity extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:6505605e777886",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "SciER",
-      "target": "24k entities",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:6a689da9853b43",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "SciREX",
-      "target": "n-ary relation extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2020.acl-main.670:76f747de912e86:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:715b4a62b1a4a2",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "contextualized span representations",
-      "target": "relation extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D19-1585:e29e8d943c26ff:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:78a0292f16899c",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "text-table evidence",
-      "target": "n-ary relation extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2022.emnlp-main.46:e29e8d943c26ff:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:7a8bbadc3acc82",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "GLiREL",
-      "target": "relation extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:85f55fa394e90a",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "SciIE",
-      "target": "contextualized span representations",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:8c5be718d1b052",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "SciER",
-      "target": "12k relations",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:3"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:91efcce0ca0032",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "SciER",
-      "target": "106 full-text papers",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:9b99124040f0b0",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "GLiNER",
-      "target": "zero-shot extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:3"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:aba9a7d0f537ab",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "ReSel",
-      "target": "text-table evidence",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:b64bf55ef68530",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "GLiNER",
-      "target": "bidirectional transformer",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:c1878e7a71e1f2",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "DyGIE++",
-      "target": "scientific information extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D19-1585:bfbaf8b2d1cdf9:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:cba5d6d2ee7202",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "GLiREL",
-      "target": "open relation schema",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:d740dcba4b0d09",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "DyGIE++",
-      "target": "contextualized span representations",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D19-1585:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:f0f0bd7808fe2e",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "SciREX",
-      "target": "document-level information extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2020.acl-main.670:76f747de912e86:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:f30445bd28c062",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "SciERC",
-      "target": "relation extraction",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:76f747de912e86:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:f838a9d9d6a593",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "ReSel",
-      "target": "cross-modal entity graph",
-      "relation": "guarantees",
-      "relation_type": "speculative",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-OVC-relation:faeaf99350da74",
-      "gold_supported": false,
-      "error_type": "overclaim",
-      "note": "关系谓词改写为绝对化 guarantees"
-    },
-    {
-      "source": "SciERC",
-      "target": "entity extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:76f747de912e86:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:004cf8e2608a81",
+      "claim_id": "L2-POS-relation:136b7d5e4814d5",
       "gold_supported": true,
       "error_type": null,
       "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "SciIE",
-      "target": "scientific knowledge graph construction",
-      "relation": "supports",
-      "relation_type": "SUPPORTS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:075392088032ae",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "ReSel",
-      "target": "n-ary relation extraction",
-      "relation": "addresses",
-      "relation_type": "ADDRESSES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:23e21a11a00d95",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "GLiNER",
-      "target": "open-type entity recognition",
-      "relation": "addresses",
-      "relation_type": "ADDRESSES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:2c537cc06b0c89",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "SciER",
-      "target": "full-text scientific information extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:2c6b7d532ca5e9",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "SciERC",
-      "target": "scientific information extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:76f747de912e86:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:2e477b0c978493",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "DyGIE++",
-      "target": "SciERC",
+      "source": "crystal graph convolutional neural network",
+      "target": "Materials Project",
       "relation": "evaluates_on",
       "relation_type": "EVALUATES_ON",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:D19-1585:bfbaf8b2d1cdf9:1"
+        "evidence:10.1103-PhysRevLett.120.145301:90f0f88bf84f2b:0"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-POS-relation:407dd770265128",
+      "claim_id": "L2-POS-relation:291d6e4de649ab",
       "gold_supported": true,
       "error_type": null,
       "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "GLiREL",
-      "target": "zero-shot relation extraction",
-      "relation": "addresses",
-      "relation_type": "ADDRESSES",
+      "source": "GNoME",
+      "target": "active learning",
+      "relation": "uses",
+      "relation_type": "USES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:0"
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:1"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-POS-relation:4100d4a38aa535",
+      "claim_id": "L2-POS-relation:2a4f5dc9c8d753",
       "gold_supported": true,
       "error_type": null,
       "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "SciNLP",
-      "target": "full-text scientific information extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
+      "source": "crystal graph convolutional neural network",
+      "target": "graph neural network",
+      "relation": "uses",
+      "relation_type": "USES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2025.emnlp-main.732:76f747de912e86:0"
+        "evidence:10.1103-PhysRevLett.120.145301:bfbaf8b2d1cdf9:0"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-POS-relation:53247fe168ddcb",
+      "claim_id": "L2-POS-relation:3253fcd1f0662a",
       "gold_supported": true,
       "error_type": null,
       "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "SciNLP",
-      "target": "NLP knowledge graph",
-      "relation": "supports",
-      "relation_type": "SUPPORTS",
+      "source": "M3GNet",
+      "target": "crystal structure relaxation",
+      "relation": "enables",
+      "relation_type": "ENABLES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2025.emnlp-main.732:76f747de912e86:1"
+        "evidence:10.1038-s43588-022-00349-3:e29e8d943c26ff:0"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-POS-relation:64956101c47eca",
+      "claim_id": "L2-POS-relation:341751992ecca9",
       "gold_supported": true,
       "error_type": null,
       "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "GLiNER",
-      "target": "entity extraction",
-      "relation": "addresses",
-      "relation_type": "ADDRESSES",
+      "source": "GNoME",
+      "target": "density functional theory",
+      "relation": "uses",
+      "relation_type": "USES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:2"
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:2"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-POS-relation:6505605e777886",
+      "claim_id": "L2-POS-relation:3eef71b1153f1f",
       "gold_supported": true,
       "error_type": null,
       "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "SciER",
-      "target": "24k entities",
+      "source": "GNoME",
+      "target": "2.2 million stable structures",
       "relation": "reports",
       "relation_type": "REPORTS",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:2"
+        "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:0"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-POS-relation:6a689da9853b43",
+      "claim_id": "L2-POS-relation:473fe4aa7fa7ab",
       "gold_supported": true,
       "error_type": null,
       "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "SciREX",
-      "target": "n-ary relation extraction",
+      "source": "Materials Project",
+      "target": "material property prediction",
       "relation": "benchmarks",
       "relation_type": "BENCHMARKS",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2020.acl-main.670:76f747de912e86:1"
+        "evidence:10.1063-1.4812323:7a104738973573:1"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-POS-relation:715b4a62b1a4a2",
+      "claim_id": "L2-POS-relation:69aaaa3da416ec",
       "gold_supported": true,
       "error_type": null,
       "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "contextualized span representations",
-      "target": "relation extraction",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D19-1585:e29e8d943c26ff:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:78a0292f16899c",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "text-table evidence",
-      "target": "n-ary relation extraction",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2022.emnlp-main.46:e29e8d943c26ff:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:7a8bbadc3acc82",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "GLiREL",
-      "target": "relation extraction",
+      "source": "crystal graph convolutional neural network",
+      "target": "material property prediction",
       "relation": "addresses",
       "relation_type": "ADDRESSES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:1"
+        "evidence:10.1103-PhysRevLett.120.145301:bfbaf8b2d1cdf9:1"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-POS-relation:85f55fa394e90a",
+      "claim_id": "L2-POS-relation:6ff239cff930d0",
       "gold_supported": true,
       "error_type": null,
       "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "SciIE",
-      "target": "contextualized span representations",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:8c5be718d1b052",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "SciER",
-      "target": "12k relations",
-      "relation": "reports",
-      "relation_type": "REPORTS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:3"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:91efcce0ca0032",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "SciER",
-      "target": "106 full-text papers",
-      "relation": "reports",
-      "relation_type": "REPORTS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:9b99124040f0b0",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "GLiNER",
-      "target": "zero-shot extraction",
-      "relation": "supports",
-      "relation_type": "SUPPORTS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:3"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:aba9a7d0f537ab",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "ReSel",
-      "target": "text-table evidence",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:b64bf55ef68530",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "GLiNER",
-      "target": "bidirectional transformer",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:c1878e7a71e1f2",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "DyGIE++",
-      "target": "scientific information extraction",
-      "relation": "addresses",
-      "relation_type": "ADDRESSES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D19-1585:bfbaf8b2d1cdf9:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:cba5d6d2ee7202",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "GLiREL",
-      "target": "open relation schema",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:d740dcba4b0d09",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "DyGIE++",
-      "target": "contextualized span representations",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D19-1585:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:f0f0bd7808fe2e",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "SciREX",
-      "target": "document-level information extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2020.acl-main.670:76f747de912e86:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:f30445bd28c062",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "SciERC",
-      "target": "relation extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:76f747de912e86:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:f838a9d9d6a593",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "ReSel",
-      "target": "cross-modal entity graph",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-POS-relation:faeaf99350da74",
-      "gold_supported": true,
-      "error_type": null,
-      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
-    },
-    {
-      "source": "SciERC",
-      "target": "entity extraction",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:76f747de912e86:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:004cf8e2608a81",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "SciIE",
-      "target": "scientific knowledge graph construction",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:075392088032ae",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 USES"
-    },
-    {
-      "source": "ReSel",
-      "target": "n-ary relation extraction",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:23e21a11a00d95",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 USES"
-    },
-    {
-      "source": "GLiNER",
-      "target": "open-type entity recognition",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:2c537cc06b0c89",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 USES"
-    },
-    {
-      "source": "SciER",
-      "target": "full-text scientific information extraction",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:2c6b7d532ca5e9",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "SciERC",
-      "target": "scientific information extraction",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:76f747de912e86:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:2e477b0c978493",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "DyGIE++",
-      "target": "SciERC",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D19-1585:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:407dd770265128",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "GLiREL",
-      "target": "zero-shot relation extraction",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:4100d4a38aa535",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 USES"
-    },
-    {
-      "source": "SciNLP",
-      "target": "full-text scientific information extraction",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.emnlp-main.732:76f747de912e86:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:53247fe168ddcb",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "SciNLP",
-      "target": "NLP knowledge graph",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.emnlp-main.732:76f747de912e86:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:64956101c47eca",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "GLiNER",
-      "target": "entity extraction",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:6505605e777886",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 USES"
-    },
-    {
-      "source": "SciER",
-      "target": "24k entities",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:6a689da9853b43",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "SciREX",
-      "target": "n-ary relation extraction",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2020.acl-main.670:76f747de912e86:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:715b4a62b1a4a2",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "contextualized span representations",
-      "target": "relation extraction",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D19-1585:e29e8d943c26ff:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:78a0292f16899c",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 USES"
-    },
-    {
-      "source": "text-table evidence",
-      "target": "n-ary relation extraction",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2022.emnlp-main.46:e29e8d943c26ff:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:7a8bbadc3acc82",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 USES"
-    },
-    {
-      "source": "GLiREL",
-      "target": "relation extraction",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:85f55fa394e90a",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 USES"
-    },
-    {
-      "source": "SciIE",
-      "target": "contextualized span representations",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:8c5be718d1b052",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "SciER",
-      "target": "12k relations",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:3"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:91efcce0ca0032",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "SciER",
-      "target": "106 full-text papers",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:9b99124040f0b0",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "GLiNER",
-      "target": "zero-shot extraction",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:3"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:aba9a7d0f537ab",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 USES"
-    },
-    {
-      "source": "ReSel",
-      "target": "text-table evidence",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:b64bf55ef68530",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "GLiNER",
-      "target": "bidirectional transformer",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:c1878e7a71e1f2",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "DyGIE++",
-      "target": "scientific information extraction",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D19-1585:bfbaf8b2d1cdf9:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:cba5d6d2ee7202",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 USES"
-    },
-    {
-      "source": "GLiREL",
-      "target": "open relation schema",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:d740dcba4b0d09",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "DyGIE++",
-      "target": "contextualized span representations",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D19-1585:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:f0f0bd7808fe2e",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "SciREX",
-      "target": "document-level information extraction",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2020.acl-main.670:76f747de912e86:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:f30445bd28c062",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "SciERC",
-      "target": "relation extraction",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:76f747de912e86:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:f838a9d9d6a593",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "ReSel",
-      "target": "cross-modal entity graph",
-      "relation": "improves",
-      "relation_type": "IMPROVES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-TMM-relation:faeaf99350da74",
-      "gold_supported": false,
-      "error_type": "type_mismatch",
-      "note": "换成违反约束的 IMPROVES"
-    },
-    {
-      "source": "SciERC",
-      "target": "entity extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:3"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-WEV-relation:004cf8e2608a81",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
-    },
-    {
-      "source": "SciIE",
-      "target": "scientific knowledge graph construction",
-      "relation": "supports",
-      "relation_type": "SUPPORTS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.naacl-long.418:3c6de1b7dd9146:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-WEV-relation:075392088032ae",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
-    },
-    {
-      "source": "ReSel",
-      "target": "n-ary relation extraction",
-      "relation": "addresses",
-      "relation_type": "ADDRESSES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D19-1585:3c6de1b7dd9146:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-WEV-relation:23e21a11a00d95",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
-    },
-    {
-      "source": "GLiNER",
-      "target": "open-type entity recognition",
-      "relation": "addresses",
-      "relation_type": "ADDRESSES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2022.emnlp-main.46:e29e8d943c26ff:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-WEV-relation:2c537cc06b0c89",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
-    },
-    {
-      "source": "SciER",
-      "target": "full-text scientific information extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-WEV-relation:2c6b7d532ca5e9",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
-    },
-    {
-      "source": "SciERC",
-      "target": "scientific information extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-WEV-relation:2e477b0c978493",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
-    },
-    {
-      "source": "DyGIE++",
-      "target": "SciERC",
+      "source": "MEGNet",
+      "target": "Materials Project",
       "relation": "evaluates_on",
       "relation_type": "EVALUATES_ON",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:0"
+        "evidence:10.1021-acs.chemmater.9b01294:90f0f88bf84f2b:0"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:407dd770265128",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
+      "claim_id": "L2-POS-relation:76539aa384edf5",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "GLiREL",
-      "target": "zero-shot relation extraction",
+      "source": "M3GNet",
+      "target": "interatomic potential learning",
       "relation": "addresses",
       "relation_type": "ADDRESSES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2025.emnlp-main.732:76f747de912e86:0"
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:2"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:4100d4a38aa535",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
+      "claim_id": "L2-POS-relation:78699d9abf2755",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "SciNLP",
-      "target": "full-text scientific information extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
+      "source": "M3GNet",
+      "target": "three-body interactions",
+      "relation": "uses",
+      "relation_type": "USES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2020.acl-main.670:e29e8d943c26ff:0"
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:1"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:53247fe168ddcb",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
+      "claim_id": "L2-POS-relation:8101c9dac49a4b",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "SciNLP",
-      "target": "NLP knowledge graph",
-      "relation": "supports",
-      "relation_type": "SUPPORTS",
+      "source": "density functional theory",
+      "target": "Materials Project",
+      "relation": "uses",
+      "relation_type": "USES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2020.acl-main.670:76f747de912e86:0"
+        "evidence:10.1063-1.4812323:7a104738973573:0"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:64956101c47eca",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
+      "claim_id": "L2-POS-relation:83175b92d7ada9",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "GLiNER",
-      "target": "entity extraction",
+      "source": "GNoME",
+      "target": "stable material discovery",
       "relation": "addresses",
       "relation_type": "ADDRESSES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2022.emnlp-main.46:bfbaf8b2d1cdf9:1"
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:3"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:6505605e777886",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
+      "claim_id": "L2-POS-relation:83739aedec797f",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "SciER",
-      "target": "24k entities",
-      "relation": "reports",
-      "relation_type": "REPORTS",
+      "source": "MEGNet",
+      "target": "graph neural network",
+      "relation": "uses",
+      "relation_type": "USES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2024.naacl-long.300:3c6de1b7dd9146:0"
+        "evidence:10.1021-acs.chemmater.9b01294:bfbaf8b2d1cdf9:0"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:6a689da9853b43",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
+      "claim_id": "L2-POS-relation:8fded9d5374e18",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "SciREX",
-      "target": "n-ary relation extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D19-1585:ae0b636f3a61fd:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-WEV-relation:715b4a62b1a4a2",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
-    },
-    {
-      "source": "contextualized span representations",
-      "target": "relation extraction",
+      "source": "crystal graph convolutional neural network",
+      "target": "material property prediction",
       "relation": "improves",
       "relation_type": "IMPROVES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:2"
+        "evidence:10.1103-PhysRevLett.120.145301:e29e8d943c26ff:0"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:78a0292f16899c",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
+      "claim_id": "L2-POS-relation:a36e4e79e2a644",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "text-table evidence",
-      "target": "n-ary relation extraction",
+      "source": "MEGNet",
+      "target": "material property prediction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:a7f809192c04d5",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "GNoME",
+      "target": "736 experimental structures",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:b963a8da3ca532",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "M3GNet",
+      "target": "Materials Project",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:bbf8aa16645172",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "global state attributes",
+      "target": "material property prediction",
       "relation": "improves",
       "relation_type": "IMPROVES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2025.emnlp-main.732:76f747de912e86:0"
+        "evidence:10.1021-acs.chemmater.9b01294:e29e8d943c26ff:0"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:7a8bbadc3acc82",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
+      "claim_id": "L2-POS-relation:cd6280005f8212",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "GLiREL",
-      "target": "relation extraction",
-      "relation": "addresses",
-      "relation_type": "ADDRESSES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2020.acl-main.670:a5a0d15d4ae8ea:0"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-WEV-relation:85f55fa394e90a",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
-    },
-    {
-      "source": "SciIE",
-      "target": "contextualized span representations",
+      "source": "M3GNet",
+      "target": "graph neural network",
       "relation": "uses",
       "relation_type": "USES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2020.acl-main.670:76f747de912e86:0"
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:0"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:8c5be718d1b052",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
+      "claim_id": "L2-POS-relation:de1f7a5ba3df63",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
     },
     {
-      "source": "SciER",
-      "target": "12k relations",
+      "source": "MEGNet",
+      "target": "global state attributes",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:df8734afe45d70",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "Materials Project",
+      "target": "stable material discovery",
+      "relation": "enables",
+      "relation_type": "ENABLES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1063-1.4812323:7a104738973573:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:e9f38d1da6361f",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "GNoME",
+      "target": "381,000 new stable structures",
       "relation": "reports",
       "relation_type": "REPORTS",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:0"
+        "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:1"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:91efcce0ca0032",
+      "claim_id": "L2-POS-relation:ef15f48c8191f2",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "GNoME",
+      "target": "graph neural network",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:136b7d5e4814d5",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "crystal graph convolutional neural network",
+      "target": "Materials Project",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1103-PhysRevLett.120.145301:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:291d6e4de649ab",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "GNoME",
+      "target": "active learning",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:2a4f5dc9c8d753",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "crystal graph convolutional neural network",
+      "target": "graph neural network",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1103-PhysRevLett.120.145301:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:3253fcd1f0662a",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "M3GNet",
+      "target": "crystal structure relaxation",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:341751992ecca9",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "GNoME",
+      "target": "density functional theory",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:3eef71b1153f1f",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "GNoME",
+      "target": "2.2 million stable structures",
+      "relation": "enables",
+      "relation_type": "ENABLES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:473fe4aa7fa7ab",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 ENABLES"
+    },
+    {
+      "source": "Materials Project",
+      "target": "material property prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1063-1.4812323:7a104738973573:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:69aaaa3da416ec",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "crystal graph convolutional neural network",
+      "target": "material property prediction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1103-PhysRevLett.120.145301:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:6ff239cff930d0",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "MEGNet",
+      "target": "Materials Project",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:76539aa384edf5",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "M3GNet",
+      "target": "interatomic potential learning",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:78699d9abf2755",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "M3GNet",
+      "target": "three-body interactions",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:8101c9dac49a4b",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "density functional theory",
+      "target": "Materials Project",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1063-1.4812323:7a104738973573:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:83175b92d7ada9",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "GNoME",
+      "target": "stable material discovery",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:3"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:83739aedec797f",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "MEGNet",
+      "target": "graph neural network",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:8fded9d5374e18",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "crystal graph convolutional neural network",
+      "target": "material property prediction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1103-PhysRevLett.120.145301:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:a36e4e79e2a644",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "MEGNet",
+      "target": "material property prediction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:a7f809192c04d5",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "GNoME",
+      "target": "736 experimental structures",
+      "relation": "enables",
+      "relation_type": "ENABLES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:b963a8da3ca532",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 ENABLES"
+    },
+    {
+      "source": "M3GNet",
+      "target": "Materials Project",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:bbf8aa16645172",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "global state attributes",
+      "target": "material property prediction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:cd6280005f8212",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "M3GNet",
+      "target": "graph neural network",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:de1f7a5ba3df63",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "MEGNet",
+      "target": "global state attributes",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:df8734afe45d70",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "Materials Project",
+      "target": "stable material discovery",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1063-1.4812323:7a104738973573:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:e9f38d1da6361f",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "GNoME",
+      "target": "381,000 new stable structures",
+      "relation": "enables",
+      "relation_type": "ENABLES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:e29e8d943c26ff:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:ef15f48c8191f2",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 ENABLES"
+    },
+    {
+      "source": "GNoME",
+      "target": "graph neural network",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1103-PhysRevLett.120.145301:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:136b7d5e4814d5",
       "gold_supported": false,
       "error_type": "wrong_evidence_id",
       "note": "换成不相关论文的真实证据 ID"
     },
     {
-      "source": "SciER",
-      "target": "106 full-text papers",
+      "source": "crystal graph convolutional neural network",
+      "target": "Materials Project",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:291d6e4de649ab",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "GNoME",
+      "target": "active learning",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1103-PhysRevLett.120.145301:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:2a4f5dc9c8d753",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "crystal graph convolutional neural network",
+      "target": "graph neural network",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1063-1.4812323:7a104738973573:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:3253fcd1f0662a",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "M3GNet",
+      "target": "crystal structure relaxation",
+      "relation": "enables",
+      "relation_type": "ENABLES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:341751992ecca9",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "GNoME",
+      "target": "density functional theory",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:3eef71b1153f1f",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "GNoME",
+      "target": "2.2 million stable structures",
       "relation": "reports",
       "relation_type": "REPORTS",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2025.emnlp-main.732:3c6de1b7dd9146:0"
+        "evidence:10.1063-1.4812323:7a104738973573:0"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:9b99124040f0b0",
+      "claim_id": "L2-WEV-relation:473fe4aa7fa7ab",
       "gold_supported": false,
       "error_type": "wrong_evidence_id",
       "note": "换成不相关论文的真实证据 ID"
     },
     {
-      "source": "GLiNER",
-      "target": "zero-shot extraction",
-      "relation": "supports",
-      "relation_type": "SUPPORTS",
+      "source": "Materials Project",
+      "target": "material property prediction",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2020.acl-main.670:e29e8d943c26ff:0"
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:1"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:aba9a7d0f537ab",
+      "claim_id": "L2-WEV-relation:69aaaa3da416ec",
       "gold_supported": false,
       "error_type": "wrong_evidence_id",
       "note": "换成不相关论文的真实证据 ID"
     },
     {
-      "source": "ReSel",
-      "target": "text-table evidence",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:2"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-WEV-relation:b64bf55ef68530",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
-    },
-    {
-      "source": "GLiNER",
-      "target": "bidirectional transformer",
-      "relation": "uses",
-      "relation_type": "USES",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:D18-1360:bfbaf8b2d1cdf9:1"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-WEV-relation:c1878e7a71e1f2",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
-    },
-    {
-      "source": "DyGIE++",
-      "target": "scientific information extraction",
+      "source": "crystal graph convolutional neural network",
+      "target": "material property prediction",
       "relation": "addresses",
       "relation_type": "ADDRESSES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:2"
+        "evidence:10.1038-s43588-022-00349-3:3c6de1b7dd9146:0"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:cba5d6d2ee7202",
+      "claim_id": "L2-WEV-relation:6ff239cff930d0",
       "gold_supported": false,
       "error_type": "wrong_evidence_id",
       "note": "换成不相关论文的真实证据 ID"
     },
     {
-      "source": "GLiREL",
-      "target": "open relation schema",
+      "source": "MEGNet",
+      "target": "Materials Project",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:76539aa384edf5",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "M3GNet",
+      "target": "interatomic potential learning",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:78699d9abf2755",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "M3GNet",
+      "target": "three-body interactions",
       "relation": "uses",
       "relation_type": "USES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2024.naacl-long.300:bfbaf8b2d1cdf9:3"
+        "evidence:10.1021-acs.chemmater.9b01294:bfbaf8b2d1cdf9:1"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:d740dcba4b0d09",
+      "claim_id": "L2-WEV-relation:8101c9dac49a4b",
       "gold_supported": false,
       "error_type": "wrong_evidence_id",
       "note": "换成不相关论文的真实证据 ID"
     },
     {
-      "source": "DyGIE++",
-      "target": "contextualized span representations",
+      "source": "density functional theory",
+      "target": "Materials Project",
       "relation": "uses",
       "relation_type": "USES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2020.acl-main.670:3c6de1b7dd9146:0"
+        "evidence:10.1038-s41586-023-06735-9:3c6de1b7dd9146:0"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:f0f0bd7808fe2e",
+      "claim_id": "L2-WEV-relation:83175b92d7ada9",
       "gold_supported": false,
       "error_type": "wrong_evidence_id",
       "note": "换成不相关论文的真实证据 ID"
     },
     {
-      "source": "SciREX",
-      "target": "document-level information extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
+      "source": "GNoME",
+      "target": "stable material discovery",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2024.emnlp-main.726:76f747de912e86:1"
+        "evidence:10.1103-PhysRevLett.120.145301:bfbaf8b2d1cdf9:1"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:f30445bd28c062",
+      "claim_id": "L2-WEV-relation:83739aedec797f",
       "gold_supported": false,
       "error_type": "wrong_evidence_id",
       "note": "换成不相关论文的真实证据 ID"
     },
     {
-      "source": "SciERC",
-      "target": "relation extraction",
-      "relation": "benchmarks",
-      "relation_type": "BENCHMARKS",
-      "base_confidence": 0.78,
-      "evidence_ids": [
-        "evidence:2025.naacl-long.418:bfbaf8b2d1cdf9:3"
-      ],
-      "annotators": [
-        "auto-generated"
-      ],
-      "claim_id": "L2-WEV-relation:f838a9d9d6a593",
-      "gold_supported": false,
-      "error_type": "wrong_evidence_id",
-      "note": "换成不相关论文的真实证据 ID"
-    },
-    {
-      "source": "ReSel",
-      "target": "cross-modal entity graph",
+      "source": "MEGNet",
+      "target": "graph neural network",
       "relation": "uses",
       "relation_type": "USES",
       "base_confidence": 0.78,
       "evidence_ids": [
-        "evidence:2025.emnlp-main.732:76f747de912e86:0"
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:1"
       ],
       "annotators": [
         "auto-generated"
       ],
-      "claim_id": "L2-WEV-relation:faeaf99350da74",
+      "claim_id": "L2-WEV-relation:8fded9d5374e18",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "crystal graph convolutional neural network",
+      "target": "material property prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:3"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:a36e4e79e2a644",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "MEGNet",
+      "target": "material property prediction",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:a7f809192c04d5",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "GNoME",
+      "target": "736 experimental structures",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1021-acs.chemmater.9b01294:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:b963a8da3ca532",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "M3GNet",
+      "target": "Materials Project",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:bbf8aa16645172",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "global state attributes",
+      "target": "material property prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1103-PhysRevLett.120.145301:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:cd6280005f8212",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "M3GNet",
+      "target": "graph neural network",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:3"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:de1f7a5ba3df63",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "MEGNet",
+      "target": "global state attributes",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s41586-023-06735-9:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:df8734afe45d70",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "Materials Project",
+      "target": "stable material discovery",
+      "relation": "enables",
+      "relation_type": "ENABLES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1038-s43588-022-00349-3:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:e9f38d1da6361f",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "GNoME",
+      "target": "381,000 new stable structures",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1103-PhysRevLett.120.145301:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:ef15f48c8191f2",
       "gold_supported": false,
       "error_type": "wrong_evidence_id",
       "note": "换成不相关论文的真实证据 ID"
