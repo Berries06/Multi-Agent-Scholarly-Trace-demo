@@ -37,6 +37,46 @@ from yanhai.providers import ProviderError, create_provider, load_config_from_en
 
 Runner = Callable[[list[Claim]], tuple[list[Claim], dict[str, Any]]]
 
+CASE_REQUIRED = {
+    "claim_id",
+    "source",
+    "relation",
+    "target",
+    "relation_type",
+    "base_confidence",
+    "evidence_ids",
+    "gold_supported",
+}
+
+
+def load_benchmark(cases_path: str) -> dict[str, Any]:
+    """Load the default frozen pool or a custom case set, validating its shape."""
+    if not cases_path:
+        path = PROJECT_ROOT / "data" / "evaluation" / "decision_benchmark.json"
+    else:
+        path = Path(cases_path)
+        if not path.is_absolute():
+            path = PROJECT_ROOT / path
+        if not path.exists():
+            raise SystemExit(f"案例集不存在：{path}")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    cases = payload.get("cases")
+    if not isinstance(cases, list) or not cases:
+        raise SystemExit(f"案例集 {path} 缺少非空 cases 数组。")
+    for index, item in enumerate(cases, 1):
+        if not isinstance(item, dict):
+            raise SystemExit(f"第 {index} 条案例必须是对象。")
+        missing = sorted(CASE_REQUIRED - set(item.keys()))
+        if missing:
+            raise SystemExit(f"第 {index} 条案例缺少字段：{', '.join(missing)}")
+        if not isinstance(item["evidence_ids"], list):
+            raise SystemExit(f"第 {index} 条案例 evidence_ids 必须是数组。")
+        if not isinstance(item["gold_supported"], bool):
+            raise SystemExit(f"第 {index} 条案例 gold_supported 必须是 true/false。")
+    if "benchmark_id" not in payload:
+        payload["benchmark_id"] = path.stem
+    return payload
+
 
 def load_dotenv(path: Path) -> None:
     if not path.exists():
@@ -96,14 +136,19 @@ def main() -> None:
         help="逗号分隔的 provider:model 列表；缺 Key 的组合会跳过。",
     )
     parser.add_argument("--max-cases", type=int, default=24)
+    parser.add_argument(
+        "--cases",
+        default="",
+        help="可选：自定义案例集 JSON 路径（不传则用 24 条冻结压力命题）。字段与扩充方法见 docs/协作与运维/测试案例集扩充指南.md",
+    )
     args = parser.parse_args()
 
     load_dotenv(PROJECT_ROOT / ".env")
     models = parse_models(args.models)
 
     kb = KnowledgeBase(PROJECT_ROOT / "data" / "knowledge")
-    abl = DecisionAblation(PROJECT_ROOT, kb)
-    benchmark = abl.benchmark
+    benchmark = load_benchmark(args.cases)
+    abl = DecisionAblation(PROJECT_ROOT, kb, benchmark=benchmark)
     case_limit = min(args.max_cases, len(benchmark["cases"]))
 
     price_path = PROJECT_ROOT / "config" / "experiment_models.json"
