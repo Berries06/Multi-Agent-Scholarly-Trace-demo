@@ -22,6 +22,12 @@ $items = @(
     "STOP_DEMO.bat",
     "OPEN_DEMO.url",
     "GITHUB_REPOSITORY.url",
+    "SETUP_WEB.bat",
+    "RUN_WEB.bat",
+    "extraction_lab.py",
+    "pipeline_lab.py",
+    "shared_evidence_decision_lab.py",
+    "gliner_entity_lab.py",
     "pyproject.toml",
     "EXPERIMENT_AUDIT.md",
     "EXPERIMENT_AUDIT.json",
@@ -31,6 +37,7 @@ $items = @(
     "data",
     "deploy",
     "docs",
+    "frontend",
     "scripts",
     "src",
     "submission_materials",
@@ -59,6 +66,19 @@ try {
             throw "Refusing to remove a generated cache outside staging: $resolvedCacheDirectory"
         }
         Remove-Item -LiteralPath $resolvedCacheDirectory -Recurse -Force
+    }
+
+    # 前端构建产物与依赖不打包：接收方用 SETUP_WEB.bat 自行安装。
+    $frontendStaging = Join-Path $resolvedStagingDirectory "frontend"
+    foreach ($buildDir in @("node_modules", "dist")) {
+        $target = Join-Path $frontendStaging $buildDir
+        if (Test-Path -LiteralPath $target) {
+            $resolvedTarget = (Resolve-Path -LiteralPath $target).Path
+            if (-not $resolvedTarget.StartsWith($stagingPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+                throw "Refusing to remove outside staging: $resolvedTarget"
+            }
+            Remove-Item -LiteralPath $resolvedTarget -Recurse -Force
+        }
     }
 
     Compress-Archive `
