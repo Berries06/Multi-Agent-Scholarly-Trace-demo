@@ -307,6 +307,24 @@ class ProposerAgent:
         return claims
 
 
+PROGRESSIVE_MARKERS = (
+    "尝试",
+    "试图",
+    "正在",
+    "计划",
+    "拟用",
+    "初步",
+    "探索中",
+    "attempt",
+    "trying",
+    "try to",
+    "exploring",
+    "investigating",
+    "developing",
+    "working on",
+)
+
+
 class CriticAgent:
     name = "批判者 Agent"
 
@@ -326,6 +344,12 @@ class CriticAgent:
                 claim.criticisms.append("当前仅有单一来源，需保留外部有效性限制。")
             if claim.relation.casefold() in {"guarantees", "proves"}:
                 claim.criticisms.append("使用绝对化谓词，结论强度超过现有证据。")
+            if any(
+                marker in claim.relation.casefold() for marker in PROGRESSIVE_MARKERS
+            ):
+                claim.criticisms.append(
+                    "使用进行时/尝试性表述，不能推出已完成结论（未完成体悖论）。"
+                )
             if claim.relation_type == "RELATED_TO":
                 claim.criticisms.append("同句共现不能直接证明语义关系，需要人工复核。")
             source_type = claim.source_type or kb.entity_type_for_name(claim.source)
@@ -391,6 +415,7 @@ class JudgeAgent:
                     "不匹配",
                     "没有同时覆盖",
                     "同句共现",
+                    "未完成",
                 )
             ):
                 penalty += 0.32

@@ -7,6 +7,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
+from yanhai.agents import CriticAgent  # noqa: E402
 from yanhai.knowledge import KnowledgeBase  # noqa: E402
 from yanhai.llm_decision import LLMCritic, LLMJudge, hard_guard  # noqa: E402
 from yanhai.models import Claim  # noqa: E402
@@ -87,6 +88,21 @@ class LLMFallbackTests(unittest.TestCase):
         judge.adjudicate([claim], self.kb)
         self.assertEqual("rejected", claim.status)
         self.assertIn("护栏", claim.judge_reason)
+
+    def test_progressive_relation_gets_unfinished_criticism(self) -> None:
+        claim = Claim(
+            claim_id="T-004",
+            source="A",
+            relation="attempting to improve",
+            target="B",
+            relation_type="IMPROVES",
+            base_confidence=0.85,
+            evidence_ids=[self.valid_evidence_id],
+        )
+        CriticAgent().critique([claim], self.kb)
+        self.assertTrue(
+            any("未完成体悖论" in item for item in claim.criticisms)
+        )
 
 
 if __name__ == "__main__":
