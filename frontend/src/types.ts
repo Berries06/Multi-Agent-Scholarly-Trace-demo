@@ -198,3 +198,32 @@ export interface IngestResult {
   resources: Resources
   summary: IngestSummary
 }
+
+// —— 证据知识图谱（/api/extracted-graph）——
+
+export interface GraphNode {
+  id: string
+  label: string
+  kind: string
+  confidence?: number
+  source_url?: string
+  paper_id?: string
+  section_id?: string
+  char_start?: number
+  char_end?: number
+}
+
+export interface GraphEdge {
+  id: string
+  source: string
+  target: string
+  label: string
+  status?: string
+  confidence?: number
+  evidence_ids?: string[]
+}
+
+export interface GraphData {
+  nodes: GraphNode[]
+  edges: GraphEdge[]
+}

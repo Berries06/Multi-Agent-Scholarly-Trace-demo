@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import hashlib
+import random
 from statistics import mean
 from typing import Any
 
@@ -427,6 +429,138 @@ class JudgeAgent:
         return claims
 
 
+def _seeded_rng(*keys: object) -> random.Random:
+    raw = "\x1f".join(str(key) for key in keys).encode("utf-8")
+    return random.Random(int(hashlib.sha256(raw).hexdigest()[:12], 16))
+
+
+def _generate_quiz(accepted: list[Claim], kb: KnowledgeBase) -> list[dict[str, Any]]:
+    """从 accepted 图谱关系模板化生成测评题，替代写死题库。
+
+    三种题型（按难度）：基础=关系类型判断、应用=实体类型判断、挑战=证据溯源。
+    选项由确定性种子（claim_id）打乱，可复现；干扰项来自同类型实体池。
+    """
+    relation_types = [
+        "IMPROVES",
+        "USES",
+        "EVALUATES_ON",
+        "REPORTS",
+        "ADDRESSES",
+        "BENCHMARKS",
+        "SUPPORTS",
+        "CONTRADICTS",
+        "EXTENDS",
+        "ENABLES",
+    ]
+    entity_types = [
+        "METHOD",
+        "TASK",
+        "DATASET",
+        "METRIC",
+        "FINDING",
+        "LIMITATION",
+        "DOMAIN",
+    ]
+    quiz: list[dict[str, Any]] = []
+    papers = getattr(kb, "papers", None)
+    paper_titles = (
+        {paper.paper_id: paper.title for paper in papers}
+        if papers is not None
+        else {}
+    )
+
+    for index, claim in enumerate(accepted[:3]):
+        rng = _seeded_rng("quiz", claim.claim_id)
+        if index == 0:
+            distractors = rng.sample(
+                [t for t in relation_types if t != claim.relation_type], 3
+            )
+            options = [claim.relation_type, *distractors]
+            rng.shuffle(options)
+            quiz.append(
+                {
+                    "level": "基础",
+                    "question": (
+                        f"图谱中“{claim.source}”与“{claim.target}”之间"
+                        "被接受的关系类型是什么？"
+                    ),
+                    "options": options,
+                    "answer": options.index(claim.relation_type),
+                    "evidence_ids": list(claim.evidence_ids),
+                }
+            )
+        elif index == 1 and claim.source_type:
+            distractors = rng.sample(
+                [t for t in entity_types if t != claim.source_type], 3
+            )
+            options = [claim.source_type, *distractors]
+            rng.shuffle(options)
+            quiz.append(
+                {
+                    "level": "应用",
+                    "question": f"“{claim.source}”在本体（schema）中属于哪类实体？",
+                    "options": options,
+                    "answer": options.index(claim.source_type),
+                    "evidence_ids": list(claim.evidence_ids),
+                }
+            )
+        else:
+            paper_ids = {
+                kb.paper_id_for_evidence(evidence_id)
+                for evidence_id in claim.evidence_ids
+                if kb.evidence_is_valid(evidence_id)
+            }
+            titles = sorted(
+                {paper_titles[pid] for pid in paper_ids if pid in paper_titles}
+            )
+            if titles and len(paper_titles) >= 4:
+                distractors = rng.sample(
+                    [t for t in paper_titles.values() if t not in titles], 3
+                )
+                options = [titles[0], *distractors]
+                rng.shuffle(options)
+                quiz.append(
+                    {
+                        "level": "挑战",
+                        "question": (
+                            f"支持“{claim.source}→{claim.target}”的证据"
+                            "最早来自哪篇论文？"
+                        ),
+                        "options": options,
+                        "answer": options.index(titles[0]),
+                        "evidence_ids": list(claim.evidence_ids),
+                    }
+                )
+    if len(quiz) < 2:
+        quiz.extend(
+            [
+                {
+                    "level": "基础",
+                    "question": "为什么最终命题必须保留 evidence_ids？",
+                    "options": [
+                        "便于改变配色",
+                        "支持溯源与复核",
+                        "减少前端代码",
+                        "替代学习者画像",
+                    ],
+                    "answer": 1,
+                },
+                {
+                    "level": "应用",
+                    "question": "批判者发现结论只有单一来源时，最合理的处理是什么？",
+                    "options": [
+                        "直接删除",
+                        "无条件接受",
+                        "保留限制并寻求交叉证据",
+                        "提高模型温度",
+                    ],
+                    "answer": 2,
+                },
+            ]
+        )
+    return quiz
+
+
 class ResourceAgent:
     name = "个性化资源 Agent"
 
@@ -502,26 +636,7 @@ class ResourceAgent:
                 "action": "比较无批判者、无图谱和完整系统的幻觉率与覆盖率。",
             },
         ]
-        quiz = [
-            {
-                "level": "基础",
-                "question": "为什么最终命题必须保留 evidence_ids？",
-                "options": ["便于改变配色", "支持溯源与复核", "减少前端代码", "替代学习者画像"],
-                "answer": 1,
-            },
-            {
-                "level": "应用",
-                "question": "批判者发现结论只有单一来源时，最合理的处理是什么？",
-                "options": ["直接删除", "无条件接受", "保留限制并寻求交叉证据", "提高模型温度"],
-                "answer": 2,
-            },
-            {
-                "level": "挑战",
-                "question": "验证博弈机制有效性的首选实验设计是什么？",
-                "options": ["只展示成功案例", "与无批判者版本做消融", "增加页面动画", "扩大提示词长度"],
-                "answer": 1,
-            },
-        ]
+        quiz = _generate_quiz(accepted, kb)
         accepted_concepts = {
             concept
             for claim in accepted

@@ -1,4 +1,11 @@
-import type { Domain, Health, IngestResult, LearnerProfile, RunResult } from './types'
+import type {
+  Domain,
+  GraphData,
+  Health,
+  IngestResult,
+  LearnerProfile,
+  RunResult,
+} from './types'
 
 const jsonHeaders = { 'Content-Type': 'application/json' }
 
@@ -21,6 +28,11 @@ export function getProfiles(): Promise<LearnerProfile[]> {
 
 export function getDomains(): Promise<Domain[]> {
   return request('/api/domains')
+}
+
+export function getExtractedGraph(domainId?: string | null): Promise<GraphData> {
+  const suffix = domainId ? `?domain_id=${encodeURIComponent(domainId)}` : ''
+  return request(`/api/extracted-graph${suffix}`)
 }
 
 export interface RunPayload {

@@ -18,8 +18,15 @@ import {
 import type { ColumnsType } from 'antd/es/table'
 import AgentTrace from './AgentTrace'
 import DiagnosisRadar from './DiagnosisRadar'
-import { getDomains, getProfiles, runPipeline } from './api'
-import type { Claim, Domain, LearnerProfile, RunResult } from './types'
+import KnowledgeGraphView from './KnowledgeGraphView'
+import { getDomains, getExtractedGraph, getProfiles, runPipeline } from './api'
+import type {
+  Claim,
+  Domain,
+  GraphData,
+  LearnerProfile,
+  RunResult,
+} from './types'
 
 const { Text, Paragraph } = Typography
 
@@ -49,6 +56,7 @@ export default function ProductPage() {
   const [profileId, setProfileId] = useState<string | undefined>()
   const [query, setQuery] = useState('')
   const [result, setResult] = useState<RunResult | null>(null)
+  const [graph, setGraph] = useState<GraphData | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -69,6 +77,20 @@ export default function ProductPage() {
       cancelled = true
     }
   }, [])
+
+  useEffect(() => {
+    let cancelled = false
+    getExtractedGraph(domainId ?? null)
+      .then((data) => {
+        if (!cancelled) setGraph(data)
+      })
+      .catch(() => {
+        if (!cancelled) setGraph(null)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [domainId])
 
   const domainOptions = useMemo(
     () => domains.map((d) => ({ value: d.domain_id, label: d.domain_name ?? d.domain_id })),
@@ -186,6 +208,14 @@ export default function ProductPage() {
               </Card>
             </Col>
           </Row>
+
+          <Card title="证据知识图谱（论文→证据跨度→实体→关系，点击节点看详情）" style={{ marginTop: 16 }}>
+            {graph ? (
+              <KnowledgeGraphView data={graph} />
+            ) : (
+              <Paragraph type="secondary">图谱加载中或不可用。</Paragraph>
+            )}
+          </Card>
 
           <Card title="个性化资源" style={{ marginTop: 16 }}>
             <Collapse
