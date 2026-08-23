@@ -36,18 +36,15 @@ const { TextArea } = Input
 const EXAMPLE_PAPER = `# 面向科研文献的多智能体证据裁决系统
 
 ## 摘要
-我们提出一种多智能体辩论机制，用于减少检索增强生成中的幻觉。
-系统在 SciERC 数据集上评测，实体抽取 F1 提升到 84.6%，并支持
-对知识图谱进行证据约束检索。
+我们提出一种面向科研文献的证据裁决机制，为知识图谱中的每条关系
+绑定可追溯的原文证据，并在证据变化时更新关系状态。
 
 ## 方法
-我们采用角色扮演协作与反思机制构建三个智能体：提出者、批判者、裁判。
-提出者基于 GLiNER 抽取实体，GLiREL 生成关系候选，批判者对证据跨度进行
-交叉验证，裁判对候选关系进行置信裁决。
+系统由三个决策智能体协作：提出者生成候选关系，批判者检查证据存在性、
+类型约束与跨度覆盖，裁判给出置信裁决。
 
 ## 实验
-在 SciERC 与 SciREX 上评测。结果显示多智能体辩论显著改善了事实性，
-知识覆盖率提升 12%，但仍存在不确定性，尤其是分布外评测场景。
+在自建文献语料上验证裁决协议的行为；结果与局限详见实验账本。
 `
 
 function statusTag(status: string) {
@@ -165,39 +162,10 @@ export default function LabPage() {
     confidence: e.confidence,
   }))
 
+  // 思考过程直接消费后端返回的真实轨迹（specialist + 三决策智能体），
+  // 前端不再自行拼装任何写死的步骤文案。
   const thinkingSteps = result
-    ? [
-        {
-          agent: '论文知识抽取',
-          role: '结构解析 + 实体/关系抽取',
-          status: 'completed',
-          summary: `抽取 ${result.summary.entity_count} 个实体、${result.summary.candidate_relation_count} 条关系候选`,
-        },
-        {
-          agent: '学情诊断',
-          role: '画像 → 难度/盲区',
-          status: 'completed',
-          summary: `准备度 ${result.diagnosis.readiness_score}，目标难度 L${result.diagnosis.target_difficulty}`,
-        },
-        {
-          agent: '提出者',
-          role: '候选命题',
-          status: 'completed',
-          summary: `生成 ${result.proposed_claims.length} 条候选命题`,
-        },
-        {
-          agent: '批判者',
-          role: '反证与约束',
-          status: 'completed',
-          summary: '对每条命题做证据存在性、类型约束、跨度覆盖检查',
-        },
-        {
-          agent: '裁判',
-          role: '置信裁决',
-          status: 'completed',
-          summary: `accepted ${result.summary.accepted_count} / rejected ${result.summary.rejected_count}`,
-        },
-      ]
+    ? [...result.specialist_agent_trace, ...result.agent_trace]
     : []
 
   return (

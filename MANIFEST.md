@@ -40,3 +40,8 @@
 | 2026-08-22 23:54 | /documentation | docs/文档导航.md | documentation | 接入文献来源附录、新颖性报告和升级后的指导书/实验追踪表 |
 | 2026-08-23 08:32 | /division-of-labor | docs/协作与运维/四成员分工清单_2026-08-22.md | planning | 按用户要求专业口径定稿：四成员职责、L001–L004/R001–R025 全员映射、逐成员细化任务表与验收标准、三阶段时间表 |
 | 2026-08-23 09:40 | /repo-audit | docs/研发记录/全仓代码审计报告_2026-08-23.md | audit | 14 路逐文件审计：1 critical（假流式 SSE）/4 major（LLM 未接入、LabPage 假轨迹、作品书硬编码、MLflow 冷启动）/修复优先级 |
+| 2026-08-23 20:19 | /de-fake | src/yanhai/fresh_pipeline.py、orchestrator.py、api.py | implementation | 拆假：fresh 流水线真实 agent_trace、orchestrator on_step 增量回调、真流式 SSE（线程+队列+显式错误事件）、PDF 分块早拒 |
+| 2026-08-23 20:19 | /de-fake | frontend/src/LabPage.tsx、types.ts | implementation | LabPage 消费后端真实轨迹、删除编造示例论文；types 增加 agent_trace 字段；tsc 通过 |
+| 2026-08-23 20:19 | /de-fake | scripts/run_easg_r006.py | implementation | R006 验证章按真实金标准比对签发（失败即非零退出），新 run 20260823T091952Z |
+| 2026-08-23 20:19 | /de-fake | tests/experiments/framework.py | implementation | 验证后签发：先独立复核产物，复核失败即 status=failed 并抛错 |
+| 2026-08-23 20:19 | /de-fake | scripts/build_submission_book.py | implementation | 作品书数字全部改为构建时实时读取（ablation-report/数据文件 sha256 复核/三领域实时抽取/测试发现计数/git rev-parse），旧版备份 .docx.bak |

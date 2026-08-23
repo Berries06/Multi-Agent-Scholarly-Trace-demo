@@ -233,6 +233,8 @@ export interface IngestResult {
   proposed_claims: DecisionClaim[]
   critiqued_claims: DecisionClaim[]
   adjudicated_claims: DecisionClaim[]
+  agent_trace: AgentTraceStep[]
+  specialist_agent_trace: AgentTraceStep[]
   resources: Resources
   summary: IngestSummary
 }

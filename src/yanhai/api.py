@@ -13,6 +13,8 @@ from __future__ import annotations
 
 import asyncio
 import json
+import queue
+import threading
 from pathlib import Path
 from typing import Any, AsyncIterator
 
@@ -189,7 +191,7 @@ def create_app() -> FastAPI:
         )
 
     @app.post("/api/ingest-pdf")
-    def ingest_pdf(
+    async def ingest_pdf(
         file: UploadFile = File(...),
         profile_id: str = Form(...),
         paper_id: str = Form("uploaded-paper"),
@@ -200,9 +202,16 @@ def create_app() -> FastAPI:
             raise HTTPException(
                 status_code=404, detail=f"Unknown profile: {profile_id}"
             )
-        payload = file.file.read()
-        if len(payload) > 5_000_000:
-            raise HTTPException(status_code=413, detail="PDF 超过 5MB 限制。")
+        # 分块读取并在超限时尽早拒绝，避免把超大文件完整读入内存。
+        payload = b""
+        chunk_size = 1_000_000
+        while True:
+            chunk = await file.read(chunk_size)
+            if not chunk:
+                break
+            payload += chunk
+            if len(payload) > 5_000_000:
+                raise HTTPException(status_code=413, detail="PDF 超过 5MB 限制。")
         try:
             document = PyPDFParser().parse_bytes(
                 payload, paper_id=paper_id, title=title
@@ -222,6 +231,10 @@ def create_app() -> FastAPI:
         return StreamingResponse(
             _stream_run(orchestrator, payload),
             media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "X-Accel-Buffering": "no",
+            },
         )
 
     return app
@@ -230,28 +243,43 @@ def create_app() -> FastAPI:
 async def _stream_run(
     orchestrator: ScholarlyTraceOrchestrator, payload: RunRequest
 ) -> AsyncIterator[str]:
-    """Emit SSE events: started → each agent trace step → completed (summary)."""
+    """Emit SSE events incrementally as the pipeline really runs.
+
+    The orchestrator executes in a worker thread and reports each stage through
+    its ``on_step`` callback; steps are forwarded to the client as they happen,
+    not replayed after the whole run completes. Any error is reported as an
+    explicit ``error`` event instead of truncating the stream.
+    """
     yield _sse("started", {"profile_id": payload.profile_id, "query": payload.query})
-    await asyncio.sleep(0)
+    step_queue: "queue.Queue[dict[str, Any]]" = queue.Queue()
 
-    try:
-        result = orchestrator.run(
-            payload.profile_id,
-            payload.query,
-            domain_id=payload.domain_id,
-            include_ablation=payload.include_ablation,
-        )
-    except KeyError as exc:
-        yield _sse("error", {"message": str(exc)})
-        return
+    def worker() -> None:
+        try:
+            result = orchestrator.run(
+                payload.profile_id,
+                payload.query,
+                domain_id=payload.domain_id,
+                include_ablation=payload.include_ablation,
+                on_step=step_queue.put,
+            )
+            step_queue.put({"__result__": result})
+        except KeyError as exc:
+            step_queue.put({"__error__": str(exc)})
+        except Exception as exc:  # SSE 必须显式报错，不允许静默截断
+            step_queue.put({"__error__": f"{type(exc).__name__}: {exc}"})
 
-    steps = [
-        *result.get("specialist_agent_trace", []),
-        *result.get("agent_trace", []),
-    ]
-    for step in steps:
-        yield _sse("agent_step", step)
-        await asyncio.sleep(0)
+    threading.Thread(target=worker, name="yanhai-run-stream", daemon=True).start()
+
+    result: dict[str, Any] | None = None
+    while True:
+        item = await asyncio.to_thread(step_queue.get)
+        if "__error__" in item:
+            yield _sse("error", {"message": item["__error__"]})
+            return
+        if "__result__" in item:
+            result = item["__result__"]
+            break
+        yield _sse("agent_step", item)
 
     summary = {
         "run_id": result.get("run_id"),

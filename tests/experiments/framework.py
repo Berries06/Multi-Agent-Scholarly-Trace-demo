@@ -641,7 +641,6 @@ def execute_experiment(
     (output_dir / "REPORT.md").write_text(
         _report_markdown(config, rows, aggregates), encoding="utf-8"
     )
-    verify_experiment_artifacts(output_dir)
     verified_names = [
         "run_config.json",
         "raw_results.json",
@@ -649,24 +648,33 @@ def execute_experiment(
         "cases.csv",
         "REPORT.md",
     ]
-    (output_dir / "verification.json").write_text(
-        json.dumps(
-            {
-                "status": "passed",
-                "verifier": (
-                    "tests.experiments.framework.verify_experiment_artifacts"
-                ),
-                "verified_at": datetime.now(timezone.utc).isoformat(),
-                "verified_sha256": {
-                    name: _sha256(output_dir / name)
-                    for name in verified_names
-                },
-            },
-            ensure_ascii=False,
-            indent=2,
+    # 先独立复核产物（从 raw 重算 summary/CSV/REPORT），再按复核结果签发
+    # 验证章：复核失败 → status=failed 并留在盘上，后续调用会非零退出。
+    try:
+        verify_experiment_artifacts(output_dir)
+        verification_status = "passed"
+        verification_error = None
+    except ValueError as exc:
+        verification_status = "failed"
+        verification_error = str(exc)
+    receipt: dict[str, Any] = {
+        "status": verification_status,
+        "verifier": (
+            "tests.experiments.framework.verify_experiment_artifacts"
         ),
+        "verified_at": datetime.now(timezone.utc).isoformat(),
+        "verified_sha256": {
+            name: _sha256(output_dir / name)
+            for name in verified_names
+        },
+    }
+    if verification_error is not None:
+        receipt["error"] = verification_error
+    (output_dir / "verification.json").write_text(
+        json.dumps(receipt, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
+    # 复核收据自身（哈希一致 + status=passed），失败即抛出。
     verify_experiment_artifacts(output_dir)
     return output_dir
 

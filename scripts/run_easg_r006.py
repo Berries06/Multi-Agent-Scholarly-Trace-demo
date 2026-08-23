@@ -108,14 +108,12 @@ def run_case(case: dict[str, Any]) -> dict[str, Any]:
 
     rows = []
     correct_status = case["gold"]["easg"]["admission_status"]
+    expected_superseded_by = case["gold"]["easg"].get("superseded_by") or "n/a"
     for system, projection in (("easg", easg_projection), ("static", static_projection)):
         produced = projection["admission_status"]
         mechanism_gold = case["gold"][system]["admission_status"]
-        superseded_correct = True
-        if "superseded_by" in case["gold"]["easg"] and system == "easg":
-            superseded_correct = (
-                projection["superseded_by"] == case["gold"]["easg"]["superseded_by"]
-            )
+        produced_superseded_by = projection["superseded_by"] or "n/a"
+        superseded_correct = produced_superseded_by == expected_superseded_by
         rows.append(
             {
                 "case_id": case["case_id"],
@@ -126,8 +124,8 @@ def run_case(case: dict[str, Any]) -> dict[str, Any]:
                 "produced_status": produced,
                 "transition_correct": produced == correct_status,
                 "mechanism_gold_match": produced == mechanism_gold,
-                "expected_superseded_by": case["gold"]["easg"].get("superseded_by", "n/a"),
-                "produced_superseded_by": projection["superseded_by"] or "n/a",
+                "expected_superseded_by": expected_superseded_by,
+                "produced_superseded_by": produced_superseded_by,
                 "superseded_by_correct": superseded_correct,
                 "evidence_layer": projection["evidence_layer"],
                 "reasons": "|".join(projection["reasons"]),
@@ -296,11 +294,29 @@ def main() -> int:
         writer.writeheader()
         writer.writerows(rows)
 
+    # 验证章按真实比对结果签发，绝不自签"通过"：
+    # - easg 行必须全部命中政策金标准（状态、机制忠实性、superseded_by）；
+    # - static 行必须匹配其机制的手算输出（其"错误"是实验设计结论，不是验证失败）。
+    def row_passes(row: dict[str, Any]) -> bool:
+        if row["system"] == "easg":
+            return bool(
+                row["transition_correct"]
+                and row["mechanism_gold_match"]
+                and row["superseded_by_correct"]
+            )
+        return bool(row["mechanism_gold_match"])
+
+    all_correct = all(row_passes(row) for row in rows)
+    verification_status = "passed" if all_correct else "failed"
     receipt = {
-        "status": "passed",
+        "status": verification_status,
         "scope_note": (
             "self-receipt for the toy/dev R006 protocol; NOT verified by "
             "tests.experiments.verify_experiment_artifacts (different row schema)"
+        ),
+        "verification_rule": (
+            "status=passed iff every easg row matches the policy gold and "
+            "every static row matches its mechanism's hand-computed output."
         ),
         "verified_sha256": {
             name: sha256(output_dir / name)
@@ -316,7 +332,16 @@ def main() -> int:
     print(f"easg   {easg_block['correct']}/{easg_block['total']} = {easg_block['accuracy']}")
     print(f"static {static_block['correct']}/{static_block['total']} = {static_block['accuracy']}")
     print(f"static_audit_gap_count = {summary['static_audit_gap_count']}")
+    print(f"verification = {verification_status}")
     print(output_dir)
+    if not all_correct:
+        mismatches = [row for row in rows if not row_passes(row)]
+        for row in mismatches[:10]:
+            print(
+                f"MISMATCH {row['case_id']}/{row['system']}: "
+                f"expected {row['expected_status']}, produced {row['produced_status']}"
+            )
+        return 1
     return 0
 
 

@@ -14,7 +14,7 @@
 | R003 | M0 | MLflow 幂等与字段审计 | sync twice | Track A dev | imported/skipped, field coverage | MUST | TODO | 第二次必须 imported=0 |
 | R004 | M1 | L3 pilot 双人盲标 | annotator A/B | paper-level pool | kappa/alpha, disagreements | MUST | BLOCKED | 需冻结论文清单、许可与标注指南 |
 | R005 | M1 | 仲裁并冻结 gold v1 | adjudicated gold | train/dev/test | hash, class/slice counts | MUST | BLOCKED | 依赖 R004 |
-| R006 | M2 | 手算反事实状态迁移 | static provenance vs EASG | toy/dev | transition accuracy | MUST | DONE | 12 条手算反事实（6 类事件），run=outputs/experiments/easg_r006/20260821T155122Z；EASG 12/12=1.0、static 3/12=0.25、audit_gap=3；tests/test_easg.py 9 项全过；决定：M2 门槛通过、事件语义定稿；MLflow 未同步（toy 自定义协议）；下一项 R007 重放一致性 |
+| R006 | M2 | 手算反事实状态迁移 | static provenance vs EASG | toy/dev | transition accuracy | MUST | DONE | 12 条手算反事实（6 类事件），最新 run=outputs/experiments/easg_r006/20260823T091952Z（验证章按真实比对签发、失败即非零退出；20260821T155122Z 为历史自签版本）；EASG 12/12=1.0、static 3/12=0.25、audit_gap=3；tests/test_easg.py 9 项全过；决定：M2 门槛通过、事件语义定稿；MLflow 未同步（toy 自定义协议）；下一项 R007 重放一致性 |
 | R007 | M2 | 事件重放一致性 | EASG replay ×3 | toy/dev | replay consistency | MUST | TODO | 重放次数不算独立样本 |
 | R008 | M2 | 下游污染检查 | EASG → timeline/Idea/resource | toy/dev | contamination rate | MUST | TODO | 状态变化必须传播且可解释 |
 | R009 | M3 | 固定阈值 vs 简单校准 | rule threshold/logistic/isotonic | frozen dev | ECE, Brier, risk–coverage | MUST | READY | test 不可见 |

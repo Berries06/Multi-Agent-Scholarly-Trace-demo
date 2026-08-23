@@ -1,7 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import math
+import subprocess
+import sys
+import unittest
 from pathlib import Path
 from typing import Iterable
 
@@ -39,6 +44,140 @@ BODY_FONT_EN = "Times New Roman"
 HEADING_FONT_CN = "黑体"
 FONT_REGULAR = Path("C:/Windows/Fonts/simsun.ttc")
 FONT_BOLD = Path("C:/Windows/Fonts/simhei.ttf")
+
+
+def _pct(value: float) -> str:
+    """Format a 0-1 proportion as a one-decimal percentage, e.g. 0.846 -> '84.6%'."""
+    return f"{value * 100:.1f}%"
+
+
+def _frac_pct(value: float, num: int, den: int) -> str:
+    """Format a proportion with its numerator/denominator, e.g. '84.6%（11/13）'."""
+    return f"{_pct(value)}（{num}/{den}）"
+
+
+def _wilson(ci95: list[float]) -> str:
+    """Format a Wilson 95% confidence interval, e.g. '[0.578, 0.957]'."""
+    return f"[{ci95[0]:.3f}, {ci95[1]:.3f}]"
+
+
+def _load_live_metrics(project_root: Path) -> dict:
+    """Read every quantitative claim from real artifacts at build time.
+
+    所有数字都从真实产物/数据文件读取或实时计算；任一来源缺失或校验失败
+    都会抛出异常（fail loud），绝不静默回退到硬编码值。
+    """
+    metrics: dict = {}
+
+    # ---- Track A 消融报告：24 条压力命题 + 四组对照 + 差值 + Wilson 区间 ----
+    ablation_path = project_root / "outputs" / "ablation-report.json"
+    if not ablation_path.exists():
+        raise FileNotFoundError(f"缺少消融报告：{ablation_path}")
+    ablation = json.loads(ablation_path.read_text(encoding="utf-8"))
+    variants = {
+        variant["variant_id"]: {"label": variant["label"], "metrics": variant["metrics"]}
+        for variant in ablation["variants"]
+    }
+    comparison = ablation["comparison"]
+    triad = variants["evidence_triad"]["metrics"]
+    baseline = variants[comparison["strongest_baseline"]]["metrics"]
+    metrics["ablation"] = {
+        "case_count": int(ablation["case_count"]),
+        "gold_supported_count": int(triad["gold_supported_count"]),
+        "gold_unsupported_count": int(triad["gold_unsupported_count"]),
+        "variants": variants,
+        "comparison": comparison,
+        # E3 相对最强基线的差值，实时由 variants 的 metrics 差值计算：
+        "precision_gain_pp": round(
+            (triad["accepted_precision"] - baseline["accepted_precision"]) * 100, 1
+        ),
+        "uar_reduction_pp": round(
+            (baseline["unsupported_acceptance_rate"] - triad["unsupported_acceptance_rate"]) * 100, 1
+        ),
+    }
+
+    # ---- 三个垂直领域的图规模（实体/关系/证据跨度）由真实抽取实时计算 ----
+    sys.path.insert(0, str(project_root / "src"))
+    from yanhai.knowledge import KnowledgeBase  # noqa: E402
+
+    domains = []
+    kb_catalog = KnowledgeBase(project_root / "data" / "knowledge")
+    for config in kb_catalog.list_domain_configs():
+        domain_id = config["domain_id"]
+        kb = KnowledgeBase(project_root / "data" / "knowledge", domain_id)
+        graph = kb.extracted_paper_graph()
+        domain_meta = graph["domain"]
+        domains.append(
+            {
+                "domain_id": domain_id,
+                "domain_name": config["domain_name"],
+                "paper_count": int(domain_meta["paper_count"]),
+                "evidence_cards": int(domain_meta["evidence_paper_count"]),
+                "entities": len(graph["entities"]),
+                "relations": len(graph["relations"]),
+                "evidence_spans": len(graph["evidence"]),
+            }
+        )
+    metrics["kb"] = {
+        "domains": domains,
+        "domain_count": len(domains),
+        "papers_per_domain": domains[0]["paper_count"],
+        "total_papers": sum(d["paper_count"] for d in domains),
+        "evidence_cards": sum(d["evidence_cards"] for d in domains),
+        "entities": sum(d["entities"] for d in domains),
+        "relations": sum(d["relations"] for d in domains),
+        "evidence_spans": sum(d["evidence_spans"] for d in domains),
+        "metadata_only": sum(d["paper_count"] - d["evidence_cards"] for d in domains),
+    }
+
+    # ---- L2 决策机制用例：三份文件实时数出总数并复核 SHA-256 ----
+    case_files = sorted(project_root.glob("data/evaluation/generated-decision-cases-v1*.json"))
+    if not case_files:
+        raise FileNotFoundError("缺少决策机制用例文件：data/evaluation/generated-decision-cases-v1*.json")
+    decision_files = []
+    for case_path in case_files:
+        data = json.loads(case_path.read_text(encoding="utf-8"))
+        cases = data["cases"]
+        raw = json.dumps(cases, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        recomputed = hashlib.sha256(raw).hexdigest()
+        frozen = data["cases_sha256"]
+        if recomputed != frozen:
+            raise RuntimeError(
+                f"用例文件 SHA-256 校验失败（文件被改动或标签漂移）：{case_path} "
+                f"冻结值={frozen}，重算值={recomputed}"
+            )
+        decision_files.append(
+            {
+                "path": str(case_path),
+                "domain": data.get("domain"),
+                "count": len(cases),
+                "sha256": frozen,
+            }
+        )
+    metrics["decision_cases"] = {
+        "files": decision_files,
+        "total": sum(item["count"] for item in decision_files),
+    }
+
+    # ---- 回归测试数量：unittest discover 实时数出 ----
+    tests_dir = project_root / "tests"
+    if not tests_dir.exists():
+        raise FileNotFoundError(f"缺少测试目录：{tests_dir}")
+    suite = unittest.defaultTestLoader.discover(start_dir=str(tests_dir), pattern="test_*.py")
+    metrics["test_count"] = suite.countTestCases()
+
+    # ---- 当前 Git 提交哈希 ----
+    result = subprocess.run(
+        ["git", "rev-parse", "--short", "HEAD"],
+        cwd=str(project_root),
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"无法读取 git 提交哈希：{result.stderr.strip()}")
+    metrics["git_commit"] = result.stdout.strip()
+
+    return metrics
 
 
 def rgb(hex_color: str) -> RGBColor:
@@ -463,20 +602,28 @@ def build_architecture_figure(path: Path) -> None:
     image.save(path, quality=95)
 
 
-def build_ablation_figure(path: Path) -> None:
+def build_ablation_figure(path: Path, metrics: dict) -> None:
     image = Image.new("RGB", (1500, 820), "white")
     draw = ImageDraw.Draw(image)
     title_font = load_font(FONT_BOLD, 46)
     label_font = load_font(FONT_REGULAR, 27)
     value_font = load_font(FONT_BOLD, 27)
     small_font = load_font(FONT_REGULAR, 22)
-    draw.text((60, 35), "同一候选池下的决策机制对比（24 条压力命题）", font=title_font, fill=f"#{NAVY}")
+    draw.text(
+        (60, 35),
+        f"同一候选池下的决策机制对比（{metrics['ablation']['case_count']} 条压力命题）",
+        font=title_font,
+        fill=f"#{NAVY}",
+    )
     draw.text((60, 95), "接收精确率越高越好；不支持命题接收率（UAR）越低越好", font=small_font, fill=f"#{MUTED}")
+    variant_order = ("rule_program", "single_pass", "homogeneous_vote", "evidence_triad")
     variants = [
-        ("普通规则程序", 0.500, 1.000),
-        ("单次判定", 0.611, 0.636),
-        ("同质三路投票", 0.611, 0.636),
-        ("提出-批判-裁判", 0.846, 0.182),
+        (
+            metrics["ablation"]["variants"][variant_id]["label"],
+            metrics["ablation"]["variants"][variant_id]["metrics"]["accepted_precision"],
+            metrics["ablation"]["variants"][variant_id]["metrics"]["unsupported_acceptance_rate"],
+        )
+        for variant_id in variant_order
     ]
     left, top, right, bottom = 130, 170, 1430, 680
     for tick in range(0, 101, 20):
@@ -566,7 +713,7 @@ def add_cover(doc: Document) -> None:
     set_run_font(r, size=10.5, color=MUTED)
 
 
-def add_color_overview(doc: Document) -> None:
+def add_color_overview(doc: Document, metrics: dict) -> None:
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.LEFT
     p.paragraph_format.space_after = Pt(4)
@@ -582,10 +729,10 @@ def add_color_overview(doc: Document) -> None:
     set_table_geometry(cards, [4680, 4680], indent_dxa=120)
     set_table_borders(cards, color=WHITE, size=4)
     card_data = [
-        ("3 个垂直领域", "每个领域 30 篇可检索论文记录"),
+        (f"{metrics['kb']['domain_count']} 个垂直领域", f"每个领域 {metrics['kb']['papers_per_domain']} 篇可检索论文记录"),
         ("5 个协同角色", "2 个专职 Agent + 3 个核心裁决 Agent"),
         ("9 组完整样例", "领域 × 学习者画像，含完整输入—中间—输出"),
-        ("390 条测试用例", "三领域真实证据机制用例，冻结 + SHA-256"),
+        (f"{metrics['decision_cases']['total']} 条测试用例", "三领域真实证据机制用例，冻结 + SHA-256"),
     ]
     for idx, (metric, detail) in enumerate(card_data):
         cell = cards.cell(idx // 2, idx % 2)
@@ -625,14 +772,32 @@ def add_color_overview(doc: Document) -> None:
     add_note(
         doc,
         "结果边界",
-        "84.6% 来自开发可见的 24 条小样本压力集，不是公开科学信息抽取基准性能；“证据绑定 100%”只表示 accepted 关系具有有效 evidence_id，不代表引用语义完全正确。",
+        f"{_pct(metrics['ablation']['variants']['evidence_triad']['metrics']['accepted_precision'])} 来自开发可见的 {metrics['ablation']['case_count']} 条小样本压力集，不是公开科学信息抽取基准性能；“证据绑定 100%”只表示 accepted 关系具有有效 evidence_id，不代表引用语义完全正确。",
         fill="FCE9E5",
         color=RED,
     )
 
 
-def add_abstract(doc: Document) -> None:
+def add_abstract(doc: Document, metrics: dict) -> None:
     add_heading(doc, "摘要", level=1, page_break=True)
+    kb = metrics["kb"]
+    abl = metrics["ablation"]
+    triad = abl["variants"]["evidence_triad"]["metrics"]
+    precision_txt = _frac_pct(
+        triad["accepted_precision"],
+        triad["true_positive_count"],
+        triad["accepted_count"],
+    )
+    recall_txt = _frac_pct(
+        triad["gold_recall"],
+        triad["true_positive_count"],
+        triad["gold_supported_count"],
+    )
+    uar_txt = _frac_pct(
+        triad["unsupported_acceptance_rate"],
+        triad["false_positive_count"],
+        triad["gold_unsupported_count"],
+    )
     abstract = (
         "科研人员面对的困难已经从“找不到文献”转向“难以把跨论文、跨章节、跨学科的证据组织成可复核的知识”。"
         "传统关键词检索返回文献列表，通用大模型直接总结又容易丢失来源、混淆条件或生成未经证实的关联。"
@@ -641,11 +806,11 @@ def add_abstract(doc: Document) -> None:
         "形成实体、关系与主张候选，再通过“提出者—批判者—裁判”三个异质决策 Agent 分别完成候选组织、反证约束和独立裁决；"
         "用户意图感知 Agent 将检索型、分析型和 Idea 型查询分别路由至图广度、图深度和混合检索，"
         "最终输出可回指论文证据的技术脉络、争议提示、待验证研究假设及面向不同学习者的导读、实操和测评。"
-        "当前 Demo 已构建科学信息抽取、材料发现与图神经网络、教育知识追踪三个垂直领域切片，每个领域收录 30 篇论文记录；"
-        "其中 19 篇已形成证据卡，抽取 108 条实体证据跨度、66 个规范实体和 91 条候选关系。"
+        f"当前 Demo 已构建科学信息抽取、材料发现与图神经网络、教育知识追踪三个垂直领域切片，每个领域收录 {kb['papers_per_domain']} 篇论文记录；"
+        f"其中 {kb['evidence_cards']} 篇已形成证据卡，抽取 {kb['evidence_spans']} 条实体证据跨度、{kb['entities']} 个规范实体和 {kb['relations']} 条候选关系。"
         "系统提供 3 组合成学习者画像及 9 组完整输入—协同中间数据—个性化输出样例。"
-        "在固定 24 条候选命题的压力测试中，三智能体链路接收精确率为 84.6%（11/13），Gold 保留召回为 84.6%（11/13），"
-        "不支持命题接收率为 18.2%（2/11）；相较最强单次判定基线，接收精确率提高 23.5 个百分点，不支持命题接收率下降 45.4 个百分点。"
+        f"在固定 {abl['case_count']} 条候选命题的压力测试中，三智能体链路接收精确率为 {precision_txt}，Gold 保留召回为 {recall_txt}，"
+        f"不支持命题接收率为 {uar_txt}；相较最强单次判定基线，接收精确率提高 {abl['precision_gain_pp']:.1f} 个百分点，不支持命题接收率下降 {abl['uar_reduction_pp']:.1f} 个百分点。"
         "系统同时实现本地离线运行、启动与请求超时、幂等、熔断、结构化日志和回归测试。"
         "上述结果证明了异质职责与证据约束在固定候选池上的工程价值，但尚不能替代大规模全文金标准、专家盲评和真实用户试点。"
         "项目下一阶段将接入 Docling/GROBID、GLiNER/GLiREL 或 OneKE，并在冻结的端到端测试集上完成实体、关系、证据跨度及下游发现效用评测。"
@@ -662,20 +827,20 @@ def add_abstract(doc: Document) -> None:
 def add_toc(doc: Document) -> None:
     add_heading(doc, "目录", level=1, page_break=True)
     toc = [
-        ("摘要", "3"),
-        ("作品评估指标索引表", "5"),
-        ("第一章 项目背景与榜单分析", "6"),
-        ("第二章 国内外研究与竞品分析", "8"),
-        ("第三章 研究问题与总体方案", "10"),
-        ("第四章 核心方法：论文知识抽取与可信建图", "12"),
-        ("第五章 意图驱动 GraphRAG 与个性化生成", "14"),
-        ("第六章 系统设计、实现与使用", "16"),
-        ("第七章 数据、实验与结果分析", "19"),
-        ("第八章 创新点与技术指标实现", "21"),
-        ("第九章 应用价值、竞品与实施计划", "23"),
-        ("第十章 总结、局限与下一阶段", "25"),
-        ("参考文献", "26"),
-        ("附录", "27"),
+        ("摘要", "—"),
+        ("作品评估指标索引表", "—"),
+        ("第一章 项目背景与榜单分析", "—"),
+        ("第二章 国内外研究与竞品分析", "—"),
+        ("第三章 研究问题与总体方案", "—"),
+        ("第四章 核心方法：论文知识抽取与可信建图", "—"),
+        ("第五章 意图驱动 GraphRAG 与个性化生成", "—"),
+        ("第六章 系统设计、实现与使用", "—"),
+        ("第七章 数据、实验与结果分析", "—"),
+        ("第八章 创新点与技术指标实现", "—"),
+        ("第九章 应用价值、竞品与实施计划", "—"),
+        ("第十章 总结、局限与下一阶段", "—"),
+        ("参考文献", "—"),
+        ("附录", "—"),
     ]
     for title, page in toc:
         p = doc.add_paragraph()
@@ -687,21 +852,21 @@ def add_toc(doc: Document) -> None:
         set_run_font(r1, cn=HEADING_FONT_CN if title.startswith("第") else BODY_FONT_CN, en="Arial", size=11.5, bold=title.startswith("第"), color=NAVY if title.startswith("第") else INK)
         r2 = p.add_run("\t" + page)
         set_run_font(r2, size=11, color=MUTED)
-    add_note(doc, "初稿说明", "目录页码按首版内容预算编排；提交定稿前需在 Word 中更新目录并逐页核对。")
+    add_note(doc, "初稿说明", "目录页码以最终排版为准；提交定稿前需在 Word 中更新目录并逐页核对。")
 
 
-def add_evaluation_index(doc: Document) -> None:
+def add_evaluation_index(doc: Document, metrics: dict) -> None:
     add_heading(doc, "作品评估指标索引表", level=1, page_break=True)
     add_table(
         doc,
         ["评审维度", "本项目核心主张", "正文位置", "直接证据"],
         [
             ("作品完整性", "跑通论文/证据卡到图谱、检索、裁决和个性化资源的闭环", "第 3—6 章", "系统架构、接口输出、前端截图、运行说明"),
-            ("技术性能", "固定候选池下，异质三智能体降低不支持命题入图", "第 7 章", "24 条压力集四组对照、390 条三领域机制用例、Wilson 区间、错误案例"),
+            ("技术性能", "固定候选池下，异质三智能体降低不支持命题入图", "第 7 章", f"{metrics['ablation']['case_count']} 条压力集四组对照、{metrics['decision_cases']['total']} 条三领域机制用例、Wilson 区间、错误案例"),
             ("技术创新性", "证据优先建图、异质职责博弈、语义力度校验、意图驱动图检索形成组合机制", "第 4、5、8 章", "数据契约、决策轨迹、消融矩阵"),
             ("赛题对齐", "3 个领域、3 组画像、9 组完整输入—中间—输出", "第 1、7、8 章", "领域注册表、完整样例 JSON、资源输出"),
             ("实用性", "支持论文推荐、机制分析、技术演化与待验证 Idea", "第 5、9 章", "GraphRAG 路由、图谱结果、场景流程"),
-            ("工程可靠性", "离线可运行，具备超时、幂等、熔断、日志和测试", "第 6、7 章", "80+ 项自动化测试、六实验入口、一键启动脚本、健康检查"),
+            ("工程可靠性", "离线可运行，具备超时、幂等、熔断、日志和测试", "第 6、7 章", f"{metrics['test_count']} 项自动化测试、六实验入口、一键启动脚本、健康检查"),
         ],
         [1500, 3360, 1500, 3000],
         font_size=9,
@@ -709,7 +874,7 @@ def add_evaluation_index(doc: Document) -> None:
     add_note(doc, "证据口径", "本表中的指标均对应当前提交版本。尚未形成的专利、软著、论文、应用证明和专家推荐不得作为已取得成果陈述。", fill="FCE9E5", color=RED)
 
 
-def chapter_background(doc: Document) -> None:
+def chapter_background(doc: Document, metrics: dict) -> None:
     add_heading(doc, "第一章 项目背景与榜单分析", 1)
     add_heading(doc, "1.1 为什么“搜到论文”仍不足以支持科研创新", 2, page_break=False)
     add_body(
@@ -725,7 +890,7 @@ def chapter_background(doc: Document) -> None:
         doc,
         ["榜单要求", "本项目实现", "当前状态", "可复核位置"],
         [
-            ("至少 1 个垂直领域知识库切片", "构建 3 个垂直领域，每个领域 30 篇检索记录", "Demo 级满足", "data/vertical_kb"),
+            ("至少 1 个垂直领域知识库切片", f"构建 {metrics['kb']['domain_count']} 个垂直领域，每个领域 {metrics['kb']['papers_per_domain']} 篇检索记录", "Demo 级满足", "data/vertical_kb"),
             ("不少于 2 组差异化学习者数据", "本科科研入门、跨学科硕士、企业技术情报 3 组画像", "满足", "data/profiles"),
             ("多智能体协同中间数据", "专职 Agent 轨迹、三智能体轨迹、候选命题、批判意见、裁判分解", "满足", "agent_trace / claims"),
             ("最终个性化学习资源", "导读、复现实操、分阶测评、学习路径与回答骨架", "满足", "resources / report"),
@@ -822,7 +987,7 @@ def chapter_solution(doc: Document) -> None:
     )
 
 
-def chapter_extraction(doc: Document) -> None:
+def chapter_extraction(doc: Document, metrics: dict) -> None:
     add_heading(doc, "第四章 核心方法：论文知识抽取与可信建图", 1)
     add_heading(doc, "4.1 文档结构解析", 2, page_break=False)
     add_body(
@@ -870,22 +1035,38 @@ def chapter_extraction(doc: Document) -> None:
         "关系状态按 raw → proposed → reviewed → accepted 迁移。重复关系聚合证据但不覆盖来源，互相冲突的发现可通过 CONTRADICTS 并存。图谱保存首次出现、最近更新、论文发表时间、数据/解析/schema 版本和自动/人工决策。当前以连通分量形成可复现社区，正式版将比较 Leiden 分层社区和社区摘要。"
     )
     add_heading(doc, "4.7 当前证据图规模", 2, page_break=False)
+    graph_rows = [
+        (
+            domain["domain_name"],
+            str(domain["paper_count"]),
+            str(domain["evidence_cards"]),
+            str(domain["evidence_spans"]),
+            str(domain["entities"]),
+            str(domain["relations"]),
+        )
+        for domain in metrics["kb"]["domains"]
+    ]
+    graph_rows.append(
+        (
+            "合计",
+            str(metrics["kb"]["total_papers"]),
+            str(metrics["kb"]["evidence_cards"]),
+            str(metrics["kb"]["evidence_spans"]),
+            str(metrics["kb"]["entities"]),
+            str(metrics["kb"]["relations"]),
+        )
+    )
     add_table(
         doc,
         ["领域", "收录论文", "证据卡", "证据跨度", "规范实体", "候选关系"],
-        [
-            ("科学信息抽取与知识图谱", "30", "8", "47", "31", "40"),
-            ("材料发现与图神经网络", "30", "5", "28", "17", "24"),
-            ("教育知识追踪与个性化学习", "30", "6", "33", "18", "27"),
-            ("合计", "90", "19", "108", "66", "91"),
-        ],
+        graph_rows,
         [2800, 1200, 1200, 1400, 1300, 1460],
         font_size=9,
     )
     add_note(
         doc,
         "重要边界",
-        "91 条是进入裁决流程的候选关系，不等于 91 条均被领域专家判真；100% 证据绑定只表示候选存在有效本地证据跨度，不等于关系正确率为 100%。",
+        f"{metrics['kb']['relations']} 条是进入裁决流程的候选关系，不等于 {metrics['kb']['relations']} 条均被领域专家判真；100% 证据绑定只表示候选存在有效本地证据跨度，不等于关系正确率为 100%。",
         fill="FCE9E5",
         color=RED,
     )
@@ -978,37 +1159,50 @@ def chapter_system(doc: Document) -> None:
     add_note(doc, "离线能力", "除 OpenAlex 联网扩展外，领域切片、建图、三智能体裁决、GraphRAG 路由、消融和个性化资源均可离线运行。")
 
 
-def chapter_experiments(doc: Document) -> None:
+def chapter_experiments(doc: Document, metrics: dict) -> None:
     add_heading(doc, "第七章 数据、实验与结果分析", 1)
     add_heading(doc, "7.1 数据构成与来源边界", 2, page_break=False)
     add_body(
         doc,
-        "三个领域采用目的性分层选择：科学信息抽取验证项目核心方法，材料发现验证跨学科图结构，教育知识追踪直接对齐榜题中的学习者画像与资源生成。每个领域 30 篇记录由 DOI、官方来源和 Crossref 候选快照支持；其中 19 篇证据卡用于建图，其余 71 篇 metadata_only 记录只参与书目检索。该三领域集合不是统计意义上的随机样本，不能推断系统在全部学科上的平均性能。"
+        f"三个领域采用目的性分层选择：科学信息抽取验证项目核心方法，材料发现验证跨学科图结构，教育知识追踪直接对齐榜题中的学习者画像与资源生成。每个领域 {metrics['kb']['papers_per_domain']} 篇记录由 DOI、官方来源和 Crossref 候选快照支持；其中 {metrics['kb']['evidence_cards']} 篇证据卡用于建图，其余 {metrics['kb']['metadata_only']} 篇 metadata_only 记录只参与书目检索。该三领域集合不是统计意义上的随机样本，不能推断系统在全部学科上的平均性能。"
     )
     add_heading(doc, "7.2 两条评测轨道", 2, page_break=False)
     add_body(
         doc,
-        "Track A 固定 24 条候选命题，只改变决策机制，回答异质批判与裁决是否能减少错误入图。压力集包含 13 条支持命题和 11 条不支持命题，以及低置信真阳性、有效证据 ID 语义错配、缺失/错误证据、绝对化和类型方向错误。Track B 是后续必须完成的端到端全文抽取盲测，将比较规则、GLiNER/GLiREL、SciBERT/DyGIE++、DeepKE/OneKE、单次 LLM 和最佳候选器 + 三智能体。"
+        f"Track A 固定 {metrics['ablation']['case_count']} 条候选命题，只改变决策机制，回答异质批判与裁决是否能减少错误入图。压力集包含 {metrics['ablation']['gold_supported_count']} 条支持命题和 {metrics['ablation']['gold_unsupported_count']} 条不支持命题，以及低置信真阳性、有效证据 ID 语义错配、缺失/错误证据、绝对化和类型方向错误。Track B 是后续必须完成的端到端全文抽取盲测，将比较规则、GLiNER/GLiREL、SciBERT/DyGIE++、DeepKE/OneKE、单次 LLM 和最佳候选器 + 三智能体。"
     )
     add_heading(doc, "7.3 对照结果", 2, page_break=False)
     ablation = ASSET_DIR / "ablation.png"
     doc.add_picture(str(ablation), width=Cm(15.2))
     add_caption(doc, "图 7-1 固定候选池下四种决策机制的接收精确率与 UAR")
+    variant_order = ("rule_program", "single_pass", "homogeneous_vote", "evidence_triad")
+    variant_rows = []
+    for index, variant_id in enumerate(variant_order):
+        variant = metrics["ablation"]["variants"][variant_id]
+        m = variant["metrics"]
+        variant_rows.append(
+            (
+                f"E{index} {variant['label']}",
+                _frac_pct(m["accepted_precision"], m["true_positive_count"], m["accepted_count"]),
+                _frac_pct(m["gold_recall"], m["true_positive_count"], m["gold_supported_count"]),
+                _pct(m["f1"]),
+                _frac_pct(m["unsupported_acceptance_rate"], m["false_positive_count"], m["gold_unsupported_count"]),
+                f"{m['accepted_count']} / {m['needs_review_count']} / {m['rejected_count']}",
+            )
+        )
     add_table(
         doc,
         ["变体", "接收精确率", "Gold 召回", "F1", "UAR", "接收/复核/拒绝"],
-        [
-            ("E0 普通规则程序", "50.0%（11/22）", "84.6%（11/13）", "62.9%", "100.0%（11/11）", "22 / 0 / 2"),
-            ("E1 单次判定", "61.1%（11/18）", "84.6%（11/13）", "71.0%", "63.6%（7/11）", "18 / 0 / 6"),
-            ("E2 同质三路投票", "61.1%（11/18）", "84.6%（11/13）", "71.0%", "63.6%（7/11）", "18 / 0 / 6"),
-            ("E3 提出—批判—裁判", "84.6%（11/13）", "84.6%（11/13）", "84.6%", "18.2%（2/11）", "13 / 2 / 9"),
-        ],
+        variant_rows,
         [2200, 1650, 1550, 1000, 1600, 1360],
         font_size=8.5,
     )
+    triad = metrics["ablation"]["variants"]["evidence_triad"]["metrics"]
+    precision_ci = _wilson(triad["accepted_precision_ci95"])
+    uar_ci = _wilson(triad["unsupported_acceptance_rate_ci95"])
     add_body(
         doc,
-        "相较最强基线 E1/E2，E3 接收精确率提高 23.5 个百分点，UAR 下降 45.4 个百分点，Gold 召回保持不变。E3 接收精确率和 Gold 召回的 Wilson 95% 区间均为 [0.578, 0.957]，UAR 区间为 [0.051, 0.477]。由于样本规模较小且开发者知道错误类型，结果应解释为“机制可行性与回归证据”，不能表述为统计上显著的公开基准领先。"
+        f"相较最强基线 E1/E2，E3 接收精确率提高 {metrics['ablation']['precision_gain_pp']:.1f} 个百分点，UAR 下降 {metrics['ablation']['uar_reduction_pp']:.1f} 个百分点，Gold 召回保持不变。E3 接收精确率和 Gold 召回的 Wilson 95% 区间均为 {precision_ci}，UAR 区间为 {uar_ci}。由于样本规模较小且开发者知道错误类型，结果应解释为“机制可行性与回归证据”，不能表述为统计上显著的公开基准领先。"
     )
     add_heading(doc, "7.4 失败案例与误差分析", 2, page_break=False)
     add_table(
@@ -1026,18 +1220,18 @@ def chapter_experiments(doc: Document) -> None:
     add_heading(doc, "7.5 自动化与工程验收", 2, page_break=False)
     add_body(
         doc,
-        "截至本初稿生成前，Python 源码编译、Node 前端语法检查和完整 unittest 均通过。测试 80+ 项，全部属于当前验收或版本边界检查并通过，跳过数与失败数均为 0。测试覆盖领域注册、每领域 30 篇记录、证据端点、关系绑定、意图路由、多跳路径、三智能体版本边界、LLM 决策降级与护栏、语义力度检查、六组实验入口、幂等、熔断、超时、部署路径和前端 API 契约。"
+        f"截至本初稿生成前，Python 源码编译、Node 前端语法检查和完整 unittest 均通过。经 unittest discover 实时统计，当前回归测试共 {metrics['test_count']} 项，全部属于当前验收或版本边界检查，可通过 `python -m unittest discover -s tests` 全量执行复核。测试覆盖领域注册、每领域 {metrics['kb']['papers_per_domain']} 篇记录、证据端点、关系绑定、意图路由、多跳路径、三智能体版本边界、LLM 决策降级与护栏、语义力度检查、六组实验入口、幂等、熔断、超时、部署路径和前端 API 契约。"
     )
     add_note(
         doc,
         "指标解释",
-        "页面中的单轮“幻觉代理率 0%、适配准确度 100%、知识覆盖率 100%”是结构性健康检查或画像覆盖代理，不作为作品效果主指标。作品书统一使用带分子/分母和失败案例的 24 条压力集结果。",
+        f"页面中的单轮“幻觉代理率 0%、适配准确度 100%、知识覆盖率 100%”是结构性健康检查或画像覆盖代理，不作为作品效果主指标。作品书统一使用带分子/分母和失败案例的 {metrics['ablation']['case_count']} 条压力集结果。",
         fill="FCE9E5",
         color=RED,
     )
 
 
-def chapter_innovations(doc: Document) -> None:
+def chapter_innovations(doc: Document, metrics: dict) -> None:
     add_heading(doc, "第八章 创新点与技术指标实现", 1)
     add_heading(doc, "8.1 创新点一：证据跨度驱动的论文知识图谱", 2, page_break=False)
     add_body(
@@ -1047,7 +1241,7 @@ def chapter_innovations(doc: Document) -> None:
     add_heading(doc, "8.2 创新点二：异质三智能体的选择性裁决", 2, page_break=False)
     add_body(
         doc,
-        "系统将候选生成、反证审查和最终决策分离，允许复核与拒答；同质三路投票作为反例被纳入对照。24 条压力集显示，收益来自职责和检查信号的差异，而不是 Agent 数量。下一阶段将进一步比较共享模型与异构模型、全量辩论与选择性辩论的质量、时延和 token 成本。"
+        f"系统将候选生成、反证审查和最终决策分离，允许复核与拒答；同质三路投票作为反例被纳入对照。{metrics['ablation']['case_count']} 条压力集显示，收益来自职责和检查信号的差异，而不是 Agent 数量。下一阶段将进一步比较共享模型与异构模型、全量辩论与选择性辩论的质量、时延和 token 成本。"
     )
     add_heading(doc, "8.3 创新点三：意图驱动的图检索与科研发现", 2, page_break=False)
     add_body(
@@ -1064,12 +1258,12 @@ def chapter_innovations(doc: Document) -> None:
         doc,
         ["指标", "目标", "当前结果", "结论"],
         [
-            ("垂直知识库", "≥1 个领域", "3 个领域，每领域 30 篇", "Demo 级完成"),
+            ("垂直知识库", "≥1 个领域", f"{metrics['kb']['domain_count']} 个领域，每领域 {metrics['kb']['papers_per_domain']} 篇", "Demo 级完成"),
             ("学习者画像", "≥2 组", "3 组合成画像", "完成"),
             ("完整案例", "含输入/中间/输出", "9 组机器可读案例", "完成"),
-            ("可信裁决", "降低错误入图", "precision 84.6%，UAR 18.2%", "Track A 初步支持"),
-            ("证据可追溯", "关系绑定来源", "91 条候选均有结构证据跨度", "结构护栏完成"),
-            ("工程可复现", "可离线运行并自检", "80+ 项测试通过，0 跳过、0 失败；六实验入口可执行", "完成"),
+            ("可信裁决", "降低错误入图", f"precision {_pct(metrics['ablation']['variants']['evidence_triad']['metrics']['accepted_precision'])}，UAR {_pct(metrics['ablation']['variants']['evidence_triad']['metrics']['unsupported_acceptance_rate'])}", "Track A 初步支持"),
+            ("证据可追溯", "关系绑定来源", f"{metrics['kb']['relations']} 条候选均有结构证据跨度", "结构护栏完成"),
+            ("工程可复现", "可离线运行并自检", f"{metrics['test_count']} 项测试通过，六实验入口可执行", "完成"),
             ("端到端抽取主实验", "全文冻结测试集", "尚未完成", "下一阶段核心"),
             ("知识产权/应用证明", "按校赛要求补强", "待学校流程与导师审核", "不得提前宣称"),
         ],
@@ -1120,7 +1314,7 @@ def chapter_application(doc: Document) -> None:
         add_bullet(doc, item)
 
 
-def chapter_conclusion(doc: Document) -> None:
+def chapter_conclusion(doc: Document, metrics: dict) -> None:
     add_heading(doc, "第十章 总结、局限与下一阶段", 1)
     add_heading(doc, "10.1 项目总结", 2, page_break=False)
     add_body(
@@ -1129,8 +1323,8 @@ def chapter_conclusion(doc: Document) -> None:
     )
     add_heading(doc, "10.2 当前局限", 2, page_break=False)
     for item in (
-        "19 篇证据卡仍以项目组释义和公开摘要为主，尚未形成大规模合法全文解析集。",
-        "24 条压力命题样本较小且开发可见，存在机制过拟合风险；已补充 390 条三领域真实证据机制用例（冻结 + 内容指纹）并启动人工抽查核验。",
+        f"{metrics['kb']['evidence_cards']} 篇证据卡仍以项目组释义和公开摘要为主，尚未形成大规模合法全文解析集。",
+        f"{metrics['ablation']['case_count']} 条压力命题样本较小且开发可见，存在机制过拟合风险；已补充 {metrics['decision_cases']['total']} 条三领域真实证据机制用例（冻结 + 内容指纹）并启动人工抽查核验。",
         "候选器以规则为主；LLM 三智能体（异质批判/裁判 + 模型无关护栏）与 6 家厂商对比实验框架已就绪，正式模型对比结果待 API 接入后补充。",
         "未完成双人独立标注、第三人仲裁、专家盲评和真实学习者试点。",
         "未取得可在本初稿中核验的学生近两年论文、专利、软著或应用证明。",
@@ -1177,13 +1371,13 @@ def add_references(doc: Document) -> None:
         set_run_font(run, size=9.5, color=INK)
 
 
-def add_appendix(doc: Document) -> None:
+def add_appendix(doc: Document, metrics: dict) -> None:
     add_heading(doc, "附录 A：Demo 复核清单", 1)
     for item in (
         "解压 ZIP 后确认根目录存在 RUN_DEMO.bat、STOP_DEMO.bat、OPEN_DEMO.url、GITHUB_REPOSITORY.url。",
-        "双击运行，检查 /api/health 和 /api/ready 正常，页面显示 3 个领域和 90 篇论文记录。",
+        f"双击运行，检查 /api/health 和 /api/ready 正常，页面显示 {metrics['kb']['domain_count']} 个领域和 {metrics['kb']['total_papers']} 篇论文记录。",
         "运行任意领域与画像，检查 2 个专职 Agent、3 个核心决策 Agent 及 3 项服务轨迹。",
-        "核对知识图谱中的论文—证据—实体链、裁判分解和 24 条压力集消融。",
+        f"核对知识图谱中的论文—证据—实体链、裁判分解和 {metrics['ablation']['case_count']} 条压力集消融。",
         "点击 GitHub 快捷方式，核对默认 main 分支与提交历史。",
     ):
         add_bullet(doc, item)
@@ -1192,9 +1386,9 @@ def add_appendix(doc: Document) -> None:
         doc,
         ["材料", "位置/状态", "用途"],
         [
-            ("源代码仓库", "GitHub main，提交 63f6078", "复核代码与历史"),
+            ("源代码仓库", f"GitHub main，提交 {metrics['git_commit']}", "复核代码与历史"),
             ("Windows Demo ZIP", "dist/yanhai-demo-windows.zip", "离线运行"),
-            ("领域知识库", "data/vertical_kb", "3 领域 × 30 篇"),
+            ("领域知识库", "data/vertical_kb", f"{metrics['kb']['domain_count']} 领域 × {metrics['kb']['papers_per_domain']} 篇"),
             ("完整样例", "data/examples/complete_demo_cases.json", "输入—中间—输出"),
             ("压力测试集", "data/evaluation/decision_benchmark.json", "四组对照与错误案例"),
             ("架构、路线与实验文档", "docs/08、11、14、15、16", "技术与复现说明"),
@@ -1228,8 +1422,9 @@ def add_appendix(doc: Document) -> None:
 def build_document(output_path: Path) -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     ASSET_DIR.mkdir(parents=True, exist_ok=True)
+    metrics = _load_live_metrics(PROJECT_ROOT)
     build_architecture_figure(ASSET_DIR / "system-architecture.png")
-    build_ablation_figure(ASSET_DIR / "ablation.png")
+    build_ablation_figure(ASSET_DIR / "ablation.png", metrics)
 
     doc = Document()
     configure_styles(doc)
@@ -1237,22 +1432,22 @@ def build_document(output_path: Path) -> None:
 
     body_section = doc.add_section(WD_SECTION.NEW_PAGE)
     set_section_furniture(body_section, first_page=False)
-    add_color_overview(doc)
-    add_abstract(doc)
+    add_color_overview(doc, metrics)
+    add_abstract(doc, metrics)
     add_toc(doc)
-    add_evaluation_index(doc)
-    chapter_background(doc)
+    add_evaluation_index(doc, metrics)
+    chapter_background(doc, metrics)
     chapter_related(doc)
     chapter_solution(doc)
-    chapter_extraction(doc)
+    chapter_extraction(doc, metrics)
     chapter_graphrag(doc)
     chapter_system(doc)
-    chapter_experiments(doc)
-    chapter_innovations(doc)
+    chapter_experiments(doc, metrics)
+    chapter_innovations(doc, metrics)
     chapter_application(doc)
-    chapter_conclusion(doc)
+    chapter_conclusion(doc, metrics)
     add_references(doc)
-    add_appendix(doc)
+    add_appendix(doc, metrics)
 
     core = doc.core_properties
     core.title = "研海寻踪：基于多智能体博弈推理的科研知识图谱发现系统"
