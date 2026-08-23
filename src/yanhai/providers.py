@@ -25,7 +25,12 @@ PROVIDER_REGISTRY: dict[str, dict[str, Any]] = {
         "label": "DeepSeek",
         "description": "使用 DeepSeek OpenAI-compatible Chat Completions 接口。",
         "default_model": "deepseek-v4-flash",
-        "models": ["deepseek-v4-flash", "deepseek-v4-pro"],
+        "models": [
+            "deepseek-v4-flash",
+            "deepseek-v4-pro",
+            "deepseek-chat",
+            "deepseek-reasoner",
+        ],
         "requires_api_key": True,
         "protocol": "openai_chat",
     },
@@ -51,8 +56,8 @@ PROVIDER_REGISTRY: dict[str, dict[str, Any]] = {
         "id": "kimi",
         "label": "Kimi / Moonshot",
         "description": "使用 Kimi OpenAI-compatible Chat Completions 接口。",
-        "default_model": "kimi-k3",
-        "models": ["kimi-k3", "kimi-k2.7-code-highspeed", "kimi-k2.6"],
+        "default_model": "kimi-k2.5",
+        "models": ["kimi-k2.5", "kimi-k2.7-code", "kimi-k2.6"],
         "requires_api_key": True,
         "protocol": "openai_chat",
     },
@@ -87,6 +92,16 @@ class ProviderError(RuntimeError):
         self.status_code = status_code
 
 
+def _validate_model(provider: str, model: str) -> None:
+    metadata = PROVIDER_REGISTRY[provider]
+    if model not in metadata["models"]:
+        raise ValueError(
+            f"模型 {model} 不在 {metadata['label']} 注册表内；"
+            f"可选：{', '.join(metadata['models'])}。请先在 providers.py "
+            "注册表登记（型号以供应商控制台在售为准）。"
+        )
+
+
 @dataclass(slots=True, frozen=True)
 class ProviderConfig:
     provider: str
@@ -104,6 +119,7 @@ class ProviderConfig:
         model = str(raw.get("model") or metadata["default_model"]).strip()
         if not model or len(model) > 120 or not re.fullmatch(r"[A-Za-z0-9._:/-]+", model):
             raise ValueError("模型 ID 格式不正确。")
+        _validate_model(provider, model)
         api_key = str(raw.get("api_key", "")).strip()
         if metadata["requires_api_key"] and not api_key:
             raise ValueError(f"{metadata['label']} 需要 API Key。")
@@ -555,8 +571,10 @@ def load_config_from_env(provider: str, model: str | None = None) -> ProviderCon
         raise ProviderError(
             f"缺少环境变量 {env_name}；请先把 API Key 写入项目 .env 文件。"
         )
+    model = model or metadata["default_model"]
+    _validate_model(provider, model)
     return ProviderConfig(
         provider=provider,
-        model=model or metadata["default_model"],
+        model=model,
         api_key=api_key,
     )
