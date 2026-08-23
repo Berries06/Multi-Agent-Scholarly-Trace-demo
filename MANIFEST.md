@@ -45,3 +45,4 @@
 | 2026-08-23 20:19 | /de-fake | scripts/run_easg_r006.py | implementation | R006 验证章按真实金标准比对签发（失败即非零退出），新 run 20260823T091952Z |
 | 2026-08-23 20:19 | /de-fake | tests/experiments/framework.py | implementation | 验证后签发：先独立复核产物，复核失败即 status=failed 并抛错 |
 | 2026-08-23 20:19 | /de-fake | scripts/build_submission_book.py | implementation | 作品书数字全部改为构建时实时读取（ablation-report/数据文件 sha256 复核/三领域实时抽取/测试发现计数/git rev-parse），旧版备份 .docx.bak |
+| 2026-08-23 20:40 | /member-briefings | docs/协作与运维/成员微信介绍/成员A~D 四份 | documentation | 给四位成员的独立微信介绍：背景与进展/职责板块/项目用法/实验步骤/周计划，每个方法附 idea 来源 |
