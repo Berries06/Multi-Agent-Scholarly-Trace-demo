@@ -14,6 +14,7 @@
 - **LLM 三智能体就绪**：`src/yanhai/llm_decision.py`（LLM 批判者/裁判 + 模型无关护栏 hard_guard + 失败回退规则），对比实验框架 `scripts/run_decision_experiment.py` 支持任意案例集与 6 家厂商（DeepSeek/GLM/Qwen/Kimi/GPT/Claude）；
 - **测试用例扩充至 140 条**：`data/evaluation/generated-decision-cases-v1.json`（真实证据机制用例，28 正 + 112 负，冻结 + SHA-256），解除赛题“测试用例不足 50 组扣分”线；L3 人工抽查工具 `scripts/generate_l3_sample.py`；
 - **语义力度校验**：批判者新增时态/体检查（进行中≠已完成，未完成体悖论，理论锚点 ACL 2026）；测评题从 accepted 图谱三元组动态生成。
+- **MLflow 实验跟踪**：`RUN_MLFLOW.bat` 一键启动本地 UI 并幂等导入所有通过哈希验证的实验；`RUN_PUBLIC_EXPERIMENTS.bat` 成功后自动同步，不会重跑模型。详见 `docs/协作与运维/MLflow实验跟踪指南.md`。
 
 ## 核心口径：5 个协同角色，其中 3 个负责证据裁决
 
@@ -224,6 +225,8 @@ GLiREL 仓库当前代码/权重许可含非商业限制，竞赛研究可评估
 2. 双击根目录 `RUN_DEMO.bat`（离线 Demo，端口 8765）或 `SETUP_WEB.bat` → `RUN_WEB.bat`（产品 Web 界面，FastAPI 8766 + React 5173，首次需联网装依赖）；
 3. 等待浏览器自动打开对应地址；
 4. 使用结束后双击 `STOP_DEMO.bat` 或关闭两个启动窗口。
+
+实验跟踪无需额外算力：双击 `RUN_MLFLOW.bat` 后访问 `http://127.0.0.1:5000/`。它只导入已存在且通过验证的实验产物；双击 `STOP_MLFLOW.bat` 可停止服务。
 
 若浏览器被系统策略拦截，启动窗口会停留并显示地址；双击 `OPEN_DEMO.url` 或手动访问上述地址即可。
 

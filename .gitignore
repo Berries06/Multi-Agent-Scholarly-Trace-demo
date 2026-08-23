@@ -6,6 +6,7 @@ __pycache__/
 .coverage.*
 .venv/
 .venv-lab/
+.mlflow/
 .hf-lab-cache/
 node_modules/
 frontend/dist/
@@ -27,3 +28,5 @@ outputs/experiments/
 outputs/experiment-dashboard.html
 .aris/traces/
 .aris/meta/events.jsonl
+build/
+.codex/

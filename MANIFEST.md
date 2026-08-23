@@ -26,3 +26,17 @@
 | 2026-08-22 12:55 | /patent-search | docs/研发记录/专利查新记录_2026-08-21.md | claim-freeze | web 级专利标题筛选、讯飞系相邻专利与 C1 影响评估 |
 | 2026-08-22 12:55 | /blockers | docs/协作与运维/外部阻塞与推动清单_2026-08-21.md | planning | Key/L3/专利/视频/作品书五条外部阻塞、解锁动作与验收标准 |
 | 2026-08-22 12:55 | /wording-audit | docs/研发记录/作品书措辞检查_2026-08-21.md | claim-freeze | 作品书禁用词检查通过 + EASG 口径缺口与 4 处定稿修订要求 |
+| 2026-08-22 13:10 | /division-of-labor | docs/协作与运维/四成员分工清单_2026-08-22.md | planning | 基于指导书 v1.2 的 4 成员分工：板块/背景/三阶段时间表/依赖图/公共纪律 |
+| 2026-08-22 17:24 | /mlflow | docs/协作与运维/MLflow团队实验平台使用开发与创新指导书.md | documentation | 按用户模板重写为通俗版 1.1：补充项目全景、idea 来源、新成员十分钟路径、完整指标与官方能力边界 |
+| 2026-08-22 23:54 | /novelty-check | docs/研发记录/百篇文献来源与质量分层_2026-08-22.md | idea-discovery | 100 篇逐条来源、八类主题、venue/年份/原文类型与人工复核边界 |
+| 2026-08-22 23:54 | /novelty-check | idea-stage/NOVELTY_CHECK_REPORT_20260822_235147.md | idea-discovery | EASG/ELT 最近工作严格查新：4.0/10，PROCEED WITH CAUTION |
+| 2026-08-22 23:54 | /novelty-check | idea-stage/NOVELTY_CHECK_REPORT.md | idea-discovery | latest copy |
+| 2026-08-22 23:54 | /novelty-check | .aris/traces/novelty-check/2026-08-22_run01/ | idea-discovery | gpt-5.6-sol xhigh same-family provisional 审查请求、响应与元数据追踪 |
+| 2026-08-22 23:54 | /experiment-plan | refine-logs/EXPERIMENT_PLAN_20260822_234439.md | implementation | 增加 L0 文献有效性门、自动化/人工责任和更新后的前三项任务 |
+| 2026-08-22 23:54 | /experiment-plan | refine-logs/EXPERIMENT_PLAN.md | implementation | latest copy |
+| 2026-08-22 23:54 | /experiment-plan | refine-logs/EXPERIMENT_TRACKER_20260822_234439.md | implementation | 增加 L001–L004 来源复核、closest-work、gap 一致性与检索饱和任务 |
+| 2026-08-22 23:54 | /experiment-plan | refine-logs/EXPERIMENT_TRACKER.md | implementation | latest copy |
+| 2026-08-22 23:54 | /mlflow + /novelty-check + /experiment-plan | docs/协作与运维/MLflow团队实验平台使用开发与创新指导书.md | documentation | 升级为通俗版 1.2：新增百篇质量审计、4.0/10 创新边界、人工责任、实验逻辑及 React/Vite/MLflow 前端路线 |
+| 2026-08-22 23:54 | /documentation | docs/文档导航.md | documentation | 接入文献来源附录、新颖性报告和升级后的指导书/实验追踪表 |
+| 2026-08-23 08:32 | /division-of-labor | docs/协作与运维/四成员分工清单_2026-08-22.md | planning | 按用户要求专业口径定稿：四成员职责、L001–L004/R001–R025 全员映射、逐成员细化任务表与验收标准、三阶段时间表 |
+| 2026-08-23 09:40 | /repo-audit | docs/研发记录/全仓代码审计报告_2026-08-23.md | audit | 14 路逐文件审计：1 critical（假流式 SSE）/4 major（LLM 未接入、LabPage 假轨迹、作品书硬编码、MLflow 冷启动）/修复优先级 |

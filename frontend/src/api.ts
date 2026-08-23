@@ -1,5 +1,6 @@
 import type {
   Domain,
+  ExperimentLedger,
   GraphData,
   Health,
   IngestResult,
@@ -30,9 +31,14 @@ export function getDomains(): Promise<Domain[]> {
   return request('/api/domains')
 }
 
+export function getExperimentLedger(): Promise<ExperimentLedger> {
+  return request('/api/experiments')
+}
+
 export function getExtractedGraph(domainId?: string | null): Promise<GraphData> {
   const suffix = domainId ? `?domain_id=${encodeURIComponent(domainId)}` : ''
-  return request(`/api/extracted-graph${suffix}`)
+  return request<GraphData | { graph: GraphData }>(`/api/extracted-graph${suffix}`)
+    .then((payload) => ('graph' in payload ? payload.graph : payload))
 }
 
 export interface RunPayload {

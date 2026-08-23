@@ -22,6 +22,7 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from .extraction import PyPDFParser
+from .experiment_ledger import build_experiment_ledger
 from .fresh_pipeline import run_fresh_document_pipeline, run_fresh_paper_pipeline
 from .orchestrator import ScholarlyTraceOrchestrator
 from .resources import project_root
@@ -126,6 +127,10 @@ def create_app() -> FastAPI:
     @app.get("/api/ablation")
     def ablation() -> dict[str, Any]:
         return orchestrator.ablation.run()
+
+    @app.get("/api/experiments")
+    def experiments() -> dict[str, Any]:
+        return build_experiment_ledger(Path(project_root()))
 
     @app.get("/api/graph-insights")
     def graph_insights(

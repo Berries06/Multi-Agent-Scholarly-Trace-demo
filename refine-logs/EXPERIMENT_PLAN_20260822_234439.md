@@ -1,0 +1,191 @@
+# Experiment Plan
+
+**Problem**：科研关系进入知识图谱后通常被压成静态三元组，证据删除、反驳、条件变化或新论文取代旧结论时，系统难以重放并正确更新裁决。  
+**Method Thesis**：Evidence Adjudication State Graph（EASG）用字符级证据、typed critique、校准风险和不可变 DecisionEvent 共同决定关系状态，并在同一协议下支持重放与人工覆核。  
+**Date**：2026-08-21  
+**Current Evidence Level**：候选机制；现有 24/140 条开发压力集不能支持真实性能主张。
+**Novelty Evidence Level**：`PROCEED WITH CAUTION`；冻结 100 篇是定向证据集，不是系统综述。2026 最近工作已覆盖字符证据、显式状态、历史恢复、选择性辩论和异质核验等单项机制，C1 只能保留为待实验验证的特定组合主张。
+
+## Literature Validity Gate（L0：先验证文献依据）
+
+| Gate | 要回答的问题 | 自动化可完成 | 必须人工完成 | 通过条件 |
+|---|---|---|---|---|
+| L001 来源与 venue 分层复核 | 100 篇的题目、最终版本、venue、撤稿状态是否正确 | 解析 DOI/URL、去重、哈希、生成分层抽样表 | 两名成员独立核对至少 20 篇分层样本，争议仲裁 | 来源错误率可接受；39 篇预印本的最终版本有核验计划 |
+| L002 closest-work 全文差分 | 最近工作是否已经实现 C1/C2 | 检索 2024–2026、引用链、生成候选差分表 | 领域成员阅读全文，保存页码摘录并签署 overlap/delta | 每个核心主张至少有一个 closest work 和不可越界表述 |
+| L003 gap 双人编码 | “不足”是否只是单人解释 | 提供盲化编码表、计算 kappa/alpha | 两人独立判定“已覆盖/部分覆盖/未覆盖”，第三人仲裁 | 一致性达到预设门槛；分歧有记录 |
+| L004 检索饱和与专利门 | 能否宣称接近行业边界 | 扩展关键词、前向/后向引文、专利候选去重 | 确认纳排标准、判断同族专利和技术实质 | 连续两轮不再出现改变主张的 closest work；否则继续缩小 |
+
+**L0 的结论上限**：通过后也只能说“在已执行检索协议内未发现完全相同实现”，不能自动写“首次”。未通过 L0 时，EASG 统一称为候选机制。
+
+## Claim Map
+
+| Claim | Why It Matters | Minimum Convincing Evidence | Linked Blocks |
+|---|---|---|---|
+| C1（主张）在相同 coverage 下，EASG 比最强静态/单次/always-on 基线降低 accepted risk，并提高证据变更后的状态更新正确性 | 直接解决错误关系固化和无法审计的问题 | 论文级未见 gold；等 coverage risk–coverage；配对统计；反事实 add/delete/refute/supersede；至少一个强基线被稳定超过 | B1, B2, B3 |
+| S1（支撑）typed critique + 校准器 + state-triggered 异质裁决能用更低成本实现 C1，而非靠更多 Agent/token | 排除“规模和拒答换收益”的解释 | 固定候选、模型与预算；去组件消融；always-on/triggered；小校准器/大 LLM judge；成本—风险 Pareto | B3, B4 |
+
+**Anti-claims to rule out**：
+
+1. 收益只来自拒绝更多候选；
+2. 收益只来自更强模型、更多调用或更长 prompt；
+3. 静态 provenance KG 已能完成相同状态更新；
+4. typed issue 只是换字段，没有改善判断或审计；
+5. 测试集或 gold 泄露到阈值、prompt 或选择过程；
+6. 人工审计界面更复杂，反而增加纠错时间。
+
+## Paper Storyline
+
+### Main paper must prove
+
+- EASG 在真实未见关系上改善等 coverage 风险，而不是只提高拒答率；
+- 证据事件发生后，EASG 能正确、可重放地改变状态；
+- 核心收益来自 evidence-state protocol，而非 Agent 数量；
+- 成本与延迟处于明确 Pareto frontier；
+- 人工审计者能更快定位和纠正错误，或至少不劣于静态 provenance。
+
+### Appendix can support
+
+- 三领域详细错误切片；
+- 额外 provider/model 组合；
+- trigger 阈值敏感性；
+- 更多校准器和检索器；
+- 完整 prompt、schema、运行环境、统计脚本与负结果。
+
+### Experiments intentionally cut
+
+- ELT 真人学习实验：作为独立 C2 研究线，C1 未过门前不启动；
+- 大规模模型注册和在线部署：不是当前主张所需证据；
+- 为增加数量而增加 Agent 或弱 baseline；
+- 无 gold 的 UI 主观美观评分；
+- 把确定性重放次数当独立样本。
+
+## Experiment Blocks
+
+### Block 1：Gold Anchor——等覆盖率风险
+
+- **Claim tested**：C1 风险主张；
+- **Why**：决定 EASG 是否解决核心瓶颈；
+- **Dataset / split / task**：contest pilot 为 6–10 篇未见论文、60–100 条关系与精确 evidence span；双人盲标、第三人仲裁、论文级 train/dev/test。论文级阶段扩充规模由 power analysis 决定，不预先伪造“足够样本”；
+- **Compared systems**：
+  1. 静态规则/抽取图；
+  2. 静态 provenance + single-pass verifier；
+  3. always-on proposer–critic–judge；
+  4. EASG + triggered heterogeneous adjudication；
+- **Metrics**：accepted precision、gold recall、coverage、unsupported acceptance rate、risk–coverage AUC、95% CI、错误类型；
+- **Setup**：同一候选池、同一检索结果、同一模型预算；阈值只在 dev 调整；随机组件默认 3 seeds；
+- **Success criterion**：在预先选择的等 coverage 点，EASG 相比最强基线风险下降，recall 不出现不可接受退化；效应量和 CI 一并解释；
+- **Failure interpretation**：若改善仅来自 coverage 大幅下降，C1 失败；若 CI 重叠且效应小，降级为工程协议；
+- **Table/Figure**：主表 1 + risk–coverage 主图；
+- **Priority**：MUST-RUN。
+
+### Block 2：Counterfactual State Update——反事实证据事件
+
+- **Claim tested**：C1 更新与重放主张；
+- **Why**：静态图最明确的结构性短板；
+- **Dataset/task**：从 gold claim 派生人工确认事件：add support、delete pivotal evidence、replace invalid span、add refutation、add later superseding evidence、human override；
+- **Compared systems**：静态三元组、静态 provenance 当前值、always-on triad、EASG event replay；
+- **Metrics**：state transition accuracy、replay consistency、supersession accuracy、下游污染率、错误恢复步数；
+- **Setup**：事件顺序和 gold transition 冻结；同一初始图；
+- **Success criterion**：EASG 对关键状态迁移稳定正确，重放得到同一 current projection；
+- **Failure interpretation**：静态 provenance 若能等价完成则组合创新不足；EASG 若对事件顺序脆弱则需重新设计事件代数；
+- **Table/Figure**：状态迁移混淆矩阵 + 事件时间线；
+- **Priority**：MUST-RUN。
+
+### Block 3：Novelty Isolation & Simplicity——组件删除研究
+
+- **Claim tested**：C1 的 dominant contribution 和 S1 简洁性；
+- **Why**：排除“更多复杂度”解释；
+- **Dataset/task**：与 B1/B2 相同的冻结 dev/test；
+- **Variants**：完整 EASG；去 event history；去 temporal/condition；typed critique→自然语言 criticism；去 calibrator→固定阈值；去 hard guard；LLM judge→逻辑回归/GBDT；
+- **Metrics**：B1/B2 主指标、参数/调用量、token、时延、可解释 issue 覆盖；
+- **Success criterion**：至少一个状态协议组件对更新指标不可替代；更简单校准器若等效，则采用简单版本并把它写成优点；
+- **Failure interpretation**：若仅大 LLM judge 产生收益，EASG 主张需缩小；若多数组件无贡献，删除冗余；
+- **Table/Figure**：主表 2 消融；
+- **Priority**：MUST-RUN。
+
+### Block 4：Frontier Necessity & Cost——trigger/异质性 Pareto
+
+- **Claim tested**：S1；
+- **Why**：证明现代 LLM/多 Agent 不是装饰；
+- **Compared systems**：rule-only、single LLM、homogeneous vote、always-on homogeneous triad、always-on heterogeneous triad、triggered heterogeneous triad；
+- **Metrics**：risk、coverage、token、人民币成本、调用数、P50/P95、每减少一个 FP 的成本、trigger miss rate；
+- **Setup**：先 `max-cases=8` 冒烟；价格表使用运行前冻结的官方快照；缺 Key 明确 skipped；
+- **Success criterion**：triggered 方法位于风险—成本 Pareto 前沿；
+- **Failure interpretation**：若 rule/single 更好，取消复杂 Agent；若成本不可接受，C1 保留非 LLM 版本；
+- **Table/Figure**：Pareto 散点图；
+- **Priority**：MUST-RUN。
+
+### Block 5：Human Audit & Failure Analysis——真人审计
+
+- **Claim tested**：C1 的可审计价值；
+- **Why**：机器指标不能代替真人操作价值；
+- **Participants/task**：至少两名不参与该 run 实现的复核者，交叉使用静态 provenance 与 EASG trace；定位错误证据、解释状态、完成 override；顺序平衡；
+- **Metrics**：定位时间、纠错时间、正确率、override 率、复核者一致性、主观负担（只作次指标）；
+- **Success criterion**：客观时间或正确率出现稳定改善，且没有明显学习顺序偏差；
+- **Failure interpretation**：若 UI 复杂度抵消收益，改进交互，不用主观可信感挽救主张；
+- **Table/Figure**：paired plot + 典型失败案例；
+- **Priority**：MUST-RUN。
+
+## Run Order and Milestones
+
+| Milestone | Goal | Runs | Decision Gate | Cost | Risk |
+|---|---|---|---|---|---|
+| M0 | 标准化真模型产物 | R001–R003 | 六件套、哈希验证、MLflow 幂等 | CPU 低 | 旧脚本 summary schema 不兼容 |
+| M1 | 冻结 L3 pilot | R004–R005 | 双人盲标、仲裁、论文级 split、hash | 人工中 | 数据许可、标签歧义 |
+| M2 | 最小 EASG | R006–R008 | 事件重放和手算状态迁移通过 | CPU 低 | 事件语义设计错误 |
+| M3 | 校准与 typed issue | R009–R012 | dev 改善、test 未触碰 | CPU 低 | 过拟合、小样本校准不稳 |
+| M4 | Gold anchor | R013–R016 | 等 coverage 风险有真实信号 | CPU/API 中 | proxy→gold 性能崩溃 |
+| M5 | 成本/异质性 | R017–R020 | 找到 Pareto 组合或否决多 Agent | API 中 | 价格/模型漂移 |
+| M6 | 人工审计 | R021–R023 | 客观时间/准确性有稳定信号 | 人工中 | 学习与顺序效应 |
+| M7 | 扩大研究 | R024+ | power analysis 支持、多领域复现 | 高 | 赛程与预算不足 |
+
+## 自动化与人工责任边界
+
+| 工作 | Codex / 程序可负责 | 项目成员必须负责 |
+|---|---|---|
+| 文献 | 检索、去重、来源哈希、候选分类、差分草稿 | 最终全文阅读、venue/撤稿核验、缺口判断、引用责任 |
+| EASG 逻辑 | schema、事件重放、单元/性质测试、反例生成 | 确认支持/反驳/条件/取代的科学语义和边界案例 |
+| 金标 | 标注工具、盲化切分、冲突表、一致性计算 | 双人独立标注、仲裁、领域正确性签字 |
+| 模型实验 | 运行、MLflow 记录、统计、作图、失败切片 | 冻结预算/模型/主指标，批准 test 一次性运行，解释科学意义 |
+| 人机实验 | 随机化任务、计时、配对分析 | 招募、知情同意/伦理判断、真实参与、异常说明 |
+| 产品 | 实现前端、API、可视化、可访问性与测试 | 冻结用户角色、验收工作流、真实用户可用性测试 |
+| 对外主张 | 起草可证伪措辞和证据表 | 作者、负责人、导师或法务承担最终学术与知识产权责任 |
+
+## Compute and Data Budget
+
+- **CPU**：M0–M3 可在项目现有本机完成；
+- **GPU**：C1 pilot 不强制 GPU。只有接入本地 verifier/抽取模型时单列 GPU 小时；
+- **API**：负责人在 M4 前冻结人民币上限、模型清单和价格快照。先跑 8-case 冒烟，再解锁全量；
+- **Seeds**：随机算法默认 3，增加 seed 前先证明方差需要；
+- **Human**：pilot 至少双人盲标 + 仲裁；审计实验参与者不得仅由实现者组成；
+- **Data**：contest pilot 60–100 条关系；论文级最终规模以主指标方差与 power analysis 决定；
+- **Biggest bottleneck**：可靠的论文级未见 gold 与事件状态标注，而不是算力。
+
+## Risks and Mitigations
+
+- **测试泄露**：paper-level split；test 只运行一次；所有调参记录在 dev run；
+- **只靠拒绝提高 precision**：固定 coverage 或比较完整 risk–coverage；
+- **模型漂移**：记录 provider/model revision、日期、prompt hash 和价格快照；
+- **来源伪独立**：增加 dataset/实验/引用 lineage 字段，不只按 paper ID；
+- **小样本校准不稳**：简化校准器、交叉验证、置信区间；不使用复杂神经校准器；
+- **人工审计偏差**：任务顺序平衡、盲化条件、使用客观时间与正确率；
+- **artifact 漂移**：不可覆盖 run；raw→summary→report 全量验证；
+- **多 Agent 复杂性无收益**：B3/B4 预先允许 rule/single 胜出并删掉 Agent；
+- **创新撞车**：扩大近三年查新；若 closest work 同时覆盖事件状态、字符证据、校准与更新评测，则缩小或撤回 C1。
+
+## First Three Runs to Launch
+
+1. `L001`：由两名成员分层复核至少 20 篇来源、venue、最终版本和撤稿状态；
+2. `R001`：把 `scripts/run_decision_experiment.py` 的规则基线迁入完整协议，验证 raw/summary/CSV/report/receipt 一致；
+3. `R007`：在已通过的 R006 事件语义上完成重放一致性和事件顺序压力测试。
+
+## Final Checklist
+
+- [ ] Main paper tables are covered
+- [ ] Novelty is isolated
+- [ ] Simplicity is defended
+- [ ] Frontier contribution is justified or explicitly rejected
+- [ ] Nice-to-have runs are separated from must-run runs
+- [ ] Gold/proxy and independent sample units are explicit
+- [ ] Coverage and risk are reported together
+- [ ] Negative results and stop decisions remain visible in MLflow

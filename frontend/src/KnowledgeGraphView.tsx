@@ -1,20 +1,21 @@
 import { useMemo } from 'react'
-import ReactECharts from 'echarts-for-react'
+import ReactEChartsCore from 'echarts-for-react/lib/core'
+import { echarts } from './echarts'
 import type { GraphData } from './types'
 
 const KIND_COLORS: Record<string, string> = {
-  paper: '#4f46e5',
-  evidence: '#16a34a',
-  method: '#f59e0b',
-  task: '#ef4444',
-  dataset: '#06b6d4',
-  metric: '#8b5cf6',
-  finding: '#ec4899',
-  limitation: '#64748b',
-  domain: '#14b8a6',
-  concept: '#6366f1',
-  outcome: '#0ea5e9',
-  evidence_span: '#16a34a',
+  paper: '#262521',
+  evidence: '#3f725d',
+  method: '#ad7627',
+  task: '#a31d29',
+  dataset: '#57777b',
+  metric: '#7e667b',
+  finding: '#bd5a50',
+  limitation: '#77746d',
+  domain: '#5d766a',
+  concept: '#665f58',
+  outcome: '#4f6a78',
+  evidence_span: '#3f725d',
 }
 
 const KIND_LABELS: Record<string, string> = {
@@ -56,7 +57,7 @@ export default function KnowledgeGraphView({ data }: { data: GraphData }) {
         source: edge.source,
         target: edge.target,
         lineStyle: {
-          color: rejected ? '#ef4444' : edge.label === 'MENTIONS' || edge.label === 'CONTAINS' ? '#cbd5e1' : '#94a3b8',
+          color: rejected ? '#b21f2d' : edge.label === 'MENTIONS' || edge.label === 'CONTAINS' ? '#d1ccc2' : '#8e8a82',
           width: rejected ? 2 : 1,
           type: rejected ? 'dashed' : 'solid',
         },
@@ -88,7 +89,7 @@ export default function KnowledgeGraphView({ data }: { data: GraphData }) {
           categories,
           data: nodes,
           links,
-          label: { show: true, fontSize: 10, color: '#334155' },
+          label: { show: true, fontSize: 10, color: '#34322d' },
           force: { repulsion: 220, edgeLength: [50, 140], gravity: 0.08 },
           emphasis: { focus: 'adjacency', lineStyle: { width: 3 } },
           lineStyle: { opacity: 0.6 },
@@ -98,7 +99,8 @@ export default function KnowledgeGraphView({ data }: { data: GraphData }) {
   }, [data])
 
   return (
-    <ReactECharts
+    <ReactEChartsCore
+      echarts={echarts}
       option={option}
       style={{ height: 560, width: '100%' }}
       notMerge

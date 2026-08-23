@@ -1,4 +1,5 @@
-import ReactECharts from 'echarts-for-react'
+import ReactEChartsCore from 'echarts-for-react/lib/core'
+import { echarts } from './echarts'
 import type { LearnerProfile } from './types'
 
 interface Props {
@@ -25,5 +26,5 @@ export default function DiagnosisRadar({ profile }: Props) {
       },
     ],
   }
-  return <ReactECharts option={option} style={{ height: 320 }} notMerge />
+  return <ReactEChartsCore echarts={echarts} option={option} style={{ height: 320 }} notMerge />
 }

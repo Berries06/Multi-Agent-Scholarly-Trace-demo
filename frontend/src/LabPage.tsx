@@ -201,33 +201,51 @@ export default function LabPage() {
     : []
 
   return (
-    <div>
-      <Paragraph type="secondary">
-        粘贴一篇论文正文，平台从「结构解析 → 实体/关系抽取 → 学情诊断 → 三智能体裁决 → 个性化资源」
-        逐层展示中间量。这是团队亲手验收 AI 抽取与裁决质量的地方。
-      </Paragraph>
+    <div className="lab-page">
+      <section className="page-lede page-lede--compact" aria-labelledby="intake-title">
+        <div>
+          <p className="section-kicker">02 / PAPER INTAKE</p>
+          <h2 id="intake-title">让每一次抽取，都留下可复核的中间量。</h2>
+          <p className="page-lede__summary">
+            输入有文本层的 PDF 或结构化正文，依次检查章节、实体、关系、画像与三方裁决；失败项不会静默入图。
+          </p>
+        </div>
+        <dl className="method-facts">
+          <div><dt>输入边界</dt><dd>PDF ≤ 5MB</dd></div>
+          <div><dt>裁决协议</dt><dd>Propose · Critique · Judge</dd></div>
+          <div><dt>输出要求</dt><dd>运行指纹 + 证据跨度</dd></div>
+        </dl>
+      </section>
 
-      <Card>
-        <Row gutter={16} align="bottom">
-          <Col span={4}>
-            <Text>论文 ID</Text>
+      <Card className="intake-card" variant="outlined">
+        <div className="intake-heading">
+          <div>
+            <span className="card-kicker">INGESTION PROTOCOL</span>
+            <h3>登记论文与裁决条件</h3>
+          </div>
+          <p>正文用于透明调试；上传 PDF 时优先采用解析后的章节文本。</p>
+        </div>
+
+        <div className="intake-grid">
+          <label className="editorial-field">
+            <span>论文 ID</span>
             <Input value={paperId} onChange={(e) => setPaperId(e.target.value)} />
-          </Col>
-          <Col span={4}>
-            <Text>论文标题（可选）</Text>
+          </label>
+          <label className="editorial-field">
+            <span>论文标题 <em>可选</em></span>
             <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="留空取第一个标题" />
-          </Col>
-          <Col span={5}>
-            <Text>学习者画像</Text>
+          </label>
+          <label className="editorial-field">
+            <span>学习者画像</span>
             <Select
               style={{ width: '100%' }}
               options={profileOptions}
               value={profileId}
               onChange={(value: string) => setProfileId(value)}
             />
-          </Col>
-          <Col span={8}>
-            <Text>accept_threshold（裁决接收阈值）</Text>
+          </label>
+          <label className="editorial-field threshold-field">
+            <span>裁决接收阈值 <strong>{threshold.toFixed(2)}</strong></span>
             <Slider
               min={0.5}
               max={0.95}
@@ -235,17 +253,16 @@ export default function LabPage() {
               value={threshold}
               onChange={setThreshold}
             />
-          </Col>
-          <Col span={3}>
-            <Button type="primary" onClick={run} loading={loading} block>
-              运行流水线
-            </Button>
-          </Col>
-        </Row>
+          </label>
+          <Button className="intake-run" type="primary" onClick={run} loading={loading} block>
+            运行完整流水线
+          </Button>
+        </div>
+
         <Upload.Dragger
+          className="paper-dropzone"
           accept=".pdf"
           maxCount={1}
-          style={{ marginTop: 12 }}
           beforeUpload={(file) => {
             setPdfFile(file)
             return false
@@ -253,20 +270,18 @@ export default function LabPage() {
           onRemove={() => setPdfFile(null)}
           fileList={pdfFile ? [{ uid: 'pdf-1', name: pdfFile.name }] : []}
         >
-          <Paragraph style={{ margin: 0 }}>
-            拖入或点击上传 PDF（≤5MB，需文本层；扫描版请先 OCR）
-          </Paragraph>
-          <Paragraph type="secondary" style={{ margin: 0 }}>
-            上传 PDF 后优先走 PDF 解析；否则使用下方粘贴的文本。
-          </Paragraph>
+          <p className="dropzone-title">拖入 PDF，或点击选择</p>
+          <p className="dropzone-note">≤ 5MB · 需要文本层 · 扫描件请先 OCR</p>
         </Upload.Dragger>
-        <TextArea
-          style={{ marginTop: 12 }}
-          rows={10}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="粘贴论文正文（Markdown，# 标题分段）"
-        />
+        <label className="manuscript-field">
+          <span>或粘贴结构化正文 <em>Markdown 标题将转换为章节</em></span>
+          <TextArea
+            rows={10}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="粘贴论文正文（Markdown，# 标题分段）"
+          />
+        </label>
       </Card>
 
       {error && <Alert style={{ marginTop: 16 }} type="error" message={error} showIcon />}

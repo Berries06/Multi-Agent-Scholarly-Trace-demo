@@ -129,42 +129,74 @@ export default function ProductPage() {
     : []
 
   return (
-    <div>
-      <Card title="问一个领域问题">
-        <Row gutter={12} align="bottom">
-          <Col span={4}>
-            <Text>垂直领域</Text>
+    <div className="research-page">
+      <section className="page-lede">
+        <div>
+          <p className="section-index">01 / RESEARCH DESK</p>
+          <h2>从论文证据，抵达可复核的科研判断。</h2>
+          <p className="page-lede__summary">
+            系统先寻找原文证据，再让提出者、批判者与裁判处理争议。任何入图关系都必须能回到章节与字符跨度。
+          </p>
+        </div>
+        <dl className="method-facts">
+          <div>
+            <dt>证据约束</dt>
+            <dd>强制溯源</dd>
+          </div>
+          <div>
+            <dt>核心决策</dt>
+            <dd>3 Agents</dd>
+          </div>
+          <div>
+            <dt>真实金标准</dt>
+            <dd className="is-pending">待核验</dd>
+          </div>
+        </dl>
+      </section>
+
+      <Card className="query-card" variant="outlined">
+        <div className="query-card__header">
+          <div>
+            <span className="editorial-kicker">RESEARCH QUESTION</span>
+            <h3>提出一个需要跨论文证据的问题</h3>
+          </div>
+          <p>输出会区分已接受、待复核与已拒绝的主张。</p>
+        </div>
+        <div className="query-grid">
+          <label className="field-block">
+            <span>垂直领域</span>
             <Select
               style={{ width: '100%' }}
               options={domainOptions}
               value={domainId}
               onChange={(value: string) => setDomainId(value)}
             />
-          </Col>
-          <Col span={5}>
-            <Text>学习者画像</Text>
+          </label>
+          <label className="field-block">
+            <span>学习者画像</span>
             <Select
               style={{ width: '100%' }}
               options={profileOptions}
               value={profileId}
               onChange={(value: string) => setProfileId(value)}
             />
-          </Col>
-          <Col span={12}>
-            <Text>你的问题</Text>
+          </label>
+          <label className="field-block field-block--query">
+            <span>研究问题</span>
             <Input.TextArea
               rows={2}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="例如：分析图神经网络如何支持稳定材料发现"
             />
-          </Col>
-          <Col span={3}>
-            <Button type="primary" onClick={run} loading={loading} block>
-              提交
+          </label>
+          <div className="query-action">
+            <Button type="primary" onClick={run} loading={loading} block size="large">
+              开始证据推理
             </Button>
-          </Col>
-        </Row>
+            <small>运行后生成可追溯 run_id</small>
+          </div>
+        </div>
       </Card>
 
       {error && <Alert style={{ marginTop: 16 }} type="error" message={error} showIcon />}
@@ -180,6 +212,13 @@ export default function ProductPage() {
 
       {result && !loading && (
         <>
+          <Alert
+            className="metric-disclosure"
+            type="warning"
+            showIcon
+            message="指标披露"
+            description="当前页面中的适配率与覆盖率属于开发阶段代理指标；L3 人工金标准完成前，不作为对外实测结论。"
+          />
           <Card
             title={`思考过程 · ${thinkingSteps.length} 个 Agent`}
             style={{ marginTop: 16 }}

@@ -1,22 +1,22 @@
-import { useEffect, useState } from 'react'
-import { ConfigProvider, Layout, Menu, Space, Tag, Typography } from 'antd'
-import type { MenuProps } from 'antd'
+import { lazy, Suspense, useEffect, useState } from 'react'
+import { ConfigProvider } from 'antd'
 import { getHealth } from './api'
 import type { Health } from './types'
-import LabPage from './LabPage'
-import ProductPage from './ProductPage'
 import { appTheme } from './theme'
 
-const { Header, Sider, Content } = Layout
-const { Title } = Typography
+const ExperimentPage = lazy(() => import('./ExperimentPage'))
+const LabPage = lazy(() => import('./LabPage'))
+const ProductPage = lazy(() => import('./ProductPage'))
 
-const menuItems: MenuProps['items'] = [
-  { key: 'product', label: '产品演示' },
-  { key: 'lab', label: '实验台 · 粘贴论文' },
+type Workspace = 'product' | 'lab' | 'experiments'
+
+const workspaces: Array<{ key: Workspace; index: string; label: string; description: string }> = [
+  { key: 'product', index: '01', label: '研究工作台', description: '问题、证据与裁决' },
+  { key: 'lab', index: '02', label: '论文摄入', description: '抽取、复核与入图' },
 ]
 
 export default function App() {
-  const [mode, setMode] = useState('product')
+  const [mode, setMode] = useState<Workspace>('product')
   const [health, setHealth] = useState<Health | null>(null)
 
   useEffect(() => {
@@ -27,50 +27,75 @@ export default function App() {
 
   return (
     <ConfigProvider theme={appTheme}>
-      <Layout style={{ minHeight: '100vh' }}>
-        <Header
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 16,
-            paddingInline: 24,
-            borderBottom: '1px solid #f0f0f0',
-          }}
-        >
-          <Title level={4} style={{ color: '#4f46e5', margin: 0 }}>
-            🧭 研海寻踪
-          </Title>
-          <Space size={4}>
-            {health ? (
-              <>
-                <Tag color="green">后端在线</Tag>
-                <Tag>{health.domain_count} 领域</Tag>
-                <Tag>{health.system_agents} Agent</Tag>
-              </>
-            ) : (
-              <Tag color="orange">连接中…</Tag>
-            )}
-          </Space>
-        </Header>
-        <Layout>
-          <Sider
-            width={208}
-            theme="light"
-            style={{ borderRight: '1px solid #f0f0f0', paddingTop: 12 }}
-          >
-            <Menu
-              mode="inline"
-              selectedKeys={[mode]}
-              items={menuItems}
-              onClick={(e) => setMode(e.key)}
-              style={{ borderInlineEnd: 'none' }}
-            />
-          </Sider>
-          <Content style={{ padding: 24, maxWidth: 1100, width: '100%', margin: '0 auto' }}>
-            {mode === 'product' ? <ProductPage /> : <LabPage />}
-          </Content>
-        </Layout>
-      </Layout>
+      <div className="research-app">
+        <header className="masthead">
+          <div className="masthead__edition">
+            <span>CHALLENGE CUP · XH-202630</span>
+            <span>21 AUGUST 2026</span>
+          </div>
+          <div className="masthead__identity">
+            <div>
+              <p className="eyebrow">EVIDENCE-GROUNDED RESEARCH INTELLIGENCE</p>
+              <h1>研海寻踪</h1>
+              <p className="masthead__subtitle">多智能体博弈推理的科研知识图谱发现系统</p>
+            </div>
+            <div className="system-proof" aria-live="polite">
+              <span className={`system-proof__dot ${health ? 'is-online' : ''}`} />
+              <div>
+                <strong>{health ? '系统可用' : '正在连接'}</strong>
+                <small>
+                  {health
+                    ? `${health.domain_count} 个领域 · ${health.core_agents ?? 3} 个核心 Agent`
+                    : '等待证据服务响应'}
+                </small>
+              </div>
+            </div>
+          </div>
+          <nav className="workspace-nav" aria-label="主要工作区">
+            {workspaces.map((workspace) => (
+              <button
+                key={workspace.key}
+                type="button"
+                className={mode === workspace.key ? 'is-active' : ''}
+                onClick={() => setMode(workspace.key)}
+                aria-current={mode === workspace.key ? 'page' : undefined}
+              >
+                <span>{workspace.index}</span>
+                <strong>{workspace.label}</strong>
+                <small>{workspace.description}</small>
+              </button>
+            ))}
+            <div className="workspace-nav__forthcoming" aria-label="即将上线的工作区">
+              <span>03</span>
+              <strong>证据图谱</strong>
+              <small>联动阅读 · 规划中</small>
+            </div>
+            <button
+              type="button"
+              className={mode === 'experiments' ? 'is-active' : ''}
+              onClick={() => setMode('experiments')}
+              aria-current={mode === 'experiments' ? 'page' : undefined}
+            >
+              <span>04</span>
+              <strong>实验账本</strong>
+              <small>复现、校验与对比</small>
+            </button>
+          </nav>
+        </header>
+
+        <main className="research-main">
+          <Suspense fallback={<div className="ledger-loading">正在装载研究工作区</div>}>
+            {mode === 'product' && <ProductPage />}
+            {mode === 'lab' && <LabPage />}
+            {mode === 'experiments' && <ExperimentPage />}
+          </Suspense>
+        </main>
+
+        <footer className="research-footer">
+          <span>研海寻踪 · YANHAI TRACE</span>
+          <span>Evidence before assertion. Measurement before claim.</span>
+        </footer>
+      </div>
     </ConfigProvider>
   )
 }

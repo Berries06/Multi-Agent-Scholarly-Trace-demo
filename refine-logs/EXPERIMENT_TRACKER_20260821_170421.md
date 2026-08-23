@@ -4,17 +4,13 @@
 
 | Run ID | Milestone | Purpose | System / Variant | Split | Metrics | Priority | Status | Notes |
 |---|---|---|---|---|---|---|---|---|
-| L001 | L0 | 100 篇来源与 venue 分层双人复核 | 20+ 篇分层样本 | literature audit | source/version/retraction errors | MUST | BLOCKED | 程序账本已完成；需两名人工复核者 |
-| L002 | L0 | 2024–2026 closest-work 全文差分 | C1/C2 claims | recent primary sources | overlap/delta/page evidence | MUST | READY | web 级候选已找到；需全文页码摘录与签字 |
-| L003 | L0 | gap 双人盲化编码与仲裁 | 8 buckets | stratified papers | kappa/alpha, disagreement | MUST | BLOCKED | 需两名领域成员和一名仲裁人 |
-| L004 | L0 | 引文链、专利与检索饱和门 | closest-work set | 2024–2026 + patents | new material overlap per round | MUST | BLOCKED | 需确定数据库/专利渠道与纳排标准 |
 | R000 | Platform | MLflow 安装与历史导入 | verified-run-sync | 现有 proxy | health, integrity | MUST | DONE | MLflow 3.15.1；6 experiments/12 runs；幂等通过 |
 | R001 | M0 | 真模型矩阵规则基线标准化 | baseline_rule | Track A dev | artifact integrity | MUST | READY | 迁入版本化 framework；先不调用 API |
 | R002 | M0 | 验证篡改检测 | damaged artifact negative test | Track A dev | verification rejection | MUST | TODO | 故意改 raw/summary，必须非零退出 |
 | R003 | M0 | MLflow 幂等与字段审计 | sync twice | Track A dev | imported/skipped, field coverage | MUST | TODO | 第二次必须 imported=0 |
 | R004 | M1 | L3 pilot 双人盲标 | annotator A/B | paper-level pool | kappa/alpha, disagreements | MUST | BLOCKED | 需冻结论文清单、许可与标注指南 |
 | R005 | M1 | 仲裁并冻结 gold v1 | adjudicated gold | train/dev/test | hash, class/slice counts | MUST | BLOCKED | 依赖 R004 |
-| R006 | M2 | 手算反事实状态迁移 | static provenance vs EASG | toy/dev | transition accuracy | MUST | DONE | 12 条手算反事实（6 类事件），run=outputs/experiments/easg_r006/20260821T155122Z；EASG 12/12=1.0、static 3/12=0.25、audit_gap=3；tests/test_easg.py 9 项全过；决定：M2 门槛通过、事件语义定稿；MLflow 未同步（toy 自定义协议）；下一项 R007 重放一致性 |
+| R006 | M2 | 手算反事实状态迁移 | static provenance vs EASG | toy/dev | transition accuracy | MUST | READY | 10–20 条 add/delete/refute/supersede |
 | R007 | M2 | 事件重放一致性 | EASG replay ×3 | toy/dev | replay consistency | MUST | TODO | 重放次数不算独立样本 |
 | R008 | M2 | 下游污染检查 | EASG → timeline/Idea/resource | toy/dev | contamination rate | MUST | TODO | 状态变化必须传播且可解释 |
 | R009 | M3 | 固定阈值 vs 简单校准 | rule threshold/logistic/isotonic | frozen dev | ECE, Brier, risk–coverage | MUST | READY | test 不可见 |
@@ -39,7 +35,6 @@
 
 | Task | Suggested owner role | Reviewer role | Deliverable |
 |---|---|---|---|
-| L001–L004 | 文献负责人 + 两名独立复核者 | 研究负责人/导师 | 来源复核表、closest-work 页码差分、gap 一致性与检索饱和记录 |
 | R001–R003 | 平台/实验工程 | 独立算法成员 | `07_decision_model_matrix` 完整 run |
 | R004–R005 | 数据负责人 + 两名标注者 | 仲裁人 | gold v1、标注指南、哈希与一致性 |
 | R006–R008 | 图谱/状态机开发 | 数据负责人 | `DecisionEvent` schema 与反事实集 |
@@ -49,3 +44,4 @@
 ## Next Update Rule
 
 每次 run 后只更新对应行的 `Status` 和 `Notes`，并填入 MLflow run ID、artifact path 和决定。若重新生成本 tracker，必须保留时间戳版本，不能抹掉历史状态。
+

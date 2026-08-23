@@ -32,6 +32,42 @@ export interface Domain {
   [key: string]: unknown
 }
 
+export interface ExperimentProtocol {
+  slug: string
+  title: string
+  purpose: string
+  mode: string
+  evaluation_type: string
+  claim_ceiling: string
+  primary_metrics: string[]
+  config_path: string
+}
+
+export interface ExperimentRun {
+  run_id: string
+  artifact_path: string
+  experiment: string
+  title: string
+  generated_at: string | null
+  status: string
+  evaluation_type: string
+  claim_ceiling: string
+  git_head: string | null
+  git_dirty: boolean | null
+  summary: Array<Record<string, unknown>>
+  error?: string
+}
+
+export interface ExperimentLedger {
+  schema_version: string
+  protocol_count: number
+  run_count: number
+  run_command: string
+  mlflow_url: string
+  protocols: ExperimentProtocol[]
+  runs: ExperimentRun[]
+}
+
 export interface AgentTraceStep {
   agent: string
   role: string
