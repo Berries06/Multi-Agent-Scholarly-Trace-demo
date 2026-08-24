@@ -640,6 +640,11 @@ textarea:focus {
   border-left: 4px solid var(--teal);
 }
 
+.provider-run-block .offline-badge {
+  color: #8a5b1e;
+  background: #f7ead3;
+}
+
 .provider-run-meta {
   display: flex;
   flex-wrap: wrap;
@@ -1736,5 +1741,141 @@ footer {
   *::after {
     scroll-behavior: auto !important;
     transition: none !important;
+  }
+}
+
+/* ── 账号登录与注册视图 ─────────────────────────────── */
+.auth-view {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 48px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 72px 40px;
+  align-items: center;
+}
+
+.auth-showcase .auth-kicker {
+  font-size: 11pt;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--accent, #057dbc);
+}
+
+.auth-showcase h1 {
+  font-size: 42pt;
+  line-height: 1.15;
+  font-weight: 700;
+  margin: 18px 0 16px;
+}
+
+.auth-showcase p {
+  color: var(--muted, #666);
+  max-width: 46ch;
+}
+
+.auth-proof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.auth-proof span {
+  border: 2px solid currentColor;
+  padding: 8px 14px;
+  font-size: 9.5pt;
+  font-weight: 600;
+}
+
+.auth-card {
+  border: 2px solid var(--rule, #141414);
+  background: var(--surface, #fff);
+  padding: 30px;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.08);
+}
+
+.auth-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.auth-card-heading strong {
+  display: block;
+  font-size: 15pt;
+}
+
+.auth-card-heading small {
+  color: var(--muted, #666);
+}
+
+.auth-tabs {
+  display: flex;
+  border: 1px solid var(--rule, #141414);
+  margin-bottom: 22px;
+}
+
+.auth-tabs button {
+  flex: 1;
+  min-height: 42px;
+  background: transparent;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--ink, #141414);
+}
+
+.auth-tabs button.active {
+  background: var(--ink, #141414);
+  color: var(--inverted, #fff);
+}
+
+.auth-form {
+  display: grid;
+  gap: 14px;
+}
+
+.auth-form label {
+  font-size: 9.5pt;
+  font-weight: 600;
+}
+
+.auth-form input {
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--rule, #141414);
+  font-size: 11pt;
+}
+
+.auth-hint {
+  margin-top: 18px;
+  font-size: 9.5pt;
+  color: var(--muted, #666);
+}
+
+.account-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 2px solid var(--rule, #141414);
+  background: var(--surface, #fff);
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+
+.account-summary .account-status {
+  font-size: 10pt;
+  font-weight: 600;
+  margin: 0;
+}
+
+@media (max-width: 820px) {
+  .auth-view {
+    grid-template-columns: 1fr;
+    padding: 40px 20px;
+    gap: 32px;
   }
 }

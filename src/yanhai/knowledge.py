@@ -62,8 +62,8 @@ class KnowledgeBase:
             vertical_root,
             root / "extraction_schema.json",
         )
-        # Expansion slices are strictly isolated. The default slice keeps the
-        # earlier multi-agent reading list for backward-compatible demos/tests.
+        # 扩展切片严格隔离。默认切片保留早期多智能体阅读清单，
+        # 以保持 demo/测试的向后兼容。
         if selected_domain_id == self.default_domain_id:
             vertical_ids = {
                 paper.paper_id for paper in self.vertical_corpus.papers
@@ -117,10 +117,9 @@ class KnowledgeBase:
     def _tokens(text: str) -> set[str]:
         lowered = text.lower()
         terms = set(re.findall(r"[a-z0-9][a-z0-9-]+|[\u4e00-\u9fff]{2,}", lowered))
-        # The standard library regex treats a complete Chinese sentence as one
-        # token. Character n-grams keep the offline demo query-sensitive without
-        # adding a tokenizer dependency. Formal experiments can replace this
-        # with a domain tokenizer through the retrieval adapter.
+        # 标准库正则会把整句中文当作一个 token。字符 n-gram 让离线 demo
+        # 保持对查询敏感，且不引入分词器依赖；正式实验可通过检索适配器
+        # 替换为领域分词器。
         for run in re.findall(r"[\u4e00-\u9fff]{2,}", lowered):
             for width in (2, 3, 4, 5, 6):
                 terms.update(
@@ -354,7 +353,7 @@ class KnowledgeBase:
         return {"nodes": list(nodes.values()), "edges": edges}
 
     def extracted_paper_graph(self) -> dict[str, Any]:
-        """Build the evidence-first graph produced from paper text, not curated triples."""
+        """构建由论文文本生成、而非人工三元组雕琢的证据优先图谱。"""
         if self._extracted_graph is None:
             self._extracted_graph = self.vertical_corpus.extraction_dict()
         return self._extracted_graph
@@ -395,7 +394,7 @@ class KnowledgeBase:
         return details
 
     def evidence_for_entity(self, entity_name: str) -> list[dict[str, Any]]:
-        """Return traceable spans for an extracted canonical entity."""
+        """返回某个已抽取规范实体的可追溯跨度。"""
         normalized = entity_name.casefold()
         payload = self.extracted_paper_graph()
         evidence_index = {

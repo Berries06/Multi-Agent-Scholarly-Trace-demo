@@ -16,7 +16,7 @@ def _safe_divide(numerator: float, denominator: float) -> float:
 
 
 def _wilson_interval(successes: int, total: int, z: float = 1.96) -> list[float]:
-    """Return a binomial Wilson 95% interval without pretending n is large."""
+    """返回二项 Wilson 95% 置信区间，不假装 n 足够大。"""
     if total <= 0:
         return [0.0, 0.0]
     estimate = successes / total
@@ -33,11 +33,10 @@ def _wilson_interval(successes: int, total: int, z: float = 1.96) -> list[float]
 
 
 class DecisionAblation:
-    """Track-A comparison over a frozen candidate pool.
+    """在同一冻结候选池上做 Track-A 对比。
 
-    This is intentionally a deterministic demo benchmark. It validates that the
-    comparison and trace pipeline work; it is not a substitute for an LLM or
-    expert-annotated public benchmark.
+    这有意设计为确定性 demo 基准：用于验证对比与轨迹流水线可用，
+    不替代 LLM 或专家标注的公开基准。
     """
 
     def __init__(

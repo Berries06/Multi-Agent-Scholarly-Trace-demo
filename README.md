@@ -1,10 +1,10 @@
 # 研海寻踪（Scholarly Trace）
 
-> 基于证据可追溯科学信息抽取与三智能体校验的科研知识图谱发现系统
+> 面向科研文献的、证据可追溯的多智能体知识图谱发现系统
 
-**项目入口：** [GitHub 源码仓库](https://github.com/Berries06/Multi-Agent-Scholarly-Trace-demo) · [在线最新版（main）](https://github.com/Berries06/Multi-Agent-Scholarly-Trace-demo/tree/main) · [版本提交记录](https://github.com/Berries06/Multi-Agent-Scholarly-Trace-demo/commits/main/)
+**项目入口：** [GitHub 源码仓库](https://github.com/Beries06/Multi-Agent-Scholarly-Trace-demo) · [在线最新版（main）](https://github.com/Beries06/Multi-Agent-Scholarly-Trace-demo/tree/main) · [版本提交记录](https://github.com/Beries06/Multi-Agent-Scholarly-Trace-demo/commits/main/)
 
-项目面向科研文献孤岛化、碎片化和跨学科检索困难：从论文正文或来源边界明确的论文知识卡抽取方法、任务、数据集、指标与发现，把每条关系绑定到论文、章节和证据跨度，再由“提出者—批判者—裁判”完成异质化决策。通过的图谱关系用于理解技术演化、生成待验证研究 Idea，并针对不同学习者生成导读、实操和测评。
+## 项目简介
 
 当前版本是可离线运行、可回归验证的 **Demo 工程基线 + 产品化 Web 前端**。已提供 3 个可切换垂直领域，每个领域 30 篇、合计 90 篇可核验 DOI/官方来源论文记录，并保留 19 篇已解析证据卡作为关系图谱核心；另有 9 组“领域 × 学习者”完整样例。系统真正跑通“论文证据卡 → 实体/关系抽取 → 可追溯图谱 → 三智能体裁决 → 技术脉络/Idea → 个性化资源”。新增的 71 篇元数据论文只参与书目检索，取得并解析全文前不能支撑知识关系；尚未完成大规模全文人工金标准、神经模型主实验和专家盲审。因此页面中的 24 条噪声压力集结果只用于暴露机制和失败案例，不能写成公开基准上的科研性能。
 
@@ -16,7 +16,7 @@
 - **语义力度校验**：批判者新增时态/体检查（进行中≠已完成，未完成体悖论，理论锚点 ACL 2026）；测评题从 accepted 图谱三元组动态生成。
 - **MLflow 实验跟踪**：`RUN_MLFLOW.bat` 一键启动本地 UI 并幂等导入所有通过哈希验证的实验；`RUN_PUBLIC_EXPERIMENTS.bat` 成功后自动同步，不会重跑模型。详见 `docs/协作与运维/MLflow实验跟踪指南.md`。
 
-## 核心口径：5 个协同角色，其中 3 个负责证据裁决
+当前是可离线运行、可回归验证的 **Demo 工程基线**：3 个可切换垂直领域、90 篇论文记录、19 篇已解析证据卡、9 组"领域 × 学习者"完整样例。学术定位、评测口径与实验设计详见 [docs/文档导航.md](docs/文档导航.md)。
 
 两个前置专职 Agent：
 
@@ -219,7 +219,7 @@ GLiREL 仓库当前代码/权重许可含非商业限制，竞赛研究可评估
 
 要求 Python 3.11+，基础 Demo 无第三方运行依赖。
 
-给评委或队友发送压缩包时，解压到纯英文或中文路径均可，然后：
+### Windows 一键启动（推荐给评委）
 
 1. 安装 Python 3.11+，安装时勾选 `Add Python to PATH`；
 2. 双击根目录 `RUN_DEMO.bat`（离线 Demo，端口 8765）或 `SETUP_WEB.bat` → `RUN_WEB.bat`（产品 Web 界面，FastAPI 8766 + React 5173，首次需联网装依赖）；
@@ -228,119 +228,209 @@ GLiREL 仓库当前代码/权重许可含非商业限制，竞赛研究可评估
 
 实验跟踪无需额外算力：双击 `RUN_MLFLOW.bat` 后访问 `http://127.0.0.1:5000/`。它只导入已存在且通过验证的实验产物；双击 `STOP_MLFLOW.bat` 可停止服务。
 
-若浏览器被系统策略拦截，启动窗口会停留并显示地址；双击 `OPEN_DEMO.url` 或手动访问上述地址即可。
+若浏览器被策略拦截，启动窗口会停留并显示地址；双击 `OPEN_DEMO.url` 或手动访问上述地址即可。
 
-命令行启动方式：
+### 命令行启动
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
 .\scripts\start_demo.ps1 -Background -StartupTimeoutSeconds 10
 ```
 
-后台模式会在 10 秒启动截止时间内检查健康状态；失败时终止精确子进程并返回错误，避免终端被常驻服务阻塞。
+后台模式会在 10 秒内检查健康状态，失败时自动终止子进程并返回错误。浏览器打开 `http://127.0.0.1:8765/`。
 
-浏览器打开：
+### 常用命令
+
+```powershell
+$env:PYTHONPATH="src"
+python scripts/build_demo_assets.py          # 生成图谱、DB、消融与完整示例
+python -m unittest discover -s tests -v      # 回归测试
+python scripts/smoke_test_backend.py         # 后端冒烟（完整闭环 + 幂等）
+.\scripts\package_demo.ps1                   # 生成 dist/yanhai-demo-windows.zip
+```
+
+本地服务默认监听 IPv4 `127.0.0.1`，为每次请求生成 `X-Request-ID`、每次运行生成 run ID，并支持有界并发、任务 deadline、幂等重放、JSON 日志和 OpenAlex 重试熔断。容器、环境变量与详细部署见 [docs/协作与运维/部署说明.md](docs/协作与运维/部署说明.md)。
+
+## 核心业务闭环
+
+```mermaid
+flowchart LR
+    P["论文 PDF / 证据卡"] --> D["结构解析"]
+    D --> E["论文知识抽取 Agent<br/>实体·关系·主张候选"]
+    E --> A1["提出者"]
+    A1 --> A2["批判者"]
+    A2 --> A3["裁判"]
+    A3 -->|accepted| KG["可追溯知识图谱"]
+    A3 -->|needs_review| HR["人工复核队列"]
+    KG --> T["技术演化脉络"]
+    KG --> I["缺失边 Idea"]
+    U["学习者画像"] --> R["个性化资源服务"]
+    KG --> R
+    O["OpenAlex 联网候选"] -->|仅候选，不能直接入图| D
+    W["Web / API"] --> HZ["可靠 Harness<br/>幂等·超时·有界并发"]
+    HZ --> UQ["用户意图感知 Agent"]
+    UQ -->|检索| GB["广度搜索"]
+    UQ -->|分析| GD["深度搜索"]
+    UQ -->|Idea| GH["混合搜索"]
+    KG --> GB
+    KG --> GD
+    KG --> GH
+```
+
+### 5 个协同角色，其中 3 个负责证据裁决
+
+前置专职 Agent（记录在 `specialist_agent_trace`）：
+
+| Agent              | 职责                                          | 当前实现                                        |
+| ------------------ | --------------------------------------------- | ----------------------------------------------- |
+| 论文知识抽取 Agent | 从论文正文生成实体、关系和主张候选            | 版本化 schema + 规则抽取 + 规范化；复用离线索引 |
+| 用户意图感知 Agent | 识别检索、分析、Idea 三类意图并选择图检索路线 | 可审计多标签词法基线                            |
+
+核心决策 Agent（记录在 `agent_trace`）：
+
+| Agent  | 输入                           | 当前实现                                         | 输出                                                   |
+| ------ | ------------------------------ | ------------------------------------------------ | ------------------------------------------------------ |
+| 提出者 | 论文证据跨度、schema、候选实体 | schema 约束触发模式                              | 带实体/关系类型、证据 ID 和置信度的命题                |
+| 批判者 | 候选命题与原文证据             | 证据存在性、跨度覆盖、类型约束、绝对化与共现检查 | 阻断项、限制项与反证意见                               |
+| 裁判   | 候选、批判项、证据来源         | 独立确定性校准规则                               | `accepted / needs_review / rejected`、分数分解和理由 |
+
+### 意图路由
+
+| 用户意图           | 当前路线          | 输出重点                     |
+| ------------------ | ----------------- | ---------------------------- |
+| 信息检索、论文推荐 | `graph_breadth` | 概念社区、相关论文、证据理由 |
+| 分析推理、机制追踪 | `graph_depth`   | 多跳路径、逐边证据、适用边界 |
+| 研究空白、Idea     | `hybrid_drift`  | 缺失边、追问、新颖性待验证   |
+
+当前是 GraphRAG-inspired 离线基线，不是微软官方 GraphRAG runtime；官方 BYOG 接入路线见 [docs/项目说明/系统架构.md](docs/项目说明/系统架构.md)。
+
+## 代码结构
 
 ```text
-http://127.0.0.1:8765/
+src/yanhai/
+  agents.py                2 前置专职 Agent + 3 核心决策 Agent
+  corpus.py                版本化垂直语料
+  extraction.py            解析、实体/关系/证据抽取
+  knowledge.py             知识库检索与图谱查询
+  graph_rag.py             意图驱动广度/深度/混合图检索
+  ablation.py              四组同候选池决策对比
+  discovery.py             时间线与缺失边 Idea
+  online_rag.py            OpenAlex 候选检索与缓存
+  providers.py             供应商注册表（mock / deepseek / free-deepseek / …）
+  live_research.py         实时 LLM 循证路径（规划→检索→裁决→教学）
+  storage.py               账号、画像与会话的 SQLite 持久化
+  store.py                 SQLite 图谱落库
+  harness.py               配置、指标、幂等、运行日志与熔断
+  orchestrator.py          完整运行协议
+  server.py                有界 HTTP API、静态页面与账号认证
+  qt_app.py                可选 PyQt 桌面壳（非主线）
+web/                       原生 HTML/CSS/JavaScript 前端
+config/
+  model_routes.json        模型路由（提出/批判/裁判）
+  graphrag_routes.json     图检索路由
+data/
+  vertical_kb/             3 个领域注册表、manifest 与检索快照
+  knowledge/               版本化抽取 schema
+  profiles/                3 组差异化合成画像
+  examples/                9 组完整输入/中间/输出样例
+  evaluation/              24 条决策压力命题
+scripts/                   构建、打包、数据扩容与测试工具
+tests/                     工程与证据链回归测试
+docs/                      项目说明、研发记录、协作与运维、变更记录
 ```
 
-生成所有演示资产：
+## API 一览
 
-```powershell
-$env:PYTHONPATH="src"
-python scripts/build_demo_assets.py
-```
+| 方法 | 路径                     | 说明                                          |
+| ---- | ------------------------ | --------------------------------------------- |
+| GET  | `/api/health`          | 服务、垂直库和核心 Agent 状态                 |
+| GET  | `/api/ready`           | 画像、语料、schema 与前端就绪状态             |
+| GET  | `/api/metrics`         | 请求、失败、延迟、事件与熔断状态              |
+| GET  | `/api/profiles`        | 3 组差异化画像                                |
+| GET  | `/api/domains`         | 3 个可切换领域及默认查询                      |
+| GET  | `/api/providers`       | 可用供应商、默认模型和协议                    |
+| GET  | `/api/knowledge-base`  | 文献与关系切片                                |
+| GET  | `/api/extracted-graph` | 论文—证据—实体—关系图                      |
+| GET  | `/api/ablation`        | 四组决策对比                                  |
+| GET  | `/api/graph-insights`  | 论文时间线与图谱 Idea                         |
+| GET  | `/api/auth/me`         | 当前会话用户                                  |
+| GET  | `/api/auth/status`     | 注册开关状态                                  |
+| POST | `/api/auth/register`   | 注册（`YANHAI_REGISTRATION_OPEN=1` 时开放） |
+| POST | `/api/auth/login`      | 邮箱或昵称登录                                |
+| POST | `/api/auth/logout`     | 退出并清除会话                                |
+| POST | `/api/provider/test`   | 用本次提交的 Key 做最小连接测试               |
+| POST | `/api/run`             | 完整三智能体与个性化资源闭环                  |
+| POST | `/api/feedback`        | 根据难度反馈重跑                              |
+| POST | `/api/graph-query`     | 意图感知与概念图检索                          |
+| POST | `/api/online-rag`      | 可选 OpenAlex 候选扩展                        |
 
-运行回归测试：
-
-```powershell
-$env:PYTHONPATH="src"
-python -m unittest discover -s tests -v
-python scripts/smoke_test_backend.py
-```
-
-本地服务默认显式监听 IPv4 `127.0.0.1`。它为每次请求生成 request ID、为每次协同运行生成 run ID，并支持有界并发、任务 deadline、幂等重放、JSON 日志和 OpenAlex 重试熔断。容器及环境变量说明见 `docs/04_deployment.md`；工程自检见 `docs/13_backend_reliability_audit.md`。
-
-生成不含 Git 历史和运行日志的交付压缩包：
-
-```powershell
-.\scripts\package_demo.ps1
-```
-
-默认产物为 `dist/yanhai-demo-windows.zip`。是否需要公网域名、何时才值得封装 EXE，以及 Docker 备选运行方式见 `docs/16_demo_distribution.md`。
-
-单独调用意图驱动图检索：
+写请求（`/api/run`、`/api/feedback`）要求登录，会话由 `yanhai_session` Cookie 维持；登录用户的画像自动注入运行。单次请求示例：
 
 ```json
-POST /api/graph-query
+POST /api/run
 {
   "domain_id": "materials-discovery-gnn",
-  "query": "分析图神经网络如何支持稳定材料发现"
+  "profile_id": "undergraduate_ai",
+  "query": "图神经网络如何用于稳定材料发现？",
+  "llm": { "provider": "free-deepseek", "model": "deepseek-v4-flash" }
 }
 ```
 
-响应会给出 `intent`、`retrieval_plan`、纯概念 `concept_subgraph`、多跳 `paths`、`recommended_papers` 与带证据的 `answer`。
+## 工程规模
 
-可选下载本地 ACL PDF：
+运行 `python scripts/build_demo_assets.py` 后生成 3 个领域切片：合计 90 篇论文记录、19 篇已解析证据卡、108 个证据跨度、91 条候选关系，另有 3 组画像与 9 组完整样例。表中的"证据绑定完整率 100%"是"每条关系都绑定本地证据 ID"的结构护栏，不代表关系正确率；71 篇元数据记录只参与书目检索，不进入关系抽取。
 
-```powershell
-python scripts/fetch_vertical_corpus.py
-```
+## 集成与扩展
 
-核心领域 PDF 默认保存到 `papers/scientific-ie-kg/`，并由 `.gitignore` 排除；两个新增领域当前使用经官网/DOI 核验的摘要级知识卡，不宣称已持有全文。manifest 和证据卡可提交，以控制仓库体积并记录来源。
+- 规则基线无需 GPU 即可运行；模型可替换 Provider，路由配置见 `config/model_routes.json`，候选模型与选型证据见 [docs/研发记录/技术选型与文献证据.md](docs/研发记录/技术选型与文献证据.md)。
+- 联网 OpenAlex 只扩展候选；未完成本地解析和裁决的联网记录不能入图。
+- 容器（Docker）、公网发布与打包分发见 [docs/协作与运维/部署说明.md](docs/协作与运维/部署说明.md)。
 
-## （八）混淆
+## 国际化
 
-暂不适用。项目当前为 Python + 原生 Web，不进行代码混淆。竞赛离线 APP 若用 PySide6 + QtWebEngine 封装，也不会以混淆替代许可证合规、模型权重保护或服务端访问控制。
+- 前端与申报材料以简体中文为主，论文题名、DOI/ACL ID 与来源保留英文；
+- JSON、SQLite 和 HTTP API 全部使用 UTF-8；
+- `data/knowledge/extraction_schema.json` 为核心概念保存规范名、中英文别名和稳定类型键。
 
-## （九）关于作者/组织及交流方式等信息
+待完成：界面文本迁移到 `locales/zh-CN.json`、`locales/en-US.json`。
+
+## 项目特点
+
+1. **图谱是计算底座**：论文原文先成为 evidence 节点，关系、时间线、Idea 和学习资源都消费同一个图谱；
+2. **关系必须携带原文跨度**：保存章节、文本和字符位置，论文 URL 或摘要级引用不等于证据；
+3. **三智能体异质分工**：提出者提召回、批判者找错误、裁判独立校准；同质三路投票被单独列为弱对照；
+4. **离线可演示、模型可替换**：无外部 API 时规则基线稳定运行，模型只替换 Provider，不推翻证据协议与评测接口。
+
+## 关于项目
 
 - 项目名称：研海寻踪：基于多智能体博弈推理的科研知识图谱发现系统
 - 赛题编号：XH-202630
-- 团队：待填写学校、学院和团队名称
-- 指导教师：待填写
-- 项目负责人：待填写
-- 联系邮箱/项目交流群：待填写
-- GitHub：<https://github.com/Berries06/Multi-Agent-Scholarly-Trace-demo>
+- 团队 / 指导教师 / 负责人：待填写
+- GitHub：[https://github.com/Beries06/Multi-Agent-Scholarly-Trace-demo](https://github.com/Beries06/Multi-Agent-Scholarly-Trace-demo)
 
-## （十）贡献者/贡献组织
+四人团队按科研工作包分工，完整责任边界与 12 周计划见 [docs/协作与运维/团队工作包与验收计划.md](docs/协作与运维/团队工作包与验收计划.md)。
 
-四人团队按科研工作包分工：
+## 鸣谢
 
-| 成员 | 主责 | 当前近期交付 |
-|---|---|---|
-| A（待填） | 语料、解析与标注 | 论文许可台账、全文解析、Pilot 金标准、标注一致性 |
-| B（待填） | 科学信息抽取算法 | GLiNER/GLiREL、DyGIE++/DeepKE/OneKE 基线，实体/关系/证据 F1 |
-| C（待填） | 实体链接、图谱与发现 | 跨论文融合、图版本、演化/争议/Idea 专家评测 |
-| D（待填） | 三智能体、实验与系统 | 消融、校准、API、前端、离线 APP 与复现 |
-
-完整责任边界和 12 周科研计划见 `docs/10_team_research_workplan.md`。
-
-## （十一）鸣谢
-
-- [Datawhale Hello-Agents](https://github.com/datawhalechina/hello-agents)：轻量 Agent 协议、可观测性和工程组织思路。
-- [CAMEL](https://github.com/camel-ai/camel)：角色协作与消息边界思路。
-- [Docling](https://github.com/docling-project/docling)：统一文档解析 IR 与 PDF/表格处理路线。
-- [GROBID](https://github.com/kermitt2/grobid)：科学文献 TEI、元数据和引文解析路线。
-- [DeepKE](https://github.com/zjunlp/DeepKE) 与 [OneKE](https://github.com/zjunlp/OneKE)：知识抽取分层与 schema/extraction/reflection 思路。
-- [Microsoft GraphRAG](https://github.com/microsoft/graphrag)：采纳实体/关系/text units/communities 数据契约及 Local、Global、DRIFT 的查询分工；当前使用轻量兼容基线，官方 BYOG 接入路线见 `docs/14_intent_driven_graphrag.md`。
+- [Datawhale Hello-Agents](https://github.com/datawhalechina/hello-agents)：轻量 Agent 协议与工程组织思路；
+- [CAMEL](https://github.com/camel-ai/camel)：角色协作与消息边界思路；
+- [Docling](https://github.com/docling-project/docling)：统一文档解析 IR 与 PDF/表格处理路线；
+- [GROBID](https://github.com/kermitt2/grobid)：科学文献 TEI、元数据和引文解析路线；
+- [DeepKE](https://github.com/zjunlp/DeepKE) 与 [OneKE](https://github.com/zjunlp/OneKE)：知识抽取分层思路；
+- [Microsoft GraphRAG](https://github.com/microsoft/graphrag)：实体/关系/社区数据契约与查询分工，当前使用轻量兼容基线；
 - ACL Anthology、OpenAlex 及本仓库列出的论文作者。
 
-本项目借鉴架构思想，不宣称复制上游模型成果。引入任何代码、数据或权重前均需单独核验许可证。
+本项目借鉴架构思想，不宣称复制上游模型成果；引入任何代码、数据或权重前均需单独核验许可证。
 
-## （十二）版权信息
+## 版权信息
 
-仓库尚未放置项目自身的 `LICENSE`，因此默认保留全部权利；在团队与学校确认成果归属前，不应假设代码可任意商用或再分发。
+仓库尚未放置项目自身的 `LICENSE`，默认保留全部权利；在团队与学校确认成果归属前，不应假设代码可任意商用或再分发。第三方代码、模型权重和数据集遵循各自许可证；代码许可证不自动覆盖模型权重。
 
-- ACL Anthology 论文和本地证据卡保留原作者、题名与来源；证据卡为团队的简要转述，不替代论文原文。
-- 第三方代码、模型权重和数据集遵循各自许可证；代码许可证不自动覆盖模型权重。
-- 申报书和论文引用必须回到权威论文、官方文档或项目仓库，不能把本 README 当作学术证据。
+## 延伸文档
 
-关键延伸文档：
-
-- `docs/07_submission_and_paper_format.md`：申报书与论文格式
-- `docs/08_scientific_ie_kg_technical_route.md`：科学信息抽取与知识图谱技术路线
-- `docs/11_ablation_and_demo_protocol.md`：对比/消融与现场演示协议
-- `docs/12_literature_and_model_evidence.md`：论文、模型与开源选型证据
-- `docs/CHANGELOG_2026-07-29.md`：本次推进日志
+- [文档导航](docs/文档导航.md)：docs 统一入口
+- [docs/项目说明/系统架构.md](docs/项目说明/系统架构.md)：5 角色、意图驱动检索与账号/供应商接入
+- [docs/研发记录/实验设计与消融协议.md](docs/研发记录/实验设计与消融协议.md)：评测轨道、消融矩阵与指标定义
+- [docs/研发记录/技术选型与文献证据.md](docs/研发记录/技术选型与文献证据.md)：模型与开源选型证据
+- [docs/协作与运维/部署说明.md](docs/协作与运维/部署说明.md)：本地运行、API、环境变量与打包
+- [docs/协作与运维/网站发布与维护.md](docs/协作与运维/网站发布与维护.md)：线上地址与公网发布

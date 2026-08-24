@@ -9,7 +9,7 @@ from .models import Paper
 
 
 class VerticalCorpus:
-    """Versioned, locally reproducible scholarly corpus for one vertical domain."""
+    """某个垂直领域、可版本化且本地可复现的学术语料。"""
 
     def __init__(self, root: Path, schema_path: Path) -> None:
         self.root = root

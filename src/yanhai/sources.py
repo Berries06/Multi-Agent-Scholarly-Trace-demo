@@ -1,4 +1,4 @@
-"""Open scholarly and authoritative-document retrieval adapters."""
+"""开放学术与权威文档的检索适配器。"""
 from __future__ import annotations
 
 import hashlib
@@ -484,7 +484,7 @@ class RetrievalReport:
 
 
 class MultiSourceRetriever:
-    """Run independent adapters concurrently and keep partial successes."""
+    """并发运行各独立适配器，并保留部分成功结果。"""
 
     source_id = "multi_source"
 
