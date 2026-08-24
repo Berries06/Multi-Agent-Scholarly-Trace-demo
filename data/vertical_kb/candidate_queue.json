@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0.0",
+  "updated_at": "2026-08-23T17:01:25.551004+00:00",
+  "protocol": "candidate -> human review -> evidence_card -> EASG adjudication -> graph; interpretation is reading aid, never evidence.",
+  "entries": [
+    {
+      "arxiv_id": "2608.20331v1",
+      "title": "G-CARL: Grounded Checklist-Aligned Reward Learning for Patient-Oriented Medical Report Interpretation",
+      "authors": [
+        "Shiao Xie",
+        "Siyu Chen",
+        "Jianwei Lv",
+        "Bo Yuan",
+        "Yujin Wang",
+        "Xiandong Li"
+      ],
+      "first_affiliation": "",
+      "accepted_venue": "",
+      "pdf_url": "https://arxiv.org/pdf/2608.20331v1",
+      "primary_url": "https://arxiv.org/abs/2608.20331v1",
+      "published": "2026-08-20T17:59:46Z",
+      "matched_queries": [
+        "scientific-claim-verification"
+      ],
+      "status": "candidate",
+      "human_review_required": true,
+      "novelty_label": "candidate",
+      "interpretation": {},
+      "evidence_spans": [],
+      "scanned_week": "2026-W33"
+    },
+    {
+      "arxiv_id": "2608.18681v1",
+      "title": "Learning What to Fail On: Failure-Mode Contextual Bandits for Adversarial Data Curation",
+      "authors": [
+        "Roie Kazoom",
+        "Ofir Cohen",
+        "Rami Puzis",
+        "Asaf Shabtai",
+        "Ofer Hadar"
+      ],
+      "first_affiliation": "",
+      "accepted_venue": "Transactions on Machine Learning Research (TMLR), August 2026",
+      "pdf_url": "https://arxiv.org/pdf/2608.18681v1",
+      "primary_url": "https://arxiv.org/abs/2608.18681v1",
+      "published": "2026-08-19T08:31:15Z",
+      "matched_queries": [
+        "scientific-claim-verification"
+      ],
+      "status": "candidate",
+      "human_review_required": true,
+      "novelty_label": "candidate",
+      "interpretation": {},
+      "evidence_spans": [],
+      "scanned_week": "2026-W33"
+    },
+    {
+      "arxiv_id": "2608.17443v1",
+      "title": "Structure-Internalized Rule Language Model for Faithful Knowledge Graph Reasoning",
+      "authors": [
+        "Xingrui Zhuo",
+        "Jiapu Wang",
+        "Manzong Huang",
+        "Gongqing Wu",
+        "Xindong Wu"
+      ],
+      "first_affiliation": "",
+      "accepted_venue": "",
+      "pdf_url": "https://arxiv.org/pdf/2608.17443v1",
+      "primary_url": "https://arxiv.org/abs/2608.17443v1",
+      "published": "2026-08-18T07:21:20Z",
+      "matched_queries": [
+        "kg-construction-llm"
+      ],
+      "status": "candidate",
+      "human_review_required": true,
+      "novelty_label": "candidate",
+      "interpretation": {},
+      "evidence_spans": [],
+      "scanned_week": "2026-W33"
+    },
+    {
+      "arxiv_id": "2608.15919v1",
+      "title": "Noesis: Bidirectional Graph-RAG with Adaptive Parallelism and Cross-Knowledge-Base Semantic Discovery",
+      "authors": [
+        "Nicola Cogotti"
+      ],
+      "first_affiliation": "",
+      "accepted_venue": "",
+      "pdf_url": "https://arxiv.org/pdf/2608.15919v1",
+      "primary_url": "https://arxiv.org/abs/2608.15919v1",
+      "published": "2026-08-16T20:23:35Z",
+      "matched_queries": [
+        "kg-construction-llm"
+      ],
+      "status": "candidate",
+      "human_review_required": true,
+      "novelty_label": "candidate",
+      "interpretation": {},
+      "evidence_spans": [],
+      "scanned_week": "2026-W33"
+    }
+  ]
+}

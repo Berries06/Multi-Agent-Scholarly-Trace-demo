@@ -46,3 +46,8 @@
 | 2026-08-23 20:19 | /de-fake | tests/experiments/framework.py | implementation | 验证后签发：先独立复核产物，复核失败即 status=failed 并抛错 |
 | 2026-08-23 20:19 | /de-fake | scripts/build_submission_book.py | implementation | 作品书数字全部改为构建时实时读取（ablation-report/数据文件 sha256 复核/三领域实时抽取/测试发现计数/git rev-parse），旧版备份 .docx.bak |
 | 2026-08-23 20:40 | /member-briefings | docs/协作与运维/成员微信介绍/成员A~D 四份 | documentation | 给四位成员的独立微信介绍：背景与进展/职责板块/项目用法/实验步骤/周计划，每个方法附 idea 来源 |
+| 2026-08-23 21:10 | /model-selection | docs/协作与运维/模型选型与接入方案_2026-08-23.md | planning | C 线第一大任务：30 篇新文献调研、三家模型广场盘点、模型×角色矩阵（6 同质+6 异质）、Key 配置与复用流程、降本三招 |
+| 2026-08-23 21:10 | /model-selection | src/yanhai/providers.py、tests/test_providers.py | implementation | DeepSeek/Kimi/智谱注册表对齐在售型号；新增 model∈注册表校验（from_payload 与 load_config_from_env） |
+| 2026-08-24 01:02 | /literature-pipeline | scripts/weekly_literature_scan.py、scripts/chunk_corpus.py、tests/test_literature_pipeline.py | implementation | 文献管线 P0 落地：arXiv 周报扫描（去重/新颖度初筛/候选队列）、句子级切块（全局偏移/OCR 标记）、9 项单测 |
+| 2026-08-24 01:02 | /literature-pipeline | data/vertical_kb/candidate_queue.json、data/vertical_kb/search_cache/、docs/文献周报/ | experiment | 首轮周报与候选队列：近 7 天 4 篇候选，human_review_required=true，AI 解读与证据跨度分离 |
+| 2026-08-24 01:02 | /division-of-labor | docs/协作与运维/四成员分工清单_2026-08-22.md | planning | 融入文献管线：C-9（脚本+解读）、A-9（每周复核）、D-9（复核协议），S1–S4/C1–C3/I1–I4 进映射矩阵 |
