@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 import urllib.parse
@@ -56,6 +57,18 @@ QUERIES = {
 
 def _norm(value: str) -> str:
     return " ".join(value.split())
+
+
+def load_dotenv(path: Path) -> None:
+    """Load KEY=value lines from .env into the process environment (setdefault)."""
+    if not path.exists():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
 
 
 def load_known_titles() -> list[str]:
@@ -317,6 +330,8 @@ def main() -> int:
     parser.add_argument("--interpret", action="store_true")
     parser.add_argument("--interpret-limit", type=int, default=10)
     args = parser.parse_args()
+
+    load_dotenv(PROJECT_ROOT / ".env")
 
     papers, query_log = scan_arxiv(args.days, args.max_per_query)
     known_norm = load_known_titles()
