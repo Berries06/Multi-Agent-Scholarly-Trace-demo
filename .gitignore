@@ -30,3 +30,11 @@ outputs/experiment-dashboard.html
 .aris/meta/events.jsonl
 build/
 .codex/
+
+# runtime secrets & release artifacts (re-added after upstream merge)
+secret/
+secret/*
+!secret/.gitkeep
+release/
+*.sqlite3
+outputs/runtime/
