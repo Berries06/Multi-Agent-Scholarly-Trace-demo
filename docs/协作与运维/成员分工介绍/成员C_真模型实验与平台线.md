@@ -48,7 +48,7 @@
 3. 每组同步进 MLflow：`.venv-lab\Scripts\python.exe scripts\sync_mlflow.py --run-dir outputs\experiments\<协议>\<时间戳>`，打上标签（负责人、数据性质 proxy、主张编号 C1-EASG）；
 4. 9 月 20 日前后，用 A 的封存考试卷跑最终主结果——**只跑一次**，跑完在实验配置里登记使用记录并告知 A。
 
-另外一件持续的小事：文献周报管线（`scripts/weekly_literature_scan.py`）每周跑一次扫描新论文；Key 填好后加 `--interpret` 参数让便宜模型自动生成四问解读，产出周报和候选卡片给 A 复核。缺 Key 时该参数会显式报错退出，这是有意为之。
+另外一件持续的小事：文献周报管线（`scripts/weekly_literature_scan.py`）会定期扫描新论文（默认每周一批）；Key 填好后加 `--interpret` 参数让便宜模型自动生成四问解读，产出周报和候选卡片给 A 复核。缺 Key 时该参数会显式报错退出，这是有意为之。
 
 ## 你和别人的衔接（逐条说清）
 
