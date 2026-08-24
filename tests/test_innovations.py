@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import sys
 import unittest
 from pathlib import Path
@@ -8,81 +9,78 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from yanhai import ScholarlyTraceOrchestrator, get_preset  # noqa: E402
+import yanhai  # noqa: E402
+from yanhai import ScholarlyTraceOrchestrator  # noqa: E402
+from yanhai.archive import legacy_six_agent  # noqa: E402
 
 
-@unittest.skip(
-    "归档的六智能体实验；当前竞赛验收版固定为三个核心决策智能体。"
-)
-class InnovationPipelineTests(unittest.TestCase):
+class CurrentPipelineBoundaryTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.orchestrator = ScholarlyTraceOrchestrator(PROJECT_ROOT)
+        cls.result = cls.orchestrator.run("undergraduate_ai")
 
-    def test_default_api_remains_legacy(self) -> None:
-        result = self.orchestrator.run("undergraduate_ai")
-        self.assertEqual("legacy", result["system_config"]["name"])
-        self.assertEqual(6, len(result["agent_trace"]))
-        self.assertFalse(result["system_config"]["flags"]["sentence_provenance"])
+    def test_run_signature_has_no_archived_preset_argument(self) -> None:
+        parameters = inspect.signature(self.orchestrator.run).parameters
+        self.assertNotIn("config", parameters)
+        self.assertNotIn("preset", parameters)
 
-    def test_full_preset_exposes_research_mechanisms(self) -> None:
-        result = self.orchestrator.run("undergraduate_ai", config="full")
-        self.assertEqual("full", result["system_config"]["name"])
-        self.assertGreater(result["innovations"]["debate_view_count"], 0)
-        self.assertGreater(result["innovations"]["falsification"]["rounds"], 0)
-        self.assertEqual(3, len(result["innovations"]["hypotheses"]))
-        self.assertGreater(len(result["innovations"]["discovery"]["timeline"]), 0)
-        self.assertTrue(result["innovations"]["knowledge_state"]["concepts"])
+    def test_current_trace_contains_exactly_three_decision_agents(self) -> None:
+        self.assertEqual(3, self.result["core_method"]["agent_count"])
+        self.assertEqual(
+            {"关联提出", "反证与约束", "置信裁决"},
+            {item["role"] for item in self.result["agent_trace"]},
+        )
 
-    def test_sentence_level_provenance_is_traceable(self) -> None:
-        result = self.orchestrator.run("graduate_cross_domain", config="full")
-        supported = [
-            claim for claim in result["claims"] if claim["evidence_ids"]
+    def test_track_a_exposes_only_current_decision_variants(self) -> None:
+        variants = {
+            item["variant_id"] for item in self.result["ablation"]["variants"]
+        }
+        self.assertEqual(
+            {
+                "rule_program",
+                "single_pass",
+                "homogeneous_vote",
+                "evidence_triad",
+            },
+            variants,
+        )
+
+    def test_unsupported_pressure_claim_is_not_accepted(self) -> None:
+        pressure = next(
+            claim
+            for claim in self.result["claims"]
+            if claim["relation"] == "guarantees"
+        )
+        self.assertNotEqual("accepted", pressure["status"])
+
+    def test_every_accepted_claim_has_valid_evidence_details(self) -> None:
+        accepted = [
+            claim for claim in self.result["claims"] if claim["status"] == "accepted"
         ]
-        self.assertTrue(all(claim["evidence_spans"] for claim in supported))
-        valid_ids = set(self.orchestrator.kb.paper_by_id)
+        self.assertTrue(accepted)
         self.assertTrue(
             all(
-                span["paper_id"] in valid_ids
-                for claim in supported
-                for span in claim["evidence_spans"]
+                all(
+                    self.orchestrator.kb.evidence_is_valid(item)
+                    for item in claim["evidence_ids"]
+                )
+                and self.result["evidence_details"][claim["claim_id"]]
+                for claim in accepted
             )
         )
-        self.assertTrue(
-            any(node["kind"] == "evidence_span" for node in result["graph"]["nodes"])
+
+    def test_legacy_presets_are_not_exported_by_runtime_package(self) -> None:
+        self.assertFalse(hasattr(yanhai, "get_preset"))
+        self.assertFalse(hasattr(yanhai, "list_presets"))
+        self.assertNotIn("FeatureFlags", yanhai.__all__)
+
+    def test_legacy_prototypes_are_explicitly_archived(self) -> None:
+        self.assertEqual(
+            "unsupported_historical_reference",
+            legacy_six_agent.ARCHIVE_STATUS,
         )
-
-    def test_ablation_changes_only_requested_switch(self) -> None:
-        full = get_preset("full").flags.to_dict()
-        ablated = get_preset("no_falsification").flags.to_dict()
-        changed = {key for key in full if full[key] != ablated[key]}
-        self.assertEqual({"sequential_falsification"}, changed)
-
-    def test_no_judge_ablation_exposes_pressure_claim(self) -> None:
-        result = self.orchestrator.run("undergraduate_ai", config="no_judge")
-        pressure = next(
-            claim for claim in result["claims"] if claim["relation"] == "guarantees"
-        )
-        self.assertEqual("accepted", pressure["status"])
-        self.assertGreater(result["metrics"]["hallucination_proxy_rate"], 0)
-
-    def test_pressure_claim_uses_explicit_abstention(self) -> None:
-        result = self.orchestrator.run("enterprise_analyst", config="full")
-        pressure = next(
-            claim for claim in result["claims"] if claim["relation"] == "guarantees"
-        )
-        self.assertEqual("abstained", pressure["status"])
-        self.assertGreater(len(pressure["falsification_steps"]), 0)
-        graph_labels = {node["label"] for node in result["graph"]["nodes"]}
-        self.assertNotIn("零幻觉科研结论", graph_labels)
-
-    def test_performance_probe_contains_real_stage_timings(self) -> None:
-        result = self.orchestrator.run("undergraduate_ai", config="full")
-        probe = result["performance"]
-        self.assertEqual("time.perf_counter_ns", probe["clock"])
-        self.assertGreater(probe["total_ms"], 0)
-        self.assertTrue(all(stage["duration_ms"] >= 0 for stage in probe["stages"]))
-        self.assertEqual(len(result["claims"]), probe["counters"]["claims_proposed"])
+        self.assertIn("full", legacy_six_agent.ARCHIVED_PRESETS)
 
 
 if __name__ == "__main__":

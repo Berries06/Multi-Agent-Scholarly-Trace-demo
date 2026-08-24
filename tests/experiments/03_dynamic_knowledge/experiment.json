@@ -1,10 +1,13 @@
 {
   "slug": "03_dynamic_knowledge",
-  "title": "动态学情反馈测试",
-  "purpose": "比较三种难度反馈下概念掌握状态和目标难度是否产生可解释更新。",
-  "presets": ["full", "no_knowledge_tracing"],
+  "title": "三智能体反馈难度回归",
+  "purpose": "比较太难、合适、太简单三种反馈下目标难度、资源适配和裁决链路是否稳定更新。",
+  "mode": "orchestrator",
+  "evaluation_type": "self_supervised_proxy",
+  "claim_ceiling": "仅支持合成画像下反馈—难度更新的确定性回归行为。",
+  "variants": ["three_agent_pipeline"],
   "case_ids": ["M001", "M004"],
   "feedbacks": ["too_hard", "suitable", "too_easy"],
   "repetitions": 2,
-  "primary_metrics": ["目标难度", "掌握度更新开关", "适配指标", "资源稳定性"]
+  "primary_metrics": ["目标难度", "适配准确率", "知识覆盖率", "三智能体轨迹完整率"]
 }

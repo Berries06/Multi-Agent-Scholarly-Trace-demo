@@ -21,11 +21,17 @@
 | `/AgentDemo/start/` | Nginx HTTPS 反代 | `127.0.0.1:8765` |
 | `/AgentDemo/start/api/` | 反代、限流、请求体限制 | `127.0.0.1:8765/api/` |
 | `/AgentDemo/install/` | Nginx 静态文件 | `/var/www/mysite/AgentDemo/install/` |
+| `/AgentDemo/lab/` | CPU 证据裁决实验台 | `127.0.0.1:8501` |
+| `/AgentDemo/lab/gliner/` | GPU GLiNER 实验台（反向隧道） | `127.0.0.1:18502` |
 | `/AgentDemo` | 308 跳转 | `/AgentDemo/` |
 
 Web 服务直接运行在腾讯云，不经过宿舍 M920q 和 FRP。这样不受宿舍网络
 23:30–07:00 断网影响，也减少一层故障点。当前程序运行时没有第三方 Python
 依赖，1.9 GiB 云主机足以承载验证流量。
+
+共享实验台的授权闸门、固定环境、反向隧道、费用记录、验收和回滚步骤见
+[`labs/README.md`](labs/README.md)。该手册未授权任何人直接修改成员个人服务器
+或购买 GPU。
 
 ## 本地构建
 

@@ -39,11 +39,21 @@ class DecisionAblation:
     不替代 LLM 或专家标注的公开基准。
     """
 
-    def __init__(self, project_root: Path, knowledge_base: KnowledgeBase) -> None:
+    def __init__(
+        self,
+        project_root: Path,
+        knowledge_base: KnowledgeBase,
+        benchmark: dict[str, Any] | None = None,
+    ) -> None:
         self.project_root = project_root
         self.kb = knowledge_base
-        benchmark_path = project_root / "data" / "evaluation" / "decision_benchmark.json"
-        self.benchmark = json.loads(benchmark_path.read_text(encoding="utf-8"))
+        if benchmark is not None:
+            self.benchmark = benchmark
+        else:
+            benchmark_path = (
+                project_root / "data" / "evaluation" / "decision_benchmark.json"
+            )
+            self.benchmark = json.loads(benchmark_path.read_text(encoding="utf-8"))
         self.critic = CriticAgent()
         self.judge = JudgeAgent()
 

@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "description": "差距1对比实验的模型池与价格快照。价格单位见每项 currency：CNY=元/百万 token，USD=美元/百万 token。快照日期 2026-08-24，来源为团队负责人提供的官方目录；控制台调价时更新本文件并同步记录新日期。",
+  "snapshot_date": "2026-08-24",
+  "price_pages": {
+    "deepseek": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing",
+    "zhipu": "https://open.bigmodel.cn/pricing",
+    "kimi": "https://platform.moonshot.cn/docs/pricing/chat"
+  },
+  "prices": {
+    "deepseek:deepseek-v4-flash": { "input": 1.0, "output": 2.0, "currency": "CNY", "note": "低延迟高吞吐，1M 上下文" },
+    "deepseek:deepseek-v4-pro": { "input": 3.1, "output": 6.2, "currency": "CNY", "note": "综合旗舰，1M 上下文；75% 折扣已转永久定价" },
+    "deepseek:deepseek-chat": { "input": null, "output": null, "currency": "CNY", "note": "旧别名，指向 v4 系列" },
+    "deepseek:deepseek-reasoner": { "input": null, "output": null, "currency": "CNY", "note": "旧别名，指向 v4 系列" },
+    "zhipu:glm-4-flash": { "input": 0, "output": 0, "currency": "CNY", "note": "免费模型，128K 上下文" },
+    "zhipu:glm-5-turbo": { "input": 5, "output": 22, "currency": "CNY", "note": "Agent 专用，200K 上下文" },
+    "zhipu:glm-5.1": { "input": 6, "output": 24, "currency": "CNY", "note": "旗舰基座，200K 上下文" },
+    "zhipu:glm-4.7": { "input": null, "output": null, "currency": "CNY", "note": "Agentic Coding；价格待控制台确认" },
+    "kimi:kimi-k2.6": { "input": 0.95, "output": 4.0, "currency": "USD", "note": "通用模型，256K 上下文" },
+    "kimi:kimi-k2.7-code": { "input": 0.95, "output": 4.0, "currency": "USD", "note": "编程专用高速，256K 上下文" },
+    "kimi:kimi-k3": { "input": 3.0, "output": 15.0, "currency": "USD", "note": "旗舰推理，1M 上下文，支持视觉理解" }
+  }
+}

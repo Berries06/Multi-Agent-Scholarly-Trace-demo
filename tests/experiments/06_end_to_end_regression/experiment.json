@@ -1,8 +1,11 @@
 {
   "slug": "06_end_to_end_regression",
-  "title": "全角色全案例回归",
-  "purpose": "对全部 mock case 运行完整创新预设，确认数据扩张前的端到端基线可重复。",
-  "presets": ["full"],
+  "title": "三智能体全画像全案例回归",
+  "purpose": "对全部 synthetic proxy case 运行当前三智能体协议，确认画像、图检索、证据裁决和资源生成链路可重复。",
+  "mode": "orchestrator",
+  "evaluation_type": "simulation_only",
+  "claim_ceiling": "仅支持 9 个合成案例的代码路径、schema、证据 ID、轨迹与 Idea 输出回归。",
+  "variants": ["three_agent_pipeline"],
   "repetitions": 3,
-  "primary_metrics": ["全部 case 可运行", "证据完整性", "反证输出", "蓝海假设输出"]
+  "primary_metrics": ["全部 case 可运行", "证据完整性", "三智能体轨迹完整率", "研究 Idea 输出"]
 }

@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import time
+import uuid
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from .agents import (
     CriticAgent,
@@ -115,21 +117,70 @@ class ScholarlyTraceOrchestrator:
         query: str = DEFAULT_QUERY,
         difficulty_adjustment: int = 0,
         domain_id: str | None = None,
+        *,
+        include_ablation: bool = True,
+        on_step: Callable[[dict[str, Any]], None] | None = None,
     ) -> dict[str, Any]:
         if profile_id not in self.profiles:
             raise KeyError(f"Unknown profile: {profile_id}")
         kb, graph_rag, discovery = self._runtime(domain_id)
         profile = self.profiles[profile_id]
         traces: list[AgentTrace] = []
+        emit = on_step or (lambda step: None)
 
         diagnosis = self.diagnoser.diagnose(profile, difficulty_adjustment)
+        emit(
+            {
+                "stage": "diagnosis",
+                "agent": self.diagnoser.name,
+                "role": "学情诊断",
+                "status": "completed",
+                "summary": (
+                    f"准备度 {diagnosis['readiness_score']}，目标难度 "
+                    f"L{diagnosis['target_difficulty']}。"
+                ),
+            }
+        )
         intent = self.intent_agent.perceive(query)
+        emit(
+            {
+                "stage": "intent",
+                "agent": self.intent_agent.name,
+                "role": "意图识别与检索路由",
+                "status": "completed",
+                "summary": (
+                    f"识别为“{intent['label']}”，路由至 {intent['route']}"
+                    f"（置信度 {intent['confidence']:.0%}）。"
+                ),
+            }
+        )
         graph_retrieval = graph_rag.query(query, intent)
+        emit(
+            {
+                "stage": "graph_retrieval",
+                "agent": "GraphRAGLiteEngine",
+                "role": "意图驱动图检索",
+                "status": "completed",
+                "summary": (
+                    f"沿 {intent['route']} 检索，召回 "
+                    f"{len(graph_retrieval['recommended_papers'])} 篇推荐论文。"
+                ),
+            }
+        )
         profile_papers = self.retriever.retrieve(
             kb,
             query,
             profile,
             diagnosis,
+        )
+        emit(
+            {
+                "stage": "retrieval",
+                "agent": self.retriever.name,
+                "role": "证据检索",
+                "status": "completed",
+                "summary": f"证据检索完成，命中 {len(profile_papers)} 篇候选论文。",
+            }
         )
         graph_paper_ids = [
             item["paper_id"]
@@ -149,8 +200,23 @@ class ScholarlyTraceOrchestrator:
             if len(papers) >= 8:
                 break
         extraction = self.extraction_agent.inspect_index(kb, papers)
+        emit(
+            {
+                "stage": "extraction",
+                "agent": self.extraction_agent.name,
+                "role": "论文解析与知识建图",
+                "status": extraction["status"],
+                "summary": (
+                    f"复用版本化索引：{extraction['input_papers']} 篇论文、"
+                    f"{extraction['evidence_spans']} 条证据跨度、"
+                    f"{extraction['knowledge_concepts']} 个知识概念。"
+                ),
+            }
+        )
 
+        started = time.perf_counter()
         claims = self.proposer.propose(kb, papers)
+        proposer_ms = (time.perf_counter() - started) * 1000
         traces.append(
             AgentTrace(
                 agent=self.proposer.name,
@@ -160,11 +226,14 @@ class ScholarlyTraceOrchestrator:
                     f"从抽取图谱生成 {len(claims) - 1} 条候选关系，并加入 "
                     "1 条无证据压力测试命题。"
                 ),
-                duration_ms=203,
+                duration_ms=round(proposer_ms, 2),
             )
         )
+        emit(traces[-1].to_dict())
 
+        started = time.perf_counter()
         claims = self.critic.critique(claims, kb)
+        critic_ms = (time.perf_counter() - started) * 1000
         flagged = sum(
             1
             for claim in claims
@@ -176,11 +245,14 @@ class ScholarlyTraceOrchestrator:
                 role="反证与约束",
                 status="completed",
                 summary=f"完成证据交叉检查，标记 {flagged} 条高风险命题。",
-                duration_ms=232,
+                duration_ms=round(critic_ms, 2),
             )
         )
+        emit(traces[-1].to_dict())
 
+        started = time.perf_counter()
         claims = self.judge.adjudicate(claims, kb)
+        judge_ms = (time.perf_counter() - started) * 1000
         accepted = sum(claim.status == "accepted" for claim in claims)
         rejected = sum(claim.status == "rejected" for claim in claims)
         traces.append(
@@ -189,11 +261,21 @@ class ScholarlyTraceOrchestrator:
                 role="置信裁决",
                 status="completed",
                 summary=f"通过 {accepted} 条，拒绝 {rejected} 条；无证据强断言未进入资源。",
-                duration_ms=167,
+                duration_ms=round(judge_ms, 2),
             )
         )
+        emit(traces[-1].to_dict())
 
         resources = self.resource_agent.generate(profile, diagnosis, claims, kb)
+        emit(
+            {
+                "stage": "resources",
+                "agent": self.resource_agent.name,
+                "role": "个性化资源",
+                "status": "completed",
+                "summary": "依据已接收图谱关系生成导读、实操和测评。",
+            }
+        )
 
         claim_dicts = [claim.to_dict() for claim in claims]
         graph = kb.graph_for_claims(claim_dicts)
@@ -208,7 +290,8 @@ class ScholarlyTraceOrchestrator:
             "resource_match_score": diagnosis["resource_match_score"],
             "feedback_adjustment": difficulty_adjustment,
         }
-        return {
+        result = {
+            "run_id": uuid.uuid4().hex,
             "project": "研海寻踪",
             "domain": kb.domain,
             "query": query,
@@ -287,8 +370,10 @@ class ScholarlyTraceOrchestrator:
             "resources": resources,
             "report": report,
             "metrics": metrics,
-            "ablation": self.ablation.run(),
         }
+        if include_ablation:
+            result["ablation"] = self.ablation.run()
+        return result
 
     def run_with_provider(
         self,
@@ -487,6 +572,8 @@ class ScholarlyTraceOrchestrator:
         feedback: str,
         query: str = DEFAULT_QUERY,
         domain_id: str | None = None,
+        *,
+        include_ablation: bool = True,
     ) -> dict[str, Any]:
         adjustments = {"too_hard": -1, "suitable": 0, "too_easy": 1}
         if feedback not in adjustments:
@@ -496,6 +583,7 @@ class ScholarlyTraceOrchestrator:
             query,
             adjustments[feedback],
             domain_id,
+            include_ablation=include_ablation,
         )
         result["feedback"] = {
             "signal": feedback,

@@ -113,8 +113,8 @@
       "canonical_name": "document-level information extraction",
       "entity_type": "TASK",
       "aliases": [
-        "document-level information extraction",
-        "Document-level information extraction"
+        "Document-level information extraction",
+        "document-level information extraction"
       ],
       "mentions": [
         {
@@ -359,8 +359,8 @@
       "canonical_name": "zero-shot relation extraction",
       "entity_type": "TASK",
       "aliases": [
-        "Zero-shot relation extraction",
-        "zero-shot relation extraction"
+        "zero-shot relation extraction",
+        "Zero-shot relation extraction"
       ],
       "mentions": [
         {
@@ -387,8 +387,8 @@
       "canonical_name": "full-text scientific information extraction",
       "entity_type": "TASK",
       "aliases": [
-        "Full-text scientific information extraction",
-        "full-text scientific information extraction"
+        "full-text scientific information extraction",
+        "Full-text scientific information extraction"
       ],
       "mentions": [
         {
@@ -886,8 +886,8 @@
       "canonical_name": "text-table evidence",
       "entity_type": "METHOD",
       "aliases": [
-        "text-table evidence",
-        "Text-table evidence"
+        "Text-table evidence",
+        "text-table evidence"
       ],
       "mentions": [
         {
@@ -942,8 +942,8 @@
       "canonical_name": "scientific information extraction",
       "entity_type": "TASK",
       "aliases": [
-        "scientific information extraction",
-        "Scientific information extraction"
+        "Scientific information extraction",
+        "scientific information extraction"
       ],
       "mentions": [
         {

@@ -21,7 +21,16 @@ class ProviderTests(unittest.TestCase):
     def test_four_remote_providers_and_mock_are_available(self) -> None:
         provider_ids = {item["id"] for item in list_providers()}
         self.assertEqual(
-            {"mock", "deepseek", "free-deepseek", "openai", "anthropic", "kimi"},
+            {
+                "mock",
+                "deepseek",
+                "free-deepseek",
+                "openai",
+                "anthropic",
+                "kimi",
+                "zhipu",
+                "qwen",
+            },
             provider_ids,
         )
 
@@ -112,7 +121,7 @@ class ProviderTests(unittest.TestCase):
         config = ProviderConfig.from_payload(
             {
                 "provider": "kimi",
-                "model": "kimi-k3",
+                "model": "kimi-k2.6",
                 "api_key": "test-secret",
             }
         )

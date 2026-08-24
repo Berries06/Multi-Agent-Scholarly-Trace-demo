@@ -1,0 +1,2172 @@
+{
+  "benchmark_id": "generated-decision-cases-v1",
+  "domain": "educational-knowledge-tracing",
+  "frozen_on": "2026-08-20",
+  "scope": "L2 真实证据机制用例：从 accepted 关系程序化生成。标签由构造方式客观决定；positive 标签以规则抽取为基准，必须经 L3 人工抽查核验。不得在生成后修改标签；若人工推翻某条，写入 separate corrections 记录而非改文件。",
+  "generation": {
+    "seed": 20260819,
+    "source_relation_count": 26,
+    "generated_on": "2026-08-20T12:54:45.130257+00:00"
+  },
+  "cases_sha256": "e9848e422bf1409b8ddb2799740b1a4fcdc2390e6c43f8ac5053339f8370a832",
+  "cases": [
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "recurrent neural network",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:0fde873d98b156",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:28835549fa108d",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "AKT",
+      "target": "Rasch model",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:3b079e541a1deb",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SAINT",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:54c9f453ead0dc",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SAINT",
+      "target": "EdNet",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:5662a80e3b1995",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "DKVMN",
+      "target": "key-value memory network",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:5a33f5cb287b6e",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "DKVMN",
+      "target": "ASSISTments",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:5c7933dc216b1c",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "DKVMN",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:610927609b9d86",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "AKT",
+      "target": "monotonic attention",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:6a06d7ec74a4ca",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "EdNet",
+      "target": "knowledge tracing",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:6d6d15673bbed0",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SAINT",
+      "target": "self-attention",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:6e52aa62737af8",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "pyKT",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:7fd653dc660874",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "EdNet",
+      "target": "784,309 learners",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:8566a6a3f5ed86",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "pyKT",
+      "target": "standardized preprocessing",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:88a991644a5fcb",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "AKT",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:8cf08e1144aefa",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:8d06c4f8c06f31",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "pyKT",
+      "target": "EdNet",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:90961eeae98894",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "pyKT",
+      "target": "ASSISTments",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:97bf7456cb1759",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "DKVMN",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:9a002e86260e9a",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "standardized preprocessing",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:9a2745658c77d2",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "AKT",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:b679800e6a8b1d",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "SAINT",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:b9748913df5116",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "EdNet",
+      "target": "131 million interactions",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:d40064a875e325",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "EdNet",
+      "target": "learner performance prediction",
+      "relation": "enables",
+      "relation_type": "ENABLES",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:deaa6c241dae27",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "AKT",
+      "target": "ASSISTments",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:eed7859e453577",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "ASSISTments",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-NOE-relation:f6c359b9e3841a",
+      "gold_supported": false,
+      "error_type": "no_evidence",
+      "note": "同一三元组去掉全部证据"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "recurrent neural network",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:0fde873d98b156",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "learner performance prediction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:28835549fa108d",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "AKT",
+      "target": "Rasch model",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:3b079e541a1deb",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SAINT",
+      "target": "learner performance prediction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:54c9f453ead0dc",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SAINT",
+      "target": "EdNet",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:5662a80e3b1995",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "DKVMN",
+      "target": "key-value memory network",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:5a33f5cb287b6e",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "DKVMN",
+      "target": "ASSISTments",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:5c7933dc216b1c",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "DKVMN",
+      "target": "knowledge tracing",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:610927609b9d86",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "AKT",
+      "target": "monotonic attention",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:6a06d7ec74a4ca",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "EdNet",
+      "target": "knowledge tracing",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:6d6d15673bbed0",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SAINT",
+      "target": "self-attention",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:6e52aa62737af8",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "pyKT",
+      "target": "knowledge tracing",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:7fd653dc660874",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "EdNet",
+      "target": "784,309 learners",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:8566a6a3f5ed86",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "pyKT",
+      "target": "standardized preprocessing",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:88a991644a5fcb",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "AKT",
+      "target": "knowledge tracing",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:8cf08e1144aefa",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "knowledge tracing",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:8d06c4f8c06f31",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "pyKT",
+      "target": "EdNet",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:90f0f88bf84f2b:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:90961eeae98894",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "pyKT",
+      "target": "ASSISTments",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:97bf7456cb1759",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "DKVMN",
+      "target": "learner performance prediction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:9a002e86260e9a",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "standardized preprocessing",
+      "target": "learner performance prediction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:9a2745658c77d2",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "AKT",
+      "target": "learner performance prediction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:b679800e6a8b1d",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "SAINT",
+      "target": "knowledge tracing",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:b9748913df5116",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "EdNet",
+      "target": "131 million interactions",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:d40064a875e325",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "EdNet",
+      "target": "learner performance prediction",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:deaa6c241dae27",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "AKT",
+      "target": "ASSISTments",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:eed7859e453577",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "ASSISTments",
+      "relation": "guarantees",
+      "relation_type": "speculative",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-OVC-relation:f6c359b9e3841a",
+      "gold_supported": false,
+      "error_type": "overclaim",
+      "note": "关系谓词改写为绝对化 guarantees"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "recurrent neural network",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:0fde873d98b156",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:28835549fa108d",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "AKT",
+      "target": "Rasch model",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:3b079e541a1deb",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SAINT",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:54c9f453ead0dc",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SAINT",
+      "target": "EdNet",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:5662a80e3b1995",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "DKVMN",
+      "target": "key-value memory network",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:5a33f5cb287b6e",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "DKVMN",
+      "target": "ASSISTments",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:5c7933dc216b1c",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "DKVMN",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:610927609b9d86",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "AKT",
+      "target": "monotonic attention",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:6a06d7ec74a4ca",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "EdNet",
+      "target": "knowledge tracing",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:6d6d15673bbed0",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SAINT",
+      "target": "self-attention",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:6e52aa62737af8",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "pyKT",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:7fd653dc660874",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "EdNet",
+      "target": "784,309 learners",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:8566a6a3f5ed86",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "pyKT",
+      "target": "standardized preprocessing",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:88a991644a5fcb",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "AKT",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:8cf08e1144aefa",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:8d06c4f8c06f31",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "pyKT",
+      "target": "EdNet",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:90f0f88bf84f2b:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:90961eeae98894",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "pyKT",
+      "target": "ASSISTments",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:97bf7456cb1759",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "DKVMN",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:9a002e86260e9a",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "standardized preprocessing",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:9a2745658c77d2",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "AKT",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:b679800e6a8b1d",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "SAINT",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:b9748913df5116",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "EdNet",
+      "target": "131 million interactions",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:d40064a875e325",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "EdNet",
+      "target": "learner performance prediction",
+      "relation": "enables",
+      "relation_type": "ENABLES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:deaa6c241dae27",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "AKT",
+      "target": "ASSISTments",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:eed7859e453577",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "ASSISTments",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-POS-relation:f6c359b9e3841a",
+      "gold_supported": true,
+      "error_type": null,
+      "note": "真实关系 + 真实证据；标签以规则抽取为准，需 L3 抽查"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "recurrent neural network",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:0fde873d98b156",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "learner performance prediction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:28835549fa108d",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "AKT",
+      "target": "Rasch model",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:3b079e541a1deb",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "SAINT",
+      "target": "learner performance prediction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:54c9f453ead0dc",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "SAINT",
+      "target": "EdNet",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:5662a80e3b1995",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "DKVMN",
+      "target": "key-value memory network",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:5a33f5cb287b6e",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "DKVMN",
+      "target": "ASSISTments",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:5c7933dc216b1c",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "DKVMN",
+      "target": "knowledge tracing",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:610927609b9d86",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "AKT",
+      "target": "monotonic attention",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:6a06d7ec74a4ca",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "EdNet",
+      "target": "knowledge tracing",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:6d6d15673bbed0",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "SAINT",
+      "target": "self-attention",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:6e52aa62737af8",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "pyKT",
+      "target": "knowledge tracing",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:7fd653dc660874",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "EdNet",
+      "target": "784,309 learners",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:8566a6a3f5ed86",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "pyKT",
+      "target": "standardized preprocessing",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:88a991644a5fcb",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "AKT",
+      "target": "knowledge tracing",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:2"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:8cf08e1144aefa",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "knowledge tracing",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:8d06c4f8c06f31",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "pyKT",
+      "target": "EdNet",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:90f0f88bf84f2b:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:90961eeae98894",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "pyKT",
+      "target": "ASSISTments",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:97bf7456cb1759",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "DKVMN",
+      "target": "learner performance prediction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:9a002e86260e9a",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "standardized preprocessing",
+      "target": "learner performance prediction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:9a2745658c77d2",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "AKT",
+      "target": "learner performance prediction",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:b679800e6a8b1d",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "SAINT",
+      "target": "knowledge tracing",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:b9748913df5116",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 USES"
+    },
+    {
+      "source": "EdNet",
+      "target": "131 million interactions",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:d40064a875e325",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "EdNet",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:deaa6c241dae27",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "AKT",
+      "target": "ASSISTments",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:eed7859e453577",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "ASSISTments",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-TMM-relation:f6c359b9e3841a",
+      "gold_supported": false,
+      "error_type": "type_mismatch",
+      "note": "换成违反约束的 IMPROVES"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "recurrent neural network",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:0fde873d98b156",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:28835549fa108d",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "AKT",
+      "target": "Rasch model",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:3b079e541a1deb",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SAINT",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:90f0f88bf84f2b:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:54c9f453ead0dc",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SAINT",
+      "target": "EdNet",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:5662a80e3b1995",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "DKVMN",
+      "target": "key-value memory network",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:5a33f5cb287b6e",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "DKVMN",
+      "target": "ASSISTments",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:ae0b636f3a61fd:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:5c7933dc216b1c",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "DKVMN",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:610927609b9d86",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "AKT",
+      "target": "monotonic attention",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:6a06d7ec74a4ca",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "EdNet",
+      "target": "knowledge tracing",
+      "relation": "benchmarks",
+      "relation_type": "BENCHMARKS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:6d6d15673bbed0",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SAINT",
+      "target": "self-attention",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:6e52aa62737af8",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "pyKT",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:7fd653dc660874",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "EdNet",
+      "target": "784,309 learners",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:8566a6a3f5ed86",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "pyKT",
+      "target": "standardized preprocessing",
+      "relation": "uses",
+      "relation_type": "USES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:76f747de912e86:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:88a991644a5fcb",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "AKT",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:8cf08e1144aefa",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:8d06c4f8c06f31",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "pyKT",
+      "target": "EdNet",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:90961eeae98894",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "pyKT",
+      "target": "ASSISTments",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:97bf7456cb1759",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "DKVMN",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:9a002e86260e9a",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "standardized preprocessing",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:3c6de1b7dd9146:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:9a2745658c77d2",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "AKT",
+      "target": "learner performance prediction",
+      "relation": "improves",
+      "relation_type": "IMPROVES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2022-pykt:90f0f88bf84f2b:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:b679800e6a8b1d",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "SAINT",
+      "target": "knowledge tracing",
+      "relation": "addresses",
+      "relation_type": "ADDRESSES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3038912.3052580:bfbaf8b2d1cdf9:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:b9748913df5116",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "EdNet",
+      "target": "131 million interactions",
+      "relation": "reports",
+      "relation_type": "REPORTS",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:neurips-2015-dkt:bfbaf8b2d1cdf9:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:d40064a875e325",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "EdNet",
+      "target": "learner performance prediction",
+      "relation": "enables",
+      "relation_type": "ENABLES",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3394486.3403282:90f0f88bf84f2b:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:deaa6c241dae27",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "AKT",
+      "target": "ASSISTments",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1007-978-3-030-52240-7_13:60020d1b19707b:1"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:eed7859e453577",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    },
+    {
+      "source": "Deep Knowledge Tracing",
+      "target": "ASSISTments",
+      "relation": "evaluates_on",
+      "relation_type": "EVALUATES_ON",
+      "base_confidence": 0.78,
+      "evidence_ids": [
+        "evidence:10.1145-3386527.3405945:e29e8d943c26ff:0"
+      ],
+      "annotators": [
+        "auto-generated"
+      ],
+      "claim_id": "L2-WEV-relation:f6c359b9e3841a",
+      "gold_supported": false,
+      "error_type": "wrong_evidence_id",
+      "note": "换成不相关论文的真实证据 ID"
+    }
+  ]
+}

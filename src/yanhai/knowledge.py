@@ -412,6 +412,38 @@ class KnowledgeBase:
             if evidence_id in evidence_index
         ]
 
+    def entity_mentioned_in_evidence(self, entity_name: str, evidence_id: str) -> bool:
+        """Return whether an extracted entity is mentioned in a specific evidence span.
+
+        The critic uses this instead of a canonical-name substring match so that
+        entities matched via Chinese aliases are still recognised inside Chinese
+        evidence text (canonical names are usually English). When mention linkage
+        is unavailable for the entity, fall back to alias-aware substring matching
+        against the evidence text.
+        """
+        normalized = entity_name.casefold()
+        payload = self.extracted_paper_graph()
+        for entity in payload["entities"]:
+            if entity["canonical_name"].casefold() != normalized:
+                continue
+            mention_ids = {mention["evidence_id"] for mention in entity["mentions"]}
+            if mention_ids:
+                return evidence_id in mention_ids
+            break
+        # Entity has no mention linkage (or is absent from the extracted graph):
+        # fall back to alias-aware substring matching against the evidence text.
+        details = self.evidence_details([evidence_id])
+        if not details:
+            return False
+        text = details[0].get("text", "").casefold()
+        aliases = {entity_name.casefold()}
+        for concept in self.schema["concepts"]:
+            if concept["canonical"].casefold() == normalized:
+                aliases.update(
+                    alias.casefold() for alias in concept.get("aliases", [])
+                )
+        return any(alias and alias in text for alias in aliases)
+
     def entity_type_for_name(self, name: str) -> str:
         return self.entity_type_by_name.get(name.casefold(), "")
 

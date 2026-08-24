@@ -10,6 +10,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from yanhai.extraction import (  # noqa: E402
     PlainTextParser,
+    PyPDFParser,
     SchemaGuidedExtractor,
     normalize_name,
 )
@@ -75,6 +76,27 @@ class ExtractionTests(unittest.TestCase):
         self.assertEqual(
             1.0,
             self.payload["audit"]["quality"]["relation_evidence_coverage"],
+        )
+
+
+class PyPDFBytesTests(unittest.TestCase):
+    def test_parse_bytes_preserves_page_sections(self) -> None:
+        try:
+            import pypdf  # noqa: F401
+        except ImportError:
+            self.skipTest("pypdf not installed")
+        pdfs = sorted(
+            (PROJECT_ROOT / "papers" / "scientific-ie-kg").glob("*.pdf")
+        )
+        if not pdfs:
+            self.skipTest("no local sample PDFs")
+        document = PyPDFParser().parse_bytes(
+            pdfs[0].read_bytes(), paper_id="pdf-test", title="pdf-test"
+        )
+        self.assertEqual("pdf-test", document.paper_id)
+        self.assertTrue(document.sections)
+        self.assertTrue(
+            all(name.startswith("page-") for name in document.sections)
         )
 
 

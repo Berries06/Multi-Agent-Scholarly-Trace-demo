@@ -1,0 +1,129 @@
+{
+  "generated_at": "2026-08-23T17:01:25.545856+00:00",
+  "days": 7,
+  "queries": {
+    "scientific-claim-verification": "cat:cs.CL AND (abs:\"claim verification\" OR abs:\"fact verification\" OR abs:\"evidence adjudication\")",
+    "kg-construction-llm": "cat:cs.AI AND (abs:\"knowledge graph\" AND abs:\"large language\")",
+    "multiagent-verification": "cat:cs.SI AND (abs:\"multi-agent\" AND (abs:\"debate\" OR abs:\"verification\"))"
+  },
+  "query_log": {
+    "scientific-claim-verification": [
+      "2608.20331v1",
+      "2608.18681v1"
+    ],
+    "kg-construction-llm": [
+      "2608.17443v1",
+      "2608.15919v1"
+    ],
+    "multiagent-verification": []
+  },
+  "hits": [
+    {
+      "arxiv_id": "2608.20331v1",
+      "title": "G-CARL: Grounded Checklist-Aligned Reward Learning for Patient-Oriented Medical Report Interpretation",
+      "authors": [
+        "Shiao Xie",
+        "Siyu Chen",
+        "Jianwei Lv",
+        "Bo Yuan",
+        "Yujin Wang",
+        "Xiandong Li"
+      ],
+      "affiliations": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "abstract": "Personalized interpretation of medical reports has emerged as an increasingly important need among patients. Addressing this need requires both evidence-grounded medical factuality and context-dependent patient communication, yet existing medical vision-language tasks do not adequately capture these dual requirements. To bridge this gap, we introduce Patient-oriented Medical Report Interpretation (PMRI), a novel open-ended multimodal generation task that requires models to explain medical reports in accurate and accessible language based on a user's query and dialogue history. These two objectives differ fundamentally in their verifiability, yet remain tightly coupled, making them difficult to optimize jointly under conventional supervised fine-tuning and holistic reinforcement learning paradigms. To address this challenge, we propose G-CARL, a grounded, checklist-aligned reinforcement learning framework that combines multi-source retrieval for atomic claim verification with context-aware, instance-specific weighted checklists for response coverage, providing structured supervision for factuality, user-demand satisfaction, and expression quality without constraining response diversity. We further construct MMedReport, a real-world PMRI benchmark, along with a clinician-designed three-dimensional evaluation protocol. Extensive experiments demonstrate that G-CARL consistently outperforms existing post-training baselines in overall quality, claim-level precision, and checklist recall. Pairwise preference evaluation by clinicians further confirms that G-CARL produces interpretations that are more accurate and better aligned with patient needs.",
+      "published": "2026-08-20T17:59:46Z",
+      "primary_url": "2608.20331v1",
+      "pdf_url": "https://arxiv.org/pdf/2608.20331v1",
+      "journal_ref": "",
+      "comment": "",
+      "matched_queries": [
+        "scientific-claim-verification"
+      ],
+      "similar_known_work": null
+    },
+    {
+      "arxiv_id": "2608.18681v1",
+      "title": "Learning What to Fail On: Failure-Mode Contextual Bandits for Adversarial Data Curation",
+      "authors": [
+        "Roie Kazoom",
+        "Ofir Cohen",
+        "Rami Puzis",
+        "Asaf Shabtai",
+        "Ofer Hadar"
+      ],
+      "affiliations": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "abstract": "We introduce a failure-aware adversarial retrieval-augmented framework for improving robustness in natural language understanding. Rather than selecting synthetic examples with a fixed reward threshold, our method formulates adversarial data curation as a failure-mode contextual bandit problem. Candidate examples are generated with retrieval-augmented prompting, filtered by the current target model, automatically validated by an LLM judge ensemble, and clustered into recurring failure modes. A stochastic policy then selects which failure modes to sample for retraining, and is updated using validation-based reward that balances robustness gains, forgetting, and data cost. This makes the data curator itself the learning agent, enabling adaptive selection of the most useful model failures across training rounds. On standard benchmarks, our approach improves RoBERTa-base accuracy from 88.48% to 92.60% on SNLI, from 75.04% to 80.95% on ANLI, and from 54.67% to 71.99% on MultiNLI, while consistently outperforming prior adversarial augmentation methods. We further demonstrate transfer to FEVER fact verification, achieving up to 79.86\\% FEVER score and 82.45\\% accuracy with RoBERTa-large. Finally, we provide a theoretical interpretation showing that, under stated assumptions, failure-mode sampling can reduce shortcut-aligned gradient contributions while inducing bounded distributional drift. By combining retrieval, automated validation, contextual-bandit failure selection, and controlled adversarial retraining, our framework enables scalable robustness improvement without additional human annotation.",
+      "published": "2026-08-19T08:31:15Z",
+      "primary_url": "2608.18681v1",
+      "pdf_url": "https://arxiv.org/pdf/2608.18681v1",
+      "journal_ref": "Transactions on Machine Learning Research (TMLR), August 2026",
+      "comment": "",
+      "matched_queries": [
+        "scientific-claim-verification"
+      ],
+      "similar_known_work": null
+    },
+    {
+      "arxiv_id": "2608.17443v1",
+      "title": "Structure-Internalized Rule Language Model for Faithful Knowledge Graph Reasoning",
+      "authors": [
+        "Xingrui Zhuo",
+        "Jiapu Wang",
+        "Manzong Huang",
+        "Gongqing Wu",
+        "Xindong Wu"
+      ],
+      "affiliations": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "abstract": "Knowledge Graph Reasoning (KGR) aims to discover latent facts by leveraging the structural evidence available in KGs, posing a challenge to the structural semantic understanding capability of KGR models. Recent studies have demonstrated that Large Language Models (LLMs) can achieve remarkable progress on KGR tasks via flexible in-context learning. However, the inherent representation inconsistency between KG structural context and LLM parametric knowledge remains inadequately addressed. This limitation prevents LLMs from effectively perceiving reasoning evidence that aligns with KG constraints, which undermines both the effectiveness and faithfulness of reasoning. We refer to this problem as reasoning evidence perception drift of LLMs over KGs. To address this problem, we propose a Structure-Internalized Rule Language Model (SIRLM), which centers on structural rule generation to couple the parametric learning of structural knowledge with the faithfulness evaluation of reasoning logic, enabling LLMs to anchor tightly to KG-grounded evidence. Specifically, we first design a Structure-Internalized Rule Generator (SIRG), which incorporates an in-context learning block augmented with a structural relation memory to coordinate structural and parametric knowledge. Furthermore, we equip SIRG with a KG tokenizer based on structural invariance learning and a neuro-symbolic reasoner based on rule-constrained message propagation. These components provide SIRG with learnable structural representations and faithful rule-execution feedback, respectively. Our SIRLM can be seamlessly integrated into standard LLM training paradigms, such as SFT and GRPO. Extensive experiments against 17 state-of-the-art KGR methods on 36 datasets demonstrate the significant superiority of SIRLM.",
+      "published": "2026-08-18T07:21:20Z",
+      "primary_url": "2608.17443v1",
+      "pdf_url": "https://arxiv.org/pdf/2608.17443v1",
+      "journal_ref": "",
+      "comment": "",
+      "matched_queries": [
+        "kg-construction-llm"
+      ],
+      "similar_known_work": null
+    },
+    {
+      "arxiv_id": "2608.15919v1",
+      "title": "Noesis: Bidirectional Graph-RAG with Adaptive Parallelism and Cross-Knowledge-Base Semantic Discovery",
+      "authors": [
+        "Nicola Cogotti"
+      ],
+      "affiliations": [
+        ""
+      ],
+      "abstract": "Retrieval-Augmented Generation over knowledge graphs (Graph-RAG) has emerged as a powerful paradigm for grounding large language models in domain-specific corpora. However, existing systems face persistent limitations: (1) static chunking fragments long documents, losing cross-section semantic connections; (2) ingestion pipelines do not scale adaptively; and (3) multi-domain deployments require either a monolithic knowledge base that dilutes retrieval precision or manual user routing. We present Noesis, a decoupled Graph-RAG architecture addressing these limitations through four algorithms: (a) Bidirectional Graph Traversal with a Graph-Feedback Context Resolver simulating human reading with degrading memory; (b) an AIMD Concurrency Controller adapted from TCP congestion control, achieving 23x speedup with zero OOM events; (c) Moesis, domain-aware selective quantization for MoE models achieving 6.3x speedup on 12 GB consumer GPUs; and (d) Mesh, cross-KB semantic routing with runtime structural discovery enabling small on-premises models to perform multi-hop cross-domain reasoning. On HotpotQA (1,000 questions), Noesis achieves 59.5 EM / 74.7 F1, surpassing GraphRAG by +27.8 EM while using a 35B on-premises model for graph construction rather than GPT-4o. Source text verification on a 193-page document confirms 90% precision on long-range causal edges inaccessible to chunk-independent extraction.",
+      "published": "2026-08-16T20:23:35Z",
+      "primary_url": "2608.15919v1",
+      "pdf_url": "https://arxiv.org/pdf/2608.15919v1",
+      "journal_ref": "",
+      "comment": "14 pages, 6 figures, 4 tables. Patent pending",
+      "matched_queries": [
+        "kg-construction-llm"
+      ],
+      "similar_known_work": null
+    }
+  ],
+  "interpreted": false
+}

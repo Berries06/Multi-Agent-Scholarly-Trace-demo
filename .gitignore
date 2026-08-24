@@ -2,7 +2,14 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
+.coverage
+.coverage.*
 .venv/
+.venv-lab/
+.mlflow/
+.hf-lab-cache/
+node_modules/
+frontend/dist/
 .env
 *.env
 !*.env.example
@@ -12,15 +19,14 @@ outputs/*.db
 outputs/*.log
 outputs/*.jsonl
 outputs/*.pid
-# runtime DB & generated experiment artifacts (not source assets)
-outputs/runtime/
-outputs/experiments/
-*.sqlite3
-# packaged release artifacts
-release/
+outputs/*.csv
 papers/**/*.pdf
 tmp/
+.tmp/
 dist/
-secret/
-secret/*
-!secret/.gitkeep
+outputs/experiments/
+outputs/experiment-dashboard.html
+.aris/traces/
+.aris/meta/events.jsonl
+build/
+.codex/

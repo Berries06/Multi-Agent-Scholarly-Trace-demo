@@ -1,0 +1,32 @@
+[Unit]
+Description=Yanhai GLiNER reverse SSH tunnel to snowsong.top
+After=network-online.target yanhai-gliner-lab.service
+Wants=network-online.target
+Requires=yanhai-gliner-lab.service
+
+[Service]
+Type=simple
+User=yanhai-gliner
+Group=yanhai-gliner
+EnvironmentFile=/etc/yanhai-gliner-tunnel.env
+ExecStart=/usr/bin/ssh -NT -i /etc/yanhai-gliner-tunnel/id_ed25519 -o BatchMode=yes -o ExitOnForwardFailure=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=yes -o UserKnownHostsFile=/etc/yanhai-gliner-tunnel/known_hosts -R 127.0.0.1:18502:127.0.0.1:8502 ${TUNNEL_DESTINATION}
+Restart=always
+RestartSec=5
+TimeoutStartSec=30
+TimeoutStopSec=15
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryMax=128M
+TasksMax=16
+
+[Install]
+WantedBy=multi-user.target

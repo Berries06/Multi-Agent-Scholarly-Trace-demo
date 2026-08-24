@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import time
 from dataclasses import dataclass, field
@@ -24,7 +25,12 @@ PROVIDER_REGISTRY: dict[str, dict[str, Any]] = {
         "label": "DeepSeek",
         "description": "使用自己的 DeepSeek API Key。",
         "default_model": "deepseek-v4-flash",
-        "models": ["deepseek-v4-flash", "deepseek-v4-pro"],
+        "models": [
+            "deepseek-v4-flash",
+            "deepseek-v4-pro",
+            "deepseek-chat",
+            "deepseek-reasoner",
+        ],
         "requires_api_key": True,
         "protocol": "openai_chat",
     },
@@ -59,8 +65,26 @@ PROVIDER_REGISTRY: dict[str, dict[str, Any]] = {
         "id": "kimi",
         "label": "Kimi / Moonshot",
         "description": "使用 Kimi OpenAI-compatible Chat Completions 接口。",
-        "default_model": "kimi-k3",
-        "models": ["kimi-k3", "kimi-k2.7-code-highspeed", "kimi-k2.6"],
+        "default_model": "kimi-k2.6",
+        "models": ["kimi-k2.6", "kimi-k2.7-code", "kimi-k3"],
+        "requires_api_key": True,
+        "protocol": "openai_chat",
+    },
+    "zhipu": {
+        "id": "zhipu",
+        "label": "智谱 GLM",
+        "description": "使用智谱 GLM OpenAI-compatible Chat Completions 接口。",
+        "default_model": "glm-4-flash",
+        "models": ["glm-4-flash", "glm-5-turbo", "glm-5.1", "glm-4.7"],
+        "requires_api_key": True,
+        "protocol": "openai_chat",
+    },
+    "qwen": {
+        "id": "qwen",
+        "label": "通义千问 Qwen",
+        "description": "使用阿里云百炼 DashScope OpenAI-compatible 接口。",
+        "default_model": "qwen-turbo",
+        "models": ["qwen-turbo", "qwen-plus", "qwen-max"],
         "requires_api_key": True,
         "protocol": "openai_chat",
     },
@@ -75,6 +99,16 @@ class ProviderError(RuntimeError):
     def __init__(self, message: str, *, status_code: int | None = None) -> None:
         super().__init__(message)
         self.status_code = status_code
+
+
+def _validate_model(provider: str, model: str) -> None:
+    metadata = PROVIDER_REGISTRY[provider]
+    if model not in metadata["models"]:
+        raise ValueError(
+            f"模型 {model} 不在 {metadata['label']} 注册表内；"
+            f"可选：{', '.join(metadata['models'])}。请先在 providers.py "
+            "注册表登记（型号以供应商控制台在售为准）。"
+        )
 
 
 @dataclass(slots=True, frozen=True)
@@ -94,6 +128,7 @@ class ProviderConfig:
         model = str(raw.get("model") or metadata["default_model"]).strip()
         if not model or len(model) > 120 or not re.fullmatch(r"[A-Za-z0-9._:/-]+", model):
             raise ValueError("模型 ID 格式不正确。")
+        _validate_model(provider, model)
         api_key = str(raw.get("api_key", "")).strip()
         if metadata["requires_api_key"] and not api_key:
             raise ValueError(f"{metadata['label']} 需要 API Key。")
@@ -369,6 +404,8 @@ class OpenAIChatProvider(BaseProvider):
             "deepseek": "https://api.deepseek.com/chat/completions",
             "free-deepseek": "https://api.deepseek.com/chat/completions",
             "kimi": "https://api.moonshot.cn/v1/chat/completions",
+            "zhipu": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+            "qwen": "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
         }[config.provider]
 
     def complete(
@@ -522,8 +559,32 @@ def create_provider(
 ) -> BaseProvider:
     if config.provider == "openai":
         return OpenAIResponsesProvider(config, transport)
-    if config.provider in {"deepseek", "kimi", "free-deepseek"}:
+    if config.provider in {"deepseek", "kimi", "zhipu", "qwen"}:
         return OpenAIChatProvider(config, transport)
     if config.provider == "anthropic":
         return AnthropicMessagesProvider(config, transport)
     raise ValueError("离线 Mock 不需要创建远程 Provider。")
+
+
+def load_config_from_env(provider: str, model: str | None = None) -> ProviderConfig:
+    """Build a ProviderConfig from environment variables.
+
+    API keys are read from ``<PROVIDER_UPPER>_API_KEY`` (e.g. ``ZHIPU_API_KEY``)
+    so they never enter source code or logs.
+    """
+    if provider not in PROVIDER_REGISTRY:
+        raise ProviderError(f"不支持的 AI 供应商：{provider}")
+    metadata = PROVIDER_REGISTRY[provider]
+    env_name = f"{provider.upper().replace('-', '_')}_API_KEY"
+    api_key = os.getenv(env_name, "").strip()
+    if metadata["requires_api_key"] and not api_key:
+        raise ProviderError(
+            f"缺少环境变量 {env_name}；请先把 API Key 写入项目 .env 文件。"
+        )
+    model = model or metadata["default_model"]
+    _validate_model(provider, model)
+    return ProviderConfig(
+        provider=provider,
+        model=model,
+        api_key=api_key,
+    )
