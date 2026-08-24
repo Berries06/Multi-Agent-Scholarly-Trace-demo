@@ -18,7 +18,7 @@
 
 **第一块，把 Key 和实验环境接好。** 三家的 Key 填进项目根目录的 `.env` 文件（变量名是 DEEPSEEK_API_KEY、KIMI_API_KEY、ZHIPU_API_KEY），Key 不发群、不进仓库。然后建实验专用环境：`python -m venv .venv-lab`，再装 `.[tracking]` 依赖。价格表已经入档在 `config/experiment_models.json`，控制台调价时你去更新并记下新日期。
 
-**第二块，先冒烟再全量。** 第一步只跑 8 道题验证三家能真调通——命令是 `.venv-lab\Scripts\python.exe scripts/run_decision_experiment.py --models "deepseek:deepseek-v4-flash,zhipu:glm-4-flash,kimi:kimi-k2.6" --max-cases 8`。冒烟通过的标准有三条：结果文件里申请的模型列表不为空、token 统计有数字、没有任何组合被静默跳过。之后按定稿的 12 组矩阵跑全量 390 道题：六个模型各自单独跑一遍（同质组），再做六组跨模型搭配（比如免费的 glm-4-flash 当批判者配 deepseek-v4-pro 当裁判）。每组的产出物：精确率、错误接收率、每道题的成本、token 数、耗时，全部留成六件套文件。
+**第二块，先冒烟再全量。** 第一步只跑 8 道题验证三家能真调通——命令是 `.venv-lab\Scripts\python.exe scripts/run_decision_experiment.py --models "deepseek:deepseek-v4-flash,zhipu:glm-4-flash,kimi:kimi-k2.6" --max-cases 8`。冒烟通过的标准有三条：结果文件里申请的模型列表不为空、token 统计有数字、没有任何组合被静默跳过。之后按定稿的矩阵跑全量 390 道题：六个模型各自单独跑一遍（同质组），再做六组跨模型搭配——glm-4-flash 配 deepseek-v4-pro、kimi-k2.6 配 deepseek-v4-pro、deepseek-v4-flash 配 glm-5-turbo、glm-4-flash 配 kimi-k3、deepseek-v4-pro 配 glm-4-flash、kimi-k2.6 配 kimi-k3（每组前半是批判者、后半是裁判）。每组的产出物：精确率、错误接收率、每道题的成本、token 数、耗时，全部留成六件套文件。
 
 **第三块，画曲线、做冻结。** 把所有组合画成"成本—精确率"散点图，先圈出精确率过 90% 的组合，再在其中挑成本最低的，这就是最终推荐配置；其余组合的结果也全量保留，不许只报好看的。每组跑完同步进 MLflow，打上负责人、数据性质、主张编号这些标签。
 
@@ -36,4 +36,4 @@
 
 ## 几条要注意的
 
-缺 Key 就记"跳过"，绝不允许拿规则模型冒充；成本数字只认入档的价格表；每次实验跑完让别人独立复核后再下结论。
+缺 Key 就记"跳过"，绝不允许拿规则模型冒充；成本数字只认入档的价格表；每组实验跑完交 D 独立复核，复核通过的数字才允许进作品书和视频。
