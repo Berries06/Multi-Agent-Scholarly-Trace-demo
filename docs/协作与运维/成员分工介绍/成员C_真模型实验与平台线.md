@@ -62,7 +62,7 @@
 
 **你的实验流程（按序）**：
 
-1. **R017 冒烟**：`.venv-lab\Scripts\python.exe scripts/run_decision_experiment.py --models "deepseek:deepseek-chat,zhipu:glm-4-flash" --max-cases 8` → 检查 summary.json 里 `models_requested` 非空、`stats` 有 token 数、缺 Key 的组合在 `skipped`；
+1. **R017 冒烟**：`.venv-lab\Scripts\python.exe scripts/run_decision_experiment.py --models "deepseek:deepseek-v4-flash,zhipu:glm-4-flash,kimi:kimi-k2.6" --max-cases 8` → 检查 summary.json 里 `models_requested` 非空、`stats` 有 token 数、缺 Key 的组合在 `skipped`；
 2. **R001–R003 标准化**：把 `scripts/run_decision_experiment.py` 迁进 `tests/experiments/07_decision_model_matrix/`（复用 `framework.py` 的六件套与验证逻辑）；写一个"故意损坏产物必须非零退出"的负测试（R002）；
 3. **全量矩阵**：`--max-cases 390` 跑"模型×角色"组合，产出成本/风险/时延表；
 4. **Pareto**（R020）：横轴成本、纵轴风险，标出前沿组合；用 `sync_mlflow.py` 入库，加 tags（`owner=你`, `data_kind=proxy`, `claim_id=C1-EASG`）；

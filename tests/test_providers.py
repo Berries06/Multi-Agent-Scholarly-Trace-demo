@@ -112,7 +112,7 @@ class ProviderTests(unittest.TestCase):
         config = ProviderConfig.from_payload(
             {
                 "provider": "kimi",
-                "model": "kimi-k2.5",
+                "model": "kimi-k2.6",
                 "api_key": "test-secret",
             }
         )
