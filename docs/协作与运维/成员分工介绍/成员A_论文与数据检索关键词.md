@@ -1,10 +1,10 @@
-# 成员 A · 论文与数据检索关键词清单
+﻿# 成员 A · 论文与数据检索关键词清单
 
 用途：为"标准答案集"扩量（60–100 条关系、6–10 篇未标注过的新论文）找论文。选论文三条硬标准：
 
 1. 2025–2026 年优先，有可获取全文（arXiv OA、ACL Anthology PDF、OpenAlex 标 is_oa）；
 2. 正文里有明确可标注的关系主张（"A 提升 B""X 在 Z 上优于 Y"这类句子），每篇至少能抽出 8–12 条候选关系；
-3. 与冻结语料（100+2 篇）和 vertical_kb（90 篇）不重复——核对方式：把候选论文列表交给管线脚本比对，或人工对照 `config/literature_corpus_100.json` 与 `data/vertical_kb/manifest.json`。
+3. 与冻结语料（100+2 篇）和 vertical_kb（90 篇）不重复——核对方式：把候选论文列表交给管线脚本比对，或人工对照 `config/文献/literature_corpus_100.json` 与 `data/vertical_kb/manifest.json`。
 
 ## 领域一：科学文献信息抽取与知识图谱
 

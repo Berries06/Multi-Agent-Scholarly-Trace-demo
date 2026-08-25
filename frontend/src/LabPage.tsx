@@ -3,6 +3,7 @@ import {
   Alert,
   Button,
   Card,
+  Checkbox,
   Col,
   Collapse,
   Descriptions,
@@ -86,6 +87,7 @@ export default function LabPage() {
   const [text, setText] = useState(EXAMPLE_PAPER)
   const [threshold, setThreshold] = useState(0.72)
   const [pdfFile, setPdfFile] = useState<File | null>(null)
+  const [saveSource, setSaveSource] = useState(false)
   const [result, setResult] = useState<IngestResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -121,6 +123,7 @@ export default function LabPage() {
           paper_id: paperId,
           title,
           accept_threshold: threshold,
+          save_source: saveSource,
         })
       } else {
         data = await ingestPaper({
@@ -129,6 +132,7 @@ export default function LabPage() {
           text,
           profile_id: profileId,
           accept_threshold: threshold,
+          save_source: saveSource,
         })
       }
       setResult(data)
@@ -226,6 +230,11 @@ export default function LabPage() {
             运行完整流水线
           </Button>
         </div>
+        <Alert
+          style={{ marginTop: 16 }} type="info" showIcon
+          message="默认只保存抽取与裁决结果"
+          description={<Checkbox checked={saveSource} onChange={(event) => setSaveSource(event.target.checked)}>我明确同意将本次论文原文或 PDF 解析正文保存到服务器</Checkbox>}
+        />
 
         <Upload.Dragger
           className="paper-dropzone"

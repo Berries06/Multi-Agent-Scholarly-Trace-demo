@@ -3,6 +3,17 @@
 .venv
 __pycache__
 *.pyc
+*.egg-info
+.pytest_cache
+.coverage
+archive
+artifacts
+docs
+idea-stage
+release
+secret
 outputs
 papers/**/*.pdf
 tmp
+frontend/dist
+frontend/node_modules

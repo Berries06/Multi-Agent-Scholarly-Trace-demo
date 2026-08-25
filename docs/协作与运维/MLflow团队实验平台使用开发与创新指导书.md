@@ -1,4 +1,4 @@
-# 研海寻踪 MLflow 团队实验平台使用、开发与创新指导书（通俗版 1.2）
+﻿# 研海寻踪 MLflow 团队实验平台使用、开发与创新指导书（通俗版 1.2）
 
 版本：1.2 研究证据复核版（在 1.1 通俗版基础上升级）  
 适用对象：研究负责人、数据与标注成员、算法成员、实验执行成员、系统与前端成员、独立复核成员  
@@ -380,7 +380,7 @@ RUN_PUBLIC_EXPERIMENTS.bat
 单个已版本化实验：
 
 ```powershell
-.venv-lab\Scripts\python.exe -m tests.experiments.<实验目录>.run
+.venv\Scripts\python.exe -m tests.experiments.<实验目录>.run
 ```
 
 DSH：
@@ -396,7 +396,7 @@ RUN_PUBLIC_EXPERIMENTS.bat --dsh
 只有 `verification.json.status=passed` 才能同步：
 
 ```powershell
-.venv-lab\Scripts\python.exe scripts\sync_mlflow.py `
+.venv\Scripts\python.exe scripts\sync_mlflow.py `
   --run-dir outputs\experiments\<protocol>\<timestamp>
 ```
 
@@ -954,9 +954,9 @@ DecisionEvent:
 - [100 篇完整来源、类别和质量分层](../研发记录/百篇文献来源与质量分层_2026-08-22.md)
 - [百篇缺口矩阵](../研发记录/百篇顶会文献缺口矩阵_2026-08-21.md)
 - [2026 补充 closest-work 差分](../研发记录/最近工作差分与C1口径修订_2026-08-21.md)
-- [本轮独立新颖性复核报告](../../idea-stage/NOVELTY_CHECK_REPORT.md)
-- 机器事实表：config/literature_corpus_100.json
-- 来源与哈希收据：artifacts/literature/literature_audit_100.json
+- [本轮独立新颖性复核报告](../研发记录/实验规划/新颖性复核报告.md)
+- 机器事实表：config/文献/literature_corpus_100.json
+- 来源与哈希收据：docs/研发记录/审计/数据/百篇文献审计.json
 - 审计程序：scripts/audit_literature_corpus.py
 
 ### 24.3 venue 质量分层：为什么不能说“100 篇顶刊”
@@ -1108,7 +1108,7 @@ DecisionEvent:
 | M7 | 多领域真实链 | 迁移、lineage 和时间链分析 | 领域专家确认真实反驳/修正/取代 | 只在单领域成立则缩小适用范围 |
 | C2 | ELT 真人纵向实验 | 题目、KT 基线、心理测量统计 | 招募、专家效度、延迟后测 | 无跨文档/跨领域迁移则降级为产品功能 |
 
-完整运行编号、指标和依赖见 [EASG 主张驱动实验计划](../../refine-logs/EXPERIMENT_PLAN.md) 与 [实验追踪表](../../refine-logs/EXPERIMENT_TRACKER.md)。
+完整运行编号、指标和依赖见 [EASG 主张驱动实验计划](../研发记录/实验规划/实验计划.md) 与 [实验追踪表](../研发记录/实验规划/实验追踪表.md)。
 
 ### 24.11 产品前端的唯一推荐平台
 

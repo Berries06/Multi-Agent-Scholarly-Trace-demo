@@ -36,7 +36,7 @@ from yanhai.easg import (  # noqa: E402
     load_events,
 )
 
-CASES_PATH = PROJECT_ROOT / "config" / "easg_r006_cases.json"
+CASES_PATH = PROJECT_ROOT / "config" / "实验" / "easg_r006_cases.json"
 EASG_SOURCE = SRC_ROOT / "yanhai" / "easg.py"
 RUNNER_SOURCE = Path(__file__).resolve()
 
@@ -194,7 +194,7 @@ def report_markdown(
         "",
         f"- 运行时间（UTC）：{run_config['timestamp_utc']}",
         f"- Git HEAD：{run_config['provenance']['git']['head']}（dirty={run_config['provenance']['git']['dirty']}）",
-        f"- 案例集：{run_config['input_sha256']['config/easg_r006_cases.json']}",
+        f"- 案例集：{run_config['input_sha256']['config/实验/easg_r006_cases.json']}",
         f"- 内核源码：{run_config['source_sha256']['src/yanhai/easg.py']}",
         "",
         "## 口径",
@@ -265,7 +265,7 @@ def main() -> int:
             "scripts/run_easg_r006.py": sha256(RUNNER_SOURCE),
         },
         "input_sha256": {
-            "config/easg_r006_cases.json": sha256(CASES_PATH),
+            "config/实验/easg_r006_cases.json": sha256(CASES_PATH),
         },
         "ledger_note": (
             "summary.json is a single-element array of the aggregate object to "

@@ -1,103 +1,43 @@
+"""统一产品后端的无副作用冒烟检查。"""
+
 from __future__ import annotations
 
 import argparse
 import json
 import sys
-import uuid
-from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 
-def request_json(
-    base_url: str,
-    path: str,
-    *,
-    payload: dict[str, Any] | None = None,
-    headers: dict[str, str] | None = None,
-) -> tuple[dict[str, Any], dict[str, str]]:
-    body = (
-        json.dumps(payload, ensure_ascii=False).encode("utf-8")
-        if payload is not None
-        else None
-    )
-    request_headers = dict(headers or {})
-    if body is not None:
-        request_headers["Content-Type"] = "application/json"
-    request = Request(
-        f"{base_url.rstrip('/')}{path}",
-        data=body,
-        headers=request_headers,
-        method="POST" if body is not None else "GET",
-    )
-    with urlopen(request, timeout=15) as response:
-        result = json.load(response)
-        return result, dict(response.headers.items())
+def read_json(url: str) -> dict[str, object]:
+    with urlopen(Request(url, headers={"Accept": "application/json"}), timeout=10) as response:
+        return json.load(response)
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Smoke-test the Yanhai backend and idempotency contract."
-    )
-    parser.add_argument("--base-url", default="http://127.0.0.1:8765")
+    parser = argparse.ArgumentParser(description="检查 FastAPI 健康状态和登录门禁")
+    parser.add_argument("--base-url", default="http://127.0.0.1:8766")
     args = parser.parse_args()
+    base = args.base_url.rstrip("/")
     try:
-        health, _ = request_json(args.base_url, "/api/health")
-        readiness, _ = request_json(args.base_url, "/api/ready")
-        domains, _ = request_json(args.base_url, "/api/domains")
-        key = f"smoke-{uuid.uuid4()}"
-        run_payload = {
-            "profile_id": "undergraduate_ai",
-            "query": "知识图谱如何帮助理解科研论文脉络？",
-        }
-        first, first_headers = request_json(
-            args.base_url,
-            "/api/run",
-            payload=run_payload,
-            headers={"Idempotency-Key": key},
-        )
-        second, second_headers = request_json(
-            args.base_url,
-            "/api/run",
-            payload=run_payload,
-            headers={"Idempotency-Key": key},
-        )
-        metrics, _ = request_json(args.base_url, "/api/metrics")
+        health = read_json(f"{base}/api/health")
+        ready = read_json(f"{base}/api/ready")
+        login_required = False
+        try:
+            read_json(f"{base}/api/domains")
+        except HTTPError as exc:
+            login_required = exc.code == 401
     except (HTTPError, URLError, TimeoutError, ValueError) as exc:
         print(json.dumps({"status": "failed", "error": str(exc)}, ensure_ascii=False))
         return 1
-
-    first_run = first.get("observability", {}).get("run_id")
-    second_run = second.get("observability", {}).get("run_id")
     checks = {
         "health_ok": health.get("status") == "ok",
-        "ready": readiness.get("status") == "ready",
+        "ready": ready.get("status") == "ready",
+        "fastapi_service": health.get("service") == "yanhai-api",
+        "login_gate": login_required,
         "three_core_agents": health.get("core_agents") == 3,
-        "five_system_agents": health.get("system_agents") == 5,
-        "three_vertical_domains": (
-            health.get("domains") == 3
-            and len(domains.get("domains", [])) == 3
-        ),
-        "run_traceable": bool(first_run and first_headers.get("X-Run-ID")),
-        "idempotency_replayed": (
-            first_run == second_run
-            and second_headers.get("Idempotency-Replayed") == "true"
-        ),
-        "metrics_available": metrics.get("requests_total", 0) >= 4,
     }
-    print(
-        json.dumps(
-            {
-                "status": "passed" if all(checks.values()) else "failed",
-                "checks": checks,
-                "run_id": first_run,
-                "papers": health.get("papers"),
-                "domains": health.get("domains"),
-            },
-            ensure_ascii=False,
-            indent=2,
-        )
-    )
+    print(json.dumps({"status": "passed" if all(checks.values()) else "failed", "checks": checks}, ensure_ascii=False, indent=2))
     return 0 if all(checks.values()) else 1
 
 

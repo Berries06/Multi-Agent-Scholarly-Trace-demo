@@ -5,7 +5,7 @@ an append-only DecisionEvent stream whose current projection is recomputed by a
 pure, hand-computable policy, plus a static-provenance baseline with
 last-write-wins semantics and no audit history.
 
-Scope (documented, per refine-logs/EXPERIMENT_PLAN.md Block 2):
+Scope (documented, per docs/研发记录/实验规划/实验计划.md Block 2):
 - toy/dev only; no LLM calls, no real papers, simulation_only.
 - state per claim: evidence_layer (supported|refuted|contested|unsupported)
   and admission_status (candidate|accepted|needs_review|rejected|superseded).

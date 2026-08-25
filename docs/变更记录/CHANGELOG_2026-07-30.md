@@ -1,4 +1,4 @@
-# 2026-07-30 后端可靠性改造日志
+﻿# 2026-07-30 后端可靠性改造日志
 
 ## 目标
 
@@ -107,7 +107,7 @@ Smoke 检查覆盖：
 - `/api/run` 新增 `specialist_agent_trace`、`graph_retrieval` 与 `assistant_response`。
 - 新增 `/api/graph-query`，可独立运行意图路由、概念图检索和论文推荐。
 - 前端增加两个专职 Agent、检索路由、纯概念图、论文推荐、回答骨架与建议追问。
-- 新增 `config/graphrag_routes.json` 和 `docs/14_intent_driven_graphrag.md`。
+- 新增 `docs/归档/配置/旧GraphRAG路线.json` 和 `docs/14_intent_driven_graphrag.md`。
 - 明确当前是 GraphRAG-inspired 离线基线，不冒充 Microsoft GraphRAG runtime；未来按 BYOG 接入 entities、relationships、text_units、communities、reports 与 embeddings。
 - 回归测试增至 43 项，覆盖三类意图路由、概念图纯度、多跳证据路径、论文推荐、独立 API 和乱码查询拒绝。
 

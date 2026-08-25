@@ -61,7 +61,7 @@ def _env_bool(name: str, default: bool = False) -> bool:
 @dataclass(slots=True, frozen=True)
 class RuntimeConfig:
     host: str = "127.0.0.1"
-    port: int = 8765
+    port: int = 8766
     max_request_body_bytes: int = 1_000_000
     max_workers: int = 4
     max_queued_tasks: int = 4
@@ -87,7 +87,7 @@ class RuntimeConfig:
             host=host or os.getenv("YANHAI_HOST", "127.0.0.1"),
             port=port
             if port is not None
-            else _env_int("YANHAI_PORT", 8765, 1, 65535),
+            else _env_int("YANHAI_PORT", 8766, 1, 65535),
             max_request_body_bytes=_env_int(
                 "YANHAI_MAX_BODY_BYTES", 1_000_000, 1024, 10_000_000
             ),

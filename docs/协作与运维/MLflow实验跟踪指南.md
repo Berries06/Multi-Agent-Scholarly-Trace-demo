@@ -18,7 +18,7 @@ flowchart LR
   V --> API["Yanhai Experiment Ledger :5173"]
 ```
 
-当前采用项目私有 `.venv-lab`、SQLite 后端和本地文件 artifact store，不需要 Docker、GPU 或任何模型 API。MLflow 状态全部位于被 Git 忽略的 `.mlflow/`，不会污染源码提交。
+当前采用项目私有 `.venv`、SQLite 后端和本地文件 artifact store，不需要 Docker、GPU 或任何模型 API。MLflow 状态全部位于被 Git 忽略的 `.mlflow/`，不会污染源码提交。
 
 职责边界：
 
@@ -66,7 +66,7 @@ RUN_PUBLIC_EXPERIMENTS.bat
 六个协议全部成功后会自动调用 MLflow 启动与同步。只同步某一条已经验证的运行：
 
 ```powershell
-.venv-lab\Scripts\python.exe scripts\sync_mlflow.py `
+.venv\Scripts\python.exe scripts\sync_mlflow.py `
   --run-dir outputs\experiments\<protocol>\<UTC timestamp>
 ```
 
@@ -84,8 +84,8 @@ RUN_PUBLIC_EXPERIMENTS.bat
 重新安装或升级到项目约束范围：
 
 ```powershell
-.venv-lab\Scripts\python.exe -m pip install ".[tracking]"
-.venv-lab\Scripts\python.exe -m pip check
+.venv\Scripts\python.exe -m pip install ".[tracking]"
+.venv\Scripts\python.exe -m pip check
 ```
 
 手工启动后台服务：

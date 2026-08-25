@@ -5,7 +5,9 @@ __pycache__/
 .coverage
 .coverage.*
 .venv/
-.venv-lab/
+.venv-product/
+.venv-win/
+.venv-local/
 .mlflow/
 .hf-lab-cache/
 node_modules/
@@ -26,8 +28,8 @@ tmp/
 dist/
 outputs/experiments/
 outputs/experiment-dashboard.html
-.aris/traces/
-.aris/meta/events.jsonl
+.aris/
+outputs/domains/
 build/
 .codex/
 

@@ -89,7 +89,7 @@ def build_experiment_ledger(project_root: Path) -> dict[str, Any]:
         "protocol_count": len(protocols),
         "run_count": len(runs),
         "run_command": (
-            ".venv-lab\\Scripts\\python.exe "
+            ".venv\\Scripts\\python.exe "
             "-m tests.experiments.run_all --repetitions 1"
         ),
         "mlflow_url": os.environ.get(

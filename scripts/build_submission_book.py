@@ -21,8 +21,8 @@ from docx.shared import Cm, Inches, Pt, RGBColor
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-OUTPUT_DIR = PROJECT_ROOT / "submission_materials"
-ASSET_DIR = OUTPUT_DIR / "assets"
+OUTPUT_DIR = PROJECT_ROOT / "docs" / "申报材料"
+ASSET_DIR = OUTPUT_DIR / "资源"
 DOCX_NAME = "研海寻踪：基于多智能体博弈推理的科研知识图谱发现系统+作品书（预审核初稿）.docx"
 
 TEAL = "087F78"
@@ -69,11 +69,14 @@ def _load_live_metrics(project_root: Path) -> dict:
     """
     metrics: dict = {}
 
+    sys.path.insert(0, str(project_root / "src"))
+    from yanhai.ablation import DecisionAblation  # noqa: E402
+    from yanhai.knowledge import KnowledgeBase  # noqa: E402
+
     # ---- Track A 消融报告：24 条压力命题 + 四组对照 + 差值 + Wilson 区间 ----
-    ablation_path = project_root / "outputs" / "ablation-report.json"
-    if not ablation_path.exists():
-        raise FileNotFoundError(f"缺少消融报告：{ablation_path}")
-    ablation = json.loads(ablation_path.read_text(encoding="utf-8"))
+    knowledge_root = project_root / "data" / "knowledge"
+    default_kb = KnowledgeBase(knowledge_root)
+    ablation = DecisionAblation(project_root, default_kb).run()
     variants = {
         variant["variant_id"]: {"label": variant["label"], "metrics": variant["metrics"]}
         for variant in ablation["variants"]
@@ -97,11 +100,8 @@ def _load_live_metrics(project_root: Path) -> dict:
     }
 
     # ---- 三个垂直领域的图规模（实体/关系/证据跨度）由真实抽取实时计算 ----
-    sys.path.insert(0, str(project_root / "src"))
-    from yanhai.knowledge import KnowledgeBase  # noqa: E402
-
     domains = []
-    kb_catalog = KnowledgeBase(project_root / "data" / "knowledge")
+    kb_catalog = default_kb
     for config in kb_catalog.list_domain_configs():
         domain_id = config["domain_id"]
         kb = KnowledgeBase(project_root / "data" / "knowledge", domain_id)
@@ -755,8 +755,8 @@ def add_color_overview(doc: Document, metrics: dict) -> None:
     image_table.alignment = WD_TABLE_ALIGNMENT.CENTER
     set_table_geometry(image_table, [4680, 4680], indent_dxa=120)
     set_table_borders(image_table, color="D8E2DF", size=4)
-    home = PROJECT_ROOT / "docs" / "assets" / "readme" / "demo-home.png"
-    results = PROJECT_ROOT / "docs" / "assets" / "readme" / "demo-results.png"
+    home = PROJECT_ROOT / "docs" / "资源" / "自述文件图片" / "demo-home.png"
+    results = PROJECT_ROOT / "docs" / "资源" / "自述文件图片" / "demo-results.png"
     for cell, image_path, caption in (
         (image_table.cell(0, 0), home, "领域与学习者输入"),
         (image_table.cell(0, 1), results, "图谱、轨迹与消融输出"),
@@ -1119,8 +1119,9 @@ def chapter_system(doc: Document) -> None:
         doc,
         ["层次", "当前实现", "选择理由"],
         [
-            ("前端", "HTML5 + CSS3 + 原生 JavaScript + SVG", "零构建依赖，适合离线比赛演示"),
-            ("后端", "Python 3.11+ 标准库 HTTP 服务", "轻量、可打包、单进程稳定"),
+            ("网页端", "React + TypeScript + antd + ECharts", "论文摄入、证据图谱与实验账本统一工作区"),
+            ("后端", "Python 3.12 + FastAPI", "账号门禁、SSE、运行留存与统一 API"),
+            ("桌面端", "PyQt6 + httpx", "与 React 共用 FastAPI 和 Cookie 会话"),
             ("知识加工", "版本化 schema、规则抽取、实体融合、证据审计", "形成可运行与可解释下限"),
             ("图检索", "GraphRAG-inspired BFS/多跳/混合路由", "展示不同意图的图检索差异"),
             ("存储", "JSON + SQLite 导出", "便于审计、复现和演示"),
@@ -1141,19 +1142,19 @@ def chapter_system(doc: Document) -> None:
     ):
         add_bullet(doc, item)
     add_heading(doc, "6.3 前端界面与演示路径", 2, page_break=False)
-    doc.add_picture(str(PROJECT_ROOT / "docs" / "assets" / "readme" / "demo-home.png"), width=Cm(15.2))
+    doc.add_picture(str(PROJECT_ROOT / "docs" / "资源" / "自述文件图片" / "demo-home.png"), width=Cm(15.2))
     add_caption(doc, "图 6-1 领域知识库与学习者画像选择界面")
-    doc.add_picture(str(PROJECT_ROOT / "docs" / "assets" / "readme" / "demo-results.png"), width=Cm(15.2))
+    doc.add_picture(str(PROJECT_ROOT / "docs" / "资源" / "自述文件图片" / "demo-results.png"), width=Cm(15.2))
     add_caption(doc, "图 6-2 协同轨迹、图谱检索与消融结果界面")
     add_heading(doc, "6.4 使用方式", 2, page_break=False)
     add_numbered_list(
         doc,
         (
-            "完整解压提交 ZIP，安装 Python 3.11 或更高版本并勾选 Add Python to PATH。",
-            "双击 RUN_DEMO.bat；健康检查通过后访问 http://127.0.0.1:8765/。",
+            "完整解压提交 ZIP，安装 Python 3.12 与 Node.js 20 或更高版本。",
+            "双击安装产品依赖.bat 创建唯一 .venv，再双击启动产品.bat 启动 FastAPI 与 React。",
             "选择领域、学习者画像和研究任务，点击“启动协同推理”。",
             "依次查看知识抽取统计、意图路由、三智能体轨迹、证据图谱、消融与个性化资源。",
-            "演示结束双击 STOP_DEMO.bat；若浏览器未自动打开，双击 OPEN_DEMO.url。",
+            "桌面演示先保持 FastAPI 运行，再双击启动桌面端.bat；演示结束关闭对应服务窗口。",
         ),
     )
     add_note(doc, "离线能力", "除 OpenAlex 联网扩展外，领域切片、建图、三智能体裁决、GraphRAG 路由、消融和个性化资源均可离线运行。")
@@ -1220,7 +1221,7 @@ def chapter_experiments(doc: Document, metrics: dict) -> None:
     add_heading(doc, "7.5 自动化与工程验收", 2, page_break=False)
     add_body(
         doc,
-        f"截至本初稿生成前，Python 源码编译、Node 前端语法检查和完整 unittest 均通过。经 unittest discover 实时统计，当前回归测试共 {metrics['test_count']} 项，全部属于当前验收或版本边界检查，可通过 `python -m unittest discover -s tests` 全量执行复核。测试覆盖领域注册、每领域 {metrics['kb']['papers_per_domain']} 篇记录、证据端点、关系绑定、意图路由、多跳路径、三智能体版本边界、LLM 决策降级与护栏、语义力度检查、六组实验入口、幂等、熔断、超时、部署路径和前端 API 契约。"
+        f"截至本初稿生成前，Python 源码编译、React 类型检查与生产构建、完整 unittest 均通过。经 unittest discover 实时统计，当前回归测试共 {metrics['test_count']} 项，可通过 `scripts/环境/运行全部测试.ps1` 全量复核。测试覆盖账号门禁、领域注册、每领域 {metrics['kb']['papers_per_domain']} 篇记录、证据端点、关系绑定、意图路由、多跳路径、三智能体版本边界、LLM 决策降级与护栏、语义力度检查、六组实验入口、部署路径、桌面 API 客户端和前端 API 契约。"
     )
     add_note(
         doc,
@@ -1282,7 +1283,7 @@ def chapter_application(doc: Document) -> None:
     add_heading(doc, "9.2 企业技术情报场景", 2, page_break=False)
     add_body(
         doc,
-        "面向研发与战略部门，系统可围绕某项技术形成证据图、关键论文、能力边界和待验证路线，帮助团队从“人工阅读大量文献”转向“先看关系与证据，再回读重点论文”。企业版本需要增加账号权限、私有语料隔离、任务队列、审计和私有化部署。"
+        "面向研发与战略部门，系统可围绕某项技术形成证据图、关键论文、能力边界和待验证路线，帮助团队从“人工阅读大量文献”转向“先看关系与证据，再回读重点论文”。当前版本已有账号隔离与运行留存；企业化仍需补充角色权限、组织级私有语料隔离、任务队列、审计策略和私有化部署。"
     )
     add_heading(doc, "9.3 个性化科研训练场景", 2, page_break=False)
     add_body(
@@ -1374,7 +1375,7 @@ def add_references(doc: Document) -> None:
 def add_appendix(doc: Document, metrics: dict) -> None:
     add_heading(doc, "附录 A：Demo 复核清单", 1)
     for item in (
-        "解压 ZIP 后确认根目录存在 RUN_DEMO.bat、STOP_DEMO.bat、OPEN_DEMO.url、GITHUB_REPOSITORY.url。",
+        "解压 ZIP 后确认根目录存在安装产品依赖.bat、启动产品.bat、启动桌面端.bat和GITHUB_REPOSITORY.url。",
         f"双击运行，检查 /api/health 和 /api/ready 正常，页面显示 {metrics['kb']['domain_count']} 个领域和 {metrics['kb']['total_papers']} 篇论文记录。",
         "运行任意领域与画像，检查 2 个专职 Agent、3 个核心决策 Agent 及 3 项服务轨迹。",
         f"核对知识图谱中的论文—证据—实体链、裁判分解和 {metrics['ablation']['case_count']} 条压力集消融。",
@@ -1387,12 +1388,12 @@ def add_appendix(doc: Document, metrics: dict) -> None:
         ["材料", "位置/状态", "用途"],
         [
             ("源代码仓库", f"GitHub main，提交 {metrics['git_commit']}", "复核代码与历史"),
-            ("Windows Demo ZIP", "dist/yanhai-demo-windows.zip", "离线运行"),
+            ("Windows 桌面端 ZIP", "release/研海寻踪桌面端-Windows-x64-<版本>.zip", "连接统一 FastAPI"),
             ("领域知识库", "data/vertical_kb", f"{metrics['kb']['domain_count']} 领域 × {metrics['kb']['papers_per_domain']} 篇"),
             ("完整样例", "data/examples/complete_demo_cases.json", "输入—中间—输出"),
             ("压力测试集", "data/evaluation/decision_benchmark.json", "四组对照与错误案例"),
-            ("架构、路线与实验文档", "docs/08、11、14、15、16", "技术与复现说明"),
-            ("参考作品书", "references/competition_examples", "格式与结构参考"),
+            ("架构、路线与实验文档", "docs/项目说明、docs/研发记录", "技术与复现说明"),
+            ("参考作品书", "docs/参考资料/竞赛参考作品", "格式与结构参考"),
         ],
         [2100, 3600, 3660],
         font_size=8.8,

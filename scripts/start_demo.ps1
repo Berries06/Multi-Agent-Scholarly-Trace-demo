@@ -1,33 +1,22 @@
-param(
+﻿param(
     [string]$HostAddress = "127.0.0.1",
-    [int]$Port = 8765,
+    [int]$Port = 8766,
     [switch]$Background,
     [ValidateRange(2, 60)]
     [int]$StartupTimeoutSeconds = 10
 )
 
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$command = Get-Command python -ErrorAction SilentlyContinue
-$pyLauncher = Get-Command py -ErrorAction SilentlyContinue
-$bundledPython = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
-$pythonPrefixArguments = @()
-
-if ($command) {
-    $pythonExecutable = $command.Source
-} elseif ($pyLauncher) {
-    $pythonExecutable = $pyLauncher.Source
-    $pythonPrefixArguments = @("-3")
-} elseif (Test-Path -LiteralPath $bundledPython) {
-    $pythonExecutable = $bundledPython
-} else {
-    throw "Python 3.11+ was not found. Install Python from https://www.python.org/downloads/ and enable Add Python to PATH."
+$pythonExecutable = Join-Path $projectRoot ".venv\Scripts\python.exe"
+if (-not (Test-Path -LiteralPath $pythonExecutable)) {
+    throw "未找到统一环境 .venv，请先运行 scripts\环境\创建统一环境.ps1。"
 }
 
 $env:PYTHONPATH = Join-Path $projectRoot "src"
 Write-Host "Yanhai backend: http://${HostAddress}:$Port/"
 
 if (-not $Background) {
-    & $pythonExecutable @pythonPrefixArguments -m yanhai.server --host $HostAddress --port $Port
+    & $pythonExecutable -m uvicorn yanhai.api:app --host $HostAddress --port $Port
     exit $LASTEXITCODE
 }
 
@@ -36,7 +25,7 @@ if (-not $Background) {
 # blocked even after the server is healthy.
 $process = Start-Process `
     -FilePath $pythonExecutable `
-    -ArgumentList @($pythonPrefixArguments + @("-m", "yanhai.server", "--host", $HostAddress, "--port", "$Port")) `
+    -ArgumentList @("-m", "uvicorn", "yanhai.api:app", "--host", $HostAddress, "--port", "$Port") `
     -WorkingDirectory $projectRoot `
     -WindowStyle Hidden `
     -PassThru
@@ -55,8 +44,8 @@ while ([DateTime]::UtcNow -lt $deadline) {
         # health check before the new child reports its bind failure.
         if (
             $health.status -eq "ok" -and
-            $health.PSObject.Properties.Name -contains "domains" -and
-            $health.PSObject.Properties.Name -contains "default_domain"
+            $health.service -eq "yanhai-api" -and
+            $health.PSObject.Properties.Name -contains "domain_count"
         ) {
             Start-Sleep -Milliseconds 200
             $process.Refresh()

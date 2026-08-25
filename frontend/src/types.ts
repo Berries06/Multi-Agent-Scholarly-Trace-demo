@@ -7,6 +7,30 @@ export interface Health {
   system_agents: number
 }
 
+export interface UserAccount {
+  user_id: string
+  email: string
+  nickname: string
+  profile_version: number
+  profile: LearnerProfile
+}
+
+export interface AuthState {
+  authenticated: boolean
+  user: UserAccount | null
+}
+
+export interface ProviderOption {
+  id: string
+  label: string
+  description: string
+  default_model: string
+  models: string[]
+  requires_api_key: boolean
+  access_mode: 'offline' | 'free' | 'byok'
+  available: boolean
+}
+
 export interface LearnerProfile {
   profile_id: string
   name: string
@@ -19,6 +43,8 @@ export interface LearnerProfile {
   preferred_style: string
   expected_difficulty: number
   synthetic: boolean
+  profile_kind?: 'personal' | 'demo'
+  required_concepts?: string[]
 }
 
 export interface Domain {
@@ -136,6 +162,30 @@ export interface RunResult {
   }
   evidence_details?: Record<string, EvidenceSpan[]>
   ablation?: { variants: unknown[] }
+  provider_run?: {
+    provider?: string
+    provider_label?: string
+    model?: string
+    access_mode?: string
+    mode?: string
+    source_mode?: string
+    usage?: { input_tokens: number; output_tokens: number; total_tokens: number }
+    warnings?: string[]
+    api_key_persisted?: boolean
+  }
+  graph_insights?: {
+    timeline?: Array<Record<string, unknown>>
+    research_ideas?: Array<Record<string, unknown>>
+    [key: string]: unknown
+  }
+  graph_retrieval?: Record<string, unknown>
+  persistence?: {
+    saved: boolean
+    research_session_id?: string
+    ingestion_id?: string
+    source_saved?: boolean
+  }
+  feedback?: { decision?: string }
 }
 
 // —— 实验台（粘贴论文）返回结构 ——

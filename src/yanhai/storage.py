@@ -234,7 +234,7 @@ class AppRepository:
     WAL 模式允许在写入期间并行读取。
     """
 
-    SCHEMA_VERSION = 2
+    SCHEMA_VERSION = 3
 
     def __init__(self, database_path: Path) -> None:
         self.database_path = database_path.resolve()
@@ -410,6 +410,18 @@ class AppRepository:
                     comment TEXT NOT NULL DEFAULT '',
                     created_at TEXT NOT NULL,
                     UNIQUE(user_id, research_session_id)
+                );
+
+                CREATE TABLE IF NOT EXISTS paper_ingestions (
+                    ingestion_id TEXT PRIMARY KEY,
+                    user_id TEXT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+                    paper_id TEXT NOT NULL,
+                    title TEXT NOT NULL,
+                    source_kind TEXT NOT NULL,
+                    source_saved INTEGER NOT NULL DEFAULT 0,
+                    source_text TEXT,
+                    result_json TEXT NOT NULL,
+                    created_at TEXT NOT NULL
                 );
 
                 CREATE INDEX IF NOT EXISTS papers_last_seen
@@ -1371,6 +1383,106 @@ class AppRepository:
             ).fetchall()
         return [dict(row) for row in rows]
 
+    def research_result(
+        self,
+        user_id: str,
+        research_session_id: str,
+    ) -> dict[str, Any]:
+        """返回属于当前用户的已保存运行，避免跨账号读取。"""
+        with self._connect() as connection:
+            row = connection.execute(
+                """
+                SELECT rs.research_session_id, rs.query, rs.domain_slug,
+                       rs.created_at, rs.provider_json, av.result_json
+                FROM research_sessions rs
+                JOIN answer_variants av
+                  ON av.research_session_id = rs.research_session_id
+                 AND av.shown_to_user = 1
+                WHERE rs.user_id = ? AND rs.research_session_id = ?
+                ORDER BY av.created_at DESC
+                LIMIT 1
+                """,
+                (user_id, research_session_id),
+            ).fetchone()
+        if row is None:
+            raise KeyError("找不到该运行记录。")
+        return {
+            "research_session_id": row["research_session_id"],
+            "query": row["query"],
+            "domain_slug": row["domain_slug"],
+            "created_at": row["created_at"],
+            "provider": json.loads(row["provider_json"]),
+            "result": json.loads(row["result_json"]),
+        }
+
+    def save_ingestion(
+        self,
+        *,
+        user_id: str,
+        paper_id: str,
+        title: str,
+        source_kind: str,
+        source_text: str,
+        save_source: bool,
+        result: dict[str, Any],
+    ) -> dict[str, Any]:
+        """保存摄入结果；未获同意时不落盘论文原文或解析正文。"""
+        safe_result = json.loads(_json(result))
+        if not save_source:
+            document = safe_result.get("document")
+            if isinstance(document, dict):
+                document["sections"] = {}
+                document["source_redacted"] = True
+        ingestion_id = _identifier("ing")
+        created_at = _now()
+        with self._connect() as connection:
+            connection.execute(
+                """
+                INSERT INTO paper_ingestions(
+                    ingestion_id, user_id, paper_id, title, source_kind,
+                    source_saved, source_text, result_json, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    ingestion_id,
+                    user_id,
+                    paper_id[:200],
+                    title[:500],
+                    source_kind[:40],
+                    int(save_source),
+                    source_text if save_source else None,
+                    _json(safe_result),
+                    created_at,
+                ),
+            )
+        return {
+            "ingestion_id": ingestion_id,
+            "source_saved": save_source,
+            "created_at": created_at,
+        }
+
+    def user_ingestions(
+        self,
+        user_id: str,
+        limit: int = 50,
+    ) -> list[dict[str, Any]]:
+        with self._connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT ingestion_id, paper_id, title, source_kind,
+                       source_saved, created_at
+                FROM paper_ingestions
+                WHERE user_id = ?
+                ORDER BY created_at DESC
+                LIMIT ?
+                """,
+                (user_id, max(1, min(200, limit))),
+            ).fetchall()
+        return [
+            {**dict(row), "source_saved": bool(row["source_saved"])}
+            for row in rows
+        ]
+
     def study_statistics(self) -> dict[str, Any]:
         with self._connect() as connection:
             counts = {}
@@ -1383,6 +1495,7 @@ class AppRepository:
                 "answer_variants",
                 "hallucination_evaluations",
                 "survey_responses",
+                "paper_ingestions",
             ):
                 counts[table] = int(
                     connection.execute(f"SELECT count(*) FROM {table}").fetchone()[0]

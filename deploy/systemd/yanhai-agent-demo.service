@@ -10,10 +10,11 @@ Group=yanhai-agent
 WorkingDirectory=/opt/yanhai-agent-demo/current
 Environment=PYTHONPATH=/opt/yanhai-agent-demo/current/src
 Environment=YANHAI_PROJECT_ROOT=/opt/yanhai-agent-demo/current
+Environment=YANHAI_DATA_DIR=/var/lib/yanhai-agent-demo
 Environment=PYTHONDONTWRITEBYTECODE=1
 Environment=PYTHONUNBUFFERED=1
 EnvironmentFile=-/etc/yanhai-agent-demo.env
-ExecStart=/usr/bin/python3 -m yanhai --host 127.0.0.1 --port 8765
+ExecStart=/opt/yanhai-agent-demo/current/.venv/bin/python -m uvicorn yanhai.api:app --host 127.0.0.1 --port 8766 --workers 2
 Restart=on-failure
 RestartSec=3
 TimeoutStopSec=15
@@ -25,9 +26,10 @@ ProtectHome=true
 ProtectKernelTunables=true
 ProtectKernelModules=true
 ProtectControlGroups=true
+ReadWritePaths=/var/lib/yanhai-agent-demo
 RestrictSUIDSGID=true
 LockPersonality=true
-MemoryMax=512M
+MemoryMax=1G
 TasksMax=64
 
 [Install]

@@ -1,4 +1,4 @@
-# 2026-07-29 项目推进日志
+﻿# 2026-07-29 项目推进日志
 
 ## 今日目标
 
@@ -49,7 +49,7 @@
 - 状态统一为 `accepted / needs_review / rejected`。
 - Claim 增加实体类型、模型路线、提出理由、裁判理由和分数分解。
 - 理论目标明确为在 precision 与 evidence coverage 约束下最大化 VTY。
-- 模型路线写入 `config/model_routes.json`。
+- 模型路线写入 `docs/归档/配置/旧模型路线.json`。
 
 ## 对比与消融
 

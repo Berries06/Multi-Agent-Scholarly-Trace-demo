@@ -9,7 +9,7 @@ data/profiles/profiles.json
 执行：
 
 ```powershell
-python scripts/build_demo_assets.py
+.venv\Scripts\python.exe scripts/build_demo_cases.py
 ```
 
 脚本会生成 `complete_demo_cases.json`：3 个领域 × 3 组画像，共 9 个 case。每个 case 包含：
@@ -24,4 +24,4 @@ python scripts/build_demo_assets.py
 - 学情报告、四组决策消融和图谱驱动研究想法；
 - `contract`：赛题要求与 JSON 字段的显式对应。
 
-三个领域的图谱 JSON/SQLite 写入 `outputs/domains/<domain_id>/`。为了避免把运行产物误当作人工标注金标准，manifest 和文档明确区分全文、摘要知识卡与规则候选关系；正式参赛时仍需冻结经专家复核的输入输出样本，并记录标注者、版本、日期和审核状态。
+脚本只更新固定案例，不写入 `outputs/domains/`。知识图谱由当前 `data/knowledge` 与 `data/vertical_kb` 在运行时构建，避免把派生结果误当作人工标注金标准。正式参赛时仍需冻结经专家复核的输入输出样本，并记录标注者、版本、日期和审核状态。

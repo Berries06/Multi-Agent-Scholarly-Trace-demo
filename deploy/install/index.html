@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="下载研海寻踪 Windows Qt 功能验证版，或进入网页版。"
+      content="下载研海寻踪 Windows PyQt 客户端，或进入 React 网页版。"
     />
     <title>研海寻踪 · 下载</title>
     <link rel="stylesheet" href="styles.css" />
@@ -13,13 +13,13 @@
   <body>
     <main>
       <p class="eyebrow">YANHAI TRACE · VALIDATION RELEASE</p>
-      <h1>研海寻踪<br />Windows Qt 验证版</h1>
+      <h1>研海寻踪<br />Windows PyQt 客户端</h1>
       <p class="lead">
-        解压即用，保留离线 Mock，并支持用户临时接入 DeepSeek、GPT、Claude 与 Kimi。
+        桌面端与 React 共用 FastAPI、账号会话、运行留存和模型策略；使用前需连接产品服务器并登录。
       </p>
 
       <div class="actions">
-        <a class="primary" href="YanhaiTrace-Windows-x64-0.1.0.zip" download>
+        <a class="primary" href="研海寻踪桌面端-Windows-x64-0.1.0.zip" download>
           下载 Windows x64 ZIP
         </a>
         <a class="secondary" href="../start/">直接使用网页版</a>
@@ -28,7 +28,7 @@
       <section>
         <div>
           <span>版本</span>
-          <strong>0.1.0 · 验证版</strong>
+          <strong>0.1.0 · 融合版</strong>
         </div>
         <div>
           <span>系统</span>
@@ -37,9 +37,9 @@
         <div>
           <span>包体与校验</span>
           <strong id="release-integrity">
-            36.55 MiB<br />
+            55.32 MiB<br />
             SHA-256:
-            <code>ac0f4b453c83afba531f4e84aaaf00b4cddd6a0b20f4ea85b449cafb51c99d6d</code>
+            <code>07a22bb14c822280a71cbd8b266551c5f6ae80d41cac0c291d9ec22a1f935ec9</code>
           </strong>
         </div>
       </section>
@@ -48,12 +48,13 @@
         <h2>使用方法</h2>
         <ol>
           <li>下载 ZIP 并完整解压。</li>
-          <li>双击 <code>YanhaiTrace.exe</code>。</li>
-          <li>离线演示直接选择 Mock；实时模式再填写自己的 API Key。</li>
+          <li>双击 <code>研海寻踪.exe</code>。</li>
+          <li>填写 FastAPI 服务地址并使用管理员创建的账号登录。</li>
+          <li>可选择离线规则、服务器免费 DeepSeek 或临时 BYOK。</li>
         </ol>
         <p>
           本验证包尚未代码签名，Windows 可能显示“未知发布者”。请只从本站下载并核对
-          SHA-256。API Key 不写入文件；公共设备使用后请关闭程序。
+          SHA-256。API Key 不写入文件；公共设备使用后请退出账号并关闭程序。
         </p>
       </article>
     </main>

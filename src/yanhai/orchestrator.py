@@ -381,6 +381,7 @@ class ScholarlyTraceOrchestrator:
         query: str = DEFAULT_QUERY,
         domain_id: str | None = None,
         provider_config: ProviderConfig | None = None,
+        on_step: Callable[[dict[str, Any]], None] | None = None,
     ) -> dict[str, Any]:
         """运行确定性的离线基线，或走实时、证据支撑的 LLM 路径。
 
@@ -389,7 +390,13 @@ class ScholarlyTraceOrchestrator:
         领域知识库创建 ``LiveResearchService``，用其证据支撑的回答替换基线回答，
         同时保留确定性的 report、metrics 与 ablation。
         """
-        result = self.run(profile_id, query, 0, domain_id=domain_id)
+        result = self.run(
+            profile_id,
+            query,
+            0,
+            domain_id=domain_id,
+            on_step=on_step,
+        )
         if provider_config is None or provider_config.provider == "mock":
             public = (
                 provider_config.public_dict()

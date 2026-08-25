@@ -1,54 +1,37 @@
-# 产品 Web 技术栈与迁移路线
+# 产品网页技术栈
 
-> 状态：脚手架已落地（2026-08-19）。本文档说明产品化 Web 的技术选型、
-> 与早期 Demo 的关系，以及启动/构建命令。核心决策层的模型选型仍待后续讨论。
+## 唯一产品栈
 
-## 1. 两层结构
+| 层级 | 技术 | 职责 |
+|---|---|---|
+| 产品前端 | React、TypeScript、Vite | 四个工作区、登录与画像、流式轨迹、结果解释 |
+| 桌面客户端 | PyQt6、httpx | 登录统一 API、消费 SSE、提供轻量桌面工作台 |
+| 组件与可视化 | Ant Design、ECharts | 表单、表格、状态、诊断雷达和证据图谱 |
+| 产品后端 | FastAPI、Uvicorn、Pydantic | 统一接口、校验、Cookie 会话、SSE 与静态资源 |
+| 核心算法 | `src/yanhai/` | 编排、抽取、图谱检索、多智能体裁决和资源生成 |
+| 存储 | SQLite | 用户、画像版本、会话、运行、证据快照、摄入与反馈 |
+| 模型接入 | 服务端提供方适配层 | 离线规则、免费 DeepSeek、BYOK，密钥不持久化 |
 
-| 层 | 现状 | 目标 |
-| --- | --- | --- |
-| 早期离线 Demo | `web/`（原生 HTML/CSS/JS）+ `src/yanhai/server.py`（stdlib http.server，端口 8765） | 保留为"零第三方依赖"的离线演示基线，不再投入新功能 |
-| 产品 Web | `frontend/`（React 18 + Vite + TS + AntD + ECharts）+ `src/yanhai/api.py`（FastAPI，端口 8766） | 面向评委/用户的产品化界面与 ASGI 后端 |
+FastAPI 默认监听 `8766`；Vite 开发服务器监听 `5173` 并代理 `/api`。生产构建由 FastAPI 直接托管 `frontend/dist`。
 
-两条链路共享同一个 `src/yanhai` 业务内核（orchestrator、agents、knowledge、
-extraction），只有接入层不同，因此业务修复会同时惠及两侧。
+所有 Python 入口统一使用仓库根目录 `.venv`。React 的 Node 依赖由 `frontend/node_modules` 管理；它不是第二个 Python 环境。桌面端只支持 PyQt6，不保留 PyQt5 双版本兼容。
 
-## 2. 后端：FastAPI（`src/yanhai/api.py`）
+## 产品工作区
 
-- 复用 `ScholarlyTraceOrchestrator`，暴露 `/api/health`、`/api/ready`、
-  `/api/profiles`、`/api/domains`、`/api/extracted-graph`、`/api/ablation`、
-  `/api/graph-insights`、`/api/graph-query`、`/api/run`、`/api/feedback`。
-- 新增 `/api/run/stream`：SSE 流式推送 `started → agent_step(逐个) → completed`，
-  供前端"多智能体调度过程可视化"使用。当前流水线是同步规则基线，流式只是
-  协议骨架；接入真实 LLM 后改为真正的增量流式。
-- CORS 默认只允许 `127.0.0.1:5173` / `localhost:5173`（Vite dev server）。
-- 自动接口文档：`http://127.0.0.1:8766/docs`。
+1. 研究工作台：SSE 展示真实步骤，完成后显示裁决主张、原文证据、个性化资源与反馈；
+2. 论文摄入：支持文本和 PDF，展示抽取中间量与三智能体裁决，正文保存必须显式授权；
+3. 证据图谱：按领域浏览证据网络，执行图查询并查看个人运行历史；
+4. 实验账本：呈现实验协议、运行产物、消融和复现命令。
 
-依赖（可选组 `web`，见 `pyproject.toml`）：
+## 接口原则
 
-```powershell
-pip install "fastapi>=0.115" "uvicorn[standard]>=0.30"
-$env:PYTHONPATH="src"
-python -m uvicorn yanhai.api:app --host 127.0.0.1 --port 8766
-```
+- 除健康检查、就绪检查和登录状态外，产品数据接口均要求登录；
+- 不提供公开注册接口；
+- 错误统一为 `error.code / error.message / error.retryable`；
+- 流式运行使用 POST + `text/event-stream`，事件为 `started`、`agent_step`、`completed`、`error`；
+- `completed` 返回完整运行结果，普通 `/api/run` 作为非流式兼容入口；
+- 运行与摄入结果绑定当前账号，演示画像只影响个性化计算，不改变数据所有权。
 
-## 3. 前端：React + Vite + TS + Ant Design + ECharts（`frontend/`）
+## 已停用体系
 
-- 主界面 `App.tsx`：领域/画像选择 → 运行 → 指标卡 → 画像雷达图 →
-  多智能体调度轨迹（Steps）→ 裁决命题表 → 个性化资源（Collapse）。
-- 类型化 API 客户端见 `frontend/src/api.ts`，类型见 `frontend/src/types.ts`。
-- 启动：`cd frontend && npm install && npm run dev`（`/api` 自动代理到 8766）。
-
-## 4. 迁移与回滚
-
-- `src/yanhai/server.py` 暂不删除；`/api/run/stream` 的 `run_id` 字段目前为
-  `null`，待把 harness 的 run ID 贯通到 orchestrator 后再填充。
-- 前端可逐步把 `web/` 演示页的功能迁入，迁移完成后再下线 `web/`。
-- 生产部署沿用 `deploy/` 下的 Nginx 反代模式，仅把 upstream 从 8765 切到
-  FastAPI 的 uvicorn 端口（正式端口待定，默认 8766 仅用于本地开发）。
-
-## 5. 下一步（待核心决策）
-
-- 批判者/裁判的模型 provider（规则 + 小模型验证器？单一大模型？）——
-  见 [`研发记录/决策层语义漏洞与修复线索.md`](../研发记录/决策层语义漏洞与修复线索.md)。
-- 真正的流式 Agent 轨迹（接入 LLM 后）。
+旧 `stdlib http.server + 原生 web` 已冻结在 `archive/旧版离线演示/`。它不参与当前依赖、测试、构建、Docker、systemd 或 Nginx 部署，也不接受新功能。

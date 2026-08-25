@@ -1,4 +1,4 @@
-# 研海寻踪 · 成员 C 工作说明
+﻿# 研海寻踪 · 成员 C 工作说明
 
 ## 这个项目在做什么
 
@@ -10,7 +10,7 @@
 
 ## 现在走到哪一步了
 
-系统端到端能跑，128 项测试全过。真模型代码全部就绪：DeepSeek、Kimi、智谱三家的接口是真实 HTTP 实现，LLM 版批判者和裁判带硬护栏与规则回退，实验脚本保证"缺 Key 就显式跳过，绝不偷偷用规则冒充模型"。三家模型目录和价格已经定稿入档（`config/experiment_models.json`，2026-08-24 快照），Key 已经买好，只差填进 `.env` 文件。实验记录平台 MLflow 配好，390 道冻结测试题备好，文献周报管线也已落地——万事俱备，就差你的第一批真模型数字。
+系统端到端能跑，128 项测试全过。真模型代码全部就绪：DeepSeek、Kimi、智谱三家的接口是真实 HTTP 实现，LLM 版批判者和裁判带硬护栏与规则回退，实验脚本保证"缺 Key 就显式跳过，绝不偷偷用规则冒充模型"。三家模型目录和价格已经定稿入档（`config/实验/experiment_models.json`，2026-08-24 快照），Key 已经买好，只差填进 `.env` 文件。实验记录平台 MLflow 配好，390 道冻结测试题备好，文献周报管线也已落地——万事俱备，就差你的第一批真模型数字。
 
 ## 你的工作目标（先看清终点）
 
@@ -21,15 +21,15 @@
 ### 第一件：把 Key 和实验环境接好
 
 1. **填 Key**：三家的 Key 填进项目根目录的 `.env` 文件，三行分别是 `DEEPSEEK_API_KEY`、`KIMI_API_KEY`、`ZHIPU_API_KEY`（等号后直接贴 Key，不加引号不留空格）。这个文件不进 git、不发群、不发聊天记录——它被 `.gitignore` 忽略了，仓库里只有 `.env.example` 模板。填完跑一条验证命令确认三个变量都能读到（只检查读没读到，不打印 Key 内容）。
-2. **建实验环境**：`python -m venv .venv-lab`，然后 `.venv-lab\Scripts\python.exe -m pip install ".[tracking]"`。实验和 MLflow 全部用这个环境跑，产品界面用系统 Python，两套解释器分开是现状，别混。
-3. **价格表维护**：价格已入档 `config/experiment_models.json`（快照日期 2026-08-24，货币分列）。控制台调价时你去更新这个文件并改快照日期；成本数字一律以这份文件为准，价格查不到就留空，不许编。
+2. **使用统一环境**：运行 `scripts/环境/创建统一环境.ps1 -IncludeResearchTools`。产品、实验和 MLflow 全部使用根目录 `.venv`，禁止再建第二套解释器环境。
+3. **价格表维护**：价格已入档 `config/实验/experiment_models.json`（快照日期 2026-08-24，货币分列）。控制台调价时你去更新这个文件并改快照日期；成本数字一律以这份文件为准，价格查不到就留空，不许编。
 
 ### 第二件：先冒烟，再跑全量矩阵
 
 **冒烟（第一次真调模型）**，命令：
 
 ```
-.venv-lab\Scripts\python.exe scripts\run_decision_experiment.py --models "deepseek:deepseek-v4-flash,zhipu:glm-4-flash,kimi:kimi-k2.6" --max-cases 8
+.venv\Scripts\python.exe scripts\run_decision_experiment.py --models "deepseek:deepseek-v4-flash,zhipu:glm-4-flash,kimi:kimi-k2.6" --max-cases 8
 ```
 
 跑完看结果文件里的三个验收点，三条全过才算通：`models_requested` 列表非空（三家都真的申请了）；`stats` 里有 token 计数（真的调用了）；`skipped` 为空（没有组合被静默跳过）。任何一家 Key 填错或缺，这里都会显式报错或进 skipped，绝不会假装成功——这是设计，不是故障。
@@ -45,7 +45,7 @@
 
 1. 把所有组合画成"成本—精确率"散点图；先圈出精确率过 90% 的组合，再在其中挑成本最低的，这就是推荐配置；
 2. 输掉的组合全量保留、全部入库——只报好看的组是红线，评委问"别的组合呢"你要有全部数据；
-3. 每组同步进 MLflow：`.venv-lab\Scripts\python.exe scripts\sync_mlflow.py --run-dir outputs\experiments\<协议>\<时间戳>`，打上标签（负责人、数据性质 proxy、主张编号 C1-EASG）；
+3. 每组同步进 MLflow：`.venv\Scripts\python.exe scripts\sync_mlflow.py --run-dir outputs\experiments\<协议>\<时间戳>`，打上标签（负责人、数据性质 proxy、主张编号 C1-EASG）；
 4. 9 月 20 日前后，用 A 的封存考试卷跑最终主结果——**只跑一次**，跑完在实验配置里登记使用记录并告知 A。
 
 另外一件持续的小事：文献周报管线（`scripts/weekly_literature_scan.py`）会定期扫描新论文（默认每周一批）；Key 填好后加 `--interpret` 参数让便宜模型自动生成四问解读，产出周报和候选卡片给 A 复核。缺 Key 时该参数会显式报错退出，这是有意为之。

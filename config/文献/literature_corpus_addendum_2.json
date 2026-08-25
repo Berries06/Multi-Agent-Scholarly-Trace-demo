@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "frozen_at": "2026-08-21",
+  "extends": "config/文献/literature_corpus_100.json",
+  "read_protocol": "abstract + method/system + conclusion + limitations/future-work; primary paper or author preprint only",
+  "hypotheses": {
+    "I1": "evidence-state-machine graph",
+    "I2": "dispute-triggered heterogeneous verification",
+    "I3": "calibrated selective graph admission",
+    "I4": "temporal and conflict-aware evidence graph",
+    "I5": "evidence-coverage-aware learner feedback",
+    "I6": "public run ledger and external experiment control plane"
+  },
+  "papers": [
+    {"id":"P101","bucket":"verification","title":"StatefulDiscovery: Evidence-Calibrated Claim Formation in Open-Ended Scientific Discovery","venue":"arXiv preprint","year":2026,"gap":"Stateful claim formation couples executed-analysis evidence with claim confidence and frontier control for open-ended data discovery; it does not adjudicate literature relations entering a shared knowledge graph: no character-span provenance, no graph admission states (accepted/needs_review/rejected), no evidence-event revision (add/delete/refute/supersede) with replay, and no human-override event.","hypotheses":["I1","I3"]},
+    {"id":"P102","bucket":"graph_temporal","title":"Reliable Post-Retrieval Assembly for Agent Memory: Separating Evidence Extraction from Policy Execution","venue":"arXiv preprint (accepted, Lifelong Agent Workshop at COLM 2026)","year":2026,"gap":"Separating evidence extraction from deterministic policy execution fixes memory conflict assembly and shows LLM-mediated freshness tracking is the bottleneck; it handles versioned facts with an explicit total order, not scientific relations whose evidence sufficiency, semantic strength, calibrated risk, and human override must be adjudicated before graph admission.","hypotheses":["I1","I4"]}
+  ]
+}

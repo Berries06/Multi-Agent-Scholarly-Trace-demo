@@ -21,33 +21,40 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
           cache: pip
 
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
 
-      - name: Install test tooling
-        run: python -m pip install -e ".[test]"
-
-      - name: Unit and integration tests with coverage
-        run: |
-          python -m coverage run -m unittest discover -s tests -v
-          python -m coverage report
-
-      - name: Six-experiment smoke regression
-        run: >-
-          python -m tests.experiments.run_all
-          --repetitions 1
-          --output-root .tmp/ci-experiments
-
-      - name: Frontend syntax check
-        run: node --check web/app.js
-
-      - name: Windows package manifest check
+      - name: Install unified Python environment
         shell: powershell
         run: >-
           powershell -NoProfile -ExecutionPolicy Bypass
-          -File scripts/package_demo.ps1
-          -OutputPath dist/yanhai-demo-ci.zip
+          -File scripts/环境/创建统一环境.ps1
+          -SkipFrontend
+
+      - name: Install React dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Unified regression and frontend build
+        shell: powershell
+        run: >-
+          powershell -NoProfile -ExecutionPolicy Bypass
+          -File scripts/环境/运行全部测试.ps1
+
+      - name: Six-experiment smoke regression
+        run: >-
+          .venv\Scripts\python.exe -m tests.experiments.run_all
+          --repetitions 1
+          --output-root .tmp/ci-experiments
+
+      - name: PyQt frozen package check
+        shell: powershell
+        run: >-
+          powershell -NoProfile -ExecutionPolicy Bypass
+          -File scripts/构建桌面应用.ps1
+          -Version ci
+          -SkipTests

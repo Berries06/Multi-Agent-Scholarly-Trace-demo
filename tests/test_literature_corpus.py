@@ -8,8 +8,8 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-CORPUS_PATH = PROJECT_ROOT / "config" / "literature_corpus_100.json"
-AUDIT_PATH = PROJECT_ROOT / "artifacts" / "literature" / "literature_audit_100.json"
+CORPUS_PATH = PROJECT_ROOT / "config" / "文献" / "literature_corpus_100.json"
+AUDIT_PATH = PROJECT_ROOT / "docs" / "研发记录" / "审计" / "数据" / "百篇文献审计.json"
 
 
 class LiteratureCorpusTests(unittest.TestCase):
