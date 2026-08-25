@@ -31,7 +31,3 @@ FastAPI 默认监听 `8766`；Vite 开发服务器监听 `5173` 并代理 `/api`
 - 流式运行使用 POST + `text/event-stream`，事件为 `started`、`agent_step`、`completed`、`error`；
 - `completed` 返回完整运行结果，普通 `/api/run` 作为非流式兼容入口；
 - 运行与摄入结果绑定当前账号，演示画像只影响个性化计算，不改变数据所有权。
-
-## 已停用体系
-
-旧 `stdlib http.server + 原生 web` 已冻结在 `archive/旧版离线演示/`。它不参与当前依赖、测试、构建、Docker、systemd 或 Nginx 部署，也不接受新功能。

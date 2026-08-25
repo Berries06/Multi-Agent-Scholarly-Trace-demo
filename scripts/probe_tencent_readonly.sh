@@ -30,7 +30,7 @@ ssh \
     printf "certbot=%s\n" "$(command -v certbot || printf not-found)"
     printf "python=%s\n" "$(python3 --version 2>&1)"
     printf "listening_ports:\n"
-    ss -lnt | awk "NR == 1 || /:22 |:80 |:443 |:7000 |:8765 /"
+    ss -lnt | awk "NR == 1 || /:22 |:80 |:443 |:7000 |:8766 /"
     if command -v nginx >/dev/null 2>&1; then
       printf "nginx_routes:\n"
       nginx -T 2>/dev/null |

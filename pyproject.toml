@@ -46,9 +46,6 @@ where = ["src"]
 [tool.coverage.run]
 branch = true
 source = ["yanhai"]
-omit = [
-    "src/yanhai/archive/*",
-]
 
 [tool.coverage.report]
 fail_under = 75

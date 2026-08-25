@@ -9,9 +9,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-import yanhai  # noqa: E402
 from yanhai import ScholarlyTraceOrchestrator  # noqa: E402
-from yanhai.archive import legacy_six_agent  # noqa: E402
 
 
 class CurrentPipelineBoundaryTests(unittest.TestCase):
@@ -69,19 +67,6 @@ class CurrentPipelineBoundaryTests(unittest.TestCase):
                 for claim in accepted
             )
         )
-
-    def test_legacy_presets_are_not_exported_by_runtime_package(self) -> None:
-        self.assertFalse(hasattr(yanhai, "get_preset"))
-        self.assertFalse(hasattr(yanhai, "list_presets"))
-        self.assertNotIn("FeatureFlags", yanhai.__all__)
-
-    def test_legacy_prototypes_are_explicitly_archived(self) -> None:
-        self.assertEqual(
-            "unsupported_historical_reference",
-            legacy_six_agent.ARCHIVE_STATUS,
-        )
-        self.assertIn("full", legacy_six_agent.ARCHIVED_PRESETS)
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -579,7 +579,7 @@ def build_architecture_figure(path: Path) -> None:
         ("论文到图谱", 315, ["结构解析", "知识抽取 Agent", "实体规范化", "证据跨度图"]),
         ("可信裁决", 470, ["提出者\n候选组织", "批判者\n反证/约束", "裁判\n接收/复核/拒绝"]),
         ("检索与发现", 625, ["意图感知 Agent", "广度检索\n找论文", "深度检索\n做分析", "混合检索\n找 Idea"]),
-        ("输出与工程", 780, ["技术脉络", "争议/空白", "个性化资源", "超时·幂等·熔断·审计"]),
+        ("输出与工程", 780, ["技术脉络", "争议/空白", "个性化资源", "登录·留存·熔断·审计"]),
     ]
     layer_colors = [LIGHT_BLUE, LIGHT_TEAL, LIGHT_GOLD, LIGHT_TEAL, LIGHT_GRAY]
     box_fills = ["F7FAFC", "F5FBFA", "FFF9EC", "F5FBFA", "F7F8F7"]
@@ -751,24 +751,6 @@ def add_color_overview(doc: Document, metrics: dict) -> None:
         fill=LIGHT_BLUE,
     )
 
-    image_table = doc.add_table(rows=1, cols=2)
-    image_table.alignment = WD_TABLE_ALIGNMENT.CENTER
-    set_table_geometry(image_table, [4680, 4680], indent_dxa=120)
-    set_table_borders(image_table, color="D8E2DF", size=4)
-    home = PROJECT_ROOT / "docs" / "资源" / "自述文件图片" / "demo-home.png"
-    results = PROJECT_ROOT / "docs" / "资源" / "自述文件图片" / "demo-results.png"
-    for cell, image_path, caption in (
-        (image_table.cell(0, 0), home, "领域与学习者输入"),
-        (image_table.cell(0, 1), results, "图谱、轨迹与消融输出"),
-    ):
-        p = cell.paragraphs[0]
-        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p.add_run().add_picture(str(image_path), width=Cm(7.2))
-        cp = cell.add_paragraph()
-        cp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        rr = cp.add_run(caption)
-        set_run_font(rr, size=9, color=MUTED)
-
     add_note(
         doc,
         "结果边界",
@@ -861,12 +843,12 @@ def add_evaluation_index(doc: Document, metrics: dict) -> None:
         doc,
         ["评审维度", "本项目核心主张", "正文位置", "直接证据"],
         [
-            ("作品完整性", "跑通论文/证据卡到图谱、检索、裁决和个性化资源的闭环", "第 3—6 章", "系统架构、接口输出、前端截图、运行说明"),
+            ("作品完整性", "跑通论文/证据卡到图谱、检索、裁决和个性化资源的闭环", "第 3—6 章", "系统架构、接口契约、自动化测试、运行说明"),
             ("技术性能", "固定候选池下，异质三智能体降低不支持命题入图", "第 7 章", f"{metrics['ablation']['case_count']} 条压力集四组对照、{metrics['decision_cases']['total']} 条三领域机制用例、Wilson 区间、错误案例"),
             ("技术创新性", "证据优先建图、异质职责博弈、语义力度校验、意图驱动图检索形成组合机制", "第 4、5、8 章", "数据契约、决策轨迹、消融矩阵"),
             ("赛题对齐", "3 个领域、3 组画像、9 组完整输入—中间—输出", "第 1、7、8 章", "领域注册表、完整样例 JSON、资源输出"),
             ("实用性", "支持论文推荐、机制分析、技术演化与待验证 Idea", "第 5、9 章", "GraphRAG 路由、图谱结果、场景流程"),
-            ("工程可靠性", "离线可运行，具备超时、幂等、熔断、日志和测试", "第 6、7 章", f"{metrics['test_count']} 项自动化测试、六实验入口、一键启动脚本、健康检查"),
+            ("工程可靠性", "离线核心可运行，具备账号门禁、运行留存、联网熔断和测试", "第 6、7 章", f"{metrics['test_count']} 项自动化测试、六实验入口、三套中文启动脚本、健康检查"),
         ],
         [1500, 3360, 1500, 3000],
         font_size=9,
@@ -1124,8 +1106,8 @@ def chapter_system(doc: Document) -> None:
             ("桌面端", "PyQt6 + httpx", "与 React 共用 FastAPI 和 Cookie 会话"),
             ("知识加工", "版本化 schema、规则抽取、实体融合、证据审计", "形成可运行与可解释下限"),
             ("图检索", "GraphRAG-inspired BFS/多跳/混合路由", "展示不同意图的图检索差异"),
-            ("存储", "JSON + SQLite 导出", "便于审计、复现和演示"),
-            ("工程 Harness", "超时、幂等、熔断、有界并发、日志、健康探针", "避免网络/并发导致 Demo 卡死"),
+            ("存储", "SQLite 产品数据 + JSON 研究输入", "账号隔离、运行留存与可复现实验"),
+            ("联网保护", "重试、熔断、本地回退、健康与就绪检查", "外部检索失败时保持核心产品可用"),
             ("交付", "Windows 双击脚本 + Docker Compose", "接收者可本地复现"),
         ],
         [1600, 3600, 4160],
@@ -1133,19 +1115,19 @@ def chapter_system(doc: Document) -> None:
     )
     add_heading(doc, "6.2 后端可靠性设计", 2, page_break=False)
     for item in (
-        "启动层：后台进程不长期占用调用端句柄，总启动截止默认 10 秒；健康请求单次最多等待 1 秒。",
-        "HTTP 层：限制请求体和字符编码，输出稳定错误结构；写请求使用 Idempotency-Key 防止重复运行。",
-        "任务层：有界 worker 与队列，过载返回 429，任务超时返回 504。",
+        "账号层：除健康、就绪和登录状态外，产品数据接口均要求登录；公开注册已关闭。",
+        "会话层：Cookie 使用 HttpOnly 与 SameSite=Lax；密码以 scrypt 加盐哈希保存。",
+        "数据层：运行、摄入、画像和反馈绑定当前用户；BYOK 密钥不写入数据库或日志。",
         "联网 RAG：有限重试、指数退避和 closed/open/half-open 熔断；失败时回退本地缓存。",
-        "可观测性：请求 ID、运行 ID、结构化日志、聚合指标和 append-only 运行日志。",
-        "安全边界：默认只绑定 127.0.0.1；非回环部署无 Token 时拒绝启动。",
+        "运行层：SSE 逐步发送 started、agent_step、completed 或 error，完成结果默认持久化。",
+        "部署层：开发服务默认绑定 127.0.0.1；生产由 Nginx 反向代理并限制请求速率。",
     ):
         add_bullet(doc, item)
-    add_heading(doc, "6.3 前端界面与演示路径", 2, page_break=False)
-    doc.add_picture(str(PROJECT_ROOT / "docs" / "资源" / "自述文件图片" / "demo-home.png"), width=Cm(15.2))
-    add_caption(doc, "图 6-1 领域知识库与学习者画像选择界面")
-    doc.add_picture(str(PROJECT_ROOT / "docs" / "资源" / "自述文件图片" / "demo-results.png"), width=Cm(15.2))
-    add_caption(doc, "图 6-2 协同轨迹、图谱检索与消融结果界面")
+    add_heading(doc, "6.3 产品界面与演示路径", 2, page_break=False)
+    add_body(
+        doc,
+        "React 网页端提供研究工作台、论文摄入、证据图谱和实验账本四个工作区；PyQt6 桌面端通过同一 FastAPI 登录并消费 SSE。界面展示以现场构建版本为准，文档不固化容易过期的页面截图。",
+    )
     add_heading(doc, "6.4 使用方式", 2, page_break=False)
     add_numbered_list(
         doc,
