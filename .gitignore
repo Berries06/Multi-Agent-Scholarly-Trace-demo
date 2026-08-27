@@ -14,12 +14,15 @@ frontend/dist/
 *.env
 !*.env.example
 !deploy/*.env.example
+secret/
+!secret/*.example
 outputs/*.json
 outputs/*.db
 outputs/*.log
 outputs/*.jsonl
 outputs/*.pid
 outputs/*.csv
+outputs/runtime/
 papers/**/*.pdf
 tmp/
 .tmp/

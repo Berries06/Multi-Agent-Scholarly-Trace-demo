@@ -34,6 +34,8 @@ from .providers import (
     list_providers,
 )
 from .resources import project_root
+from .skills import conduct_research, diagnose, humanize, quality_gate
+from .skills.pdf_processor import extract_pdf
 from .sources import search_multi_source
 
 DEFAULT_QUERY = (
@@ -113,6 +115,21 @@ class IngestPaperRequest(BaseModel):
 class SearchRequest(BaseModel):
     query: str
     limit: int = Field(8, ge=1, le=20)
+
+
+class ResearchRequest(BaseModel):
+    domain_id: str | None = None
+    topic: str = ""
+    discipline: str = "cs_ai"
+
+
+class HumanizeRequest(BaseModel):
+    text: str
+    intensity: str = Field("light", pattern="^(light|medium|heavy)$")
+
+
+class DiagnoseRequest(BaseModel):
+    text: str
 
 
 class ApiState:
@@ -451,6 +468,87 @@ def create_app() -> FastAPI:
                 "X-Accel-Buffering": "no",
             },
         )
+
+    # ── 学术 Skills ──────────────────────────────────────
+
+    @app.get("/api/skills")
+    def list_skills() -> dict[str, Any]:
+        return {
+            "skills": [
+                {
+                    "id": "academic-researcher",
+                    "name": "学术文献调研",
+                    "description": "证据分级、引用核验、主题聚类、争议与空白识别",
+                    "endpoints": ["/api/skills/research"],
+                },
+                {
+                    "id": "pdf-processor",
+                    "name": "PDF 论文解析",
+                    "description": "文本、表格、图片提取，扫描件检测，质量检查",
+                    "endpoints": ["/api/skills/pdf/extract"],
+                },
+                {
+                    "id": "human-signal",
+                    "name": "去 AI 味",
+                    "description": "六层 AI 味诊断、评分、轻度/中度/重度改写",
+                    "endpoints": ["/api/skills/diagnose", "/api/skills/humanize"],
+                },
+            ]
+        }
+
+    @app.post("/api/skills/research")
+    def skills_research(payload: ResearchRequest) -> dict[str, Any]:
+        kb, _, _ = orchestrator._runtime(payload.domain_id)
+        papers = list(kb.paper_by_id.values())
+        if not papers:
+            raise HTTPException(status_code=404, detail="该领域没有论文数据")
+        report = conduct_research(
+            papers,
+            topic=payload.topic,
+            discipline=payload.discipline,
+        )
+        return report.to_dict()
+
+    @app.post("/api/skills/diagnose")
+    def skills_diagnose(payload: DiagnoseRequest) -> dict[str, Any]:
+        result = diagnose(payload.text)
+        gate = quality_gate(payload.text)
+        return {"diagnosis": result.to_dict(), "quality_gate": gate}
+
+    @app.post("/api/skills/humanize")
+    def skills_humanize(payload: HumanizeRequest) -> dict[str, Any]:
+        original = payload.text
+        revised = humanize(original, intensity=payload.intensity)
+        before = diagnose(original)
+        after = diagnose(revised)
+        return {
+            "original": original,
+            "revised": revised,
+            "intensity": payload.intensity,
+            "before_score": before.ai_score,
+            "after_score": after.ai_score,
+            "improvement": before.ai_score - after.ai_score,
+        }
+
+    @app.post("/api/skills/pdf/extract")
+    async def skills_pdf_extract(
+        file: UploadFile = File(...),
+        extract_tables: bool = Form(True),
+    ) -> dict[str, Any]:
+        if not file.filename or not file.filename.lower().endswith(".pdf"):
+            raise HTTPException(status_code=400, detail="请上传 PDF 文件")
+        content = await file.read()
+        tmp_dir = Path(project_root()) / "data" / "tmp"
+        tmp_dir.mkdir(parents=True, exist_ok=True)
+        tmp_path = tmp_dir / f"upload_{file.filename}"
+        tmp_path.write_bytes(content)
+        try:
+            result = extract_pdf(tmp_path, extract_tables=extract_tables)
+            return result.to_dict()
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"PDF 解析失败：{exc}") from exc
+        finally:
+            tmp_path.unlink(missing_ok=True)
 
     return app
 
