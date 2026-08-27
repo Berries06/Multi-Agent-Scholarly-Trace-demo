@@ -14,7 +14,7 @@ frontend/dist/
 *.env
 !*.env.example
 !deploy/*.env.example
-secret/
+secret/*
 !secret/*.example
 outputs/*.json
 outputs/*.db
