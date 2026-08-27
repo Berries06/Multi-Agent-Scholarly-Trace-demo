@@ -23,6 +23,20 @@
       "domain_name": "教育知识追踪与个性化学习",
       "description": "赛题场景对齐切片：追踪循环网络、记忆网络和注意力模型如何刻画学习者知识状态。",
       "query_example": "请比较 DKT、DKVMN、SAINT 与 AKT 的知识追踪路线，并为学习者生成循证学习建议。"
+    },
+    {
+      "domain_id": "single-cell-transcriptomics",
+      "path": "domains/single-cell-transcriptomics",
+      "domain_name": "单细胞转录组数据分析",
+      "description": "生物信息学切片：追踪单细胞 RNA-seq 分析方法、数据整合、细胞类型注释与轨迹推断路线。",
+      "query_example": "请沿知识图谱分析单细胞转录组数据分析方法如何演进，并推荐关键论文。"
+    },
+    {
+      "domain_id": "quantum-computing",
+      "path": "domains/quantum-computing",
+      "domain_name": "量子计算与量子信息处理",
+      "description": "物理学切片：追踪超导量子处理器、量子纠错、量子优势与变分量子算法路线。",
+      "query_example": "请沿知识图谱分析量子计算硬件与量子纠错如何发展，并推荐关键论文。"
     }
   ]
 }

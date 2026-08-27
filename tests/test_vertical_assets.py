@@ -38,11 +38,13 @@ class VerticalAssetTests(unittest.TestCase):
             all(record["exclude_from_evidence_graph"] for record in metadata_only)
         )
 
-    def test_registry_exposes_three_reproducible_vertical_slices(self) -> None:
+    def test_registry_exposes_reproducible_vertical_slices(self) -> None:
         expected = {
             "scientific-ie-kg": 30,
             "materials-discovery-gnn": 30,
             "educational-knowledge-tracing": 30,
+            "single-cell-transcriptomics": 100,
+            "quantum-computing": 100,
         }
         self.assertEqual(set(expected), set(self.kb.domain_configs))
         for domain_id, paper_count in expected.items():

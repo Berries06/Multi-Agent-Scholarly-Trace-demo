@@ -106,8 +106,8 @@ class ServerIntegrationTests(unittest.TestCase):
         self.assertEqual(health["project"], "研海寻踪")
         self.assertEqual(health["core_agents"], 3)
         self.assertEqual(health["system_agents"], 5)
-        self.assertEqual(health["domains"], 3)
-        self.assertEqual(health["papers"], 90)
+        self.assertEqual(health["domains"], 5)
+        self.assertEqual(health["papers"], 290)
         self.assertIn("X-Request-ID", health_headers)
         self.assertEqual(ready_status, 200)
         self.assertEqual(ready["status"], "ready")
@@ -115,12 +115,15 @@ class ServerIntegrationTests(unittest.TestCase):
     def test_domains_endpoint_and_domain_scoped_run(self) -> None:
         status, _, payload = self.request("GET", "/api/domains")
         self.assertEqual(status, 200)
-        self.assertEqual(len(payload["domains"]), 3)
-        self.assertTrue(
-            all(domain["paper_count"] == 30 for domain in payload["domains"])
-        )
+        self.assertEqual(len(payload["domains"]), 5)
+        paper_counts = {d["domain_id"]: d["paper_count"] for d in payload["domains"]}
+        self.assertEqual(paper_counts["scientific-ie-kg"], 30)
+        self.assertEqual(paper_counts["materials-discovery-gnn"], 30)
+        self.assertEqual(paper_counts["educational-knowledge-tracing"], 30)
+        self.assertEqual(paper_counts["single-cell-transcriptomics"], 100)
+        self.assertEqual(paper_counts["quantum-computing"], 100)
         self.assertEqual(
-            19,
+            181,
             sum(
                 domain["evidence_paper_count"]
                 for domain in payload["domains"]
