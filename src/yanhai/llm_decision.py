@@ -164,6 +164,8 @@ def hard_guard(claim: Claim, kb: Any) -> None:
 class LLMCritic:
     """LLM 版批判者；失败时回退规则批判者。"""
 
+    name = "批判者 Agent（LLM）"
+
     def __init__(
         self,
         provider: BaseProvider,
@@ -226,6 +228,8 @@ class LLMCritic:
 
 class LLMJudge:
     """LLM 版裁判；失败时回退规则裁判。"""
+
+    name = "裁判 Agent（LLM）"
 
     def __init__(
         self,

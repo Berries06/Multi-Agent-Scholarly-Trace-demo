@@ -21,6 +21,7 @@ import {
 import type { ColumnsType } from 'antd/es/table'
 import AgentTrace from './AgentTrace'
 import DiagnosisRadar from './DiagnosisRadar'
+import LlmModelSelector from './LlmModelSelector'
 import { getProfiles, ingestPaper, ingestPdf } from './api'
 import type {
   DecisionClaim,
@@ -28,6 +29,7 @@ import type {
   ExtractedRelation,
   IngestResult,
   LearnerProfile,
+  LlmConfig,
 } from './types'
 
 const { Text, Paragraph } = Typography
@@ -86,6 +88,7 @@ export default function LabPage() {
   const [text, setText] = useState(EXAMPLE_PAPER)
   const [threshold, setThreshold] = useState(0.72)
   const [pdfFile, setPdfFile] = useState<File | null>(null)
+  const [llmConfig, setLlmConfig] = useState<LlmConfig | null>(null)
   const [result, setResult] = useState<IngestResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -121,6 +124,7 @@ export default function LabPage() {
           paper_id: paperId,
           title,
           accept_threshold: threshold,
+          llm: llmConfig,
         })
       } else {
         data = await ingestPaper({
@@ -129,6 +133,7 @@ export default function LabPage() {
           text,
           profile_id: profileId,
           accept_threshold: threshold,
+          llm: llmConfig,
         })
       }
       setResult(data)
@@ -222,6 +227,9 @@ export default function LabPage() {
               onChange={setThreshold}
             />
           </label>
+          <div className="editorial-field" style={{ gridColumn: '1 / -1' }}>
+            <LlmModelSelector value={llmConfig} onChange={setLlmConfig} />
+          </div>
           <Button className="intake-run" type="primary" onClick={run} loading={loading} block>
             运行完整流水线
           </Button>

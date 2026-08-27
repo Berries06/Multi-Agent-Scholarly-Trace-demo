@@ -27,6 +27,12 @@ from .extraction import PyPDFParser
 from .experiment_ledger import build_experiment_ledger
 from .fresh_pipeline import run_fresh_document_pipeline, run_fresh_paper_pipeline
 from .orchestrator import ScholarlyTraceOrchestrator
+from .providers import (
+    ProviderConfig,
+    ProviderError,
+    create_provider,
+    list_providers,
+)
 from .resources import project_root
 from .sources import search_multi_source
 
@@ -35,11 +41,52 @@ DEFAULT_QUERY = (
 )
 
 
+def _load_server_api_key() -> str:
+    """读取服务端托管的 DeepSeek API Key，供免费选项使用。"""
+    key_path = project_root() / "secret" / "DeepSeekAPI.txt"
+    if key_path.exists():
+        return key_path.read_text(encoding="utf-8").strip()
+    return ""
+
+
+SERVER_API_KEY = _load_server_api_key()
+
+
+def _provider_config_from_payload(
+    raw: dict[str, Any] | None,
+) -> ProviderConfig | None:
+    """从请求 payload 的 ``llm`` 字段构造 ProviderConfig。
+
+    - 缺省或 provider=mock → 返回 None，调用方走确定性规则基线；
+    - ``free-deepseek`` → 注入服务端托管 Key 并改走 deepseek 协议；
+    - 其他供应商 → 由前端传入 api_key（自备 Key）。
+    """
+    if not raw:
+        return None
+    payload = dict(raw)
+    provider = str(payload.get("provider", "mock")).strip().lower()
+    if provider == "mock":
+        return None
+    if provider == "free-deepseek":
+        if not SERVER_API_KEY:
+            raise HTTPException(
+                status_code=503,
+                detail="免费 DeepSeek 暂不可用（服务端未配置 Key），请自备 Key 选择 DeepSeek。",
+            )
+        payload["provider"] = "deepseek"
+        payload["api_key"] = SERVER_API_KEY
+    try:
+        return ProviderConfig.from_payload(payload)
+    except (ValueError, ProviderError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
 class RunRequest(BaseModel):
     profile_id: str
     query: str = DEFAULT_QUERY
     domain_id: str | None = None
     include_ablation: bool = True
+    llm: dict[str, Any] | None = None
 
 
 class GraphQueryRequest(BaseModel):
@@ -60,6 +107,7 @@ class IngestPaperRequest(BaseModel):
     text: str
     profile_id: str
     accept_threshold: float = Field(0.72, ge=0.50, le=0.95)
+    llm: dict[str, Any] | None = None
 
 
 class SearchRequest(BaseModel):
@@ -121,6 +169,40 @@ def create_app() -> FastAPI:
     def domains() -> list[dict[str, Any]]:
         return orchestrator.list_domains()
 
+    @app.get("/api/providers")
+    def providers() -> dict[str, Any]:
+        """列出可用 LLM 供应商、默认模型与协议，并标记免费 Key 是否就绪。"""
+        items = list_providers()
+        free_ready = bool(SERVER_API_KEY)
+        for item in items:
+            if item["id"] == "free-deepseek":
+                item["available"] = free_ready
+        return {"providers": items, "free_deepseek_ready": free_ready}
+
+    @app.post("/api/provider/test")
+    def provider_test(payload: dict[str, Any]) -> dict[str, Any]:
+        """用本次提交的配置做最小连接测试（只回复 OK）。"""
+        provider_config = _provider_config_from_payload(payload)
+        if provider_config is None:
+            return {
+                "ok": True,
+                "provider": "mock",
+                "model": "offline-rules",
+                "message": "离线规则引擎无需连接测试。",
+            }
+        try:
+            provider = create_provider(provider_config)
+            response = provider.test_connection()
+        except (ProviderError, ValueError) as exc:
+            raise HTTPException(status_code=502, detail=str(exc)) from exc
+        return {
+            "ok": True,
+            "provider": provider_config.provider,
+            "model": provider_config.model,
+            "duration_ms": response.duration_ms,
+            "usage": response.usage,
+        }
+
     @app.get("/api/extracted-graph")
     def extracted_graph(domain_id: str | None = None) -> dict[str, Any]:
         kb, _, _ = orchestrator._runtime(domain_id)
@@ -151,11 +233,13 @@ def create_app() -> FastAPI:
 
     @app.post("/api/run")
     def run(payload: RunRequest) -> dict[str, Any]:
+        provider_config = _provider_config_from_payload(payload.llm)
         try:
-            return orchestrator.run(
+            return orchestrator.run_with_provider(
                 payload.profile_id,
                 payload.query,
                 domain_id=payload.domain_id,
+                provider_config=provider_config,
                 include_ablation=payload.include_ablation,
             )
         except KeyError as exc:
@@ -180,6 +264,7 @@ def create_app() -> FastAPI:
                 status_code=404, detail=f"Unknown profile: {payload.profile_id}"
             )
         profile = orchestrator.profiles[payload.profile_id]
+        provider_config = _provider_config_from_payload(payload.llm)
         schema_path = Path(project_root()) / "data" / "knowledge" / "extraction_schema.json"
         return run_fresh_paper_pipeline(
             paper_id=payload.paper_id,
@@ -188,6 +273,7 @@ def create_app() -> FastAPI:
             profile=profile,
             schema_path=schema_path,
             accept_threshold=payload.accept_threshold,
+            provider_config=provider_config,
         )
 
     @app.post("/api/ingest-pdf")
@@ -197,11 +283,21 @@ def create_app() -> FastAPI:
         paper_id: str = Form("uploaded-paper"),
         title: str = Form(""),
         accept_threshold: float = Form(0.72, ge=0.5, le=0.95),
+        llm: str = Form(""),
     ) -> dict[str, Any]:
         if profile_id not in orchestrator.profiles:
             raise HTTPException(
                 status_code=404, detail=f"Unknown profile: {profile_id}"
             )
+        llm_payload: dict[str, Any] | None = None
+        if llm and llm.strip():
+            try:
+                llm_payload = json.loads(llm)
+            except json.JSONDecodeError as exc:
+                raise HTTPException(
+                    status_code=400, detail=f"llm 字段不是合法 JSON: {exc}"
+                ) from exc
+        provider_config = _provider_config_from_payload(llm_payload)
         # 分块读取并在超限时尽早拒绝，避免把超大文件完整读入内存。
         payload = b""
         chunk_size = 1_000_000
@@ -224,12 +320,14 @@ def create_app() -> FastAPI:
             profile=orchestrator.profiles[profile_id],
             schema_path=schema_path,
             accept_threshold=accept_threshold,
+            provider_config=provider_config,
         )
 
     @app.post("/api/run/stream")
     async def run_stream(payload: RunRequest) -> StreamingResponse:
+        provider_config = _provider_config_from_payload(payload.llm)
         return StreamingResponse(
-            _stream_run(orchestrator, payload),
+            _stream_run(orchestrator, payload, provider_config=provider_config),
             media_type="text/event-stream",
             headers={
                 "Cache-Control": "no-cache",
@@ -241,7 +339,10 @@ def create_app() -> FastAPI:
 
 
 async def _stream_run(
-    orchestrator: ScholarlyTraceOrchestrator, payload: RunRequest
+    orchestrator: ScholarlyTraceOrchestrator,
+    payload: RunRequest,
+    *,
+    provider_config: ProviderConfig | None = None,
 ) -> AsyncIterator[str]:
     """Emit SSE events incrementally as the pipeline really runs.
 
@@ -255,10 +356,11 @@ async def _stream_run(
 
     def worker() -> None:
         try:
-            result = orchestrator.run(
+            result = orchestrator.run_with_provider(
                 payload.profile_id,
                 payload.query,
                 domain_id=payload.domain_id,
+                provider_config=provider_config,
                 include_ablation=payload.include_ablation,
                 on_step=step_queue.put,
             )

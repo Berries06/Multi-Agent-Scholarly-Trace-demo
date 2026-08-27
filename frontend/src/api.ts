@@ -5,6 +5,9 @@ import type {
   Health,
   IngestResult,
   LearnerProfile,
+  LlmConfig,
+  ProviderInfo,
+  ProviderTestResult,
   RunResult,
 } from './types'
 
@@ -31,6 +34,18 @@ export function getDomains(): Promise<Domain[]> {
   return request('/api/domains')
 }
 
+export function getProviders(): Promise<{ providers: ProviderInfo[]; free_deepseek_ready: boolean }> {
+  return request('/api/providers')
+}
+
+export function testProvider(config: LlmConfig): Promise<ProviderTestResult> {
+  return request('/api/provider/test', {
+    method: 'POST',
+    headers: jsonHeaders,
+    body: JSON.stringify(config),
+  })
+}
+
 export function getExperimentLedger(): Promise<ExperimentLedger> {
   return request('/api/experiments')
 }
@@ -46,6 +61,7 @@ export interface RunPayload {
   query: string
   domain_id?: string | null
   include_ablation?: boolean
+  llm?: LlmConfig | null
 }
 
 export function runPipeline(payload: RunPayload): Promise<RunResult> {
@@ -62,6 +78,7 @@ export interface IngestPayload {
   text: string
   profile_id: string
   accept_threshold: number
+  llm?: LlmConfig | null
 }
 
 export function ingestPaper(payload: IngestPayload): Promise<IngestResult> {
@@ -78,6 +95,7 @@ export function ingestPdf(payload: {
   paper_id: string
   title: string
   accept_threshold: number
+  llm?: LlmConfig | null
 }): Promise<IngestResult> {
   const form = new FormData()
   form.append('file', payload.file)
@@ -85,5 +103,6 @@ export function ingestPdf(payload: {
   form.append('paper_id', payload.paper_id)
   form.append('title', payload.title)
   form.append('accept_threshold', String(payload.accept_threshold))
+  if (payload.llm) form.append('llm', JSON.stringify(payload.llm))
   return request('/api/ingest-pdf', { method: 'POST', body: form })
 }

@@ -7,6 +7,34 @@ export interface Health {
   system_agents: number
 }
 
+// —— LLM 供应商配置 ——
+
+export interface ProviderInfo {
+  id: string
+  label: string
+  default_model: string
+  models: string[]
+  requires_api_key: boolean
+  protocol: string
+  available?: boolean
+}
+
+export interface LlmConfig {
+  provider: string
+  model?: string
+  api_key?: string
+  timeout_seconds?: number
+}
+
+export interface ProviderTestResult {
+  ok: boolean
+  provider: string
+  model: string
+  message?: string
+  duration_ms?: number
+  usage?: Record<string, number>
+}
+
 export interface LearnerProfile {
   profile_id: string
   name: string
@@ -136,6 +164,12 @@ export interface RunResult {
   }
   evidence_details?: Record<string, EvidenceSpan[]>
   ablation?: { variants: unknown[] }
+  decision_layer?: {
+    mode: string
+    provider: Record<string, unknown> | null
+    usage: Record<string, number>
+  }
+  provider_run?: Record<string, unknown>
 }
 
 // —— 实验台（粘贴论文）返回结构 ——
@@ -237,6 +271,11 @@ export interface IngestResult {
   specialist_agent_trace: AgentTraceStep[]
   resources: Resources
   summary: IngestSummary
+  decision_layer?: {
+    mode: string
+    provider: Record<string, unknown> | null
+    usage: Record<string, number>
+  }
 }
 
 // —— 证据知识图谱（/api/extracted-graph）——
