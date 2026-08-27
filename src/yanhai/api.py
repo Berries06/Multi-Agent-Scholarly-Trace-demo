@@ -208,6 +208,123 @@ def create_app() -> FastAPI:
         kb, _, _ = orchestrator._runtime(domain_id)
         return kb.extracted_paper_graph()
 
+    @app.get("/api/atlas/domains")
+    def atlas_domains() -> dict[str, Any]:
+        """所有领域的摘要信息，供证据图谱工作区切换。"""
+        result = []
+        for did, cfg in orchestrator.kb.domain_configs.items():
+            kb, _, _ = orchestrator._runtime(did)
+            corpus = kb.vertical_corpus
+            result.append({
+                "domain_id": did,
+                "domain_name": cfg.get("domain_name", did),
+                "description": cfg.get("description", ""),
+                "query_example": cfg.get("query_example", ""),
+                "paper_count": len(corpus.papers),
+                "evidence_paper_count": len(corpus.evidence_papers),
+                "metadata_only_count": len(corpus.papers) - len(corpus.evidence_papers),
+                "entity_count": len(corpus.extraction_dict().get("entities", [])),
+                "relation_count": len(corpus.extraction_dict().get("relations", [])),
+            })
+        return {"domains": result}
+
+    @app.get("/api/atlas/{domain_id}")
+    def atlas_domain(domain_id: str) -> dict[str, Any]:
+        """单个领域的完整图谱数据：论文、实体、关系、证据卡。"""
+        if domain_id not in orchestrator.kb.domain_configs:
+            raise HTTPException(status_code=404, detail=f"Unknown domain: {domain_id}")
+        kb, _, _ = orchestrator._runtime(domain_id)
+        corpus = kb.vertical_corpus
+        ext = corpus.extraction_dict()
+        cfg = orchestrator.kb.domain_configs[domain_id]
+        ent_map = {e["entity_id"]: e for e in ext.get("entities", [])}
+
+        papers = []
+        for paper in corpus.papers:
+            rec = corpus.paper_records[paper.paper_id]
+            papers.append({
+                "paper_id": paper.paper_id,
+                "title": paper.title,
+                "authors": rec.get("authors", []),
+                "year": paper.year,
+                "venue": rec.get("venue", ""),
+                "doi": rec.get("doi", ""),
+                "source_url": paper.source_url,
+                "citation_count": rec.get("citation_count_snapshot", 0),
+                "evidence_tier": rec.get("evidence_tier", "metadata_only"),
+                "summary": rec.get("summary", ""),
+                "concepts": rec.get("concepts", []),
+            })
+
+        entities = [{
+            "entity_id": e["entity_id"],
+            "canonical_name": e["canonical_name"],
+            "entity_type": e["entity_type"],
+            "confidence": e["confidence"],
+            "mention_count": len(e.get("mentions", [])),
+            "aliases": e.get("aliases", []),
+        } for e in ext.get("entities", [])]
+
+        relations = []
+        for r in ext.get("relations", []):
+            src = ent_map.get(r["source_id"], {})
+            tgt = ent_map.get(r["target_id"], {})
+            relations.append({
+                "relation_id": r["relation_id"],
+                "source_id": r["source_id"],
+                "target_id": r["target_id"],
+                "source_name": src.get("canonical_name", r["source_id"]),
+                "target_name": tgt.get("canonical_name", r["target_id"]),
+                "source_type": src.get("entity_type", ""),
+                "target_type": tgt.get("entity_type", ""),
+                "relation_type": r["relation_type"],
+                "confidence": r["confidence"],
+                "status": r.get("status", "accepted"),
+                "evidence_ids": r.get("evidence_ids", []),
+            })
+
+        ev_ids: set[str] = set()
+        for r in relations:
+            ev_ids.update(r.get("evidence_ids", []))
+        evidence = [{
+            "evidence_id": ev["evidence_id"],
+            "paper_id": ev["paper_id"],
+            "section_id": ev["section_id"],
+            "text": ev["text"],
+            "char_start": ev["char_start"],
+            "char_end": ev["char_end"],
+        } for ev in ext.get("evidence", []) if ev["evidence_id"] in ev_ids]
+
+        paper_entities: dict[str, list[str]] = {}
+        for e in ext.get("entities", []):
+            for m in e.get("mentions", []):
+                parts = m["evidence_id"].split(":")
+                if len(parts) >= 3:
+                    paper_entities.setdefault(parts[1], []).append(e["entity_id"])
+
+        cards: dict[str, str] = {}
+        vertical_root = Path(project_root()) / "data" / "vertical_kb" / "domains" / domain_id
+        for paper in corpus.evidence_papers:
+            rec = corpus.paper_records[paper.paper_id]
+            doc_path = rec.get("document_path", "")
+            if doc_path:
+                card_file = vertical_root / doc_path
+                if card_file.exists():
+                    cards[paper.paper_id] = card_file.read_text(encoding="utf-8")[:4000]
+
+        return {
+            "domain_id": domain_id,
+            "domain_name": cfg.get("domain_name", domain_id),
+            "description": cfg.get("description", ""),
+            "query_example": cfg.get("query_example", ""),
+            "papers": papers,
+            "entities": entities,
+            "relations": relations,
+            "evidence": evidence,
+            "paper_entities": paper_entities,
+            "cards": cards,
+        }
+
     @app.get("/api/ablation")
     def ablation() -> dict[str, Any]:
         return orchestrator.ablation.run()

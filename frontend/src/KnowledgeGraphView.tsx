@@ -37,7 +37,13 @@ function shorten(text: string, limit = 14): string {
   return text.length > limit ? `${text.slice(0, limit)}…` : text
 }
 
-export default function KnowledgeGraphView({ data }: { data: GraphData }) {
+interface Props {
+  data: GraphData
+  highlightIds?: Set<string>
+  height?: number
+}
+
+export default function KnowledgeGraphView({ data, highlightIds, height = 520 }: Props) {
   const option = useMemo(() => {
     const kinds = Array.from(new Set(data.nodes.map((node) => node.kind)))
     const categories = kinds.map((kind) => ({
@@ -45,14 +51,25 @@ export default function KnowledgeGraphView({ data }: { data: GraphData }) {
       itemStyle: { color: KIND_COLORS[kind] ?? '#94a3b8' },
     }))
     const nodeInfo = new Map(data.nodes.map((node) => [node.id, node]))
-    const nodes = data.nodes.map((node) => ({
-      id: node.id,
-      name: shorten(node.label, 16),
-      category: kinds.indexOf(node.kind),
-      symbolSize: node.kind === 'paper' ? 36 : node.kind === 'evidence' ? 14 : 24,
-    }))
+    const hasHighlight = highlightIds && highlightIds.size > 0
+    const nodes = data.nodes.map((node) => {
+      const dimmed = hasHighlight && !highlightIds!.has(node.id)
+      return {
+        id: node.id,
+        name: shorten(node.label, 16),
+        category: kinds.indexOf(node.kind),
+        symbolSize: node.kind === 'paper' ? 36 : node.kind === 'evidence' ? 14 : 24,
+        itemStyle: {
+          opacity: dimmed ? 0.15 : 1,
+          borderColor: hasHighlight && highlightIds!.has(node.id) ? '#a51931' : '#fff',
+          borderWidth: hasHighlight && highlightIds!.has(node.id) ? 3 : 1,
+        },
+        label: { show: !dimmed },
+      }
+    })
     const links = data.edges.map((edge) => {
       const rejected = edge.status === 'rejected'
+      const edgeDimmed = hasHighlight && !(highlightIds!.has(edge.source) && highlightIds!.has(edge.target))
       return {
         source: edge.source,
         target: edge.target,
@@ -60,6 +77,7 @@ export default function KnowledgeGraphView({ data }: { data: GraphData }) {
           color: rejected ? '#b21f2d' : edge.label === 'MENTIONS' || edge.label === 'CONTAINS' ? '#d1ccc2' : '#8e8a82',
           width: rejected ? 2 : 1,
           type: rejected ? 'dashed' : 'solid',
+          opacity: edgeDimmed ? 0.05 : 0.6,
         },
       }
     })
@@ -96,13 +114,13 @@ export default function KnowledgeGraphView({ data }: { data: GraphData }) {
         },
       ],
     }
-  }, [data])
+  }, [data, highlightIds])
 
   return (
     <ReactEChartsCore
       echarts={echarts}
       option={option}
-      style={{ height: 560, width: '100%' }}
+      style={{ height, width: '100%' }}
       notMerge
       opts={{ renderer: 'canvas' }}
     />

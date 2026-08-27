@@ -968,3 +968,7 @@ select {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* Atlas fullscreen mode */
+.research-main--atlas { position: fixed; inset: 0; width: 100%; max-width: none; margin: 0; padding: 0; z-index: 100; background: #f7f4ee; }
+.research-main--atlas ~ .research-footer { display: none; }

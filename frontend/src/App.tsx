@@ -7,12 +7,14 @@ import { appTheme } from './theme'
 const ExperimentPage = lazy(() => import('./ExperimentPage'))
 const LabPage = lazy(() => import('./LabPage'))
 const ProductPage = lazy(() => import('./ProductPage'))
+const AtlasPage = lazy(() => import('./atlas/AtlasPage'))
 
-type Workspace = 'product' | 'lab' | 'experiments'
+type Workspace = 'product' | 'lab' | 'atlas' | 'experiments'
 
 const workspaces: Array<{ key: Workspace; index: string; label: string; description: string }> = [
   { key: 'product', index: '01', label: '研究工作台', description: '问题、证据与裁决' },
   { key: 'lab', index: '02', label: '论文摄入', description: '抽取、复核与入图' },
+  { key: 'atlas', index: '03', label: '证据图谱', description: '联动阅读 · 5 领域 290 篇' },
 ]
 
 export default function App() {
@@ -28,6 +30,7 @@ export default function App() {
   return (
     <ConfigProvider theme={appTheme}>
       <div className="research-app">
+        {mode !== 'atlas' && (
         <header className="masthead">
           <div className="masthead__edition">
             <span>CHALLENGE CUP · XH-202630</span>
@@ -65,11 +68,6 @@ export default function App() {
                 <small>{workspace.description}</small>
               </button>
             ))}
-            <div className="workspace-nav__forthcoming" aria-label="即将上线的工作区">
-              <span>03</span>
-              <strong>证据图谱</strong>
-              <small>联动阅读 · 规划中</small>
-            </div>
             <button
               type="button"
               className={mode === 'experiments' ? 'is-active' : ''}
@@ -82,19 +80,23 @@ export default function App() {
             </button>
           </nav>
         </header>
+        )}
 
-        <main className="research-main">
+        <main className={`research-main ${mode === 'atlas' ? 'research-main--atlas' : ''}`}>
           <Suspense fallback={<div className="ledger-loading">正在装载研究工作区</div>}>
             {mode === 'product' && <ProductPage />}
             {mode === 'lab' && <LabPage />}
+            {mode === 'atlas' && <AtlasPage onExit={() => setMode('product')} />}
             {mode === 'experiments' && <ExperimentPage />}
           </Suspense>
         </main>
 
+        {mode !== 'atlas' && (
         <footer className="research-footer">
           <span>研海寻踪 · YANHAI TRACE</span>
           <span>Evidence before assertion. Measurement before claim.</span>
         </footer>
+        )}
       </div>
     </ConfigProvider>
   )

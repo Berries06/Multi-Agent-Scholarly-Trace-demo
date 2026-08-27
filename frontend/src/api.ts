@@ -1,4 +1,6 @@
 import type {
+  AtlasDomainData,
+  AtlasDomainSummary,
   Domain,
   ExperimentLedger,
   GraphData,
@@ -105,4 +107,12 @@ export function ingestPdf(payload: {
   form.append('accept_threshold', String(payload.accept_threshold))
   if (payload.llm) form.append('llm', JSON.stringify(payload.llm))
   return request('/api/ingest-pdf', { method: 'POST', body: form })
+}
+
+export function getAtlasDomains(): Promise<{ domains: AtlasDomainSummary[] }> {
+  return request('/api/atlas/domains')
+}
+
+export function getAtlasDomain(domainId: string): Promise<AtlasDomainData> {
+  return request(`/api/atlas/${encodeURIComponent(domainId)}`)
 }

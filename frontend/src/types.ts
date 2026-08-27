@@ -306,3 +306,76 @@ export interface GraphData {
   nodes: GraphNode[]
   edges: GraphEdge[]
 }
+
+// —— 证据图谱工作区（/api/atlas）——
+
+export interface AtlasDomainSummary {
+  domain_id: string
+  domain_name: string
+  description: string
+  query_example: string
+  paper_count: number
+  evidence_paper_count: number
+  metadata_only_count: number
+  entity_count: number
+  relation_count: number
+}
+
+export interface AtlasPaper {
+  paper_id: string
+  title: string
+  authors: string[]
+  year: number
+  venue: string
+  doi: string
+  source_url: string
+  citation_count: number
+  evidence_tier: 'evidence_card' | 'metadata_only'
+  summary: string
+  concepts: string[]
+}
+
+export interface AtlasEntity {
+  entity_id: string
+  canonical_name: string
+  entity_type: string
+  confidence: number
+  mention_count: number
+  aliases: string[]
+}
+
+export interface AtlasRelation {
+  relation_id: string
+  source_id: string
+  target_id: string
+  source_name: string
+  target_name: string
+  source_type: string
+  target_type: string
+  relation_type: string
+  confidence: number
+  status: string
+  evidence_ids: string[]
+}
+
+export interface AtlasEvidence {
+  evidence_id: string
+  paper_id: string
+  section_id: string
+  text: string
+  char_start: number
+  char_end: number
+}
+
+export interface AtlasDomainData {
+  domain_id: string
+  domain_name: string
+  description: string
+  query_example: string
+  papers: AtlasPaper[]
+  entities: AtlasEntity[]
+  relations: AtlasRelation[]
+  evidence: AtlasEvidence[]
+  paper_entities: Record<string, string[]>
+  cards: Record<string, string>
+}
