@@ -60,13 +60,6 @@ class ProfileUpdateRequest(BaseModel):
     required_concepts: list[str] = Field(default_factory=list)
 
 
-class ProviderRequest(BaseModel):
-    provider: str = "mock"
-    model: str | None = None
-    api_key: str = Field("", max_length=500)
-    timeout_seconds: float = Field(60, ge=5, le=180)
-
-
 def _load_server_api_key() -> str:
     """读取服务端托管的 DeepSeek API Key，供免费选项使用。"""
     key_path = project_root() / "secret" / "DeepSeekAPI.txt"
@@ -399,39 +392,22 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
         return [mine, *demos]
 
     @app.get("/api/providers")
-    def providers(_: dict[str, Any] = Depends(require_user)) -> list[dict[str, Any]]:
-        values = []
-        for item in list_providers():
-            public = dict(item)
-            public["available"] = item["id"] != "free-deepseek" or bool(state.deepseek_key)
-            public["access_mode"] = "offline" if item["id"] == "mock" else ("free" if item["id"] == "free-deepseek" else "byok")
-            values.append(public)
-        return values
-
-    @app.post("/api/providers/test")
-    def test_provider(payload: ProviderRequest, _: dict[str, Any] = Depends(require_user)) -> dict[str, Any]:
-        config, public = provider_config(payload)
-        if config.provider == "mock":
-            return {"ok": True, "provider": public, "message": "离线规则引擎可用。"}
-        try:
-            response = create_provider(config).test_connection()
-        except ProviderError as exc:
-            raise _error(exc.status_code or 502, "provider_unavailable", str(exc), retryable=True) from exc
-        return {"ok": True, "provider": public, "response": response.public_dict()}
-
-    @app.get("/api/domains")
-    def domains(_: dict[str, Any] = Depends(require_user)) -> list[dict[str, Any]]:
-        return state.orchestrator.list_domains()
-
-    @app.get("/api/providers")
     def providers() -> dict[str, Any]:
         """列出可用 LLM 供应商、默认模型与协议，并标记免费 Key 是否就绪。"""
         items = list_providers()
         free_ready = bool(SERVER_API_KEY)
         for item in items:
-            if item["id"] == "free-deepseek":
-                item["available"] = free_ready
+            item["available"] = item["id"] != "free-deepseek" or free_ready
+            item["access_mode"] = (
+                "offline" if item["id"] == "mock"
+                else "free" if item["id"] == "free-deepseek"
+                else "byok"
+            )
         return {"providers": items, "free_deepseek_ready": free_ready}
+
+    @app.get("/api/domains")
+    def domains(_: dict[str, Any] = Depends(require_user)) -> list[dict[str, Any]]:
+        return state.orchestrator.list_domains()
 
     @app.post("/api/provider/test")
     def provider_test(payload: dict[str, Any]) -> dict[str, Any]:

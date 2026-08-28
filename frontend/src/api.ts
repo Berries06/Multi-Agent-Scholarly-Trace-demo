@@ -1,6 +1,8 @@
 import type {
+  AgentTraceStep,
   AtlasDomainData,
   AtlasDomainSummary,
+  AuthState,
   Domain,
   ExperimentLedger,
   GraphData,
@@ -118,9 +120,6 @@ export async function streamPipeline(
   if (!result) throw new Error('运行流已结束，但没有收到完成结果。')
   return result
 }
-
-export const testProvider = (payload: ProviderPayload): Promise<Record<string, unknown>> =>
-  request('/api/providers/test', { method: 'POST', headers: jsonHeaders, body: JSON.stringify(payload) })
 
 export const sendFeedback = (payload: {
   profile_id: string; query: string; domain_id?: string | null; feedback: 'too_hard' | 'suitable' | 'too_easy'

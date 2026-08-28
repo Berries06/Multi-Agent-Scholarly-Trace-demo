@@ -18,12 +18,13 @@ import AgentTrace from './AgentTrace'
 import DiagnosisRadar from './DiagnosisRadar'
 import KnowledgeGraphView from './KnowledgeGraphView'
 import LlmModelSelector from './LlmModelSelector'
-import { getDomains, getExtractedGraph, getProfiles, runPipeline } from './api'
+import { getDomains, getExtractedGraph, getProfiles, getProviders, runPipeline, searchOnline, sendFeedback, testProvider } from './api'
 import type {
   Domain,
   GraphData,
   LearnerProfile,
   LlmConfig,
+  ProviderOption,
   RunResult,
   AgentTraceStep,
 } from './types'
@@ -63,7 +64,7 @@ export default function ProductPage() {
         if (cancelled) return
         setDomains(domainsData)
         setProfiles(profilesData)
-        setProviders(providerData)
+        setProviders(providerData.providers)
         setDomainId(domainsData[0]?.domain_id)
         setProfileId(profilesData[0]?.profile_id ?? 'my-profile')
         const example = domainsData[0]?.query_example
@@ -190,7 +191,7 @@ export default function ProductPage() {
           </label>
           <label className="field-block">
             <span>模型</span>
-            <Select style={{ width: '100%' }} options={(selectedProvider?.models ?? []).map((value) => ({ value, label: value }))} value={model} onChange={setModel} />
+            <Select style={{ width: '100%' }} options={(selectedProvider?.models ?? []).map((value: string) => ({ value, label: value }))} value={model} onChange={setModel} />
           </label>
           {selectedProvider?.access_mode === 'byok' && (
             <label className="field-block field-block--query">

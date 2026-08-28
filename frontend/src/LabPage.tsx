@@ -90,6 +90,7 @@ export default function LabPage() {
   const [threshold, setThreshold] = useState(0.72)
   const [pdfFile, setPdfFile] = useState<File | null>(null)
   const [llmConfig, setLlmConfig] = useState<LlmConfig | null>(null)
+  const [saveSource, setSaveSource] = useState(false)
   const [result, setResult] = useState<IngestResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)

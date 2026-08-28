@@ -17,7 +17,10 @@ export interface ProviderInfo {
   requires_api_key: boolean
   protocol: string
   available?: boolean
+  access_mode?: string
 }
+
+export type ProviderOption = ProviderInfo
 
 export interface LlmConfig {
   provider: string
@@ -33,6 +36,22 @@ export interface ProviderTestResult {
   message?: string
   duration_ms?: number
   usage?: Record<string, number>
+}
+
+export interface UserAccount {
+  user_id: string
+  email: string
+  nickname: string
+  status: string
+  created_at: string
+  last_login_at: string | null
+  profile_version: number
+  profile: LearnerProfile
+}
+
+export interface AuthState {
+  authenticated: boolean
+  user: UserAccount | null
 }
 
 export interface LearnerProfile {
@@ -172,6 +191,8 @@ export interface RunResult {
     usage: Record<string, number>
   }
   provider_run?: Record<string, unknown>
+  feedback?: { decision?: string; adjustment?: number }
+  persistence?: { saved?: boolean; source_saved?: boolean }
 }
 
 // —— 实验台（粘贴论文）返回结构 ——
