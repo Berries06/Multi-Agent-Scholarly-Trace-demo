@@ -22,17 +22,21 @@ from pydantic import BaseModel, Field
 from .extraction import PyPDFParser
 from .experiment_ledger import build_experiment_ledger
 from .fresh_pipeline import run_fresh_document_pipeline, run_fresh_paper_pipeline
+from .harness import CircuitBreaker, RuntimeConfig
+from .online_rag import OnlineRAG
 from .orchestrator import ScholarlyTraceOrchestrator
+from . import __version__
 from .providers import (
     ProviderConfig,
     ProviderError,
     create_provider,
     list_providers,
 )
-from .resources import project_root
+from .resources import database_path, project_root
 from .skills import conduct_research, diagnose, humanize, quality_gate
 from .skills.pdf_processor import extract_pdf
 from .sources import search_multi_source
+from .storage import AppRepository
 
 SESSION_COOKIE = "yanhai_session"
 MAX_PDF_BYTES = 5_000_000
@@ -103,6 +107,11 @@ def _provider_config_from_payload(
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
+DEFAULT_QUERY = (
+    "如何从科学论文中抽取可追溯知识图谱，并利用图谱理解技术脉络和生成研究想法？"
+)
+
+
 class RunRequest(BaseModel):
     profile_id: str = "my-profile"
     query: str = Field(DEFAULT_QUERY, min_length=2, max_length=5000)
@@ -130,6 +139,7 @@ class IngestPaperRequest(BaseModel):
     profile_id: str = "my-profile"
     accept_threshold: float = Field(0.72, ge=0.50, le=0.95)
     llm: dict[str, Any] | None = None
+    save_source: bool = False
 
 
 class SearchRequest(BaseModel):
@@ -194,6 +204,7 @@ def _cookie_options() -> dict[str, Any]:
 
 def create_app(*, root: Path | None = None, repository: AppRepository | None = None) -> FastAPI:
     state = ApiState(root or project_root())
+    orchestrator = state.orchestrator
     if repository is not None:
         state.repository = repository
     app = FastAPI(
@@ -261,9 +272,9 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
             raise _error(404, "unknown_profile", "画像不存在或不属于当前用户。")
         return profile
 
-    def provider_config(payload: ProviderRequest) -> tuple[ProviderConfig, dict[str, Any]]:
-        raw = payload.model_dump()
-        selected = raw["provider"]
+    def provider_config(payload: dict[str, Any] | None) -> tuple[ProviderConfig, dict[str, Any]]:
+        raw = dict(payload or {})
+        selected = str(raw.get("provider", "mock")).strip().lower()
         if selected == "free-deepseek":
             if not state.deepseek_key:
                 raise _error(503, "free_provider_unavailable", "服务器免费 DeepSeek 暂不可用。", retryable=True)
@@ -590,20 +601,9 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
         return state.online_rag.search(payload.query, limit=payload.limit, allow_network=payload.allow_network)
 
     @app.post("/api/run")
-    def run(payload: RunRequest) -> dict[str, Any]:
-        provider_config = _provider_config_from_payload(payload.llm)
-        try:
-            return orchestrator.run_with_provider(
-                payload.profile_id,
-                payload.query,
-                domain_id=payload.domain_id,
-                provider_config=provider_config,
-                include_ablation=payload.include_ablation,
-            )
-        except KeyError as exc:
-            raise _error(404, "unknown_resource", str(exc)) from exc
-        except ProviderError as exc:
-            raise _error(exc.status_code or 502, "provider_failed", str(exc), retryable=True) from exc
+    async def run(payload: RunRequest, user: dict[str, Any] = Depends(require_user)) -> dict[str, Any]:
+        # execute_run 内部已按用户持久化（persist_run），此处不再重复保存。
+        return await asyncio.to_thread(execute_run, payload, user)
 
     @app.post("/api/run/stream")
     async def run_stream(payload: RunRequest, user: dict[str, Any] = Depends(require_user)) -> StreamingResponse:
@@ -642,15 +642,15 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
         return state.repository.user_ingestions(str(user["user_id"]), limit)
 
     @app.post("/api/ingest-paper")
-    def ingest_paper(payload: IngestPaperRequest) -> dict[str, Any]:
-        if payload.profile_id not in orchestrator.profiles:
-            raise HTTPException(
-                status_code=404, detail=f"Unknown profile: {payload.profile_id}"
-            )
-        profile = orchestrator.profiles[payload.profile_id]
+    async def ingest_paper(
+        payload: IngestPaperRequest,
+        user: dict[str, Any] = Depends(require_user),
+    ) -> dict[str, Any]:
+        profile = active_profile(payload.profile_id, user)
         provider_config = _provider_config_from_payload(payload.llm)
-        schema_path = Path(project_root()) / "data" / "knowledge" / "extraction_schema.json"
-        return run_fresh_paper_pipeline(
+        schema_path = state.root / "data" / "knowledge" / "extraction_schema.json"
+        result = await asyncio.to_thread(
+            run_fresh_paper_pipeline,
             paper_id=payload.paper_id,
             title=payload.title,
             text=payload.text,
@@ -659,10 +659,16 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
             accept_threshold=payload.accept_threshold,
             provider_config=provider_config,
         )
-        result["persistence"] = state.repository.save_ingestion(
-            user_id=str(user["user_id"]), paper_id=payload.paper_id, title=payload.title,
-            source_kind="text", source_text=payload.text, save_source=payload.save_source, result=result,
+        saved = state.repository.save_ingestion(
+            user_id=str(user["user_id"]),
+            paper_id=payload.paper_id,
+            title=payload.title,
+            source_kind="text",
+            source_text=payload.text,
+            save_source=payload.save_source,
+            result=result,
         )
+        result["persistence"] = {"saved": True, **saved}
         return result
 
     @app.post("/api/ingest-pdf")
@@ -673,11 +679,9 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
         title: str = Form(""),
         accept_threshold: float = Form(0.72, ge=0.5, le=0.95),
         llm: str = Form(""),
+        user: dict[str, Any] = Depends(require_user),
     ) -> dict[str, Any]:
-        if profile_id not in orchestrator.profiles:
-            raise HTTPException(
-                status_code=404, detail=f"Unknown profile: {profile_id}"
-            )
+        profile = active_profile(profile_id, user)
         llm_payload: dict[str, Any] | None = None
         if llm and llm.strip():
             try:
@@ -688,14 +692,14 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
                 ) from exc
         provider_config = _provider_config_from_payload(llm_payload)
         # 分块读取并在超限时尽早拒绝，避免把超大文件完整读入内存。
-        payload = b""
+        raw_pdf = b""
         chunk_size = 1_000_000
         while True:
             chunk = await file.read(chunk_size)
             if not chunk:
                 break
-            payload += chunk
-            if len(payload) > 5_000_000:
+            raw_pdf += chunk
+            if len(raw_pdf) > 5_000_000:
                 raise HTTPException(status_code=413, detail="PDF 超过 5MB 限制。")
         try:
             document = PyPDFParser().parse_bytes(raw_pdf, paper_id=paper_id, title=title)
@@ -709,18 +713,16 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
             accept_threshold=accept_threshold,
             provider_config=provider_config,
         )
-
-    @app.post("/api/run/stream")
-    async def run_stream(payload: RunRequest) -> StreamingResponse:
-        provider_config = _provider_config_from_payload(payload.llm)
-        return StreamingResponse(
-            _stream_run(orchestrator, payload, provider_config=provider_config),
-            media_type="text/event-stream",
-            headers={
-                "Cache-Control": "no-cache",
-                "X-Accel-Buffering": "no",
-            },
+        saved = state.repository.save_ingestion(
+            user_id=str(user["user_id"]),
+            paper_id=paper_id,
+            title=title,
+            source_kind="pdf",
+            source_text="",
+            save_source=False,
+            result=result,
         )
+        result["persistence"] = {"saved": True, **saved}
         return result
 
     # ── 学术 Skills ──────────────────────────────────────
@@ -808,40 +810,33 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
 
 
 async def _stream_run(
-    orchestrator: ScholarlyTraceOrchestrator,
+    executor: Any,
     payload: RunRequest,
-    *,
-    provider_config: ProviderConfig | None = None,
+    user: dict[str, Any],
 ) -> AsyncIterator[str]:
     """Emit SSE events incrementally as the pipeline really runs.
 
-    The orchestrator executes in a worker thread and reports each stage through
-    its ``on_step`` callback; steps are forwarded to the client as they happen,
-    not replayed after the whole run completes. Any error is reported as an
-    explicit ``error`` event instead of truncating the stream.
+    ``executor`` 是 create_app 闭包内的 execute_run(payload, user, on_step)；
+    流水线在工作线程中执行，每个阶段通过 on_step 实时上抛，SSE 逐帧转发，
+    绝不回放；任何异常都发显式 error 事件，不静默截断。
     """
-    yield _sse("started", {"profile_id": payload.profile_id, "query": payload.query})
+    operation_id = uuid.uuid4().hex
+    yield _sse(
+        "started",
+        {"operation_id": operation_id, "profile_id": payload.profile_id, "query": payload.query},
+    )
     step_queue: "queue.Queue[dict[str, Any]]" = queue.Queue()
 
     def worker() -> None:
         try:
-            result = orchestrator.run_with_provider(
-                payload.profile_id,
-                payload.query,
-                domain_id=payload.domain_id,
-                provider_config=provider_config,
-                include_ablation=payload.include_ablation,
-                on_step=step_queue.put,
-            )
+            result = executor(payload, user, on_step=step_queue.put)
             step_queue.put({"__result__": result})
-        except KeyError as exc:
-            step_queue.put({"__error__": str(exc)})
         except Exception as exc:  # SSE 必须显式报错，不允许静默截断
             step_queue.put({"__error__": f"{type(exc).__name__}: {exc}"})
 
     threading.Thread(target=worker, name="yanhai-sse-run", daemon=True).start()
     while True:
-        item = await asyncio.to_thread(events.get)
+        item = await asyncio.to_thread(step_queue.get)
         if "__error__" in item:
             yield _sse("error", {"operation_id": operation_id, "message": item["__error__"]})
             return

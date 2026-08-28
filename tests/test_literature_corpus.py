@@ -38,7 +38,9 @@ class LiteratureCorpusTests(unittest.TestCase):
 
     def test_audit_matches_corpus_and_records_targeted_reading(self) -> None:
         audit = json.loads(AUDIT_PATH.read_text(encoding="utf-8"))
-        corpus_hash = hashlib.sha256(CORPUS_PATH.read_bytes()).hexdigest()
+        # 归一化换行符：Windows 检出会把 LF 转成 CRLF，哈希按 LF 内容计算才与冻结值一致。
+        normalized = CORPUS_PATH.read_bytes().replace(b"\r\n", b"\n")
+        corpus_hash = hashlib.sha256(normalized).hexdigest()
         self.assertEqual(audit["corpus_sha256"], corpus_hash)
         self.assertEqual(audit["paper_count"], 100)
         self.assertEqual(audit["read_status_counts"], {"targeted_sections_read": 100})

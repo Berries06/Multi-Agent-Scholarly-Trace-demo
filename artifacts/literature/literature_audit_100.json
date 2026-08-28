@@ -1,0 +1,2898 @@
+{
+  "schema_version": "1.0.0",
+  "corpus_sha256": "0513a2a0dde979111df6c772952364166280169cc3c9d53866e951f922aeb1dd",
+  "paper_count": 100,
+  "read_status_counts": {
+    "targeted_sections_read": 100
+  },
+  "novelty_claims_frozen": false,
+  "papers": [
+    {
+      "id": "P001",
+      "bucket": "scientific_ie",
+      "title": "Multi-Task Identification of Entities, Relations, and Coreference for Scientific Knowledge Graph Construction",
+      "venue": "EMNLP",
+      "year": 2018,
+      "gap": "Abstract-level fixed-schema extraction does not model evidence sufficiency, admission state, or cross-paper conflict.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/D18-1360/",
+      "pdf_url": "https://aclanthology.org/D18-1360.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "a0955c173c503e5762bb685eabc5acb3c0212908ec60dff56dbf706f335126ba",
+      "pdf_bytes": 1760152,
+      "pages": 14,
+      "text_chars": 66537,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P002",
+      "bucket": "scientific_ie",
+      "title": "A General Framework for Information Extraction using Dynamic Span Graphs",
+      "venue": "NAACL",
+      "year": 2019,
+      "gap": "Dynamic span graphs remain task-local; confidence is not calibrated as a graph-admission probability and provenance is not a first-class state.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/N19-1308/",
+      "pdf_url": "https://aclanthology.org/N19-1308.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "0373e0d905e5b123a53beb16ad7da15c655bf4d29a11fa4850e5143498128939",
+      "pdf_bytes": 396381,
+      "pages": 11,
+      "text_chars": 43865,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P003",
+      "bucket": "scientific_ie",
+      "title": "Entity, Relation, and Event Extraction with Contextualized Span Representations",
+      "venue": "EMNLP",
+      "year": 2019,
+      "gap": "Contextual spans improve extraction but do not decide whether the supporting text is sufficient for a scientific assertion.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/D19-1585/",
+      "pdf_url": "https://aclanthology.org/D19-1585.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "87e463c0d415a925e348f4f9fdddc86b2b78dc6e6411e24a8b02a3a2f01a525e",
+      "pdf_bytes": 433048,
+      "pages": 6,
+      "text_chars": 25840,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P004",
+      "bucket": "scientific_ie",
+      "title": "SciREX: A Challenge Dataset for Document-Level Information Extraction",
+      "venue": "ACL",
+      "year": 2020,
+      "gap": "Document-level n-ary relations expose a large human-model gap; versioned cross-paper evidence and contradiction states are outside scope.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2020.acl-main.670/",
+      "pdf_url": "https://aclanthology.org/2020.acl-main.670.pdf",
+      "comment": "official ACL proceedings",
+      "pdf_sha256": "b19535b67223edfc3b89a299ea5d32ad88f003d2ceb30d3967073d501e9079ff",
+      "pdf_bytes": 424491,
+      "pages": 11,
+      "text_chars": 48790,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P005",
+      "bucket": "scientific_ie",
+      "title": "A Joint Neural Model for Information Extraction with Global Features",
+      "venue": "ACL",
+      "year": 2020,
+      "gap": "Sentence-level global decoding optimizes extraction consistency, not document provenance, evidence completeness, or calibrated abstention.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2020.acl-main.713/",
+      "pdf_url": "https://aclanthology.org/2020.acl-main.713.pdf",
+      "comment": "official ACL proceedings",
+      "pdf_sha256": "ea0693747388152b714a394f91ac2125e7d248dc984dc0fe9456b0ebd17231ab",
+      "pdf_bytes": 1148447,
+      "pages": 11,
+      "text_chars": 40474,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P006",
+      "bucket": "scientific_ie",
+      "title": "Structured Prediction as Translation between Augmented Natural Languages",
+      "venue": "EMNLP",
+      "year": 2021,
+      "gap": "Generative serialization unifies tasks but can produce structurally plausible unsupported outputs without a hard evidence contract.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "We propose a new framework, Translation between Augmented Natural Languages (TANL), to solve many structured prediction language tasks including joint entity and relation extraction, nested named entity recognition, relation classification, semantic role labeling, event extraction, coreference resolution, and dialogue state tracking. Instead of tackling the problem by training task-specific discriminative classifiers, we frame it as a translation task between augmented natural languages, from which the task-relevant information can be easily extracted. Our approach can match or outperform task-specific models on all tasks, and in particular, achieves new state-of-the-art results on joint entity and relation extraction (CoNLL04, ADE, NYT, and ACE2005 datasets), relation classification (FewRel and TACRED), and semantic role labeling (CoNLL-2005 and CoNLL-2012). We accomplish this while using the same architecture and hyperparameters for all tasks and even when training a single model to solve all tasks at the same time (multi-task learning). Finally, we show that our framework can also significantly improve the performance in a low-resource regime, thanks to better use of label semantics.",
+      "primary_url": "https://arxiv.org/abs/2101.05779v3",
+      "pdf_url": "https://arxiv.org/pdf/2101.05779v3",
+      "comment": "",
+      "pdf_sha256": "75a40ccccbedb16163efa78a46b75057899659ee820e891e7fa28bd768d2615f",
+      "pdf_bytes": 1328004,
+      "pages": 26,
+      "text_chars": 125003,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P007",
+      "bucket": "scientific_ie",
+      "title": "Text2Event: Controllable Sequence-to-Structure Generation for End-to-end Event Extraction",
+      "venue": "ACL",
+      "year": 2021,
+      "gap": "Constrained decoding targets event schemas, not cross-document relation verification or evidence-state transitions.",
+      "hypotheses": [
+        "I1"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2021.acl-long.217/",
+      "pdf_url": "https://aclanthology.org/2021.acl-long.217.pdf",
+      "comment": "official ACL proceedings",
+      "pdf_sha256": "c60b92b93ce96e4f8ece06a1a5b34a8820fdbb59258376159e78703c7f2b733a",
+      "pdf_bytes": 720423,
+      "pages": 12,
+      "text_chars": 49858,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P008",
+      "bucket": "scientific_ie",
+      "title": "A Frustratingly Easy Approach for Entity and Relation Extraction",
+      "venue": "NAACL",
+      "year": 2021,
+      "gap": "The strong pipeline baseline still propagates entity errors and does not preserve evidence lineage through relation acceptance.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2021.naacl-main.5/",
+      "pdf_url": "https://aclanthology.org/2021.naacl-main.5.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "5f60780d34d9088f86d121606b753eca45ddbe581a5da99327440726c5429ce5",
+      "pdf_bytes": 396740,
+      "pages": 12,
+      "text_chars": 50574,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P009",
+      "bucket": "scientific_ie",
+      "title": "Packed Levitated Marker for Entity and Relation Extraction",
+      "venue": "ACL",
+      "year": 2022,
+      "gap": "Marker-based gains depend on supervised fixed schemas and do not address full-paper provenance or temporal contradictions.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2022.acl-long.337/",
+      "pdf_url": "https://aclanthology.org/2022.acl-long.337.pdf",
+      "comment": "official ACL proceedings",
+      "pdf_sha256": "b8cee95a8cfd05cf1832ccae771b908607f784d1f9f878a239cd2fa3819334ea",
+      "pdf_bytes": 396355,
+      "pages": 14,
+      "text_chars": 60310,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P010",
+      "bucket": "scientific_ie",
+      "title": "Unified Structure Generation for Universal Information Extraction",
+      "venue": "ACL",
+      "year": 2022,
+      "gap": "Universal structure generation improves transfer, but generated records are not guarded by evidence sufficiency and selective admission.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2022.acl-long.395/",
+      "pdf_url": "https://aclanthology.org/2022.acl-long.395.pdf",
+      "comment": "official ACL proceedings",
+      "pdf_sha256": "f6f49ecb1bdaad8814a1e7dceaee394d09b7233ddcbd5023fafeb84521782047",
+      "pdf_bytes": 576383,
+      "pages": 18,
+      "text_chars": 77582,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P011",
+      "bucket": "scientific_ie",
+      "title": "DEGREE: A Data-Efficient Generative Event Extraction Model",
+      "venue": "NAACL",
+      "year": 2022,
+      "gap": "Definition-guided generation is data-efficient but event-centric, schema-dependent, and lacks evidence-linked adjudication.",
+      "hypotheses": [
+        "I1"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 0.9333,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2022.naacl-main.138/",
+      "pdf_url": "https://aclanthology.org/2022.naacl-main.138.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "cc09cc114e8bd12fea24bdbbeb4e8d27a4a30b1654b5a3f63224e727a9c0a3a0",
+      "pdf_bytes": 614466,
+      "pages": 19,
+      "text_chars": 69125,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P012",
+      "bucket": "scientific_ie",
+      "title": "ReSel: N-ary Relation Extraction from Scientific Text and Tables by Learning to Retrieve and Select",
+      "venue": "EMNLP",
+      "year": 2022,
+      "gap": "Text-table evidence selection remains domain/task bounded and does not expose multi-agent disagreement or calibrated graph states.",
+      "hypotheses": [
+        "I1",
+        "I2",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2022.emnlp-main.46/",
+      "pdf_url": "https://aclanthology.org/2022.emnlp-main.46.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "926945e1bcbfb2e298cf476f8e231edc13429a77e61418bbbb364311dfcbe3c7",
+      "pdf_bytes": 1377392,
+      "pages": 15,
+      "text_chars": 63678,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P013",
+      "bucket": "scientific_ie",
+      "title": "GLiNER: Generalist Model for Named Entity Recognition using Bidirectional Transformer",
+      "venue": "NAACL",
+      "year": 2024,
+      "gap": "Open-label NER stops before canonicalization, relation verification, and evidence-backed graph admission.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2024.naacl-long.300/",
+      "pdf_url": "https://aclanthology.org/2024.naacl-long.300.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "835184a0203f517ae860709adb196bdda98d7503908b5701c801b79666c0cead",
+      "pdf_bytes": 1294606,
+      "pages": 13,
+      "text_chars": 56181,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P014",
+      "bucket": "scientific_ie",
+      "title": "SciER: An Entity and Relation Extraction Dataset for Datasets, Methods, and Tasks in Scientific Documents",
+      "venue": "EMNLP",
+      "year": 2024,
+      "gap": "The benchmark improves scientific coverage but remains small and does not evaluate temporal conflict or downstream decision calibration.",
+      "hypotheses": [
+        "I3",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2024.emnlp-main.726/",
+      "pdf_url": "https://aclanthology.org/2024.emnlp-main.726.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "53e741a62706fba7ddc15eca27695da3261a4d2a80b15a59fa6ccae11a018ae1",
+      "pdf_bytes": 972117,
+      "pages": 18,
+      "text_chars": 74767,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P015",
+      "bucket": "scientific_ie",
+      "title": "GLiREL: Generalist Model for Zero-Shot Relation Extraction",
+      "venue": "NAACL",
+      "year": 2025,
+      "gap": "Zero-shot relation typing depends on candidate spans and does not itself prove evidence sufficiency or provide calibrated abstention.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2025.naacl-long.418/",
+      "pdf_url": "https://aclanthology.org/2025.naacl-long.418.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "5daae56a0e523b4a4fc97f033a0f487b867c77f4acf37d562b4d61db776a5d83",
+      "pdf_bytes": 3420386,
+      "pages": 16,
+      "text_chars": 64204,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P016",
+      "bucket": "verification",
+      "title": "FEVER: a Large-scale Dataset for Fact Extraction and VERification",
+      "venue": "NAACL",
+      "year": 2018,
+      "gap": "Wikipedia claims and sentence evidence do not capture scientific modality, full-document context, or evolving conclusions.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/N18-1074/",
+      "pdf_url": "https://aclanthology.org/N18-1074.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "5d328bad901f488c4cff1dd073b55e30653b29c9c21c48700b926421cb84c9f7",
+      "pdf_bytes": 460896,
+      "pages": 11,
+      "text_chars": 42737,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "P017",
+      "bucket": "verification",
+      "title": "MultiFC: A Real-World Multi-Domain Dataset for Evidence-Based Fact Checking of Claims",
+      "venue": "EMNLP",
+      "year": 2019,
+      "gap": "Heterogeneous labels and source formats complicate uniform evidence-span supervision and calibrated cross-domain decisions.",
+      "hypotheses": [
+        "I3",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/D19-1475/",
+      "pdf_url": "https://aclanthology.org/D19-1475.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "7dc00b44bc27bef040ab2168e151d890b9be88720d1b85df992c5ca6c65d94b6",
+      "pdf_bytes": 513915,
+      "pages": 13,
+      "text_chars": 50456,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P018",
+      "bucket": "verification",
+      "title": "Fact or Fiction: Verifying Scientific Claims",
+      "venue": "EMNLP",
+      "year": 2020,
+      "gap": "SciFact is abstract-based and small; full-paper, cross-paper, temporal, and graph-admission decisions remain open.",
+      "hypotheses": [
+        "I1",
+        "I3",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2020.emnlp-main.609/",
+      "pdf_url": "https://aclanthology.org/2020.emnlp-main.609.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "e51a1fab569f2dcb00f7806fe95094e25a34c027140709725d3d05b7a0af9ac7",
+      "pdf_bytes": 4114861,
+      "pages": 17,
+      "text_chars": 60083,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P019",
+      "bucket": "verification",
+      "title": "HoVer: A Dataset for Many-Hop Fact Extraction and Claim Verification",
+      "venue": "EMNLP Findings",
+      "year": 2020,
+      "gap": "Curated Wikipedia hops do not represent open scientific evidence completeness or source disagreement.",
+      "hypotheses": [
+        "I2",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2020.findings-emnlp.309/",
+      "pdf_url": "https://aclanthology.org/2020.findings-emnlp.309.pdf",
+      "comment": "official EMNLP Findings proceedings",
+      "pdf_sha256": "1054a03641f89e915f36b8f3a5dcb8b5038fb451c29737a6617baade4c62a672",
+      "pdf_bytes": 3149351,
+      "pages": 20,
+      "text_chars": 63738,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "P020",
+      "bucket": "verification",
+      "title": "Get Your Vitamin C! Robust Fact Verification with Contrastive Evidence",
+      "venue": "NAACL",
+      "year": 2021,
+      "gap": "Synthetic contrastive edits improve robustness but underrepresent scientific semantic strength, modality, and real source conflict.",
+      "hypotheses": [
+        "I2",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2021.naacl-main.52/",
+      "pdf_url": "https://aclanthology.org/2021.naacl-main.52.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "2afdd1fb8129cbde6f766ecaf017d8c0b73530cffcf5000f6725ff900038b83d",
+      "pdf_bytes": 1178454,
+      "pages": 20,
+      "text_chars": 87249,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P021",
+      "bucket": "verification",
+      "title": "Improving Scientific Claim Verification with Weak Supervision and Full-Document Context",
+      "venue": "NAACL Findings",
+      "year": 2022,
+      "gap": "Full-document verification still yields a claim label rather than a versioned evidence object with calibrated admission state.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 0.9457,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2022.findings-naacl.6/",
+      "pdf_url": "https://aclanthology.org/2022.findings-naacl.6.pdf",
+      "comment": "official NAACL Findings proceedings",
+      "pdf_sha256": "7b3cd8a624295dd523009b1a9d8444b6a00ddf130ed06e736cabbed946de898b",
+      "pdf_bytes": 309804,
+      "pages": 16,
+      "text_chars": 67302,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P022",
+      "bucket": "verification",
+      "title": "FAVIQ: FAct Verification from Information-seeking Questions",
+      "venue": "ACL",
+      "year": 2022,
+      "gap": "Ambiguous QA exposes retrieval ambiguity but not scientific provenance, relation state transitions, or temporal conflict.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2022.acl-long.354/",
+      "pdf_url": "https://aclanthology.org/2022.acl-long.354.pdf",
+      "comment": "official ACL proceedings",
+      "pdf_sha256": "fdf450684f5b07586e80c410fc02c3e044985b4ee737bd9e648a13651d8a3ce3",
+      "pdf_bytes": 561065,
+      "pages": 13,
+      "text_chars": 54532,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P023",
+      "bucket": "verification",
+      "title": "Fact-Checking Complex Claims with Program-Guided Reasoning",
+      "venue": "ACL",
+      "year": 2023,
+      "gap": "Program decomposition inherits parser and retrieval errors; evidence sufficiency and uncertainty are not independently calibrated.",
+      "hypotheses": [
+        "I2",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2023.acl-long.386/",
+      "pdf_url": "https://aclanthology.org/2023.acl-long.386.pdf",
+      "comment": "official ACL proceedings",
+      "pdf_sha256": "0928396891b1b209c34dcc16f44f334beaec69cc18c8d15d4d411239d5e40e26",
+      "pdf_bytes": 712862,
+      "pages": 24,
+      "text_chars": 90584,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P024",
+      "bucket": "verification",
+      "title": "RARR: Researching and Revising What Language Models Say, Using Language Models",
+      "venue": "ACL",
+      "year": 2023,
+      "gap": "Research-and-revise can attach weak or irrelevant sources and lacks a structured independent admission gate.",
+      "hypotheses": [
+        "I1",
+        "I2",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2023.acl-long.910/",
+      "pdf_url": "https://aclanthology.org/2023.acl-long.910.pdf",
+      "comment": "official ACL proceedings",
+      "pdf_sha256": "012e1231dc847c4cee6c7cb0e6ffee43f5799f70754930c815db1674ceffeab9",
+      "pdf_bytes": 1298539,
+      "pages": 32,
+      "text_chars": 126828,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P025",
+      "bucket": "verification",
+      "title": "FActScore: Fine-grained Atomic Evaluation of Factual Precision in Long Form Text Generation",
+      "venue": "EMNLP",
+      "year": 2023,
+      "gap": "Atomic scoring depends on automated decomposition and retrieval; it is an evaluator, not a persistent evidence-state model.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2023.emnlp-main.741/",
+      "pdf_url": "https://aclanthology.org/2023.emnlp-main.741.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "8486fe22a15aaf3fe2e1d7043d169000600205dde9c601c9fd31c0dd6f7380e9",
+      "pdf_bytes": 2409424,
+      "pages": 25,
+      "text_chars": 97372,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P026",
+      "bucket": "verification",
+      "title": "SelfCheckGPT: Zero-Resource Black-Box Hallucination Detection for Generative Large Language Models",
+      "venue": "EMNLP",
+      "year": 2023,
+      "gap": "Self-consistency measures disagreement, not truth, and correlated samples can confidently reproduce the same error.",
+      "hypotheses": [
+        "I2",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2023.emnlp-main.557/",
+      "pdf_url": "https://aclanthology.org/2023.emnlp-main.557.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "d523eb2c779cb5902371c653301738086b2471cd21b2b4e81f7a61bd6ae370bd",
+      "pdf_bytes": 779538,
+      "pages": 14,
+      "text_chars": 53603,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P027",
+      "bucket": "verification",
+      "title": "AVeriTeC: A Dataset for Real-world Claim Verification with Evidence from the Web",
+      "venue": "NeurIPS",
+      "year": 2023,
+      "gap": "Web evidence is mutable and noisy; dataset labels do not provide scientific KG admission or temporal supersession semantics.",
+      "hypotheses": [
+        "I1",
+        "I4",
+        "I6"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://proceedings.neurips.cc/paper_files/paper/2023/hash/cd86a30526cd1aff61d6f89f107634e4-Abstract-Datasets_and_Benchmarks.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2023/file/cd86a30526cd1aff61d6f89f107634e4-Paper-Datasets_and_Benchmarks.pdf",
+      "comment": "official NeurIPS proceedings",
+      "pdf_sha256": "a1edba4c402ad9946ff56f580d5b591f74e379307021c3f95105061a929025f0",
+      "pdf_bytes": 2238535,
+      "pages": 40,
+      "text_chars": 133473,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P028",
+      "bucket": "verification",
+      "title": "FacTool: Factuality Detection in Generative AI -- A Tool Augmented Framework for Multi-Task and Multi-Domain Scenarios",
+      "venue": "EMNLP Findings",
+      "year": 2023,
+      "gap": "Tool reliability and API drift enter the verifier, while calibrated abstention and run-level provenance remain incomplete.",
+      "hypotheses": [
+        "I3",
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "The emergence of generative pre-trained models has facilitated the synthesis of high-quality text, but it has also posed challenges in identifying factual errors in the generated text. In particular: (1) A wider range of tasks now face an increasing risk of containing factual errors when handled by generative models. (2) Generated texts tend to be lengthy and lack a clearly defined granularity for individual facts. (3) There is a scarcity of explicit evidence available during the process of fact checking. With the above challenges in mind, in this paper, we propose FacTool, a task and domain agnostic framework for detecting factual errors of texts generated by large language models (e.g., ChatGPT). Experiments on four different tasks (knowledge-based QA, code generation, mathematical reasoning, and scientific literature review) show the efficacy of the proposed method. We release the code of FacTool associated with ChatGPT plugin interface at https://github.com/GAIR-NLP/factool .",
+      "primary_url": "https://arxiv.org/abs/2307.13528v2",
+      "pdf_url": "https://arxiv.org/pdf/2307.13528v2",
+      "comment": "",
+      "pdf_sha256": "beca0a325ae7f616e9a8395f67a4ec7d697d493b961b68d9444119de84602df6",
+      "pdf_bytes": 2511423,
+      "pages": 25,
+      "text_chars": 105928,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P029",
+      "bucket": "verification",
+      "title": "Large Language Models Help Humans Verify Truthfulness -- Except When They Are Convincingly Wrong",
+      "venue": "NAACL",
+      "year": 2024,
+      "gap": "Convincing wrong explanations can reduce human reliability, requiring explicit uncertainty and evidence-bound interaction design.",
+      "hypotheses": [
+        "I2",
+        "I3",
+        "I5"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2024.naacl-long.81/",
+      "pdf_url": "https://aclanthology.org/2024.naacl-long.81.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "7597823b6c43fc21b6c31a94ecea93d5560b27302a5707ff1c0a17627fc9e8c5",
+      "pdf_bytes": 1615527,
+      "pages": 16,
+      "text_chars": 64912,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P030",
+      "bucket": "verification",
+      "title": "MiniCheck: Efficient Fact-Checking of LLMs on Grounding Documents",
+      "venue": "EMNLP",
+      "year": 2024,
+      "gap": "Efficient document grounding remains local to supplied context and does not resolve multi-source temporal conflict or graph state.",
+      "hypotheses": [
+        "I3",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2024.emnlp-main.499/",
+      "pdf_url": "https://aclanthology.org/2024.emnlp-main.499.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "f63a76e127c1bceaae4bf0f8985bc15c44596b34d746424b37f91e34f0dacc14",
+      "pdf_bytes": 1545010,
+      "pages": 30,
+      "text_chars": 128253,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P031",
+      "bucket": "rag",
+      "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+      "venue": "NeurIPS",
+      "year": 2020,
+      "gap": "Retrieved passages improve generation but citations are not span-enforced and parametric/retrieved conflicts are unresolved.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://proceedings.neurips.cc/paper_files/paper/2020/hash/6b493230205f780e1bc26945df7481e5-Abstract.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2020/file/6b493230205f780e1bc26945df7481e5-Paper.pdf",
+      "comment": "official NeurIPS proceedings",
+      "pdf_sha256": "720f67eb41aa49995d5fcf3d24ac7efe431fbe08ce109b14b5a9fa4d4ebe2f8b",
+      "pdf_bytes": 946122,
+      "pages": 16,
+      "text_chars": 60445,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P032",
+      "bucket": "rag",
+      "title": "REALM: Retrieval-Augmented Language Model Pre-Training",
+      "venue": "ICML",
+      "year": 2020,
+      "gap": "A static corpus and latent retrieval improve knowledge access without user-visible attribution or evidence acceptance state.",
+      "hypotheses": [
+        "I1",
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Language model pre-training has been shown to capture a surprising amount of world knowledge, crucial for NLP tasks such as question answering. However, this knowledge is stored implicitly in the parameters of a neural network, requiring ever-larger networks to cover more facts. To capture knowledge in a more modular and interpretable way, we augment language model pre-training with a latent knowledge retriever, which allows the model to retrieve and attend over documents from a large corpus such as Wikipedia, used during pre-training, fine-tuning and inference. For the first time, we show how to pre-train such a knowledge retriever in an unsupervised manner, using masked language modeling as the learning signal and backpropagating through a retrieval step that considers millions of documents. We demonstrate the effectiveness of Retrieval-Augmented Language Model pre-training (REALM) by fine-tuning on the challenging task of Open-domain Question Answering (Open-QA). We compare against state-of-the-art models for both explicit and implicit knowledge storage on three popular Open-QA benchmarks, and find that we outperform all previous methods by a significant margin (4-16% absolute accuracy), while also providing qualitative benefits such as interpretability and modularity.",
+      "primary_url": "https://arxiv.org/abs/2002.08909v1",
+      "pdf_url": "https://arxiv.org/pdf/2002.08909v1",
+      "comment": "",
+      "pdf_sha256": "0ec1a7ab3de5514c6d3baa8af0322816d4ee7cd4c14b9f2c450cbc9da9e6b363",
+      "pdf_bytes": 419037,
+      "pages": 12,
+      "text_chars": 50542,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P033",
+      "bucket": "rag",
+      "title": "Dense Passage Retrieval for Open-Domain Question Answering",
+      "venue": "EMNLP",
+      "year": 2020,
+      "gap": "Retrieval recall is a hard bottleneck and relevance scores do not imply entailment or evidence sufficiency.",
+      "hypotheses": [
+        "I2",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2020.emnlp-main.550/",
+      "pdf_url": "https://aclanthology.org/2020.emnlp-main.550.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "2abfc7991519be2b8ce30215905516fdb593218b7bf59e50ece0d8a088a7c4d5",
+      "pdf_bytes": 403775,
+      "pages": 13,
+      "text_chars": 56134,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "P034",
+      "bucket": "rag",
+      "title": "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT",
+      "venue": "SIGIR",
+      "year": 2020,
+      "gap": "Efficient relevance ranking does not verify claims, calibrate acceptance, or preserve scientific relation provenance.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Recent progress in Natural Language Understanding (NLU) is driving fast-paced advances in Information Retrieval (IR), largely owed to fine-tuning deep language models (LMs) for document ranking. While remarkably effective, the ranking models based on these LMs increase computational cost by orders of magnitude over prior approaches, particularly as they must feed each query-document pair through a massive neural network to compute a single relevance score. To tackle this, we present ColBERT, a novel ranking model that adapts deep LMs (in particular, BERT) for efficient retrieval. ColBERT introduces a late interaction architecture that independently encodes the query and the document using BERT and then employs a cheap yet powerful interaction step that models their fine-grained similarity. By delaying and yet retaining this fine-granular interaction, ColBERT can leverage the expressiveness of deep LMs while simultaneously gaining the ability to pre-compute document representations offline, considerably speeding up query processing. Beyond reducing the cost of re-ranking the documents retrieved by a traditional model, ColBERT's pruning-friendly interaction mechanism enables leveraging vector-similarity indexes for end-to-end retrieval directly from a large document collection. We extensively evaluate ColBERT using two recent passage search datasets. Results show that ColBERT's effectiveness is competitive with existing BERT-based models (and outperforms every non-BERT baseline), while executing two orders-of-magnitude faster and requiring four orders-of-magnitude fewer FLOPs per query.",
+      "primary_url": "https://arxiv.org/abs/2004.12832v2",
+      "pdf_url": "https://arxiv.org/pdf/2004.12832v2",
+      "comment": "Accepted at SIGIR 2020",
+      "pdf_sha256": "2e487d9b96e3c2e5e286d843e98a066adc0442faa3a6e8ddbd1771221bf9ae14",
+      "pdf_bytes": 4918165,
+      "pages": 10,
+      "text_chars": 61818,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P035",
+      "bucket": "rag",
+      "title": "Leveraging Passage Retrieval with Generative Models for Open Domain Question Answering",
+      "venue": "EACL",
+      "year": 2021,
+      "gap": "Fusion over many passages can synthesize unsupported answers and offers no explicit source-conflict state.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2021.eacl-main.74/",
+      "pdf_url": "https://aclanthology.org/2021.eacl-main.74.pdf",
+      "comment": "official EACL proceedings",
+      "pdf_sha256": "a0b8708f35c78bc5799322a91e042f33233a5e48226c400843082c8a76b01175",
+      "pdf_bytes": 369293,
+      "pages": 7,
+      "text_chars": 25702,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P036",
+      "bucket": "rag",
+      "title": "Improving language models by retrieving from trillions of tokens",
+      "venue": "ICML",
+      "year": 2022,
+      "gap": "Massive retrieval is infrastructure-heavy, corpus-static, and not designed for auditable scientific evidence admission.",
+      "hypotheses": [
+        "I1",
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "We enhance auto-regressive language models by conditioning on document chunks retrieved from a large corpus, based on local similarity with preceding tokens. With a $2$ trillion token database, our Retrieval-Enhanced Transformer (RETRO) obtains comparable performance to GPT-3 and Jurassic-1 on the Pile, despite using 25$\\times$ fewer parameters. After fine-tuning, RETRO performance translates to downstream knowledge-intensive tasks such as question answering. RETRO combines a frozen Bert retriever, a differentiable encoder and a chunked cross-attention mechanism to predict tokens based on an order of magnitude more data than what is typically consumed during training. We typically train RETRO from scratch, yet can also rapidly RETROfit pre-trained transformers with retrieval and still achieve good performance. Our work opens up new avenues for improving language models through explicit memory at unprecedented scale.",
+      "primary_url": "https://arxiv.org/abs/2112.04426v3",
+      "pdf_url": "https://arxiv.org/pdf/2112.04426v3",
+      "comment": "Fix incorrect reported numbers in Table 14",
+      "pdf_sha256": "1b3e89b589b73d51ca76cb7d98f22fa5438f8b13e05363613bc6b3199f9777f4",
+      "pdf_bytes": 1566448,
+      "pages": 43,
+      "text_chars": 144698,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P037",
+      "bucket": "rag",
+      "title": "PAQ: 65 Million Probably-Asked Questions and What You Can Do With Them",
+      "venue": "ACL",
+      "year": 2021,
+      "gap": "Generated question corpora inherit generator bias and do not supply scientific evidence sufficiency or contradiction labels.",
+      "hypotheses": [
+        "I3",
+        "I5"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Open-domain Question Answering models which directly leverage question-answer (QA) pairs, such as closed-book QA (CBQA) models and QA-pair retrievers, show promise in terms of speed and memory compared to conventional models which retrieve and read from text corpora. QA-pair retrievers also offer interpretable answers, a high degree of control, and are trivial to update at test time with new knowledge. However, these models lack the accuracy of retrieve-and-read systems, as substantially less knowledge is covered by the available QA-pairs relative to text corpora like Wikipedia. To facilitate improved QA-pair models, we introduce Probably Asked Questions (PAQ), a very large resource of 65M automatically-generated QA-pairs. We introduce a new QA-pair retriever, RePAQ, to complement PAQ. We find that PAQ preempts and caches test questions, enabling RePAQ to match the accuracy of recent retrieve-and-read models, whilst being significantly faster. Using PAQ, we train CBQA models which outperform comparable baselines by 5%, but trail RePAQ by over 15%, indicating the effectiveness of explicit retrieval. RePAQ can be configured for size (under 500MB) or speed (over 1K questions per second) whilst retaining high accuracy. Lastly, we demonstrate RePAQ's strength at selective QA, abstaining from answering when it is likely to be incorrect. This enables RePAQ to ``back-off\" to a more expensive state-of-the-art model, leading to a combined system which is both more accurate and 2x faster than the state-of-the-art model alone.",
+      "primary_url": "https://arxiv.org/abs/2102.07033v1",
+      "pdf_url": "https://arxiv.org/pdf/2102.07033v1",
+      "comment": "",
+      "pdf_sha256": "42aa9405dd2115ecb0b0b70dc55b27f3fd5e60c8ca66a87456da46e51bdf3c62",
+      "pdf_bytes": 756846,
+      "pages": 16,
+      "text_chars": 69129,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P038",
+      "bucket": "rag",
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "venue": "ICLR",
+      "year": 2023,
+      "gap": "Action traces improve inspectability but do not guarantee that observations support the final claim or that agents are independent.",
+      "hypotheses": [
+        "I1",
+        "I2"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "While large language models (LLMs) have demonstrated impressive capabilities across tasks in language understanding and interactive decision making, their abilities for reasoning (e.g. chain-of-thought prompting) and acting (e.g. action plan generation) have primarily been studied as separate topics. In this paper, we explore the use of LLMs to generate both reasoning traces and task-specific actions in an interleaved manner, allowing for greater synergy between the two: reasoning traces help the model induce, track, and update action plans as well as handle exceptions, while actions allow it to interface with external sources, such as knowledge bases or environments, to gather additional information. We apply our approach, named ReAct, to a diverse set of language and decision making tasks and demonstrate its effectiveness over state-of-the-art baselines, as well as improved human interpretability and trustworthiness over methods without reasoning or acting components. Concretely, on question answering (HotpotQA) and fact verification (Fever), ReAct overcomes issues of hallucination and error propagation prevalent in chain-of-thought reasoning by interacting with a simple Wikipedia API, and generates human-like task-solving trajectories that are more interpretable than baselines without reasoning traces. On two interactive decision making benchmarks (ALFWorld and WebShop), ReAct outperforms imitation and reinforcement learning methods by an absolute success rate of 34% and 10% respectively, while being prompted with only one or two in-context examples. Project site with code: https://react-lm.github.io",
+      "primary_url": "https://arxiv.org/abs/2210.03629v3",
+      "pdf_url": "https://arxiv.org/pdf/2210.03629v3",
+      "comment": "v3 is the ICLR camera ready version with some typos fixed. Project site with code: https://react-lm.github.io",
+      "pdf_sha256": "f285b0971ae4a790e402fb93966bed3adde2cf0a04977d08b2b40d6ab0cace69",
+      "pdf_bytes": 633805,
+      "pages": 33,
+      "text_chars": 110106,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P039",
+      "bucket": "rag",
+      "title": "Interleaving Retrieval with Chain-of-Thought Reasoning for Knowledge-Intensive Multi-Step Questions",
+      "venue": "ACL",
+      "year": 2023,
+      "gap": "Early reasoning errors steer later retrieval; there is no independent evidence sufficiency gate before synthesis.",
+      "hypotheses": [
+        "I2",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2023.acl-long.557/",
+      "pdf_url": "https://aclanthology.org/2023.acl-long.557.pdf",
+      "comment": "official ACL proceedings",
+      "pdf_sha256": "d307211b02415e5a590e4a13165a2006ea53548d11566d33fd781ee1db80e3b6",
+      "pdf_bytes": 6033829,
+      "pages": 24,
+      "text_chars": 86536,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P040",
+      "bucket": "rag",
+      "title": "Active Retrieval Augmented Generation",
+      "venue": "EMNLP",
+      "year": 2023,
+      "gap": "Token-level uncertainty is a heuristic trigger and repeated retrieval adds cost without structured conflict resolution.",
+      "hypotheses": [
+        "I2",
+        "I4",
+        "I6"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2023.emnlp-main.495/",
+      "pdf_url": "https://aclanthology.org/2023.emnlp-main.495.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "5536c9136a510c9430a02a3424963ef7e3c2338e8e421ff51c98e7db3480d34c",
+      "pdf_bytes": 702939,
+      "pages": 24,
+      "text_chars": 92030,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P041",
+      "bucket": "rag",
+      "title": "Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection",
+      "venue": "ICLR",
+      "year": 2024,
+      "gap": "Reflection tokens are produced by the same learned system, leaving correlated error and calibration risks.",
+      "hypotheses": [
+        "I2",
+        "I3"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Despite their remarkable capabilities, large language models (LLMs) often produce responses containing factual inaccuracies due to their sole reliance on the parametric knowledge they encapsulate. Retrieval-Augmented Generation (RAG), an ad hoc approach that augments LMs with retrieval of relevant knowledge, decreases such issues. However, indiscriminately retrieving and incorporating a fixed number of retrieved passages, regardless of whether retrieval is necessary, or passages are relevant, diminishes LM versatility or can lead to unhelpful response generation. We introduce a new framework called Self-Reflective Retrieval-Augmented Generation (Self-RAG) that enhances an LM's quality and factuality through retrieval and self-reflection. Our framework trains a single arbitrary LM that adaptively retrieves passages on-demand, and generates and reflects on retrieved passages and its own generations using special tokens, called reflection tokens. Generating reflection tokens makes the LM controllable during the inference phase, enabling it to tailor its behavior to diverse task requirements. Experiments show that Self-RAG (7B and 13B parameters) significantly outperforms state-of-the-art LLMs and retrieval-augmented models on a diverse set of tasks. Specifically, Self-RAG outperforms ChatGPT and retrieval-augmented Llama2-chat on Open-domain QA, reasoning and fact verification tasks, and it shows significant gains in improving factuality and citation accuracy for long-form generations relative to these models.",
+      "primary_url": "https://arxiv.org/abs/2310.11511v1",
+      "pdf_url": "https://arxiv.org/pdf/2310.11511v1",
+      "comment": "30 pages, 2 figures, 12 tables",
+      "pdf_sha256": "d9eaa1398abac0df67a9d0933a5bf8b6d9d83d2e72da2a486073cd842dd52978",
+      "pdf_bytes": 1405127,
+      "pages": 30,
+      "text_chars": 105729,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P042",
+      "bucket": "rag",
+      "title": "RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval",
+      "venue": "ICLR",
+      "year": 2024,
+      "gap": "Recursive summaries can erase qualifiers and provenance; updates and contradiction-aware re-indexing remain open.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Retrieval-augmented language models can better adapt to changes in world state and incorporate long-tail knowledge. However, most existing methods retrieve only short contiguous chunks from a retrieval corpus, limiting holistic understanding of the overall document context. We introduce the novel approach of recursively embedding, clustering, and summarizing chunks of text, constructing a tree with differing levels of summarization from the bottom up. At inference time, our RAPTOR model retrieves from this tree, integrating information across lengthy documents at different levels of abstraction. Controlled experiments show that retrieval with recursive summaries offers significant improvements over traditional retrieval-augmented LMs on several tasks. On question-answering tasks that involve complex, multi-step reasoning, we show state-of-the-art results; for example, by coupling RAPTOR retrieval with the use of GPT-4, we can improve the best performance on the QuALITY benchmark by 20% in absolute accuracy.",
+      "primary_url": "https://arxiv.org/abs/2401.18059v1",
+      "pdf_url": "https://arxiv.org/pdf/2401.18059v1",
+      "comment": "",
+      "pdf_sha256": "01319e2e6e6ecfd504ee1bbda41d023f9e060bd3505ab3c161baa1d6d696cf75",
+      "pdf_bytes": 2547113,
+      "pages": 23,
+      "text_chars": 77270,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P043",
+      "bucket": "rag",
+      "title": "HippoRAG: Neurobiologically Inspired Long-Term Memory for Large Language Models",
+      "venue": "NeurIPS",
+      "year": 2024,
+      "gap": "Graph extraction errors propagate into retrieval and QA accuracy does not test evidence-state admission or temporal conflict.",
+      "hypotheses": [
+        "I1",
+        "I3",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://proceedings.neurips.cc/paper_files/paper/2024/hash/6ddc001d07ca4f319af96a3024f6dbd1-Abstract-Conference.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2024/file/6ddc001d07ca4f319af96a3024f6dbd1-Paper-Conference.pdf",
+      "comment": "official NeurIPS proceedings",
+      "pdf_sha256": "bf2af160f3e34fb424026a04714c6b1ca61be8b59fc3832ebe3583f221e43f88",
+      "pdf_bytes": 3256579,
+      "pages": 38,
+      "text_chars": 123075,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P044",
+      "bucket": "rag",
+      "title": "REPLUG: Retrieval-Augmented Black-Box Language Models",
+      "venue": "NAACL",
+      "year": 2024,
+      "gap": "Black-box mixtures improve utility but expose little claim-level attribution, calibration, or update provenance.",
+      "hypotheses": [
+        "I1",
+        "I3",
+        "I6"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2024.naacl-long.463/",
+      "pdf_url": "https://aclanthology.org/2024.naacl-long.463.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "8875a886e36202f4864a6ed4ea2aa6783adc38148e9abf15f3e66a939f9f875c",
+      "pdf_bytes": 1108571,
+      "pages": 14,
+      "text_chars": 52278,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P045",
+      "bucket": "rag",
+      "title": "Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity",
+      "venue": "NAACL",
+      "year": 2024,
+      "gap": "A learned complexity router can be brittle under distribution shift and does not model evidence disagreement.",
+      "hypotheses": [
+        "I2",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2024.naacl-long.389/",
+      "pdf_url": "https://aclanthology.org/2024.naacl-long.389.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "1e5abee712c5d8552416b2fd456bcf2c37a0ba518372e64302db2b7b7bdf643f",
+      "pdf_bytes": 436634,
+      "pages": 15,
+      "text_chars": 71820,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P046",
+      "bucket": "multi_agent",
+      "title": "Improving Factuality and Reasoning in Language Models through Multiagent Debate",
+      "venue": "ICML",
+      "year": 2024,
+      "gap": "Benefits depend on tasks and agent diversity; shared-model correlated errors, cost, and external evidence remain unresolved.",
+      "hypotheses": [
+        "I2",
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Large language models (LLMs) have demonstrated remarkable capabilities in language generation, understanding, and few-shot learning in recent years. An extensive body of work has explored how their performance may be further improved through the tools of prompting, ranging from verification, self-consistency, or intermediate scratchpads. In this paper, we present a complementary approach to improve language responses where multiple language model instances propose and debate their individual responses and reasoning processes over multiple rounds to arrive at a common final answer. Our findings indicate that this approach significantly enhances mathematical and strategic reasoning across a number of tasks. We also demonstrate that our approach improves the factual validity of generated content, reducing fallacious answers and hallucinations that contemporary models are prone to. Our approach may be directly applied to existing black-box models and uses identical procedure and prompts for all tasks we investigate. Overall, our findings suggest that such \"society of minds\" approach has the potential to significantly advance the capabilities of LLMs and pave the way for further breakthroughs in language generation and understanding.",
+      "primary_url": "https://arxiv.org/abs/2305.14325v1",
+      "pdf_url": "https://arxiv.org/pdf/2305.14325v1",
+      "comment": "Project Webpage and Code: https://composable-models.github.io/llm_debate/",
+      "pdf_sha256": "b302ff15202dc3cda03f40ea1ac92b29e1519978540b345af92991f6d3e619b4",
+      "pdf_bytes": 1779875,
+      "pages": 27,
+      "text_chars": 96104,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P047",
+      "bucket": "multi_agent",
+      "title": "Should we be going MAD? A Look at Multi-Agent Debate Strategies for LLMs",
+      "venue": "ICML",
+      "year": 2024,
+      "gap": "MAD is hyperparameter-sensitive and often fails to beat self-consistency, motivating selective rather than always-on debate.",
+      "hypotheses": [
+        "I2",
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Recent advancements in large language models (LLMs) underscore their potential for responding to inquiries in various domains. However, ensuring that generative agents provide accurate and reliable answers remains an ongoing challenge. In this context, multi-agent debate (MAD) has emerged as a promising strategy for enhancing the truthfulness of LLMs. We benchmark a range of debating and prompting strategies to explore the trade-offs between cost, time, and accuracy. Importantly, we find that multi-agent debating systems, in their current form, do not reliably outperform other proposed prompting strategies, such as self-consistency and ensembling using multiple reasoning paths. However, when performing hyperparameter tuning, several MAD systems, such as Multi-Persona, perform better. This suggests that MAD protocols might not be inherently worse than other approaches, but that they are more sensitive to different hyperparameter settings and difficult to optimize. We build on these results to offer insights into improving debating strategies, such as adjusting agent agreement levels, which can significantly enhance performance and even surpass all other non-debate protocols we evaluated. We provide an open-source repository to the community with several state-of-the-art protocols together with evaluation scripts to benchmark across popular research datasets.",
+      "primary_url": "https://arxiv.org/abs/2311.17371v3",
+      "pdf_url": "https://arxiv.org/pdf/2311.17371v3",
+      "comment": "2 pages, 13 figures",
+      "pdf_sha256": "cf31ec80f408df56d7e6010fb28fc04094638830d6d94ed9dd8f0965577c57f2",
+      "pdf_bytes": 1267702,
+      "pages": 23,
+      "text_chars": 79288,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P048",
+      "bucket": "multi_agent",
+      "title": "MetaGPT: Meta Programming for A Multi-Agent Collaborative Framework",
+      "venue": "ICLR",
+      "year": 2024,
+      "gap": "SOP-based role coordination targets software artifacts; message structure alone does not guarantee factual independence or evidence correctness.",
+      "hypotheses": [
+        "I2",
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Remarkable progress has been made on automated problem solving through societies of agents based on large language models (LLMs). Existing LLM-based multi-agent systems can already solve simple dialogue tasks. Solutions to more complex tasks, however, are complicated through logic inconsistencies due to cascading hallucinations caused by naively chaining LLMs. Here we introduce MetaGPT, an innovative meta-programming framework incorporating efficient human workflows into LLM-based multi-agent collaborations. MetaGPT encodes Standardized Operating Procedures (SOPs) into prompt sequences for more streamlined workflows, thus allowing agents with human-like domain expertise to verify intermediate results and reduce errors. MetaGPT utilizes an assembly line paradigm to assign diverse roles to various agents, efficiently breaking down complex tasks into subtasks involving many agents working together. On collaborative software engineering benchmarks, MetaGPT generates more coherent solutions than previous chat-based multi-agent systems. Our project can be found at https://github.com/geekan/MetaGPT",
+      "primary_url": "https://arxiv.org/abs/2308.00352v7",
+      "pdf_url": "https://arxiv.org/pdf/2308.00352v7",
+      "comment": "",
+      "pdf_sha256": "17582e47647fac8eaa3681feade41c8408310c4133acc5c6823565fbe880e1ac",
+      "pdf_bytes": 16753634,
+      "pages": 29,
+      "text_chars": 76665,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P049",
+      "bucket": "multi_agent",
+      "title": "AgentVerse: Facilitating Multi-Agent Collaboration and Exploring Emergent Behaviors",
+      "venue": "ICLR",
+      "year": 2024,
+      "gap": "Persona specialization and emergent communication do not establish error independence or calibrated scientific adjudication.",
+      "hypotheses": [
+        "I2",
+        "I3"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Autonomous agents empowered by Large Language Models (LLMs) have undergone significant improvements, enabling them to generalize across a broad spectrum of tasks. However, in real-world scenarios, cooperation among individuals is often required to enhance the efficiency and effectiveness of task accomplishment. Hence, inspired by human group dynamics, we propose a multi-agent framework \\framework that can collaboratively and dynamically adjust its composition as a greater-than-the-sum-of-its-parts system. Our experiments demonstrate that \\framework framework can effectively deploy multi-agent groups that outperform a single agent. Furthermore, we delve into the emergence of social behaviors among individual agents within a group during collaborative task accomplishment. In view of these behaviors, we discuss some possible strategies to leverage positive ones and mitigate negative ones for improving the collaborative potential of multi-agent groups. Our codes for \\framework will soon be released at \\url{https://github.com/OpenBMB/AgentVerse}.",
+      "primary_url": "https://arxiv.org/abs/2308.10848v3",
+      "pdf_url": "https://arxiv.org/pdf/2308.10848v3",
+      "comment": "Under review. Code at https://github.com/OpenBMB/AgentVerse/",
+      "pdf_sha256": "813320d58bd598428de4f2bba0c742f2ce305cdcda78537e6376e20543444397",
+      "pdf_bytes": 4652125,
+      "pages": 39,
+      "text_chars": 152746,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P050",
+      "bucket": "multi_agent",
+      "title": "ChatEval: Towards Better LLM-based Evaluators through Multi-Agent Debate",
+      "venue": "ICLR",
+      "year": 2024,
+      "gap": "A debating evaluator can inherit model and persona bias; alignment to human judgments is not evidence-grounded truth calibration.",
+      "hypotheses": [
+        "I2",
+        "I3"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Text evaluation has historically posed significant challenges, often demanding substantial labor and time cost. With the emergence of large language models (LLMs), researchers have explored LLMs' potential as alternatives for human evaluation. While these single-agent-based approaches show promise, experimental results suggest that further advancements are needed to bridge the gap between their current effectiveness and human-level evaluation quality. Recognizing that best practices of human evaluation processes often involve multiple human annotators collaborating in the evaluation, we resort to a multi-agent debate framework, moving beyond single-agent prompting strategies. The multi-agent-based approach enables a group of LLMs to synergize with an array of intelligent counterparts, harnessing their distinct capabilities and expertise to enhance efficiency and effectiveness in handling intricate tasks. In this paper, we construct a multi-agent referee team called ChatEval to autonomously discuss and evaluate the quality of generated responses from different models on open-ended questions and traditional natural language generation (NLG) tasks. Our analysis shows that ChatEval transcends mere textual scoring, offering a human-mimicking evaluation process for reliable assessments. Our code is available at https://github.com/chanchimin/ChatEval.",
+      "primary_url": "https://arxiv.org/abs/2308.07201v1",
+      "pdf_url": "https://arxiv.org/pdf/2308.07201v1",
+      "comment": "",
+      "pdf_sha256": "33cf1da3370e441b6a2f6ce29c420be79760e45b6efdbad2261bc6fbc7396698",
+      "pdf_bytes": 780002,
+      "pages": 16,
+      "text_chars": 53526,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "P051",
+      "bucket": "multi_agent",
+      "title": "ReConcile: Round-Table Conference Improves Reasoning via Consensus among Diverse LLMs",
+      "venue": "ACL",
+      "year": 2024,
+      "gap": "Diverse closed models and multi-round discussion are costly; confidence-weighted consensus still relies on self-reported certainty.",
+      "hypotheses": [
+        "I2",
+        "I3",
+        "I6"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2024.acl-long.381/",
+      "pdf_url": "https://aclanthology.org/2024.acl-long.381.pdf",
+      "comment": "official ACL proceedings",
+      "pdf_sha256": "f51d82275a83b75178f0414d8199a34e9a801bf7f3120f8295c36a1804913a0c",
+      "pdf_bytes": 1451189,
+      "pages": 20,
+      "text_chars": 85123,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P052",
+      "bucket": "multi_agent",
+      "title": "Encouraging Divergent Thinking in Large Language Models through Multi-Agent Debate",
+      "venue": "EMNLP",
+      "year": 2024,
+      "gap": "The authors report judge fairness and stopping sensitivity; divergence is not equivalent to evidence correctness.",
+      "hypotheses": [
+        "I2",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2024.emnlp-main.992/",
+      "pdf_url": "https://aclanthology.org/2024.emnlp-main.992.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "75103142242de3dd39f28168ad7004a24e9ad7d6d3ba148197c263d09c299600",
+      "pdf_bytes": 895481,
+      "pages": 16,
+      "text_chars": 56998,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P053",
+      "bucket": "multi_agent",
+      "title": "Exchange-of-Thought: Enhancing Large Language Model Capabilities through Cross-Model Communication",
+      "venue": "EMNLP",
+      "year": 2023,
+      "gap": "Cross-model communication can share useful insights and shared mistakes; no provenance contract distinguishes them.",
+      "hypotheses": [
+        "I1",
+        "I2"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2023.emnlp-main.936/",
+      "pdf_url": "https://aclanthology.org/2023.emnlp-main.936.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "6e553cc6160032a88ef7a04b92b8a6997b45229a3c3fc01ad45e03c6e9944945",
+      "pdf_bytes": 2259306,
+      "pages": 19,
+      "text_chars": 78602,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P054",
+      "bucket": "multi_agent",
+      "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+      "venue": "NeurIPS",
+      "year": 2023,
+      "gap": "Verbal feedback is not an external truth signal and persistent memory can accumulate incorrect reflections.",
+      "hypotheses": [
+        "I1",
+        "I2"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://proceedings.neurips.cc/paper_files/paper/2023/hash/1b44b878bb782e6954cd888628510e90-Abstract-Conference.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2023/file/1b44b878bb782e6954cd888628510e90-Paper-Conference.pdf",
+      "comment": "official NeurIPS proceedings",
+      "pdf_sha256": "efba04cd48b779131fc4c3c58ae49e8523ded534f9225a7c57c7bdad0823803d",
+      "pdf_bytes": 509025,
+      "pages": 19,
+      "text_chars": 59348,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P055",
+      "bucket": "multi_agent",
+      "title": "Self-Refine: Iterative Refinement with Self-Feedback",
+      "venue": "NeurIPS",
+      "year": 2023,
+      "gap": "Self-feedback shares the generator's blind spots and provides neither source diversity nor calibrated abstention.",
+      "hypotheses": [
+        "I2",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://proceedings.neurips.cc/paper_files/paper/2023/hash/91edff07232fb1b55a505a9e9f6c0ff3-Abstract-Conference.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2023/file/91edff07232fb1b55a505a9e9f6c0ff3-Paper-Conference.pdf",
+      "comment": "official NeurIPS proceedings",
+      "pdf_sha256": "a07dfc5ada4ff818c77812dd581065a4e3e40f5736f2f36a97787a66da6e7825",
+      "pdf_bytes": 1865721,
+      "pages": 61,
+      "text_chars": 144778,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P056",
+      "bucket": "multi_agent",
+      "title": "Removal of Hallucination on Hallucination: Debate-Augmented RAG",
+      "venue": "ACL",
+      "year": 2025,
+      "gap": "Debating both retrieval and generation raises cost and still needs tests against evidence pollution, correlated agents, and graph updates.",
+      "hypotheses": [
+        "I2",
+        "I4",
+        "I6"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2025.acl-long.770/",
+      "pdf_url": "https://aclanthology.org/2025.acl-long.770.pdf",
+      "comment": "official ACL proceedings",
+      "pdf_sha256": "c6bfe8b6df619513a5839c3232d4942805fb33f1c27cba56f0a0aacf519debd4",
+      "pdf_bytes": 2077968,
+      "pages": 15,
+      "text_chars": 63718,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P057",
+      "bucket": "multi_agent",
+      "title": "AgentBench: Evaluating LLMs as Agents",
+      "venue": "ICLR",
+      "year": 2024,
+      "gap": "Task success aggregates hide claim-level evidence quality, run drift, and intermediate coordination failure.",
+      "hypotheses": [
+        "I3",
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "The potential of Large Language Model (LLM) as agents has been widely acknowledged recently. Thus, there is an urgent need to quantitatively \\textit{evaluate LLMs as agents} on challenging tasks in interactive environments. We present AgentBench, a multi-dimensional benchmark that consists of 8 distinct environments to assess LLM-as-Agent's reasoning and decision-making abilities. Our extensive test over \\num API-based and open-sourced (OSS) LLMs shows that, while top commercial LLMs present a strong ability of acting as agents in complex environments, there is a significant disparity in performance between them and many OSS competitors that are no larger than 70B. We identify the typical reasons of failures in environments and LLMs, showing that poor long-term reasoning, decision-making, and instruction following abilities are the main obstacles for developing usable LLM agents. Improving instruction following and training on high quality multi-round alignment data could improve agent performance. And different from existing assumptions, training on code present ambivalent impacts on different agent tasks. Datasets, environments, and an integrated evaluation package for AgentBench are released at https://github.com/THUDM/AgentBench.",
+      "primary_url": "https://arxiv.org/abs/2308.03688v3",
+      "pdf_url": "https://arxiv.org/pdf/2308.03688v3",
+      "comment": "Published in ICLR 2024",
+      "pdf_sha256": "9c780e35fc0b2de6c2e21e0572f6aaaadcf7ecdd56d63cfaae2b415bc0dc83c3",
+      "pdf_bytes": 23017024,
+      "pages": 58,
+      "text_chars": 176018,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P058",
+      "bucket": "multi_agent",
+      "title": "ToolLLM: Facilitating Large Language Models to Master 16000+ Real-world APIs",
+      "venue": "ICLR",
+      "year": 2024,
+      "gap": "Synthetic tool traces and changing APIs create reproducibility and execution-validity gaps beyond benchmark success.",
+      "hypotheses": [
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Despite the advancements of open-source large language models (LLMs), e.g., LLaMA, they remain significantly limited in tool-use capabilities, i.e., using external tools (APIs) to fulfill human instructions. The reason is that current instruction tuning largely focuses on basic language tasks but ignores the tool-use domain. This is in contrast to the excellent tool-use capabilities of state-of-the-art (SOTA) closed-source LLMs, e.g., ChatGPT. To bridge this gap, we introduce ToolLLM, a general tool-use framework encompassing data construction, model training, and evaluation. We first present ToolBench, an instruction-tuning dataset for tool use, which is constructed automatically using ChatGPT. Specifically, the construction can be divided into three stages: (i) API collection: we collect 16,464 real-world RESTful APIs spanning 49 categories from RapidAPI Hub; (ii) instruction generation: we prompt ChatGPT to generate diverse instructions involving these APIs, covering both single-tool and multi-tool scenarios; (iii) solution path annotation: we use ChatGPT to search for a valid solution path (chain of API calls) for each instruction. To enhance the reasoning capabilities of LLMs, we develop a novel depth-first search-based decision tree algorithm. It enables LLMs to evaluate multiple reasoning traces and expand the search space. Moreover, to evaluate the tool-use capabilities of LLMs, we develop an automatic evaluator: ToolEval. Based on ToolBench, we fine-tune LLaMA to obtain an LLM ToolLLaMA, and equip it with a neural API retriever to recommend appropriate APIs for each instruction. Experiments show that ToolLLaMA demonstrates a remarkable ability to execute complex instructions and generalize to unseen APIs, and exhibits comparable performance to ChatGPT. Our ToolLLaMA also demonstrates strong zero-shot generalization ability in an out-of-distribution tool-use dataset: APIBench.",
+      "primary_url": "https://arxiv.org/abs/2307.16789v2",
+      "pdf_url": "https://arxiv.org/pdf/2307.16789v2",
+      "comment": "",
+      "pdf_sha256": "295299721d67b250661fb6598bee86a2e9fe766241fdc08dd7cf389e984b4d1a",
+      "pdf_bytes": 2048075,
+      "pages": 24,
+      "text_chars": 83563,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P059",
+      "bucket": "multi_agent",
+      "title": "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering",
+      "venue": "NeurIPS",
+      "year": 2024,
+      "gap": "Software issue resolution does not transfer directly to scientific evidence quality; environment and benchmark drift remain material.",
+      "hypotheses": [
+        "I6"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://proceedings.neurips.cc/paper_files/paper/2024/hash/5a7c947568c1b1328ccc5230172e1e7c-Abstract-Conference.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2024/file/5a7c947568c1b1328ccc5230172e1e7c-Paper-Conference.pdf",
+      "comment": "official NeurIPS proceedings",
+      "pdf_sha256": "0116614120ddfaa37e7c944b7205b4f05523a2415e11846081c08dd0d848ea05",
+      "pdf_bytes": 4411168,
+      "pages": 125,
+      "text_chars": 315525,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P060",
+      "bucket": "multi_agent",
+      "title": "Generative Agents: Interactive Simulacra of Human Behavior",
+      "venue": "UIST",
+      "year": 2023,
+      "gap": "Believable social simulation is evaluated for plausibility, not scientific factuality, evidence sufficiency, or calibrated decisions.",
+      "hypotheses": [
+        "I2",
+        "I3"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Believable proxies of human behavior can empower interactive applications ranging from immersive environments to rehearsal spaces for interpersonal communication to prototyping tools. In this paper, we introduce generative agents--computational software agents that simulate believable human behavior. Generative agents wake up, cook breakfast, and head to work; artists paint, while authors write; they form opinions, notice each other, and initiate conversations; they remember and reflect on days past as they plan the next day. To enable generative agents, we describe an architecture that extends a large language model to store a complete record of the agent's experiences using natural language, synthesize those memories over time into higher-level reflections, and retrieve them dynamically to plan behavior. We instantiate generative agents to populate an interactive sandbox environment inspired by The Sims, where end users can interact with a small town of twenty five agents using natural language. In an evaluation, these generative agents produce believable individual and emergent social behaviors: for example, starting with only a single user-specified notion that one agent wants to throw a Valentine's Day party, the agents autonomously spread invitations to the party over the next two days, make new acquaintances, ask each other out on dates to the party, and coordinate to show up for the party together at the right time. We demonstrate through ablation that the components of our agent architecture--observation, planning, and reflection--each contribute critically to the believability of agent behavior. By fusing large language models with computational, interactive agents, this work introduces architectural and interaction patterns for enabling believable simulations of human behavior.",
+      "primary_url": "https://arxiv.org/abs/2304.03442v2",
+      "pdf_url": "https://arxiv.org/pdf/2304.03442v2",
+      "comment": "",
+      "pdf_sha256": "1b31e77fb24d25d7598f2c49e955d12a28b95a6dabad34acdac40f44bfb7a139",
+      "pdf_bytes": 11947867,
+      "pages": 22,
+      "text_chars": 130390,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P061",
+      "bucket": "graph_temporal",
+      "title": "RotatE: Knowledge Graph Embedding by Relational Rotation in Complex Space",
+      "venue": "ICLR",
+      "year": 2019,
+      "gap": "Static embedding patterns omit source text, uncertainty, and time-varying scientific truth.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "We study the problem of learning representations of entities and relations in knowledge graphs for predicting missing links. The success of such a task heavily relies on the ability of modeling and inferring the patterns of (or between) the relations. In this paper, we present a new approach for knowledge graph embedding called RotatE, which is able to model and infer various relation patterns including: symmetry/antisymmetry, inversion, and composition. Specifically, the RotatE model defines each relation as a rotation from the source entity to the target entity in the complex vector space. In addition, we propose a novel self-adversarial negative sampling technique for efficiently and effectively training the RotatE model. Experimental results on multiple benchmark knowledge graphs show that the proposed RotatE model is not only scalable, but also able to infer and model various relation patterns and significantly outperform existing state-of-the-art models for link prediction.",
+      "primary_url": "https://arxiv.org/abs/1902.10197v1",
+      "pdf_url": "https://arxiv.org/pdf/1902.10197v1",
+      "comment": "Accepted to ICLR 2019",
+      "pdf_sha256": "0ed92ed335fed5097a72fcce10fe426473c8e539e3420f560634fc69d78f7e89",
+      "pdf_bytes": 677273,
+      "pages": 18,
+      "text_chars": 50526,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P062",
+      "bucket": "graph_temporal",
+      "title": "TuckER: Tensor Factorization for Knowledge Graph Completion",
+      "venue": "EMNLP",
+      "year": 2019,
+      "gap": "Static link completion scores are not evidence-calibrated and assume a fixed closed-world graph snapshot.",
+      "hypotheses": [
+        "I3",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/D19-1522/",
+      "pdf_url": "https://aclanthology.org/D19-1522.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "a082493a477e45722fc45ff2381da9977c412f9d9b2f2005608c37b8f2c95739",
+      "pdf_bytes": 1364133,
+      "pages": 10,
+      "text_chars": 39988,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P063",
+      "bucket": "graph_temporal",
+      "title": "KG-BERT: BERT for Knowledge Graph Completion",
+      "venue": "NAACL",
+      "year": 2019,
+      "gap": "Triple classification underuses global graph structure and cannot show which document span justifies a prediction.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Knowledge graphs are important resources for many artificial intelligence tasks but often suffer from incompleteness. In this work, we propose to use pre-trained language models for knowledge graph completion. We treat triples in knowledge graphs as textual sequences and propose a novel framework named Knowledge Graph Bidirectional Encoder Representations from Transformer (KG-BERT) to model these triples. Our method takes entity and relation descriptions of a triple as input and computes scoring function of the triple with the KG-BERT language model. Experimental results on multiple benchmark knowledge graphs show that our method can achieve state-of-the-art performance in triple classification, link prediction and relation prediction tasks.",
+      "primary_url": "https://arxiv.org/abs/1909.03193v2",
+      "pdf_url": "https://arxiv.org/pdf/1909.03193v2",
+      "comment": "",
+      "pdf_sha256": "a726cf19b0a5d5b862301e2fb45f43c29cd45510fc23696808cfa7150b45fc61",
+      "pdf_bytes": 666690,
+      "pages": 8,
+      "text_chars": 39005,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P064",
+      "bucket": "graph_temporal",
+      "title": "Composition-based Multi-Relational Graph Convolutional Networks",
+      "venue": "ICLR",
+      "year": 2020,
+      "gap": "Compositional message passing improves static completion but does not model provenance, supersession, or conflicting evidence.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Graph Convolutional Networks (GCNs) have recently been shown to be quite successful in modeling graph-structured data. However, the primary focus has been on handling simple undirected graphs. Multi-relational graphs are a more general and prevalent form of graphs where each edge has a label and direction associated with it. Most of the existing approaches to handle such graphs suffer from over-parameterization and are restricted to learning representations of nodes only. In this paper, we propose CompGCN, a novel Graph Convolutional framework which jointly embeds both nodes and relations in a relational graph. CompGCN leverages a variety of entity-relation composition operations from Knowledge Graph Embedding techniques and scales with the number of relations. It also generalizes several of the existing multi-relational GCN methods. We evaluate our proposed method on multiple tasks such as node classification, link prediction, and graph classification, and achieve demonstrably superior results. We make the source code of CompGCN available to foster reproducible research.",
+      "primary_url": "https://arxiv.org/abs/1911.03082v2",
+      "pdf_url": "https://arxiv.org/pdf/1911.03082v2",
+      "comment": "In Proceedings of ICLR 2020",
+      "pdf_sha256": "be21c17a83b22197e60fd7332333c3421c6dc4305331333dce9b9d0a8b1a5efc",
+      "pdf_bytes": 1451455,
+      "pages": 15,
+      "text_chars": 52464,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P065",
+      "bucket": "graph_temporal",
+      "title": "Tensor Decompositions for temporal knowledge base completion",
+      "venue": "ICLR",
+      "year": 2020,
+      "gap": "Timestamped factorization captures temporal patterns but not textual evidence, event granularity, or causal supersession.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Most algorithms for representation learning and link prediction in relational data have been designed for static data. However, the data they are applied to usually evolves with time, such as friend graphs in social networks or user interactions with items in recommender systems. This is also the case for knowledge bases, which contain facts such as (US, has president, B. Obama, [2009-2017]) that are valid only at certain points in time. For the problem of link prediction under temporal constraints, i.e., answering queries such as (US, has president, ?, 2012), we propose a solution inspired by the canonical decomposition of tensors of order 4. We introduce new regularization schemes and present an extension of ComplEx (Trouillon et al., 2016) that achieves state-of-the-art performance. Additionally, we propose a new dataset for knowledge base completion constructed from Wikidata, larger than previous benchmarks by an order of magnitude, as a new reference for evaluating temporal and non-temporal link prediction methods.",
+      "primary_url": "https://arxiv.org/abs/2004.04926v1",
+      "pdf_url": "https://arxiv.org/pdf/2004.04926v1",
+      "comment": "",
+      "pdf_sha256": "16b12326a5431a5e14c2b220cf94180aab458207f9873f7ca6d30494b0c7a182",
+      "pdf_bytes": 241015,
+      "pages": 12,
+      "text_chars": 38556,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P066",
+      "bucket": "graph_temporal",
+      "title": "TeMP: Temporal Message Passing for Temporal Knowledge Graph Completion",
+      "venue": "EMNLP",
+      "year": 2020,
+      "gap": "Temporal sparsity and frequency bias persist; transductive completion lacks document provenance and claim admission state.",
+      "hypotheses": [
+        "I1",
+        "I3",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2020.emnlp-main.462/",
+      "pdf_url": "https://aclanthology.org/2020.emnlp-main.462.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "82e431365a75a3e783c36cf64a34d5c4dae30a7f3b4a8e0cf45941124fea8f02",
+      "pdf_bytes": 4614085,
+      "pages": 17,
+      "text_chars": 55795,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P067",
+      "bucket": "graph_temporal",
+      "title": "Temporal Knowledge Graph Forecasting with Neural ODE",
+      "venue": "ICLR",
+      "year": 2021,
+      "gap": "TANGO's continuous dynamics remain black-box and extrapolation quality does not establish source-backed scientific validity.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "There has been an increasing interest in inferring future links on temporal knowledge graphs (KG). While links on temporal KGs vary continuously over time, the existing approaches model the temporal KGs in discrete state spaces. To this end, we propose a novel continuum model by extending the idea of neural ordinary differential equations (ODEs) to multi-relational graph convolutional networks. The proposed model preserves the continuous nature of dynamic multi-relational graph data and encodes both temporal and structural information into continuous-time dynamic embeddings. In addition, a novel graph transition layer is applied to capture the transitions on the dynamic graph, i.e., edge formation and dissolution. We perform extensive experiments on five benchmark datasets for temporal KG reasoning, showing our model's superior performance on the future link forecasting task.",
+      "primary_url": "https://arxiv.org/abs/2101.05151v3",
+      "pdf_url": "https://arxiv.org/pdf/2101.05151v3",
+      "comment": "accepted at EMNLP 2021",
+      "pdf_sha256": "4345df0faf0d50f8d5b95e4a6fa6a75492b40118c1f5cca28f0435fca9cbb549",
+      "pdf_bytes": 1369170,
+      "pages": 13,
+      "text_chars": 55302,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "P068",
+      "bucket": "graph_temporal",
+      "title": "xERTE: Explainable Reasoning on Temporal Knowledge Graphs for Forecasting Future Links",
+      "venue": "ICLR",
+      "year": 2021,
+      "gap": "Attended subgraphs are useful explanations but are not causal proof or document-level evidence provenance.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Modeling time-evolving knowledge graphs (KGs) has recently gained increasing interest. Here, graph representation learning has become the dominant paradigm for link prediction on temporal KGs. However, the embedding-based approaches largely operate in a black-box fashion, lacking the ability to interpret their predictions. This paper provides a link forecasting framework that reasons over query-relevant subgraphs of temporal KGs and jointly models the structural dependencies and the temporal dynamics. Especially, we propose a temporal relational attention mechanism and a novel reverse representation update scheme to guide the extraction of an enclosing subgraph around the query. The subgraph is expanded by an iterative sampling of temporal neighbors and by attention propagation. Our approach provides human-understandable evidence explaining the forecast. We evaluate our model on four benchmark temporal knowledge graphs for the link forecasting task. While being more explainable, our model obtains a relative improvement of up to 20% on Hits@1 compared to the previous best KG forecasting method. We also conduct a survey with 53 respondents, and the results show that the evidence extracted by the model for link forecasting is aligned with human understanding.",
+      "primary_url": "https://arxiv.org/abs/2012.15537v5",
+      "pdf_url": "https://arxiv.org/pdf/2012.15537v5",
+      "comment": "24 pages, 8 figures, accepted to ICLR 2021",
+      "pdf_sha256": "b9f7482976ae413287dd38a1123fad52f715a30dad76a8818cd36047272070af",
+      "pdf_bytes": 1581693,
+      "pages": 24,
+      "text_chars": 72510,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "P069",
+      "bucket": "graph_temporal",
+      "title": "Search to Pass Messages for Temporal Knowledge Graph Completion",
+      "venue": "EMNLP",
+      "year": 2021,
+      "gap": "Search paths optimize benchmark completion and do not encode evidence sufficiency or conflict arbitration.",
+      "hypotheses": [
+        "I3",
+        "I4"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Completing missing facts is a fundamental task for temporal knowledge graphs (TKGs). Recently, graph neural network (GNN) based methods, which can simultaneously explore topological and temporal information, have become the state-of-the-art (SOTA) to complete TKGs. However, these studies are based on hand-designed architectures and fail to explore the diverse topological and temporal properties of TKG. To address this issue, we propose to use neural architecture search (NAS) to design data-specific message passing architecture for TKG completion. In particular, we develop a generalized framework to explore topological and temporal information in TKGs. Based on this framework, we design an expressive search space to fully capture various properties of different TKGs. Meanwhile, we adopt a search algorithm, which trains a supernet structure by sampling single path for efficient search with less cost. We further conduct extensive experiments on three benchmark datasets. The results show that the searched architectures by our method achieve the SOTA performances. Besides, the searched models can also implicitly reveal diverse properties in different TKGs. Our code is released in https://github.com/striderdu/SPA.",
+      "primary_url": "https://arxiv.org/abs/2210.16740v1",
+      "pdf_url": "https://arxiv.org/pdf/2210.16740v1",
+      "comment": "Accepted by Findings of EMNLP 2022",
+      "pdf_sha256": "f380657608ee1ebe9c37ce3fda86173d7486a8421bdd85fbf7d28d8b4616de9e",
+      "pdf_bytes": 1249681,
+      "pages": 13,
+      "text_chars": 49918,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P070",
+      "bucket": "graph_temporal",
+      "title": "Complex Evolutional Pattern Learning for Temporal Knowledge Graph Reasoning",
+      "venue": "ACL",
+      "year": 2022,
+      "gap": "History-window patterns forecast facts without source-level evidence and remain sensitive to temporal benchmark artifacts.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2022.acl-short.32/",
+      "pdf_url": "https://aclanthology.org/2022.acl-short.32.pdf",
+      "comment": "official ACL proceedings",
+      "pdf_sha256": "947f16932516bccd5d20c22efeea7cb3b9bd10ce263a0a1b9bc52e7bf23a9fa5",
+      "pdf_bytes": 374176,
+      "pages": 7,
+      "text_chars": 27380,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P071",
+      "bucket": "graph_temporal",
+      "title": "TimeTraveler: Reinforcement Learning for Temporal Knowledge Graph Forecasting",
+      "venue": "EMNLP",
+      "year": 2021,
+      "gap": "Sparse-reward path search can cascade early errors and provides no scientific-document provenance contract.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2021.emnlp-main.655/",
+      "pdf_url": "https://aclanthology.org/2021.emnlp-main.655.pdf",
+      "comment": "official EMNLP proceedings",
+      "pdf_sha256": "694d4245e2f26553253245b68440a4f82784d256af2e894e3e2d616020976832",
+      "pdf_bytes": 1135988,
+      "pages": 14,
+      "text_chars": 49995,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "P072",
+      "bucket": "graph_temporal",
+      "title": "QA-GNN: Reasoning with Language Models and Knowledge Graphs for Question Answering",
+      "venue": "NAACL",
+      "year": 2021,
+      "gap": "Performance depends on external KG completeness and does not expose graph-construction uncertainty or evidence spans.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2021.naacl-main.45/",
+      "pdf_url": "https://aclanthology.org/2021.naacl-main.45.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "9b1f3b2b2c78c1678f15ac495f64fc496339babfb65ea78d04f734a512c35eeb",
+      "pdf_bytes": 1673861,
+      "pages": 12,
+      "text_chars": 61475,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P073",
+      "bucket": "graph_temporal",
+      "title": "GreaseLM: Graph REASoning Enhanced Language Models for Question Answering",
+      "venue": "ICLR",
+      "year": 2022,
+      "gap": "Latent graph-language fusion improves QA but intermediate claims are not directly auditable or selectively admitted.",
+      "hypotheses": [
+        "I1",
+        "I3"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Answering complex questions about textual narratives requires reasoning over both stated context and the world knowledge that underlies it. However, pretrained language models (LM), the foundation of most modern QA systems, do not robustly represent latent relationships between concepts, which is necessary for reasoning. While knowledge graphs (KG) are often used to augment LMs with structured representations of world knowledge, it remains an open question how to effectively fuse and reason over the KG representations and the language context, which provides situational constraints and nuances. In this work, we propose GreaseLM, a new model that fuses encoded representations from pretrained LMs and graph neural networks over multiple layers of modality interaction operations. Information from both modalities propagates to the other, allowing language context representations to be grounded by structured world knowledge, and allowing linguistic nuances (e.g., negation, hedging) in the context to inform the graph representations of knowledge. Our results on three benchmarks in the commonsense reasoning (i.e., CommonsenseQA, OpenbookQA) and medical question answering (i.e., MedQA-USMLE) domains demonstrate that GreaseLM can more reliably answer questions that require reasoning over both situational constraints and structured knowledge, even outperforming models 8x larger.",
+      "primary_url": "https://arxiv.org/abs/2201.08860v1",
+      "pdf_url": "https://arxiv.org/pdf/2201.08860v1",
+      "comment": "Published at ICLR 2022. All code, data, and pretrained models are available at https://github.com/snap-stanford/GreaseLM",
+      "pdf_sha256": "50d1ae7b708c49264290270248eeb02cd88527b62ae29e514d412563b2e32691",
+      "pdf_bytes": 558721,
+      "pages": 16,
+      "text_chars": 55164,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "P074",
+      "bucket": "graph_temporal",
+      "title": "G-Retriever: Retrieval-Augmented Generation for Textual Graph Understanding and Question Answering",
+      "venue": "NeurIPS",
+      "year": 2024,
+      "gap": "The graph is largely given; extraction uncertainty, document provenance, and temporal graph maintenance remain outside scope.",
+      "hypotheses": [
+        "I1",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://proceedings.neurips.cc/paper_files/paper/2024/hash/efaf1c9726648c8ba363a5c927440529-Abstract-Conference.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2024/file/efaf1c9726648c8ba363a5c927440529-Paper-Conference.pdf",
+      "comment": "official NeurIPS proceedings",
+      "pdf_sha256": "c1f0596b65154401f441f05b7b97b9110ec7c20af58f83d098c60f4325b43b97",
+      "pdf_bytes": 4640869,
+      "pages": 32,
+      "text_chars": 107802,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P075",
+      "bucket": "graph_temporal",
+      "title": "LightRAG: Simple and Fast Retrieval-Augmented Generation",
+      "venue": "EMNLP Findings",
+      "year": 2025,
+      "gap": "Dual-level graph retrieval is efficient, but extraction/update consistency and calibrated relation admission are not solved.",
+      "hypotheses": [
+        "I1",
+        "I3",
+        "I4"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2025.findings-emnlp.568/",
+      "pdf_url": "https://aclanthology.org/2025.findings-emnlp.568.pdf",
+      "comment": "official EMNLP Findings proceedings",
+      "pdf_sha256": "cdd04718353c5b59c94c0ff810af25c16e7b6c2af390532d8172cb2901f584a7",
+      "pdf_bytes": 1117455,
+      "pages": 16,
+      "text_chars": 62435,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P076",
+      "bucket": "personalization",
+      "title": "Deep Knowledge Tracing",
+      "venue": "NeurIPS",
+      "year": 2015,
+      "gap": "A predictive hidden state is difficult to interpret and does not prescribe evidence-grounded pedagogical interventions.",
+      "hypotheses": [
+        "I5"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://proceedings.neurips.cc/paper_files/paper/2015/hash/bac9162b47c56fc8a4d2a519803d51b3-Abstract.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2015/file/bac9162b47c56fc8a4d2a519803d51b3-Paper.pdf",
+      "comment": "official NeurIPS proceedings",
+      "pdf_sha256": "49b12f51d915943a4ae40c24fc0a0b30eeb03aaf2b59b73dbb90759441e62cf5",
+      "pdf_bytes": 630549,
+      "pages": 9,
+      "text_chars": 37069,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P077",
+      "bucket": "personalization",
+      "title": "Dynamic Key-Value Memory Networks for Knowledge Tracing",
+      "venue": "WWW",
+      "year": 2017,
+      "gap": "Latent concept slots require response labels and do not connect mastery estimates to source evidence coverage.",
+      "hypotheses": [
+        "I5"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Knowledge Tracing (KT) is a task of tracing evolving knowledge state of students with respect to one or more concepts as they engage in a sequence of learning activities. One important purpose of KT is to personalize the practice sequence to help students learn knowledge concepts efficiently. However, existing methods such as Bayesian Knowledge Tracing and Deep Knowledge Tracing either model knowledge state for each predefined concept separately or fail to pinpoint exactly which concepts a student is good at or unfamiliar with. To solve these problems, this work introduces a new model called Dynamic Key-Value Memory Networks (DKVMN) that can exploit the relationships between underlying concepts and directly output a student's mastery level of each concept. Unlike standard memory-augmented neural networks that facilitate a single memory matrix or two static memory matrices, our model has one static matrix called key, which stores the knowledge concepts and the other dynamic matrix called value, which stores and updates the mastery levels of corresponding concepts. Experiments show that our model consistently outperforms the state-of-the-art model in a range of KT datasets. Moreover, the DKVMN model can automatically discover underlying concepts of exercises typically performed by human annotations and depict the changing knowledge state of a student.",
+      "primary_url": "https://arxiv.org/abs/1611.08108v2",
+      "pdf_url": "https://arxiv.org/pdf/1611.08108v2",
+      "comment": "To appear in 26th International Conference on World Wide Web (WWW), 2017",
+      "pdf_sha256": "d2fbabbe180c048e2953a31e45b866c4e4d7ab70b04a6ab2e184ed91c3b6f444",
+      "pdf_bytes": 1020022,
+      "pages": 10,
+      "text_chars": 49954,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P078",
+      "bucket": "personalization",
+      "title": "A Self-Attentive model for Knowledge Tracing",
+      "venue": "EDM",
+      "year": 2019,
+      "gap": "Sequence prediction depends on question-skill metadata and does not test whether generated feedback causes learning gains.",
+      "hypotheses": [
+        "I5"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Knowledge tracing is the task of modeling each student's mastery of knowledge concepts (KCs) as (s)he engages with a sequence of learning activities. Each student's knowledge is modeled by estimating the performance of the student on the learning activities. It is an important research area for providing a personalized learning platform to students. In recent years, methods based on Recurrent Neural Networks (RNN) such as Deep Knowledge Tracing (DKT) and Dynamic Key-Value Memory Network (DKVMN) outperformed all the traditional methods because of their ability to capture complex representation of human learning. However, these methods face the issue of not generalizing well while dealing with sparse data which is the case with real-world data as students interact with few KCs. In order to address this issue, we develop an approach that identifies the KCs from the student's past activities that are \\textit{relevant} to the given KC and predicts his/her mastery based on the relatively few KCs that it picked. Since predictions are made based on relatively few past activities, it handles the data sparsity problem better than the methods based on RNN. For identifying the relevance between the KCs, we propose a self-attention based approach, Self Attentive Knowledge Tracing (SAKT). Extensive experimentation on a variety of real-world dataset shows that our model outperforms the state-of-the-art models for knowledge tracing, improving AUC by 4.43% on average.",
+      "primary_url": "https://arxiv.org/abs/1907.06837v1",
+      "pdf_url": "https://arxiv.org/pdf/1907.06837v1",
+      "comment": "International Conference on Education Data Mining",
+      "pdf_sha256": "a2cdb0f349e82e61266a1d7786502aca14ff7e699591a44ec88fae9d92eefffa",
+      "pdf_bytes": 679469,
+      "pages": 6,
+      "text_chars": 28288,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P079",
+      "bucket": "personalization",
+      "title": "Deep-IRT: Make Deep Learning Based Knowledge Tracing Explainable Using Item Response Theory",
+      "venue": "EDM",
+      "year": 2019,
+      "gap": "IRT-style interpretability is still response-centric and omits evidence provenance and intervention effectiveness.",
+      "hypotheses": [
+        "I5"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Deep learning based knowledge tracing model has been shown to outperform traditional knowledge tracing model without the need for human-engineered features, yet its parameters and representations have long been criticized for not being explainable. In this paper, we propose Deep-IRT which is a synthesis of the item response theory (IRT) model and a knowledge tracing model that is based on the deep neural network architecture called dynamic key-value memory network (DKVMN) to make deep learning based knowledge tracing explainable. Specifically, we use the DKVMN model to process the student's learning trajectory and estimate the student ability level and the item difficulty level over time. Then, we use the IRT model to estimate the probability that a student will answer an item correctly using the estimated student ability and the item difficulty. Experiments show that the Deep-IRT model retains the performance of the DKVMN model, while it provides a direct psychological interpretation of both students and items.",
+      "primary_url": "https://arxiv.org/abs/1904.11738v1",
+      "pdf_url": "https://arxiv.org/pdf/1904.11738v1",
+      "comment": "",
+      "pdf_sha256": "b96bd531d95728f0b55681b20b4772f3635132c9100eb1a3dd5e520917c4011a",
+      "pdf_bytes": 1046751,
+      "pages": 10,
+      "text_chars": 47389,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "P080",
+      "bucket": "personalization",
+      "title": "Context-Aware Attentive Knowledge Tracing",
+      "venue": "KDD",
+      "year": 2020,
+      "gap": "Attention and Rasch components improve interpretability but attention is not causal mastery or evidence coverage.",
+      "hypotheses": [
+        "I5"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Knowledge tracing (KT) refers to the problem of predicting future learner performance given their past performance in educational applications. Recent developments in KT using flexible deep neural network-based models excel at this task. However, these models often offer limited interpretability, thus making them insufficient for personalized learning, which requires using interpretable feedback and actionable recommendations to help learners achieve better learning outcomes. In this paper, we propose attentive knowledge tracing (AKT), which couples flexible attention-based neural network models with a series of novel, interpretable model components inspired by cognitive and psychometric models. AKT uses a novel monotonic attention mechanism that relates a learner's future responses to assessment questions to their past responses; attention weights are computed using exponential decay and a context-aware relative distance measure, in addition to the similarity between questions. Moreover, we use the Rasch model to regularize the concept and question embeddings; these embeddings are able to capture individual differences among questions on the same concept without using an excessive number of parameters. We conduct experiments on several real-world benchmark datasets and show that AKT outperforms existing KT methods (by up to $6\\%$ in AUC in some cases) on predicting future learner responses. We also conduct several case studies and show that AKT exhibits excellent interpretability and thus has potential for automated feedback and personalization in real-world educational settings.",
+      "primary_url": "https://arxiv.org/abs/2007.12324v1",
+      "pdf_url": "https://arxiv.org/pdf/2007.12324v1",
+      "comment": "Published in KDD 2020",
+      "pdf_sha256": "7c1ad6cf6ced4c4f5642362a4b8b3601be9ac7e2022b0ca73558b22c55ef4a67",
+      "pdf_bytes": 2702106,
+      "pages": 10,
+      "text_chars": 56820,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P081",
+      "bucket": "personalization",
+      "title": "GIKT: A Graph-based Interaction Model for Knowledge Tracing",
+      "venue": "ECML-PKDD",
+      "year": 2020,
+      "gap": "Performance depends on a static concept-question graph whose provenance and update uncertainty are not modeled.",
+      "hypotheses": [
+        "I4",
+        "I5"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "With the rapid development in online education, knowledge tracing (KT) has become a fundamental problem which traces students' knowledge status and predicts their performance on new questions. Questions are often numerous in online education systems, and are always associated with much fewer skills. However, the previous literature fails to involve question information together with high-order question-skill correlations, which is mostly limited by data sparsity and multi-skill problems. From the model perspective, previous models can hardly capture the long-term dependency of student exercise history, and cannot model the interactions between student-questions, and student-skills in a consistent way. In this paper, we propose a Graph-based Interaction model for Knowledge Tracing (GIKT) to tackle the above probems. More specifically, GIKT utilizes graph convolutional network (GCN) to substantially incorporate question-skill correlations via embedding propagation. Besides, considering that relevant questions are usually scattered throughout the exercise history, and that question and skill are just different instantiations of knowledge, GIKT generalizes the degree of students' master of the question to the interactions between the student's current state, the student's history related exercises, the target question, and related skills. Experiments on three datasets demonstrate that GIKT achieves the new state-of-the-art performance, with at least 1% absolute AUC improvement.",
+      "primary_url": "https://arxiv.org/abs/2009.05991v1",
+      "pdf_url": "https://arxiv.org/pdf/2009.05991v1",
+      "comment": "16 pages,2 figures, ECMLPKDD2020",
+      "pdf_sha256": "60e4947881128427cf4aa97e09a1a7451cbaa32121b74ce2aec895c40659f36e",
+      "pdf_bytes": 422345,
+      "pages": 17,
+      "text_chars": 42467,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "P082",
+      "bucket": "personalization",
+      "title": "RKT : Relation-Aware Self-Attention for Knowledge Tracing",
+      "venue": "CIKM",
+      "year": 2020,
+      "gap": "Exercise relations and forgetting improve prediction but not evidence-grounded feedback or causal personalization.",
+      "hypotheses": [
+        "I5"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "The world has transitioned into a new phase of online learning in response to the recent Covid19 pandemic. Now more than ever, it has become paramount to push the limits of online learning in every manner to keep flourishing the education system. One crucial component of online learning is Knowledge Tracing (KT). The aim of KT is to model student's knowledge level based on their answers to a sequence of exercises referred as interactions. Students acquire their skills while solving exercises and each such interaction has a distinct impact on student ability to solve a future exercise. This \\textit{impact} is characterized by 1) the relation between exercises involved in the interactions and 2) student forget behavior. Traditional studies on knowledge tracing do not explicitly model both the components jointly to estimate the impact of these interactions. In this paper, we propose a novel Relation-aware self-attention model for Knowledge Tracing (RKT). We introduce a relation-aware self-attention layer that incorporates the contextual information. This contextual information integrates both the exercise relation information through their textual content as well as student performance data and the forget behavior information through modeling an exponentially decaying kernel function. Extensive experiments on three real-world datasets, among which two new collections are released to the public, show that our model outperforms state-of-the-art knowledge tracing methods. Furthermore, the interpretable attention weights help visualize the relation between interactions and temporal patterns in the human learning process.",
+      "primary_url": "https://arxiv.org/abs/2008.12736v1",
+      "pdf_url": "https://arxiv.org/pdf/2008.12736v1",
+      "comment": "",
+      "pdf_sha256": "5b685fad1d44b0bec8435584c2caaa907acce76ae00568c36529ffca6a5069ca",
+      "pdf_bytes": 1327794,
+      "pages": 10,
+      "text_chars": 54562,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P083",
+      "bucket": "personalization",
+      "title": "SAINT+: Integrating Temporal Features for EdNet Correctness Prediction",
+      "venue": "LAK",
+      "year": 2021,
+      "gap": "Temporal response features optimize correctness prediction and do not validate resource recommendation or scientific comprehension.",
+      "hypotheses": [
+        "I5"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "We propose SAINT+, a successor of SAINT which is a Transformer based knowledge tracing model that separately processes exercise information and student response information. Following the architecture of SAINT, SAINT+ has an encoder-decoder structure where the encoder applies self-attention layers to a stream of exercise embeddings, and the decoder alternately applies self-attention layers and encoder-decoder attention layers to streams of response embeddings and encoder output. Moreover, SAINT+ incorporates two temporal feature embeddings into the response embeddings: elapsed time, the time taken for a student to answer, and lag time, the time interval between adjacent learning activities. We empirically evaluate the effectiveness of SAINT+ on EdNet, the largest publicly available benchmark dataset in the education domain. Experimental results show that SAINT+ achieves state-of-the-art performance in knowledge tracing with an improvement of 1.25% in area under receiver operating characteristic curve compared to SAINT, the current state-of-the-art model in EdNet dataset.",
+      "primary_url": "https://arxiv.org/abs/2010.12042v2",
+      "pdf_url": "https://arxiv.org/pdf/2010.12042v2",
+      "comment": "LAK 2021",
+      "pdf_sha256": "a8641d333d51ce0de6afee058722ba1009542a6dec5170bc3ca85fa083206fad",
+      "pdf_bytes": 800381,
+      "pages": 7,
+      "text_chars": 31996,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P084",
+      "bucket": "personalization",
+      "title": "simpleKT: A Simple But Tough-to-Beat Baseline for Knowledge Tracing",
+      "venue": "ICLR",
+      "year": 2023,
+      "gap": "A strong simple predictor exposes weak evaluation gains in prior KT work but still does not establish causal learning or evidence-grounded feedback.",
+      "hypotheses": [
+        "I5",
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Knowledge tracing (KT) is the problem of predicting students' future performance based on their historical interactions with intelligent tutoring systems. Recently, many works present lots of special methods for applying deep neural networks to KT from different perspectives like model architecture, adversarial augmentation and etc., which make the overall algorithm and system become more and more complex. Furthermore, due to the lack of standardized evaluation protocol \\citep{liu2022pykt}, there is no widely agreed KT baselines and published experimental comparisons become inconsistent and self-contradictory, i.e., the reported AUC scores of DKT on ASSISTments2009 range from 0.721 to 0.821 \\citep{minn2018deep,yeung2018addressing}. Therefore, in this paper, we provide a strong but simple baseline method to deal with the KT task named \\textsc{simpleKT}. Inspired by the Rasch model in psychometrics, we explicitly model question-specific variations to capture the individual differences among questions covering the same set of knowledge components that are a generalization of terms of concepts or skills needed for learners to accomplish steps in a task or a problem. Furthermore, instead of using sophisticated representations to capture student forgetting behaviors, we use the ordinary dot-product attention function to extract the time-aware information embedded in the student learning interactions. Extensive experiments show that such a simple baseline is able to always rank top 3 in terms of AUC scores and achieve 57 wins, 3 ties and 16 loss against 12 DLKT baseline methods on 7 public datasets of different domains. We believe this work serves as a strong baseline for future KT research. Code is available at \\url{https://github.com/pykt-team/pykt-toolkit}\\footnote{We merged our model to the \\textsc{pyKT} benchmark at \\url{https://pykt.org/}.}.",
+      "primary_url": "https://arxiv.org/abs/2302.06881v2",
+      "pdf_url": "https://arxiv.org/pdf/2302.06881v2",
+      "comment": "Accepted at ICLR'23: The 11th International Conference on Learning Representations, 2023",
+      "pdf_sha256": "7927f9fea3e4009c08fdcd628ddde500a1a5185467f81ec07bf7d7d456335da8",
+      "pdf_bytes": 3933112,
+      "pages": 13,
+      "text_chars": 48691,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "P085",
+      "bucket": "personalization",
+      "title": "pyKT: A Python Library to Benchmark Deep Learning based Knowledge Tracing Models",
+      "venue": "NeurIPS Datasets and Benchmarks",
+      "year": 2022,
+      "gap": "Benchmark standardization does not provide gold outcomes for evidence-linked adaptive scientific tutoring.",
+      "hypotheses": [
+        "I5",
+        "I6"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://proceedings.neurips.cc/paper_files/paper/2022/hash/75ca2b23d9794f02a92449af65a57556-Abstract-Datasets_and_Benchmarks.html",
+      "pdf_url": "https://proceedings.neurips.cc/paper_files/paper/2022/file/75ca2b23d9794f02a92449af65a57556-Paper-Datasets_and_Benchmarks.pdf",
+      "comment": "official NeurIPS proceedings",
+      "pdf_sha256": "0a01ed3eb33f32bf4664169cda491bd78cba02ada1e24dfe37f30278c294b12a",
+      "pdf_bytes": 3454199,
+      "pages": 14,
+      "text_chars": 57660,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P086",
+      "bucket": "evaluation",
+      "title": "Beyond Accuracy: Behavioral Testing of NLP Models with CheckList",
+      "venue": "ACL",
+      "year": 2020,
+      "gap": "Capability tests are manually authored and can leave unanticipated evidence and temporal failure modes uncovered.",
+      "hypotheses": [
+        "I6"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2020.acl-main.442/",
+      "pdf_url": "https://aclanthology.org/2020.acl-main.442.pdf",
+      "comment": "official ACL proceedings",
+      "pdf_sha256": "98d15d259acf15136feed5cd5d4921b60cf313704a629901d115fe910fdb00e1",
+      "pdf_bytes": 400832,
+      "pages": 11,
+      "text_chars": 51403,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "P087",
+      "bucket": "evaluation",
+      "title": "Dynabench: Rethinking Benchmarking in NLP",
+      "venue": "NAACL",
+      "year": 2021,
+      "gap": "Human-in-the-loop adversarial collection is costly and evolving rounds complicate longitudinal comparability.",
+      "hypotheses": [
+        "I6"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2021.naacl-main.324/",
+      "pdf_url": "https://aclanthology.org/2021.naacl-main.324.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "2c590ff6ee299a4e955a19c2b7bcd0a64942bcc58b4615287e1d892eec8eeff0",
+      "pdf_bytes": 480678,
+      "pages": 15,
+      "text_chars": 68414,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "P088",
+      "bucket": "evaluation",
+      "title": "BEIR: A Heterogenous Benchmark for Zero-shot Evaluation of Information Retrieval Models",
+      "venue": "NeurIPS Datasets and Benchmarks",
+      "year": 2021,
+      "gap": "Retrieval relevance across domains does not measure generation support, evidence completeness, or graph correctness.",
+      "hypotheses": [
+        "I3",
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 0.9942,
+      "abstract": "Existing neural information retrieval (IR) models have often been studied in homogeneous and narrow settings, which has considerably limited insights into their out-of-distribution (OOD) generalization capabilities. To address this, and to facilitate researchers to broadly evaluate the effectiveness of their models, we introduce Benchmarking-IR (BEIR), a robust and heterogeneous evaluation benchmark for information retrieval. We leverage a careful selection of 18 publicly available datasets from diverse text retrieval tasks and domains and evaluate 10 state-of-the-art retrieval systems including lexical, sparse, dense, late-interaction and re-ranking architectures on the BEIR benchmark. Our results show BM25 is a robust baseline and re-ranking and late-interaction-based models on average achieve the best zero-shot performances, however, at high computational costs. In contrast, dense and sparse-retrieval models are computationally more efficient but often underperform other approaches, highlighting the considerable room for improvement in their generalization capabilities. We hope this framework allows us to better evaluate and understand existing retrieval systems, and contributes to accelerating progress towards better robust and generalizable systems in the future. BEIR is publicly available at https://github.com/UKPLab/beir.",
+      "primary_url": "https://arxiv.org/abs/2104.08663v4",
+      "pdf_url": "https://arxiv.org/pdf/2104.08663v4",
+      "comment": "Accepted at NeurIPS 2021 Dataset and Benchmark Track",
+      "pdf_sha256": "1925755aeb627123d1a63c66f02e5aa2432f7e92751a02bea7c8c3b6bbb6ec33",
+      "pdf_bytes": 2094824,
+      "pages": 24,
+      "text_chars": 94679,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P089",
+      "bucket": "evaluation",
+      "title": "Measuring Massive Multitask Language Understanding",
+      "venue": "ICLR",
+      "year": 2021,
+      "gap": "Static multiple-choice accuracy is vulnerable to contamination and cannot diagnose evidence-grounded system behavior.",
+      "hypotheses": [
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "We propose a new test to measure a text model's multitask accuracy. The test covers 57 tasks including elementary mathematics, US history, computer science, law, and more. To attain high accuracy on this test, models must possess extensive world knowledge and problem solving ability. We find that while most recent models have near random-chance accuracy, the very largest GPT-3 model improves over random chance by almost 20 percentage points on average. However, on every one of the 57 tasks, the best models still need substantial improvements before they can reach expert-level accuracy. Models also have lopsided performance and frequently do not know when they are wrong. Worse, they still have near-random accuracy on some socially important subjects such as morality and law. By comprehensively evaluating the breadth and depth of a model's academic and professional understanding, our test can be used to analyze models across many tasks and to identify important shortcomings.",
+      "primary_url": "https://arxiv.org/abs/2009.03300v3",
+      "pdf_url": "https://arxiv.org/pdf/2009.03300v3",
+      "comment": "ICLR 2021; the test and code is available at https://github.com/hendrycks/test",
+      "pdf_sha256": "d3a7b0f8589f5365ebfd34a3876a9a8b3fde83e0adb9ed19ccf8f0034bb48fc1",
+      "pdf_bytes": 2074939,
+      "pages": 27,
+      "text_chars": 83184,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P090",
+      "bucket": "evaluation",
+      "title": "Holistic Evaluation of Language Models",
+      "venue": "TMLR",
+      "year": 2023,
+      "gap": "Broad scenarios improve transparency but API drift and scenario selection do not yield scientific IE causal attribution.",
+      "hypotheses": [
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Language models (LMs) are becoming the foundation for almost all major language technologies, but their capabilities, limitations, and risks are not well understood. We present Holistic Evaluation of Language Models (HELM) to improve the transparency of language models. First, we taxonomize the vast space of potential scenarios (i.e. use cases) and metrics (i.e. desiderata) that are of interest for LMs. Then we select a broad subset based on coverage and feasibility, noting what's missing or underrepresented (e.g. question answering for neglected English dialects, metrics for trustworthiness). Second, we adopt a multi-metric approach: We measure 7 metrics (accuracy, calibration, robustness, fairness, bias, toxicity, and efficiency) for each of 16 core scenarios when possible (87.5% of the time). This ensures metrics beyond accuracy don't fall to the wayside, and that trade-offs are clearly exposed. We also perform 7 targeted evaluations, based on 26 targeted scenarios, to analyze specific aspects (e.g. reasoning, disinformation). Third, we conduct a large-scale evaluation of 30 prominent language models (spanning open, limited-access, and closed models) on all 42 scenarios, 21 of which were not previously used in mainstream LM evaluation. Prior to HELM, models on average were evaluated on just 17.9% of the core HELM scenarios, with some prominent models not sharing a single scenario in common. We improve this to 96.0%: now all 30 models have been densely benchmarked on the same core scenarios and metrics under standardized conditions. Our evaluation surfaces 25 top-level findings. For full transparency, we release all raw model prompts and completions publicly for further analysis, as well as a general modular toolkit. We intend for HELM to be a living benchmark for the community, continuously updated with new scenarios, metrics, and models.",
+      "primary_url": "https://arxiv.org/abs/2211.09110v2",
+      "pdf_url": "https://arxiv.org/pdf/2211.09110v2",
+      "comment": "Authored by the Center for Research on Foundation Models (CRFM) at the Stanford Institute for Human-Centered Artificial Intelligence (HAI). Project page: https://crfm.stanford.edu/helm/v1.0",
+      "pdf_sha256": "30970bda8958a1a8adf6a0a82feef9728331840288b7d2b49368bac87fd25f18",
+      "pdf_bytes": 6045688,
+      "pages": 162,
+      "text_chars": 655003,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P091",
+      "bucket": "evaluation",
+      "title": "GAIA: a benchmark for General AI Assistants",
+      "venue": "ICLR",
+      "year": 2024,
+      "gap": "End-task completion does not isolate evidence calibration, provenance fidelity, or collaboration failure.",
+      "hypotheses": [
+        "I3",
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "We introduce GAIA, a benchmark for General AI Assistants that, if solved, would represent a milestone in AI research. GAIA proposes real-world questions that require a set of fundamental abilities such as reasoning, multi-modality handling, web browsing, and generally tool-use proficiency. GAIA questions are conceptually simple for humans yet challenging for most advanced AIs: we show that human respondents obtain 92\\% vs. 15\\% for GPT-4 equipped with plugins. This notable performance disparity contrasts with the recent trend of LLMs outperforming humans on tasks requiring professional skills in e.g. law or chemistry. GAIA's philosophy departs from the current trend in AI benchmarks suggesting to target tasks that are ever more difficult for humans. We posit that the advent of Artificial General Intelligence (AGI) hinges on a system's capability to exhibit similar robustness as the average human does on such questions. Using GAIA's methodology, we devise 466 questions and their answer. We release our questions while retaining answers to 300 of them to power a leader-board available at https://huggingface.co/gaia-benchmark.",
+      "primary_url": "https://arxiv.org/abs/2311.12983v1",
+      "pdf_url": "https://arxiv.org/pdf/2311.12983v1",
+      "comment": "",
+      "pdf_sha256": "5bf6f968d4f5cd20acdfca6e81e3c9f5277bb66061fad7a02e35442dff812ba0",
+      "pdf_bytes": 4254059,
+      "pages": 24,
+      "text_chars": 82239,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P092",
+      "bucket": "evaluation",
+      "title": "Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference",
+      "venue": "ICML",
+      "year": 2024,
+      "gap": "Pairwise preference is not factuality, reproducibility, or scientific evidence quality and model pools drift over time.",
+      "hypotheses": [
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Large Language Models (LLMs) have unlocked new capabilities and applications; however, evaluating the alignment with human preferences still poses significant challenges. To address this issue, we introduce Chatbot Arena, an open platform for evaluating LLMs based on human preferences. Our methodology employs a pairwise comparison approach and leverages input from a diverse user base through crowdsourcing. The platform has been operational for several months, amassing over 240K votes. This paper describes the platform, analyzes the data we have collected so far, and explains the tried-and-true statistical methods we are using for efficient and accurate evaluation and ranking of models. We confirm that the crowdsourced questions are sufficiently diverse and discriminating and that the crowdsourced human votes are in good agreement with those of expert raters. These analyses collectively establish a robust foundation for the credibility of Chatbot Arena. Because of its unique value and openness, Chatbot Arena has emerged as one of the most referenced LLM leaderboards, widely cited by leading LLM developers and companies. Our demo is publicly available at \\url{https://chat.lmsys.org}.",
+      "primary_url": "https://arxiv.org/abs/2403.04132v1",
+      "pdf_url": "https://arxiv.org/pdf/2403.04132v1",
+      "comment": "",
+      "pdf_sha256": "039bccd60a7d49bfda80ce17ea627654736928eee9a7ee75767a38d04a01562f",
+      "pdf_bytes": 1081950,
+      "pages": 29,
+      "text_chars": 87247,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P093",
+      "bucket": "evaluation",
+      "title": "RAGAS: Automated Evaluation of Retrieval Augmented Generation",
+      "venue": "EACL System Demonstrations",
+      "year": 2024,
+      "gap": "LLM-judged metrics can vary by judge and prompt; reference-free scores need external calibration and audit trails.",
+      "hypotheses": [
+        "I3",
+        "I6"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2024.eacl-demo.16/",
+      "pdf_url": "https://aclanthology.org/2024.eacl-demo.16.pdf",
+      "comment": "official EACL System Demonstrations proceedings",
+      "pdf_sha256": "e2038b8cff7574bf5302e1ceb6bfbac6d2471c352073b27f21460910936febce",
+      "pdf_bytes": 377888,
+      "pages": 9,
+      "text_chars": 35229,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P094",
+      "bucket": "evaluation",
+      "title": "ARES: An Automated Evaluation Framework for Retrieval-Augmented Generation Systems",
+      "venue": "NAACL",
+      "year": 2024,
+      "gap": "Synthetic training examples and learned judges can bias scores; graph and agent-level causal effects remain hidden.",
+      "hypotheses": [
+        "I3",
+        "I6"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2024.naacl-long.20/",
+      "pdf_url": "https://aclanthology.org/2024.naacl-long.20.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "5a585d88f7b63c06439a4ecb8fd3165615d637e2061f242bff3f6ec3a209bd34",
+      "pdf_bytes": 717417,
+      "pages": 17,
+      "text_chars": 62262,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P095",
+      "bucket": "evaluation",
+      "title": "LongBench: A Bilingual, Multitask Benchmark for Long Context Understanding",
+      "venue": "ACL",
+      "year": 2024,
+      "gap": "Static answer metrics test context length, not provenance-preserving extraction, conflict handling, or public experiment lineage.",
+      "hypotheses": [
+        "I1",
+        "I6"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2024.acl-long.172/",
+      "pdf_url": "https://aclanthology.org/2024.acl-long.172.pdf",
+      "comment": "official ACL proceedings",
+      "pdf_sha256": "410776768ed1a2867ddc438277b8de6f3838b313f906344081175d95446d29d4",
+      "pdf_bytes": 11900280,
+      "pages": 19,
+      "text_chars": 66451,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P096",
+      "bucket": "research_systems",
+      "title": "Assisting in Writing Wikipedia-like Articles From Scratch with Large Language Models",
+      "venue": "NAACL",
+      "year": 2024,
+      "gap": "STORM optimizes sourced long-form writing, not scientific claim verification, graph state, or controlled experiments.",
+      "hypotheses": [
+        "I1",
+        "I6"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2024.naacl-long.347/",
+      "pdf_url": "https://aclanthology.org/2024.naacl-long.347.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "5815b45d03d79f47844aeb90fe5bdbbf5e8d574bf6f457eb84aab23a5c335262",
+      "pdf_bytes": 1195666,
+      "pages": 27,
+      "text_chars": 95728,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P097",
+      "bucket": "research_systems",
+      "title": "Synthesizing scientific literature with retrieval-augmented language models",
+      "venue": "Nature",
+      "year": 2026,
+      "gap": "OpenScholar's strong literature synthesis does not expose a full entity-relation admission state machine, learner feedback, or temporal conflict layer.",
+      "hypotheses": [
+        "I1",
+        "I4",
+        "I5"
+      ],
+      "source_status": "official_publication_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://www.nature.com/articles/s41586-025-10072-4",
+      "pdf_url": "https://www.nature.com/articles/s41586-025-10072-4.pdf",
+      "comment": "direct primary source for Nature",
+      "pdf_sha256": "7d3d5b5cf460ebb73d1a8f8ba76dd14567a50812c84d53ece86c7b0441469b18",
+      "pdf_bytes": 4748516,
+      "pages": 20,
+      "text_chars": 102100,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P098",
+      "bucket": "research_systems",
+      "title": "Language agents achieve superhuman synthesis of scientific knowledge",
+      "venue": "Nature",
+      "year": 2025,
+      "gap": "PaperQA2 targets scientific synthesis; corpus access and search quality remain bottlenecks and no persistent evidence-state learner loop is provided.",
+      "hypotheses": [
+        "I1",
+        "I5",
+        "I6"
+      ],
+      "source_status": "primary_preprint_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "Language models are known to hallucinate incorrect information, and it is unclear if they are sufficiently accurate and reliable for use in scientific research. We developed a rigorous human-AI comparison methodology to evaluate language model agents on real-world literature search tasks covering information retrieval, summarization, and contradiction detection tasks. We show that PaperQA2, a frontier language model agent optimized for improved factuality, matches or exceeds subject matter expert performance on three realistic literature research tasks without any restrictions on humans (i.e., full access to internet, search tools, and time). PaperQA2 writes cited, Wikipedia-style summaries of scientific topics that are significantly more accurate than existing, human-written Wikipedia articles. We also introduce a hard benchmark for scientific literature research called LitQA2 that guided design of PaperQA2, leading to it exceeding human performance. Finally, we apply PaperQA2 to identify contradictions within the scientific literature, an important scientific task that is challenging for humans. PaperQA2 identifies 2.34 +/- 1.99 contradictions per paper in a random subset of biology papers, of which 70% are validated by human experts. These results demonstrate that language model agents are now capable of exceeding domain experts across meaningful tasks on scientific literature.",
+      "primary_url": "https://arxiv.org/abs/2409.13740v2",
+      "pdf_url": "https://arxiv.org/pdf/2409.13740v2",
+      "comment": "",
+      "pdf_sha256": "7d45adf85d98a9a2f4e619f4f6c0e380c8ad842d678d50497ab5a20b6ae79f9c",
+      "pdf_bytes": 1784943,
+      "pages": 25,
+      "text_chars": 99369,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    },
+    {
+      "id": "P099",
+      "bucket": "research_systems",
+      "title": "The Virtual Lab of AI agents designs new SARS-CoV-2 nanobodies",
+      "venue": "Nature",
+      "year": 2025,
+      "gap": "Human-guided multi-agent science is validated in one costly biomedical setting; general evidence calibration and reproducible transfer remain open.",
+      "hypotheses": [
+        "I2",
+        "I3",
+        "I6"
+      ],
+      "source_status": "official_publication_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://www.nature.com/articles/s41586-025-09442-9",
+      "pdf_url": "",
+      "html_url": "https://www.nature.com/articles/s41586-025-09442-9",
+      "comment": "direct primary source for Nature",
+      "html_sha256": "01524e8230072cd607fea856307948a82cfaccd0193cb3dced97f398a8228ac3",
+      "html_bytes": 391768,
+      "pages": null,
+      "text_chars": 27432,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion"
+      ]
+    },
+    {
+      "id": "P100",
+      "bucket": "research_systems",
+      "title": "ResearchAgent: Iterative Research Idea Generation over Scientific Literature with Large Language Models",
+      "venue": "NAACL",
+      "year": 2025,
+      "gap": "Literature-graph idea generation cannot itself establish novelty or empirical validity and needs external search plus registered experiments.",
+      "hypotheses": [
+        "I1",
+        "I4",
+        "I6"
+      ],
+      "source_status": "official_proceedings_resolved",
+      "read_status": "targeted_sections_read",
+      "score": 1.0,
+      "abstract": "",
+      "primary_url": "https://aclanthology.org/2025.naacl-long.342/",
+      "pdf_url": "https://aclanthology.org/2025.naacl-long.342.pdf",
+      "comment": "official NAACL proceedings",
+      "pdf_sha256": "f2ef097b0eb33f02002ed7a192d16d769256a2cbd477a57af39213e15a025f89",
+      "pdf_bytes": 679497,
+      "pages": 30,
+      "text_chars": 126740,
+      "sections_found": [
+        "abstract",
+        "method",
+        "conclusion",
+        "limitations"
+      ]
+    }
+  ]
+}

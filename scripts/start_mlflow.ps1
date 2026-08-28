@@ -1,4 +1,4 @@
-﻿param(
+param(
     [ValidateRange(1024, 65535)]
     [int]$Port = 5000,
     [switch]$Background,
@@ -21,9 +21,9 @@ function Get-ListeningProcessId([int]$TargetPort) {
 }
 
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$mlflowExecutable = Join-Path $projectRoot ".venv\Scripts\mlflow.exe"
+$mlflowExecutable = Join-Path $projectRoot ".venv-lab\Scripts\mlflow.exe"
 if (-not (Test-Path -LiteralPath $mlflowExecutable)) {
-    throw "MLflow was not found in .venv. Install with: .venv\Scripts\python.exe -m pip install '.[tracking]'"
+    throw "MLflow was not found in .venv-lab. Install with: .venv-lab\Scripts\python.exe -m pip install '.[tracking]'"
 }
 
 $stateRoot = Join-Path $projectRoot ".mlflow"
