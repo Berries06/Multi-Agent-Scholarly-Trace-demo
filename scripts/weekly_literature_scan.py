@@ -75,8 +75,8 @@ def load_known_titles() -> list[str]:
     """Frozen corpus + addendum + vertical manifest titles (normalized)."""
     titles: list[str] = []
     for path in (
-        PROJECT_ROOT / "config" / "literature_corpus_100.json",
-        PROJECT_ROOT / "config" / "literature_corpus_addendum_2.json",
+        PROJECT_ROOT / "config" / "文献" / "literature_corpus_100.json",
+        PROJECT_ROOT / "config" / "文献" / "literature_corpus_addendum_2.json",
     ):
         if not path.exists():
             continue

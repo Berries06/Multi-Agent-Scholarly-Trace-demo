@@ -2,7 +2,7 @@
 
 ## 目标
 
-执行既有实验、保存全部产物、只基于数据撰写简报。不得修改 `src/`、`web/`、`data/knowledge/` 或实验指标定义。
+执行既有实验、保存全部产物、只基于数据撰写简报。不得修改 `src/`、`frontend/`、`data/knowledge/` 或实验指标定义。
 
 ## 输入
 
@@ -18,7 +18,7 @@
 4. 从终端输出记录新生成的绝对目录。确认其中同时存在 `run_config.json`、`raw_results.json`、`cases.csv`、`summary.json`、`REPORT.md`。
 5. 核对 `raw_results.json` 行数与 `变体数 × case 数 × feedback 数 × 数据倍率数 × repetitions` 一致；Track A 还要核对过滤后的错误类型数。
 6. 阅读 `summary.json` 与 `REPORT.md`，写不超过 500 字的简报。
-7. 只有 `verification.json.status=passed` 后，运行 `.venv-lab\Scripts\python.exe scripts\sync_mlflow.py --run-dir <新生成目录>`；记录 MLflow run ID。同步失败不能改写实验结果，但必须如实报告。
+7. 只有 `verification.json.status=passed` 后，运行 `.venv\Scripts\python.exe scripts\sync_mlflow.py --run-dir <新生成目录>`；记录 MLflow run ID。同步失败不能改写实验结果，但必须如实报告。
 
 ## 简报必须包含
 

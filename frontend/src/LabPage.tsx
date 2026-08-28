@@ -3,6 +3,7 @@ import {
   Alert,
   Button,
   Card,
+  Checkbox,
   Col,
   Collapse,
   Descriptions,
@@ -234,6 +235,11 @@ export default function LabPage() {
             运行完整流水线
           </Button>
         </div>
+        <Alert
+          style={{ marginTop: 16 }} type="info" showIcon
+          message="默认只保存抽取与裁决结果"
+          description={<Checkbox checked={saveSource} onChange={(event) => setSaveSource(event.target.checked)}>我明确同意将本次论文原文或 PDF 解析正文保存到服务器</Checkbox>}
+        />
 
         <Upload.Dragger
           className="paper-dropzone"

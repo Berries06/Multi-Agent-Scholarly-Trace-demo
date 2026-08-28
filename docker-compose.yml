@@ -3,19 +3,14 @@ services:
     build:
       context: .
     ports:
-      - "127.0.0.1:8765:8765"
+      - "127.0.0.1:8766:8766"
     environment:
-      YANHAI_HOST: "0.0.0.0"
-      YANHAI_PORT: "8765"
-      # Port publishing is restricted to host loopback above.
-      YANHAI_ALLOW_REMOTE_WITHOUT_TOKEN: "true"
-      YANHAI_MAX_WORKERS: "4"
-      YANHAI_MAX_QUEUED_TASKS: "4"
-      YANHAI_TASK_TIMEOUT_SECONDS: "20"
+      YANHAI_COOKIE_SECURE: "0"
       YANHAI_ONLINE_TIMEOUT_SECONDS: "5"
       YANHAI_ONLINE_RETRIES: "1"
     volumes:
       - ./outputs:/app/outputs
+      - ./secret:/app/secret:ro
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

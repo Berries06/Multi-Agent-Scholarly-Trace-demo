@@ -1,6 +1,6 @@
 """Unit tests for the minimal EASG kernel and the frozen R006 counterfactuals.
 
-These tests lock the hand-computed gold states in config/easg_r006_cases.json
+These tests lock the hand-computed gold states in config/实验/easg_r006_cases.json
 against the deterministic policy in src/yanhai/easg.py. Replay determinism is
 asserted as a code property; the formal replay ×3 run (R007) is a separate
 tracked experiment and is not claimed here.
@@ -25,7 +25,7 @@ from yanhai.easg import (  # noqa: E402
     load_events,
 )
 
-CASES_PATH = PROJECT_ROOT / "config" / "easg_r006_cases.json"
+CASES_PATH = PROJECT_ROOT / "config" / "实验" / "easg_r006_cases.json"
 CONFIG_HASH = "r006-toy-v1"
 
 

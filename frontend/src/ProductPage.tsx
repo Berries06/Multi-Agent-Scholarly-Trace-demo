@@ -25,6 +25,7 @@ import type {
   LearnerProfile,
   LlmConfig,
   RunResult,
+  AgentTraceStep,
 } from './types'
 
 const { Text, Paragraph } = Typography
@@ -38,11 +39,18 @@ function statusTag(status: string) {
 export default function ProductPage() {
   const [domains, setDomains] = useState<Domain[]>([])
   const [profiles, setProfiles] = useState<LearnerProfile[]>([])
+  const [providers, setProviders] = useState<ProviderOption[]>([])
   const [domainId, setDomainId] = useState<string | undefined>()
   const [profileId, setProfileId] = useState<string | undefined>()
   const [query, setQuery] = useState('')
   const [llmConfig, setLlmConfig] = useState<LlmConfig | null>(null)
   const [result, setResult] = useState<RunResult | null>(null)
+  const [liveSteps, setLiveSteps] = useState<AgentTraceStep[]>([])
+  const [operationId, setOperationId] = useState('')
+  const [providerId, setProviderId] = useState('mock')
+  const [model, setModel] = useState('offline-rules')
+  const [apiKey, setApiKey] = useState('')
+  const [onlineResult, setOnlineResult] = useState<Record<string, unknown> | null>(null)
   const [graph, setGraph] = useState<GraphData | null>(null)
   const [selectedClaimId, setSelectedClaimId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -50,13 +58,14 @@ export default function ProductPage() {
 
   useEffect(() => {
     let cancelled = false
-    Promise.all([getDomains(), getProfiles()])
-      .then(([domainsData, profilesData]) => {
+    Promise.all([getDomains(), getProfiles(), getProviders()])
+      .then(([domainsData, profilesData, providerData]) => {
         if (cancelled) return
         setDomains(domainsData)
         setProfiles(profilesData)
+        setProviders(providerData)
         setDomainId(domainsData[0]?.domain_id)
-        setProfileId(profilesData[0]?.profile_id)
+        setProfileId(profilesData[0]?.profile_id ?? 'my-profile')
         const example = domainsData[0]?.query_example
         if (typeof example === 'string') setQuery(example)
       })
@@ -85,14 +94,18 @@ export default function ProductPage() {
     [domains],
   )
   const profileOptions = useMemo(
-    () => profiles.map((p) => ({ value: p.profile_id, label: `${p.name}（${p.education}）` })),
+    () => profiles.map((p) => ({ value: p.profile_id, label: `${p.profile_kind === 'personal' ? '我的画像' : '演示'}｜${p.name}（${p.education}）` })),
     [profiles],
   )
+  const selectedProvider = providers.find((item) => item.id === providerId)
+  const providerOptions = providers.map((item) => ({ value: item.id, disabled: !item.available, label: `${item.access_mode === 'offline' ? '离线' : item.access_mode === 'free' ? '免费' : 'BYOK'}｜${item.label}${item.available ? '' : '（不可用）'}` }))
 
   const run = async () => {
     if (!profileId) return
     setLoading(true)
     setError(null)
+    setLiveSteps([])
+    setOperationId('')
     try {
       setResult(await runPipeline({ profile_id: profileId, query, domain_id: domainId, llm: llmConfig }))
     } catch (err) {
@@ -169,6 +182,23 @@ export default function ProductPage() {
             />
           </label>
           <label className="field-block">
+            <span>推理模式</span>
+            <Select
+              style={{ width: '100%' }} options={providerOptions} value={providerId}
+              onChange={(value: string) => { const next = providers.find((item) => item.id === value); setProviderId(value); setModel(next?.default_model ?? '') ; setApiKey('') }}
+            />
+          </label>
+          <label className="field-block">
+            <span>模型</span>
+            <Select style={{ width: '100%' }} options={(selectedProvider?.models ?? []).map((value) => ({ value, label: value }))} value={model} onChange={setModel} />
+          </label>
+          {selectedProvider?.access_mode === 'byok' && (
+            <label className="field-block field-block--query">
+              <span>本次运行 API Key（不保存）</span>
+              <Input.Password value={apiKey} onChange={(event) => setApiKey(event.target.value)} placeholder="仅随本次请求发送，不写入数据库或日志" />
+            </label>
+          )}
+          <label className="field-block">
             <span>学习者画像</span>
             <Select
               style={{ width: '100%' }}
@@ -194,6 +224,7 @@ export default function ProductPage() {
               开始证据推理
             </Button>
             <small>运行后生成可追溯 run_id</small>
+            {selectedProvider && <Button type="link" disabled={selectedProvider.access_mode === 'offline' || (selectedProvider.requires_api_key && !apiKey)} onClick={() => testProvider({ provider: providerId, model, api_key: apiKey }).then(() => setError(null)).catch((err: Error) => setError(err.message))}>测试模型连接</Button>}
           </div>
         </div>
       </Card>
@@ -205,6 +236,8 @@ export default function ProductPage() {
           <Space direction="vertical" size="middle">
             <Spin size="large" />
             <Text type="secondary">多智能体协同决策运行中…</Text>
+            {operationId && <Text code>{operationId}</Text>}
+            {liveSteps.length > 0 && <AgentTrace steps={liveSteps} />}
           </Space>
         </div>
       )}
@@ -217,6 +250,11 @@ export default function ProductPage() {
             showIcon
             message="指标披露"
             description="当前页面中的适配率与覆盖率属于开发阶段代理指标；L3 人工金标准完成前，不作为对外实测结论。"
+          />
+          <Alert
+            style={{ marginTop: 16 }} type="info" showIcon
+            message={`${result.provider_run?.provider_label ?? result.provider_run?.provider ?? '离线规则'} · ${result.provider_run?.model ?? ''}`}
+            description={`接入方式：${result.provider_run?.access_mode ?? result.provider_run?.mode ?? 'offline'}；运行已保存：${result.persistence?.saved ? '是' : '否'}；API Key 持久化：否。`}
           />
           <Card
             title={`思考过程 · ${thinkingSteps.length} 个 Agent`}
@@ -357,6 +395,31 @@ export default function ProductPage() {
                 },
               ]}
             />
+          </Card>
+          <Card title="训练反馈与下一轮调节" style={{ marginTop: 16 }}>
+            <Space wrap>
+              {([
+                ['too_hard', '太难，降维解释'], ['suitable', '难度合适'], ['too_easy', '太简单，进阶挑战'],
+              ] as const).map(([feedback, label]) => (
+                <Button key={feedback} onClick={async () => {
+                  if (!profileId) return
+                  setLoading(true)
+                  try { setResult(await sendFeedback({ profile_id: profileId, query, domain_id: domainId, feedback })) }
+                  catch (err) { setError(err instanceof Error ? err.message : String(err)) }
+                  finally { setLoading(false) }
+                }}>{label}</Button>
+              ))}
+            </Space>
+            {result.feedback?.decision && <Paragraph style={{ marginTop: 12 }}>{result.feedback.decision}</Paragraph>}
+          </Card>
+          <Card title="在线候选文献（只进入待复核区，不自动入图）" style={{ marginTop: 16 }}>
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Button onClick={async () => {
+                try { setOnlineResult(await searchOnline({ query, limit: 5, allow_network: true })) }
+                catch (err) { setError(err instanceof Error ? err.message : String(err)) }
+              }}>检索 OpenAlex 候选</Button>
+              {onlineResult && <pre>{JSON.stringify(onlineResult, null, 2)}</pre>}
+            </Space>
           </Card>
         </>
       )}

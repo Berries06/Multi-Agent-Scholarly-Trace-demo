@@ -32,7 +32,7 @@ def configure_tracking(project_root: Path) -> tuple[Any, str]:
         import mlflow
     except ImportError as exc:  # pragma: no cover - exercised by base installs
         raise RuntimeError(
-            "MLflow 未安装；运行 .venv-lab\\Scripts\\python.exe -m pip "
+            "MLflow 未安装；运行 .venv\\Scripts\\python.exe -m pip "
             "install '.[tracking]'"
         ) from exc
 

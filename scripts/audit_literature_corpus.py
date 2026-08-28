@@ -353,8 +353,12 @@ def audit(
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--corpus", type=Path, default=Path("config/literature_corpus_100.json"))
-    parser.add_argument("--output", type=Path, default=Path("artifacts/literature/literature_audit_100.json"))
+    parser.add_argument("--corpus", type=Path, default=Path("config/文献/literature_corpus_100.json"))
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=Path("docs/研发记录/审计/数据/百篇文献审计.json"),
+    )
     parser.add_argument("--delay", type=float, default=0.35)
     parser.add_argument("--abstract-only", action="store_true")
     parser.add_argument("--resume-from", type=Path)

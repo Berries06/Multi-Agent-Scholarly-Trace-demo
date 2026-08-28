@@ -47,6 +47,8 @@ export interface LearnerProfile {
   preferred_style: string
   expected_difficulty: number
   synthetic: boolean
+  profile_kind?: 'personal' | 'demo'
+  required_concepts?: string[]
 }
 
 export interface Domain {

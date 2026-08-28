@@ -10,10 +10,10 @@
 RUN_PUBLIC_EXPERIMENTS.bat
 ```
 
-这会用项目 `.venv-lab` 依次执行 `tests/experiments/01_*` 至 `06_*` 六个版本化协议；全部验证通过后自动启动本地 MLflow，并把通过验证的运行同步进去。也可以只执行协议：
+这会用项目 `.venv` 依次执行 `tests/experiments/01_*` 至 `06_*` 六个版本化协议；全部验证通过后自动启动本地 MLflow，并把通过验证的运行同步进去。也可以只执行协议：
 
 ```powershell
-.venv-lab\Scripts\python.exe -m tests.experiments.run_all --repetitions 1
+.venv\Scripts\python.exe -m tests.experiments.run_all --repetitions 1
 ```
 
 需要由 DSH 执行和解释失败时：
@@ -87,7 +87,7 @@ RUN_MLFLOW.bat
 模型对比入口仍为：
 
 ```powershell
-.venv-lab\Scripts\python.exe scripts/run_decision_experiment.py `
+.venv\Scripts\python.exe scripts/run_decision_experiment.py `
   --models "deepseek:deepseek-chat,zhipu:glm-4-flash"
 ```
 

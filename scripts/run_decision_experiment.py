@@ -168,7 +168,7 @@ def main() -> None:
         else min(args.max_cases, len(benchmark["cases"]))
     )
 
-    price_path = PROJECT_ROOT / "config" / "experiment_models.json"
+    price_path = PROJECT_ROOT / "config" / "实验" / "experiment_models.json"
     prices = json.loads(price_path.read_text(encoding="utf-8")).get("prices", {})
 
     def baseline_runner(

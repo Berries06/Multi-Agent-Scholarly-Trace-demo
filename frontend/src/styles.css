@@ -63,6 +63,42 @@ select {
   padding: 28px 0 24px;
 }
 
+.masthead__account {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.login-gate {
+  min-height: 58vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 460px);
+  align-items: center;
+  gap: clamp(32px, 8vw, 120px);
+  padding: clamp(40px, 8vw, 110px) 0;
+}
+
+.login-gate__copy h2 {
+  max-width: 720px;
+  margin: 8px 0 20px;
+  font-family: Georgia, 'Noto Serif SC', serif;
+  font-size: clamp(34px, 5vw, 68px);
+  line-height: 1.08;
+}
+
+.login-gate__copy p:last-child {
+  max-width: 680px;
+  color: var(--ink-muted);
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+.login-card {
+  border-top: 4px solid var(--accent);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 32px;
+}
+
 .eyebrow,
 .section-index,
 .editorial-kicker {
@@ -854,6 +890,16 @@ select {
     align-items: flex-start;
     flex-direction: column;
     padding: 22px 0 18px;
+  }
+
+  .masthead__account,
+  .login-gate {
+    align-items: flex-start;
+    grid-template-columns: 1fr;
+  }
+
+  .masthead__account {
+    flex-direction: column;
   }
 
   .system-proof {
