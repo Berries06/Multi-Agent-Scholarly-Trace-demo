@@ -2,12 +2,15 @@
 
 用法：
   python scripts/run_decision_experiment.py --models "deepseek:deepseek-chat,zhipu:glm-4-flash"
-  省略 --models 时只跑规则基线（离线自检用，不产生费用）。
+  python scripts/run_decision_experiment.py --pairs "zhipu:glm-4-flash>deepseek:deepseek-v4-pro"
+  省略 --models/--pairs 时只跑规则基线（离线自检用，不产生费用）。
 
 组合矩阵：
   - baseline：规则批判者 + 规则裁判（对照）
   - 对每个模型 M：LLM 批判者(M) + LLM 裁判(M)（同模型三件套）
   - 模型数 ≤3 时：两两异质组合（批判者 A + 裁判 B）
+  - --pairs：只跑显式指定的 批判者>裁判 组合（与 --models 互斥，便于
+    12 组矩阵"每组一个独立 run 目录"且不重复烧同质基线）
 缺 Key 的组合会被跳过并注明（实验里不允许静默回退，否则结果不可比）。
 
 产物（outputs/experiments/decision-matrix-<时间戳>/）：
@@ -104,6 +107,29 @@ def parse_models(spec: str) -> list[tuple[str, str]]:
     return models
 
 
+def parse_pairs(spec: str) -> list[tuple[str, str, str, str]]:
+    """解析 --pairs 的 批判者>裁判 列表。
+
+    形如 "zhipu:glm-4-flash>deepseek:deepseek-v4-pro,kimi:kimi-k2.6>kimi:kimi-k3"。
+    """
+    pairs: list[tuple[str, str, str, str]] = []
+    for item in spec.split(","):
+        item = item.strip()
+        if not item:
+            continue
+        if ">" not in item:
+            raise SystemExit(
+                f"配对写法应为 批判者>裁判（provider:model>provider:model）；收到 {item!r}"
+            )
+        critic, judge = item.split(">", 1)
+        if ":" not in critic or ":" not in judge:
+            raise SystemExit(f"配对两侧都必须是 provider:model；收到 {item!r}")
+        ca, cm = critic.strip().split(":", 1)
+        jp, jm = judge.strip().split(":", 1)
+        pairs.append((ca.strip(), cm.strip(), jp.strip(), jm.strip()))
+    return pairs
+
+
 def make_llm_runner(
     kb: KnowledgeBase,
     critic_provider: str,
@@ -129,11 +155,27 @@ def make_llm_runner(
 
 
 def main() -> None:
+    # Windows 中文控制台默认 GBK，报告含 ¥/中文会 UnicodeEncodeError；
+    # 统一按 UTF-8 输出，避免"实验成功但打印崩溃"的假失败。
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if callable(reconfigure):
+            try:
+                reconfigure(encoding="utf-8", errors="replace")
+            except OSError:
+                pass
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--models",
         default="",
         help="逗号分隔的 provider:model 列表；缺 Key 的组合会跳过。",
+    )
+    parser.add_argument(
+        "--pairs",
+        default="",
+        help="显式 批判者>裁判 组合列表（与 --models 互斥），"
+        "例：zhipu:glm-4-flash>deepseek:deepseek-v4-pro。",
     )
     parser.add_argument(
         "--max-cases",
@@ -154,7 +196,10 @@ def main() -> None:
     args = parser.parse_args()
 
     load_dotenv(PROJECT_ROOT / ".env")
+    if args.models and args.pairs:
+        raise SystemExit("--models 与 --pairs 互斥：同质组用 --models，异质组用 --pairs。")
     models = parse_models(args.models)
+    pairs = parse_pairs(args.pairs)
 
     kb = KnowledgeBase(
         PROJECT_ROOT / "data" / "knowledge",
@@ -179,29 +224,42 @@ def main() -> None:
     combos: list[tuple[str, Runner, str, str]] = [
         ("baseline_rule", baseline_runner, "rule", "rule"),
     ]
-    for provider, model in models:
-        key = f"{provider}:{model}"
-        combos.append(
-            (
-                f"llm_{provider}_{model}",
-                make_llm_runner(kb, provider, model, provider, model),
-                key,
-                key,
-            )
-        )
-    if 1 < len(models) <= 3:
-        for i, (pa, ma) in enumerate(models):
-            for j, (pb, mb) in enumerate(models):
-                if i == j:
-                    continue
-                combos.append(
-                    (
-                        f"hetero_{pa}_{ma}__{pb}_{mb}",
-                        make_llm_runner(kb, pa, ma, pb, mb),
-                        f"{pa}:{ma}",
-                        f"{pb}:{mb}",
-                    )
+    if pairs:
+        for pa, ma, pb, mb in pairs:
+            critic_key = f"{pa}:{ma}"
+            judge_key = f"{pb}:{mb}"
+            combos.append(
+                (
+                    f"pair_{pa}_{ma}__{pb}_{mb}",
+                    make_llm_runner(kb, pa, ma, pb, mb),
+                    critic_key,
+                    judge_key,
                 )
+            )
+    else:
+        for provider, model in models:
+            key = f"{provider}:{model}"
+            combos.append(
+                (
+                    f"llm_{provider}_{model}",
+                    make_llm_runner(kb, provider, model, provider, model),
+                    key,
+                    key,
+                )
+            )
+        if 1 < len(models) <= 3:
+            for i, (pa, ma) in enumerate(models):
+                for j, (pb, mb) in enumerate(models):
+                    if i == j:
+                        continue
+                    combos.append(
+                        (
+                            f"hetero_{pa}_{ma}__{pb}_{mb}",
+                            make_llm_runner(kb, pa, ma, pb, mb),
+                            f"{pa}:{ma}",
+                            f"{pb}:{mb}",
+                        )
+                    )
 
     rows: list[dict[str, Any]] = []
     skipped: list[dict[str, str]] = []
