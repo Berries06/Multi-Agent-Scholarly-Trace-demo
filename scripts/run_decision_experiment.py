@@ -310,6 +310,10 @@ def main() -> None:
     print(_markdown(rows, skipped, benchmark, case_limit))
 
 
+# 实验快照日（experiment_models.json snapshot_date）参考汇率；答辩口径以当天实际汇率为准。
+USD_TO_CNY = 7.2
+
+
 def _estimate_cost(row: dict[str, Any], prices: dict[str, Any]) -> float | None:
     parts: list[float] = []
     stats = row.get("stats") or {}
@@ -320,9 +324,12 @@ def _estimate_cost(row: dict[str, Any], prices: dict[str, Any]) -> float | None:
         price = prices.get(row.get(role, ""))
         if not price or price.get("input") is None or price.get("output") is None:
             return None
+        currency = str(price.get("currency", "CNY")).upper()
+        rate = USD_TO_CNY if currency == "USD" else 1.0
         parts.append(
-            entry["input_tokens"] / 1_000_000 * price["input"]
-            + entry["output_tokens"] / 1_000_000 * price["output"]
+            (entry["input_tokens"] / 1_000_000 * price["input"]
+             + entry["output_tokens"] / 1_000_000 * price["output"])
+            * rate
         )
     return round(sum(parts), 4) if parts else None
 
