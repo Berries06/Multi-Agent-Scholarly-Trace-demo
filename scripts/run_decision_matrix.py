@@ -83,6 +83,12 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--groups", default="", help="只跑这些组（逗号分隔，如 H1,E1）")
     parser.add_argument("--domains", default="", help="只跑这些领域（逗号分隔）")
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=8,
+        help="透传给 run_decision_experiment.py 的并发数（默认 8）。",
+    )
     args = parser.parse_args()
 
     group_filter = {item.strip() for item in args.groups.split(",") if item.strip()}
@@ -121,6 +127,8 @@ def main() -> None:
                 str(PROJECT_ROOT / cases_rel),
                 "--domain",
                 domain_id,
+                "--workers",
+                str(args.workers),
             ]
             print(f"[{group['id']} × {domain_id}] {' '.join(command[2:])}", flush=True)
             result = subprocess.run(command, cwd=str(PROJECT_ROOT))

@@ -11,6 +11,7 @@ can never happen regardless of what a model says.
 from __future__ import annotations
 
 import json
+import time
 from typing import Any
 
 from .agents import CriticAgent, JudgeAgent
@@ -110,6 +111,7 @@ class UsageAccumulator:
     def __init__(self) -> None:
         self.calls = 0
         self.failed_calls = 0
+        self.retries = 0
         self.input_tokens = 0
         self.output_tokens = 0
         self.duration_ms = 0.0
@@ -125,6 +127,7 @@ class UsageAccumulator:
         return {
             "calls": self.calls,
             "failed_calls": self.failed_calls,
+            "retries": self.retries,
             "input_tokens": self.input_tokens,
             "output_tokens": self.output_tokens,
             "duration_ms": round(self.duration_ms, 1),
@@ -182,12 +185,8 @@ class LLMCritic:
         for claim in claims:
             claim.criticisms = []
             try:
-                payload, response = self.provider.complete_json(
-                    CRITIC_SYSTEM,
-                    _claim_prompt(claim, kb),
-                    schema_name="critic_verdict",
-                    schema=CRITIC_SCHEMA,
-                    max_tokens=1024,
+                payload, response = self._complete_with_retry(
+                    CRITIC_SYSTEM, _claim_prompt(claim, kb), "critic_verdict", CRITIC_SCHEMA
                 )
                 self.stats.record(response)
                 claim.criticisms = self._map_criticisms(payload)
@@ -200,6 +199,35 @@ class LLMCritic:
                         f"批判者模型调用失败，转人工复核：{str(exc)[:200]}"
                     )
         return claims
+
+    def _complete_with_retry(
+        self,
+        system: str,
+        user: str,
+        schema_name: str,
+        schema: dict[str, Any],
+    ) -> tuple[dict[str, Any], Any]:
+        """调用一次完整 JSON 决策，可重试一次（仅网络/服务端/空输出类失败）。"""
+        last: ProviderError | None = None
+        for attempt in (0, 1):
+            if attempt:
+                self.stats.retries += 1
+                time.sleep(2.0)
+            try:
+                return self.provider.complete_json(
+                    system,
+                    user,
+                    schema_name=schema_name,
+                    schema=schema,
+                    max_tokens=4096,
+                )
+            except ProviderError as exc:
+                if exc.status_code is None or exc.status_code in {429, 500, 502, 503, 504}:
+                    last = exc
+                    continue
+                raise
+        assert last is not None
+        raise last
 
     @staticmethod
     def _map_criticisms(payload: dict[str, Any]) -> list[str]:
@@ -251,12 +279,8 @@ class LLMJudge:
                     + "\n批判者给出的结构化批判项：\n"
                     + json.dumps(claim.criticisms, ensure_ascii=False)
                 )
-                payload, response = self.provider.complete_json(
-                    JUDGE_SYSTEM,
-                    prompt,
-                    schema_name="judge_verdict",
-                    schema=JUDGE_SCHEMA,
-                    max_tokens=1024,
+                payload, response = self._complete_with_retry(
+                    JUDGE_SYSTEM, prompt, "judge_verdict", JUDGE_SCHEMA
                 )
                 self.stats.record(response)
                 claim.status = str(payload["status"])
@@ -277,3 +301,32 @@ class LLMJudge:
                     claim.judge_reason = f"裁判模型调用失败，转人工复核：{str(exc)[:200]}"
             hard_guard(claim, kb)
         return claims
+
+    def _complete_with_retry(
+        self,
+        system: str,
+        user: str,
+        schema_name: str,
+        schema: dict[str, Any],
+    ) -> tuple[dict[str, Any], Any]:
+        """调用一次完整 JSON 决策，可重试一次（仅网络/服务端/空输出类失败）。"""
+        last: ProviderError | None = None
+        for attempt in (0, 1):
+            if attempt:
+                self.stats.retries += 1
+                time.sleep(2.0)
+            try:
+                return self.provider.complete_json(
+                    system,
+                    user,
+                    schema_name=schema_name,
+                    schema=schema,
+                    max_tokens=4096,
+                )
+            except ProviderError as exc:
+                if exc.status_code is None or exc.status_code in {429, 500, 502, 503, 504}:
+                    last = exc
+                    continue
+                raise
+        assert last is not None
+        raise last

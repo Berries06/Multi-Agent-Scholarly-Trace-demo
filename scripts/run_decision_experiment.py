@@ -25,6 +25,7 @@ import csv
 import json
 import os
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Callable
@@ -136,20 +137,55 @@ def make_llm_runner(
     critic_model: str,
     judge_provider: str,
     judge_model: str,
+    workers: int,
 ) -> Runner:
     def runner(claims: list[Claim]) -> tuple[list[Claim], dict[str, Any]]:
         critic_cfg = load_config_from_env(critic_provider, critic_model)
         judge_cfg = load_config_from_env(judge_provider, judge_model)
-        critic = LLMCritic(
-            create_provider(critic_cfg), fallback_to_rules=False
-        )
-        judge = LLMJudge(create_provider(judge_cfg), fallback_to_rules=False)
-        claims = critic.critique(claims, kb)
-        claims = judge.adjudicate(claims, kb)
-        return claims, {
-            "critic": critic.stats.snapshot(),
-            "judge": judge.stats.snapshot(),
-        }
+        critic_factory = create_provider(critic_cfg)
+        judge_factory = create_provider(judge_cfg)
+
+        def zero() -> dict[str, Any]:
+            return {
+                "calls": 0,
+                "failed_calls": 0,
+                "retries": 0,
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "duration_ms": 0.0,
+            }
+
+        def one(claim: Claim) -> tuple[Claim, dict[str, Any], dict[str, Any]]:
+            # 每 claim 独立 accumulator，避免多线程并发自增丢计数。
+            critic = LLMCritic(critic_factory, fallback_to_rules=False)
+            judge = LLMJudge(judge_factory, fallback_to_rules=False)
+            critic.critique([claim], kb)
+            judge.adjudicate([claim], kb)
+            return claim, critic.stats.snapshot(), judge.stats.snapshot()
+
+        processed: list[Claim] = []
+        acc_critic = zero()
+        acc_judge = zero()
+
+        def merge(acc: dict[str, Any], piece: dict[str, Any]) -> None:
+            for key in acc:
+                acc[key] += piece[key]
+
+        if workers <= 1:
+            for claim in claims:
+                item, piece_c, piece_j = one(claim)
+                processed.append(item)
+                merge(acc_critic, piece_c)
+                merge(acc_judge, piece_j)
+        else:
+            with ThreadPoolExecutor(max_workers=workers) as pool:
+                for item, piece_c, piece_j in pool.map(one, claims):
+                    processed.append(item)
+                    merge(acc_critic, piece_c)
+                    merge(acc_judge, piece_j)
+        acc_critic["duration_ms"] = round(acc_critic["duration_ms"], 1)
+        acc_judge["duration_ms"] = round(acc_judge["duration_ms"], 1)
+        return processed, {"critic": acc_critic, "judge": acc_judge}
 
     return runner
 
@@ -193,6 +229,12 @@ def main() -> None:
         default="",
         help="案例集所属领域 ID；留空=默认领域（与 --cases 对应的知识库一致）。",
     )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=8,
+        help="并发调用数（>=1）；推理类模型单次调用可达百秒级，串行不可接受。",
+    )
     args = parser.parse_args()
 
     load_dotenv(PROJECT_ROOT / ".env")
@@ -231,7 +273,7 @@ def main() -> None:
             combos.append(
                 (
                     f"pair_{pa}_{ma}__{pb}_{mb}",
-                    make_llm_runner(kb, pa, ma, pb, mb),
+                    make_llm_runner(kb, pa, ma, pb, mb, args.workers),
                     critic_key,
                     judge_key,
                 )
@@ -242,7 +284,7 @@ def main() -> None:
             combos.append(
                 (
                     f"llm_{provider}_{model}",
-                    make_llm_runner(kb, provider, model, provider, model),
+                    make_llm_runner(kb, provider, model, provider, model, args.workers),
                     key,
                     key,
                 )
@@ -255,7 +297,7 @@ def main() -> None:
                     combos.append(
                         (
                             f"hetero_{pa}_{ma}__{pb}_{mb}",
-                            make_llm_runner(kb, pa, ma, pb, mb),
+                            make_llm_runner(kb, pa, ma, pb, mb, args.workers),
                             f"{pa}:{ma}",
                             f"{pb}:{mb}",
                         )
@@ -294,6 +336,7 @@ def main() -> None:
                 "benchmark_id": benchmark["benchmark_id"],
                 "case_count": case_limit,
                 "models_requested": [f"{p}:{m}" for p, m in models],
+                "workers": args.workers,
                 "skipped": skipped,
                 "results": rows,
             },
