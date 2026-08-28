@@ -104,6 +104,8 @@ class DeploymentTests(unittest.TestCase):
         self.assertIn("proxy_pass http://127.0.0.1:8766/api/;", locations)
         self.assertIn("limit_req zone=agentdemo_api", locations)
         self.assertIn("proxy_buffering off", locations)
+        self.assertIn("style-src 'self' 'unsafe-inline'", locations)
+        self.assertIn("script-src 'self'", locations)
         self.assertIn("--host 127.0.0.1 --port 8766", unit)
         self.assertIn("yanhai.api:app", unit)
         self.assertIn("User=yanhai-agent", unit)
@@ -115,6 +117,15 @@ class DeploymentTests(unittest.TestCase):
         configured = PROJECT_ROOT / "deployment-fixture"
         with patch.dict(os.environ, {"YANHAI_PROJECT_ROOT": str(configured)}):
             self.assertEqual(project_root(), configured.resolve())
+
+    def test_production_deepseek_key_uses_a_persistent_configurable_path(self) -> None:
+        api = (PROJECT_ROOT / "src" / "yanhai" / "api.py").read_text(encoding="utf-8")
+        deployment = (PROJECT_ROOT / "scripts" / "部署" / "服务器全量发布.sh").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("YANHAI_DEEPSEEK_KEY_FILE", api)
+        self.assertIn("YANHAI_DEEPSEEK_KEY_FILE", deployment)
 
 
 if __name__ == "__main__":

@@ -10,6 +10,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.115",
+    "jsonschema>=4.23",
     "uvicorn[standard]>=0.30",
     "python-multipart>=0.0.9",
     "pypdf>=5.0",

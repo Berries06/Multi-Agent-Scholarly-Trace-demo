@@ -103,6 +103,36 @@ export interface AgentTraceStep {
   details?: Record<string, unknown>
 }
 
+export type ResearchProgressState =
+  | 'pending'
+  | 'running'
+  | 'completed'
+  | 'retrying'
+  | 'insufficient'
+  | 'degraded'
+  | 'failed'
+
+export interface ResearchProgressDetail {
+  kind: 'query' | 'question' | 'evidence' | 'claim' | 'review' | 'metric' | string
+  label: string
+  meta?: string
+  status?: string
+  reference?: string
+}
+
+export interface ResearchProgressEvent {
+  sequence: number
+  phase: string
+  state: ResearchProgressState
+  percent: number
+  title: string
+  message: string
+  content_origin?: 'system' | 'model' | 'retrieval'
+  details?: ResearchProgressDetail[]
+  elapsed_ms?: number
+  metrics?: Record<string, unknown>
+}
+
 export interface Diagnosis {
   readiness_score: number
   blind_spots: string[]
@@ -172,6 +202,15 @@ export interface RunResult {
     usage?: { input_tokens: number; output_tokens: number; total_tokens: number }
     warnings?: string[]
     api_key_persisted?: boolean
+    degraded?: boolean
+    evidence_status?: string
+    calls?: Array<{
+      role: string
+      duration_ms: number
+      finish_reason?: string | null
+      attempts?: number
+      usage: { input_tokens: number; output_tokens: number; total_tokens: number }
+    }>
   }
   graph_insights?: {
     timeline?: Array<Record<string, unknown>>
@@ -184,6 +223,10 @@ export interface RunResult {
     research_session_id?: string
     ingestion_id?: string
     source_saved?: boolean
+  }
+  observability?: {
+    duration_ms: number
+    completed_at: number
   }
   feedback?: { decision?: string }
 }

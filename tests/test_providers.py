@@ -107,7 +107,166 @@ class ProviderTests(unittest.TestCase):
             {"type": "json_object"},
             captured["payload"]["response_format"],
         )
+        self.assertEqual(
+            {"type": "disabled"},
+            captured["payload"]["thinking"],
+        )
+        self.assertEqual(0, captured["payload"]["temperature"])
         self.assertNotIn("test-key", str(response.public_dict()))
+
+    def test_truncated_json_is_retried_and_usage_is_aggregated(self) -> None:
+        payloads: list[dict[str, Any]] = []
+
+        def transport(
+            url: str,
+            headers: dict[str, str],
+            payload: dict[str, Any],
+            timeout: float,
+        ) -> tuple[dict[str, Any], dict[str, str]]:
+            payloads.append(payload)
+            if len(payloads) == 1:
+                content = '{"status":"incomplete"'
+                finish_reason = "length"
+            else:
+                content = '{"status":"ok"}'
+                finish_reason = "stop"
+            return (
+                {
+                    "id": f"req_{len(payloads)}",
+                    "model": "deepseek-v4-flash",
+                    "choices": [
+                        {
+                            "finish_reason": finish_reason,
+                            "message": {"content": content},
+                        }
+                    ],
+                    "usage": {
+                        "prompt_tokens": 10,
+                        "completion_tokens": 20,
+                        "total_tokens": 30,
+                    },
+                },
+                {},
+            )
+
+        config = ProviderConfig.from_payload(
+            {
+                "provider": "deepseek",
+                "model": "deepseek-v4-flash",
+                "api_key": "test-key",
+            }
+        )
+        provider = create_provider(config, transport)
+        provider_events: list[dict[str, Any]] = []
+        provider.set_event_callback(provider_events.append)
+        data, response = provider.complete_json(
+            "system",
+            "user",
+            schema_name="status",
+            schema={
+                "type": "object",
+                "properties": {"status": {"const": "ok"}},
+                "required": ["status"],
+            },
+            max_tokens=5000,
+        )
+
+        self.assertEqual({"status": "ok"}, data)
+        self.assertEqual(2, response.attempts)
+        self.assertEqual("stop", response.finish_reason)
+        self.assertEqual(60, response.usage["total_tokens"])
+        self.assertEqual(7500, payloads[1]["max_tokens"])
+        self.assertEqual("structured_retry", provider_events[0]["kind"])
+        self.assertEqual("status", provider_events[0]["schema_name"])
+
+    def test_empty_json_content_is_retried_without_stringifying_none(self) -> None:
+        attempts = 0
+
+        def transport(
+            url: str,
+            headers: dict[str, str],
+            payload: dict[str, Any],
+            timeout: float,
+        ) -> tuple[dict[str, Any], dict[str, str]]:
+            nonlocal attempts
+            attempts += 1
+            return (
+                {
+                    "id": f"req_{attempts}",
+                    "model": "deepseek-v4-flash",
+                    "choices": [
+                        {
+                            "finish_reason": "stop",
+                            "message": {
+                                "content": None if attempts == 1 else '{"status":"ok"}'
+                            },
+                        }
+                    ],
+                    "usage": {},
+                },
+                {},
+            )
+
+        config = ProviderConfig.from_payload(
+            {
+                "provider": "deepseek",
+                "model": "deepseek-v4-flash",
+                "api_key": "test-key",
+            }
+        )
+        data, response = create_provider(config, transport).complete_json(
+            "system",
+            "user",
+            schema_name="status",
+            schema={
+                "type": "object",
+                "properties": {"status": {"type": "string"}},
+                "required": ["status"],
+            },
+        )
+
+        self.assertEqual({"status": "ok"}, data)
+        self.assertEqual(2, response.attempts)
+
+    def test_json_schema_mismatch_is_rejected_after_retry(self) -> None:
+        def transport(
+            url: str,
+            headers: dict[str, str],
+            payload: dict[str, Any],
+            timeout: float,
+        ) -> tuple[dict[str, Any], dict[str, str]]:
+            return (
+                {
+                    "model": "deepseek-v4-flash",
+                    "choices": [
+                        {
+                            "finish_reason": "stop",
+                            "message": {"content": '{"status":42}'},
+                        }
+                    ],
+                    "usage": {},
+                },
+                {},
+            )
+
+        config = ProviderConfig.from_payload(
+            {
+                "provider": "deepseek",
+                "model": "deepseek-v4-flash",
+                "api_key": "test-key",
+            }
+        )
+        with self.assertRaisesRegex(ProviderError, "不符合 status Schema"):
+            create_provider(config, transport).complete_json(
+                "system",
+                "user",
+                schema_name="status",
+                schema={
+                    "type": "object",
+                    "properties": {"status": {"type": "string"}},
+                    "required": ["status"],
+                },
+            )
 
     def test_provider_error_redacts_exact_key(self) -> None:
         def transport(

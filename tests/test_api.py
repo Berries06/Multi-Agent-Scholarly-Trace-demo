@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 import tempfile
 import unittest
@@ -75,6 +76,32 @@ class UnifiedApiTests(unittest.TestCase):
         self.assertTrue(result["persistence"]["saved"])
         history = self.client.get("/api/history").json()
         self.assertEqual(1, len(history))
+
+    def test_offline_stream_emits_ordered_progress_and_completion(self) -> None:
+        self.login()
+        response = self.client.post(
+            "/api/run/stream",
+            json={
+                "profile_id": "my-profile",
+                "query": "知识图谱如何支持科研训练？",
+                "include_ablation": False,
+                "llm": {"provider": "mock", "model": "offline-rules"},
+            },
+        )
+        self.assertEqual(200, response.status_code, response.text)
+        blocks = [block for block in response.text.split("\n\n") if block.strip()]
+        progress = []
+        for block in blocks:
+            if not block.startswith("event: progress"):
+                continue
+            raw = next(line[6:].strip() for line in block.splitlines() if line.startswith("data:"))
+            progress.append(json.loads(raw)["progress"])
+
+        self.assertGreaterEqual(len(progress), 10)
+        self.assertEqual(list(range(1, len(progress) + 1)), [item["sequence"] for item in progress])
+        self.assertEqual("persistence", progress[-1]["phase"])
+        self.assertEqual(100, progress[-1]["percent"])
+        self.assertIn("event: completed", response.text)
 
     def test_ingestion_does_not_save_source_without_consent(self) -> None:
         self.login()

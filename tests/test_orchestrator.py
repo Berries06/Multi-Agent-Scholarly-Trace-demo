@@ -3,6 +3,7 @@ from __future__ import annotations
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -10,6 +11,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from yanhai.evaluation import evaluate_orchestrator  # noqa: E402
 from yanhai.orchestrator import ScholarlyTraceOrchestrator  # noqa: E402
+from yanhai.providers import ProviderConfig, ProviderError  # noqa: E402
 
 
 class OrchestratorTests(unittest.TestCase):
@@ -103,6 +105,56 @@ class OrchestratorTests(unittest.TestCase):
         )
         self.assertEqual(2, hard["diagnosis"]["target_difficulty"])
         self.assertEqual(4, easy["diagnosis"]["target_difficulty"])
+
+    def test_remote_provider_failure_returns_preserved_offline_baseline(self) -> None:
+        class FailingProvider:
+            def complete_json(self, *args, **kwargs):
+                raise ProviderError("research_plan：模拟结构化输出失败。")
+
+        config = ProviderConfig.from_payload(
+            {
+                "provider": "deepseek",
+                "model": "deepseek-v4-flash",
+                "api_key": "test-key",
+            }
+        )
+        events: list[dict[str, object]] = []
+        with patch("yanhai.orchestrator.create_provider", return_value=FailingProvider()):
+            result = self.orchestrator.run_with_provider(
+                "graduate_cross_domain",
+                "多智能体如何减少抽取错误？",
+                provider_config=config,
+                on_step=events.append,
+            )
+
+        self.assertEqual("degraded_offline", result["provider_run"]["mode"])
+        self.assertTrue(result["provider_run"]["degraded"])
+        self.assertGreater(len(result["papers"]), 0)
+        self.assertGreater(len(result["claims"]), 0)
+        self.assertIn("research_plan", result["provider_run"]["warnings"][0])
+        progress = [event for event in events if event.get("event_type") == "progress"]
+        self.assertEqual("baseline", progress[0]["phase"])
+        self.assertEqual("degraded", progress[-1]["state"])
+
+    def test_offline_provider_emits_real_milestone_progress(self) -> None:
+        events: list[dict[str, object]] = []
+        config = ProviderConfig.from_payload(
+            {"provider": "mock", "model": "offline-rules"}
+        )
+        result = self.orchestrator.run_with_provider(
+            "graduate_cross_domain",
+            "多智能体如何减少抽取错误？",
+            provider_config=config,
+            on_step=events.append,
+            include_ablation=False,
+        )
+
+        progress = [event for event in events if event.get("event_type") == "progress"]
+        self.assertEqual("offline_mock", result["provider_run"]["mode"])
+        self.assertEqual("diagnosis", progress[0]["phase"])
+        self.assertEqual(97, progress[-1]["percent"])
+        self.assertEqual("resources", progress[-1]["phase"])
+        self.assertNotIn("ablation", result)
 
     def test_extracted_graph_contains_paper_evidence_entity_chain(self) -> None:
         graph = self.orchestrator.run("graduate_cross_domain")[

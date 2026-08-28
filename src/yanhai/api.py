@@ -110,7 +110,12 @@ class ApiState:
                 reset_seconds=self.config.circuit_reset_seconds,
             ),
         )
-        key_path = root / "secret" / "DeepSeekAPI.txt"
+        configured_key_path = os.environ.get("YANHAI_DEEPSEEK_KEY_FILE", "").strip()
+        key_path = (
+            Path(configured_key_path).expanduser()
+            if configured_key_path
+            else root / "secret" / "DeepSeekAPI.txt"
+        )
         self.deepseek_key = (
             key_path.read_text(encoding="utf-8").strip() if key_path.is_file() else ""
         )
@@ -232,38 +237,48 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
         profile = active_profile(payload.profile_id, user)
         config, public_provider = provider_config(payload.llm)
         started = time.perf_counter()
-        if on_step is not None and config.provider == "mock":
-            result = state.orchestrator.run(
-                profile.profile_id,
-                payload.query,
-                domain_id=payload.domain_id,
-                include_ablation=payload.include_ablation,
-                on_step=on_step,
-            )
-            result["provider_run"] = {
-                **public_provider,
-                "mode": "offline_rules",
-                "source_mode": "local_knowledge_base",
-                "calls": [],
-                "usage": {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0},
-                "warnings": [],
-            }
-        else:
-            result = state.orchestrator.run_with_provider(
-                profile.profile_id,
-                payload.query,
-                domain_id=payload.domain_id,
-                provider_config=config,
-                on_step=on_step,
-            )
-            result.setdefault("provider_run", {}).update(
-                access_mode=public_provider["access_mode"], api_key_persisted=False
-            )
+        result = state.orchestrator.run_with_provider(
+            profile.profile_id,
+            payload.query,
+            domain_id=payload.domain_id,
+            provider_config=config,
+            on_step=on_step,
+            include_ablation=payload.include_ablation,
+        )
+        result.setdefault("provider_run", {}).update(
+            access_mode=public_provider["access_mode"], api_key_persisted=False
+        )
         result["observability"] = {
             "duration_ms": round((time.perf_counter() - started) * 1000, 2),
             "completed_at": time.time(),
         }
+        if on_step is not None:
+            on_step(
+                {
+                    "event_type": "progress",
+                    "phase": "persistence",
+                    "state": "running",
+                    "percent": 97,
+                    "title": "正在保存研究记录",
+                    "message": "正在保存结果、模型调用摘要和可追溯引用。",
+                }
+            )
         persist_run(user, profile, payload.query, public_provider, result)
+        if on_step is not None:
+            on_step(
+                {
+                    "event_type": "progress",
+                    "phase": "persistence",
+                    "state": "completed",
+                    "percent": 100,
+                    "title": "研究任务已完成",
+                    "message": "结果已保存，可以查看命题、证据图谱和个性化资源。",
+                    "metrics": {
+                        "paper_count": len(result.get("papers", [])),
+                        "claim_count": len(result.get("claims", [])),
+                    },
+                }
+            )
         return result
 
     @app.get("/api/health")
@@ -488,6 +503,8 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
 
 async def _stream_run(execute: Any, payload: RunRequest, user: dict[str, Any]) -> AsyncIterator[str]:
     operation_id = f"op_{uuid.uuid4().hex}"
+    stream_started = time.perf_counter()
+    progress_sequence = 0
     yield _sse("started", {"operation_id": operation_id, "profile_id": payload.profile_id, "query": payload.query})
     events: queue.Queue[dict[str, Any]] = queue.Queue()
 
@@ -495,17 +512,50 @@ async def _stream_run(execute: Any, payload: RunRequest, user: dict[str, Any]) -
         try:
             events.put({"__result__": execute(payload, user, events.put)})
         except Exception as exc:  # 流式边界必须显式收口错误
+            events.put(
+                {
+                    "event_type": "progress",
+                    "phase": "run",
+                    "state": "failed",
+                    "percent": 100,
+                    "title": "研究任务未完成",
+                    "message": str(exc)[:500],
+                }
+            )
             events.put({"__error__": f"{type(exc).__name__}: {exc}"})
 
     threading.Thread(target=worker, name="yanhai-sse-run", daemon=True).start()
     while True:
-        item = await asyncio.to_thread(events.get)
+        def poll_event() -> dict[str, Any]:
+            try:
+                return events.get(timeout=12)
+            except queue.Empty:
+                return {"__heartbeat__": True}
+
+        item = await asyncio.to_thread(poll_event)
+        elapsed_ms = round((time.perf_counter() - stream_started) * 1000, 2)
+        if "__heartbeat__" in item:
+            yield _sse(
+                "heartbeat",
+                {"operation_id": operation_id, "elapsed_ms": elapsed_ms},
+            )
+            continue
         if "__error__" in item:
             yield _sse("error", {"operation_id": operation_id, "message": item["__error__"]})
             return
         if "__result__" in item:
             yield _sse("completed", {"operation_id": operation_id, "result": item["__result__"]})
             return
+        if item.get("event_type") == "progress":
+            progress_sequence += 1
+            progress = dict(item)
+            progress.pop("event_type", None)
+            progress.update(sequence=progress_sequence, elapsed_ms=elapsed_ms)
+            yield _sse(
+                "progress",
+                {"operation_id": operation_id, "progress": progress},
+            )
+            continue
         yield _sse("agent_step", {"operation_id": operation_id, "step": item})
 
 

@@ -4,21 +4,31 @@ import {
   Button,
   Card,
   Col,
-  Collapse,
   Input,
+  List,
   Row,
   Select,
   Space,
-  Spin,
   Statistic,
   Table,
   Tag,
   Typography,
 } from 'antd'
+import {
+  BookOutlined,
+  CloudDownloadOutlined,
+  LinkOutlined,
+  PlayCircleOutlined,
+  RobotOutlined,
+  SafetyCertificateOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
 import AgentTrace from './AgentTrace'
 import DiagnosisRadar from './DiagnosisRadar'
 import KnowledgeGraphView from './KnowledgeGraphView'
+import ResourceSummary from './ResourceSummary'
+import ResearchProgress from './ResearchProgress'
 import { getDomains, getExtractedGraph, getProfiles, getProviders, searchOnline, sendFeedback, streamPipeline, testProvider } from './api'
 import type {
   Claim,
@@ -27,10 +37,12 @@ import type {
   LearnerProfile,
   ProviderOption,
   RunResult,
-  AgentTraceStep,
+  ResearchProgressEvent,
 } from './types'
 
 const { Text, Paragraph } = Typography
+
+const requestedProvider = new URLSearchParams(window.location.search).get('provider')
 
 interface ClaimRow {
   key: string
@@ -61,8 +73,11 @@ export default function ProductPage() {
   const [profileId, setProfileId] = useState<string | undefined>()
   const [query, setQuery] = useState('')
   const [result, setResult] = useState<RunResult | null>(null)
-  const [liveSteps, setLiveSteps] = useState<AgentTraceStep[]>([])
+  const [progressEvents, setProgressEvents] = useState<ResearchProgressEvent[]>([])
   const [operationId, setOperationId] = useState('')
+  const [progressStartedAt, setProgressStartedAt] = useState<number | null>(null)
+  const [lastSignalAt, setLastSignalAt] = useState<number | null>(null)
+  const [progressMode, setProgressMode] = useState<'offline' | 'online'>('offline')
   const [providerId, setProviderId] = useState('mock')
   const [model, setModel] = useState('offline-rules')
   const [apiKey, setApiKey] = useState('')
@@ -79,6 +94,13 @@ export default function ProductPage() {
         setDomains(domainsData)
         setProfiles(profilesData)
         setProviders(providerData)
+        const startupProvider = providerData.find(
+          (item) => item.id === requestedProvider && item.available,
+        )
+        if (startupProvider) {
+          setProviderId(startupProvider.id)
+          setModel(startupProvider.default_model)
+        }
         setDomainId(domainsData[0]?.domain_id)
         setProfileId(profilesData[0]?.profile_id ?? 'my-profile')
         const example = domainsData[0]?.query_example
@@ -113,18 +135,32 @@ export default function ProductPage() {
     [profiles],
   )
   const selectedProvider = providers.find((item) => item.id === providerId)
+  const selectedDomain = domains.find((item) => item.domain_id === domainId)
+  const selectedProfile = profiles.find((item) => item.profile_id === profileId)
   const providerOptions = providers.map((item) => ({ value: item.id, disabled: !item.available, label: `${item.access_mode === 'offline' ? '离线' : item.access_mode === 'free' ? '免费' : 'BYOK'}｜${item.label}${item.available ? '' : '（不可用）'}` }))
 
   const run = async () => {
     if (!profileId) return
     setLoading(true)
     setError(null)
-    setLiveSteps([])
+    setResult(null)
+    setProgressEvents([])
     setOperationId('')
+    const startedAt = Date.now()
+    setProgressStartedAt(startedAt)
+    setLastSignalAt(startedAt)
+    setProgressMode(providerId === 'mock' ? 'offline' : 'online')
     try {
       setResult(await streamPipeline(
         { profile_id: profileId, query, domain_id: domainId, llm: { provider: providerId, model, api_key: apiKey } },
-        { onStarted: setOperationId, onStep: (step) => setLiveSteps((items) => [...items, step]) },
+        {
+          onStarted: (id) => { setOperationId(id); setLastSignalAt(Date.now()) },
+          onProgress: (progress) => {
+            setProgressEvents((items) => items.some((item) => item.sequence === progress.sequence) ? items : [...items, progress])
+            setLastSignalAt(Date.now())
+          },
+          onHeartbeat: () => setLastSignalAt(Date.now()),
+        },
       ))
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
@@ -144,44 +180,55 @@ export default function ProductPage() {
   const thinkingSteps = result
     ? [...result.specialist_agent_trace, ...result.agent_trace]
     : []
+  const onlinePapers = onlineResult && Array.isArray(onlineResult.results)
+    ? onlineResult.results.filter((item): item is Record<string, unknown> => Boolean(item) && typeof item === 'object')
+    : []
 
   return (
     <div className="research-page">
-      <section className="page-lede">
-        <div>
-          <p className="section-index">01 / RESEARCH DESK</p>
-          <h2>从论文证据，抵达可复核的科研判断。</h2>
-          <p className="page-lede__summary">
-            系统先寻找原文证据，再让提出者、批判者与裁判处理争议。任何入图关系都必须能回到章节与字符跨度。
-          </p>
-        </div>
-        <dl className="method-facts">
-          <div>
-            <dt>证据约束</dt>
-            <dd>强制溯源</dd>
-          </div>
-          <div>
-            <dt>核心决策</dt>
-            <dd>3 Agents</dd>
-          </div>
-          <div>
-            <dt>真实金标准</dt>
-            <dd className="is-pending">待核验</dd>
-          </div>
-        </dl>
+      <section className="page-lede page-lede--simple">
+        <div><h2>从证据到判断</h2><p className="page-lede__summary">检索、质疑、裁决，每条结论均可回溯。</p></div>
       </section>
 
       <Card className="query-card" variant="outlined">
         <div className="query-card__header">
           <div>
-            <span className="editorial-kicker">RESEARCH QUESTION</span>
-            <h3>提出一个需要跨论文证据的问题</h3>
+            <span className="query-card__eyebrow">NEW RESEARCH RUN</span>
+            <h3>把问题交给证据链</h3>
+            <p>先定义问题，再配置证据范围与推理角色。</p>
           </div>
-          <p>输出会区分已接受、待复核与已拒绝的主张。</p>
+          <div className="query-flow" aria-label="运行步骤">
+            <span><b>01</b> 检索</span>
+            <span><b>02</b> 质疑</span>
+            <span><b>03</b> 裁决</span>
+          </div>
         </div>
-        <div className="query-grid">
+
+        <div className="query-question">
+          <label className="query-question__label" htmlFor="research-question">
+            <span>01</span>
+            <div><strong>研究问题</strong><small>描述希望验证的关系、机制或工程判断</small></div>
+          </label>
+          <Input.TextArea
+            id="research-question"
+            autoSize={{ minRows: 3, maxRows: 7 }}
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="例如：分析图神经网络如何支持稳定材料发现"
+          />
+          <div className="query-question__footer">
+            <span>{query.trim().length} 字</span>
+            <span>结论将绑定论文来源与证据 ID</span>
+          </div>
+        </div>
+
+        <div className="query-settings-heading">
+          <div><span>02</span><strong>运行配置</strong></div>
+          <small>这些选项决定检索边界、解释难度和模型调用方式</small>
+        </div>
+        <div className="query-grid query-settings">
           <label className="field-block">
-            <span>垂直领域</span>
+            <span><BookOutlined /> 垂直领域</span>
             <Select
               style={{ width: '100%' }}
               options={domainOptions}
@@ -190,24 +237,7 @@ export default function ProductPage() {
             />
           </label>
           <label className="field-block">
-            <span>推理模式</span>
-            <Select
-              style={{ width: '100%' }} options={providerOptions} value={providerId}
-              onChange={(value: string) => { const next = providers.find((item) => item.id === value); setProviderId(value); setModel(next?.default_model ?? '') ; setApiKey('') }}
-            />
-          </label>
-          <label className="field-block">
-            <span>模型</span>
-            <Select style={{ width: '100%' }} options={(selectedProvider?.models ?? []).map((value) => ({ value, label: value }))} value={model} onChange={setModel} />
-          </label>
-          {selectedProvider?.access_mode === 'byok' && (
-            <label className="field-block field-block--query">
-              <span>本次运行 API Key（不保存）</span>
-              <Input.Password value={apiKey} onChange={(event) => setApiKey(event.target.value)} placeholder="仅随本次请求发送，不写入数据库或日志" />
-            </label>
-          )}
-          <label className="field-block">
-            <span>学习者画像</span>
+            <span><UserOutlined /> 学习者画像</span>
             <Select
               style={{ width: '100%' }}
               options={profileOptions}
@@ -215,88 +245,98 @@ export default function ProductPage() {
               onChange={(value: string) => setProfileId(value)}
             />
           </label>
-          <label className="field-block field-block--query">
-            <span>研究问题</span>
-            <Input.TextArea
-              rows={2}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="例如：分析图神经网络如何支持稳定材料发现"
+          <label className="field-block provider-field">
+            <span><RobotOutlined /> 推理服务</span>
+            <Select
+              style={{ width: '100%' }} options={providerOptions} value={providerId}
+              onChange={(value: string) => { const next = providers.find((item) => item.id === value); setProviderId(value); setModel(next?.default_model ?? '') ; setApiKey('') }}
             />
           </label>
-          <div className="query-action">
-            <Button type="primary" onClick={run} loading={loading} block size="large">
-              开始证据推理
+          <label className="field-block">
+            <span><SafetyCertificateOutlined /> 模型</span>
+            <Select style={{ width: '100%' }} options={(selectedProvider?.models ?? []).map((value) => ({ value, label: value }))} value={model} onChange={setModel} />
+          </label>
+          {selectedProvider?.access_mode === 'byok' && (
+            <label className="field-block query-settings__key">
+              <span>本次运行 API Key（不保存）</span>
+              <Input.Password value={apiKey} onChange={(event) => setApiKey(event.target.value)} placeholder="仅随本次请求发送，不写入数据库或日志" />
+            </label>
+          )}
+        </div>
+
+        <div className="query-action">
+          <div className="query-action__context">
+            <span className="query-action__dot" />
+            <div>
+              <strong>{selectedProvider?.label ?? '正在读取模型'}</strong>
+              <small>{selectedDomain?.domain_name ?? '未选择领域'} · {selectedProfile?.name ?? '未选择画像'}</small>
+            </div>
+          </div>
+          <div className="query-action__buttons">
+            {selectedProvider && <Button icon={<LinkOutlined />} disabled={loading || selectedProvider.access_mode === 'offline' || (selectedProvider.requires_api_key && !apiKey)} onClick={() => testProvider({ provider: providerId, model, api_key: apiKey }).then(() => setError(null)).catch((err: Error) => setError(err.message))}>测试连接</Button>}
+            <Button type="primary" onClick={run} loading={loading} disabled={query.trim().length < 2} size="large">
+              <PlayCircleOutlined />开始循证研究
             </Button>
-            <small>运行后生成可追溯 run_id</small>
-            {selectedProvider && <Button type="link" disabled={selectedProvider.access_mode === 'offline' || (selectedProvider.requires_api_key && !apiKey)} onClick={() => testProvider({ provider: providerId, model, api_key: apiKey }).then(() => setError(null)).catch((err: Error) => setError(err.message))}>测试模型连接</Button>}
           </div>
         </div>
       </Card>
 
       {error && <Alert style={{ marginTop: 16 }} type="error" message={error} showIcon />}
 
-      {loading && (
-        <div style={{ textAlign: 'center', padding: 48 }}>
-          <Space direction="vertical" size="middle">
-            <Spin size="large" />
-            <Text type="secondary">多智能体协同决策运行中…</Text>
-            {operationId && <Text code>{operationId}</Text>}
-            {liveSteps.length > 0 && <AgentTrace steps={liveSteps} />}
-          </Space>
-        </div>
+      {progressStartedAt !== null && (loading || progressEvents.length > 0) && (
+        <ResearchProgress
+          events={progressEvents}
+          running={loading}
+          mode={progressMode}
+          operationId={operationId}
+          startedAt={progressStartedAt}
+          lastSignalAt={lastSignalAt}
+          result={result}
+          error={error}
+        />
       )}
 
       {result && !loading && (
         <>
-          <Alert
-            className="metric-disclosure"
-            type="warning"
-            showIcon
-            message="指标披露"
-            description="当前页面中的适配率与覆盖率属于开发阶段代理指标；L3 人工金标准完成前，不作为对外实测结论。"
-          />
-          <Alert
-            style={{ marginTop: 16 }} type="info" showIcon
-            message={`${result.provider_run?.provider_label ?? result.provider_run?.provider ?? '离线规则'} · ${result.provider_run?.model ?? ''}`}
-            description={`接入方式：${result.provider_run?.access_mode ?? result.provider_run?.mode ?? 'offline'}；运行已保存：${result.persistence?.saved ? '是' : '否'}；API Key 持久化：否。`}
-          />
+          <div className="run-meta">
+            <Tag>{result.provider_run?.provider_label ?? result.provider_run?.provider ?? '离线规则'} · {result.provider_run?.model ?? ''}</Tag>
+            {result.persistence?.saved && <Tag color="green">已保存</Tag>}
+            <Tag icon={<SafetyCertificateOutlined />}>Key 不留存</Tag>
+          </div>
           <Card
-            title={`思考过程 · ${thinkingSteps.length} 个 Agent`}
+            title={`智能体轨迹 · ${thinkingSteps.length}`}
             style={{ marginTop: 16 }}
             extra={result.run_id ? <Tag>run_id: {result.run_id.slice(0, 12)}</Tag> : null}
           >
             <AgentTrace steps={thinkingSteps} />
           </Card>
 
-          <Row gutter={16} style={{ marginTop: 16 }}>
-            <Col span={6}>
-              <Card><Statistic title="accepted 命题" value={result.metrics.accepted_claims} /></Card>
+          <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
+            <Col xs={24} md={8}>
+              <Card><Statistic title="已接受" value={result.claims.filter((claim) => claim.status === 'accepted').length} /></Card>
             </Col>
-            <Col span={6}>
-              <Card><Statistic title="rejected 命题" value={result.metrics.rejected_claims} /></Card>
+            <Col xs={24} md={8}>
+              <Card><Statistic title="待复核" value={result.claims.filter((claim) => ['review', 'needs_review'].includes(claim.status)).length} /></Card>
             </Col>
-            <Col span={6}>
-              <Card><Statistic title="难度适配准确率" value={result.metrics.adaptation_accuracy} suffix="%" /></Card>
-            </Col>
-            <Col span={6}>
-              <Card><Statistic title="知识覆盖率" value={result.metrics.knowledge_coverage_rate} suffix="%" /></Card>
+            <Col xs={24} md={8}>
+              <Card><Statistic title="已拒绝" value={result.claims.filter((claim) => claim.status === 'rejected').length} /></Card>
             </Col>
           </Row>
 
           <Row gutter={16} style={{ marginTop: 16 }}>
-            <Col span={10}>
+            <Col xs={24} lg={10}>
               <Card title="学习者知识画像">
                 <DiagnosisRadar profile={result.profile} />
               </Card>
             </Col>
-            <Col span={14}>
-              <Card title="裁决命题（点击行展开证据原文）">
+            <Col xs={24} lg={14}>
+              <Card title="裁决命题">
                 <Table
                   columns={claimColumns}
                   dataSource={claimRows}
                   pagination={false}
                   size="small"
+                  scroll={{ x: 760 }}
                   expandable={{
                     expandedRowRender: (row) => {
                       const spans = result.evidence_details?.[row.key] ?? []
@@ -321,7 +361,7 @@ export default function ProductPage() {
             </Col>
           </Row>
 
-          <Card title="证据知识图谱（论文→证据跨度→实体→关系，点击节点看详情）" style={{ marginTop: 16 }}>
+          <Card title="证据图谱" style={{ marginTop: 16 }}>
             {graph ? (
               <KnowledgeGraphView data={graph} />
             ) : (
@@ -330,44 +370,17 @@ export default function ProductPage() {
           </Card>
 
           <Card title="个性化资源" style={{ marginTop: 16 }}>
-            <Collapse
-              items={[
-                {
-                  key: 'briefing',
-                  label: '导读',
-                  children: (
-                    <Paragraph>
-                      <Text strong>{result.resources.briefing.title}</Text>
-                      <br />
-                      {result.resources.briefing.strategy}
-                    </Paragraph>
-                  ),
-                },
-                {
-                  key: 'guide',
-                  label: '实操指南',
-                  children: <pre>{JSON.stringify(result.resources.practical_guide, null, 2)}</pre>,
-                },
-                {
-                  key: 'quiz',
-                  label: '分阶测评',
-                  children: <pre>{JSON.stringify(result.resources.quiz, null, 2)}</pre>,
-                },
-                {
-                  key: 'blue',
-                  label: '蓝海 Idea（待验证假设）',
-                  children: <Paragraph>{result.resources.blue_ocean.hypothesis}</Paragraph>,
-                },
-              ]}
-            />
+            <ResourceSummary resources={result.resources} />
           </Card>
-          <Card title="训练反馈与下一轮调节" style={{ marginTop: 16 }}>
+          <Card title="调整难度" style={{ marginTop: 16 }}>
             <Space wrap>
               {([
                 ['too_hard', '太难，降维解释'], ['suitable', '难度合适'], ['too_easy', '太简单，进阶挑战'],
               ] as const).map(([feedback, label]) => (
                 <Button key={feedback} onClick={async () => {
                   if (!profileId) return
+                  setProgressStartedAt(null)
+                  setProgressEvents([])
                   setLoading(true)
                   try { setResult(await sendFeedback({ profile_id: profileId, query, domain_id: domainId, feedback })) }
                   catch (err) { setError(err instanceof Error ? err.message : String(err)) }
@@ -377,13 +390,27 @@ export default function ProductPage() {
             </Space>
             {result.feedback?.decision && <Paragraph style={{ marginTop: 12 }}>{result.feedback.decision}</Paragraph>}
           </Card>
-          <Card title="在线候选文献（只进入待复核区，不自动入图）" style={{ marginTop: 16 }}>
+          <Card title="候选文献" extra={<Tag color="orange">待复核</Tag>} style={{ marginTop: 16 }}>
             <Space direction="vertical" style={{ width: '100%' }}>
-              <Button onClick={async () => {
+              <Button icon={<CloudDownloadOutlined />} onClick={async () => {
                 try { setOnlineResult(await searchOnline({ query, limit: 5, allow_network: true })) }
                 catch (err) { setError(err instanceof Error ? err.message : String(err)) }
-              }}>检索 OpenAlex 候选</Button>
-              {onlineResult && <pre>{JSON.stringify(onlineResult, null, 2)}</pre>}
+              }}>检索候选</Button>
+              {onlineResult && (
+                <List
+                  size="small"
+                  locale={{ emptyText: '没有找到候选文献' }}
+                  dataSource={onlinePapers}
+                  renderItem={(paper) => (
+                    <List.Item>
+                      <List.Item.Meta
+                        title={paper.source_url ? <Typography.Link href={String(paper.source_url)} target="_blank">{String(paper.title ?? '未命名文献')}</Typography.Link> : String(paper.title ?? '未命名文献')}
+                        description={[paper.year, paper.venue].filter(Boolean).join(' · ')}
+                      />
+                    </List.Item>
+                  )}
+                />
+              )}
             </Space>
           </Card>
         </>

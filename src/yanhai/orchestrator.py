@@ -22,7 +22,7 @@ from .graph_rag import GraphRAGLiteEngine
 from .knowledge import KnowledgeBase
 from .live_research import LiveResearchService
 from .models import AgentTrace, LearnerProfile
-from .providers import ProviderConfig, create_provider
+from .providers import ProviderConfig, ProviderError, create_provider
 
 
 DEFAULT_QUERY = "如何从科学论文中抽取可追溯知识图谱，并利用图谱理解技术脉络和生成研究想法？"
@@ -382,6 +382,7 @@ class ScholarlyTraceOrchestrator:
         domain_id: str | None = None,
         provider_config: ProviderConfig | None = None,
         on_step: Callable[[dict[str, Any]], None] | None = None,
+        include_ablation: bool = True,
     ) -> dict[str, Any]:
         """运行确定性的离线基线，或走实时、证据支撑的 LLM 路径。
 
@@ -390,13 +391,88 @@ class ScholarlyTraceOrchestrator:
         领域知识库创建 ``LiveResearchService``，用其证据支撑的回答替换基线回答，
         同时保留确定性的 report、metrics 与 ablation。
         """
+        emit = on_step or (lambda event: None)
+        is_remote = provider_config is not None and provider_config.provider != "mock"
+
+        if is_remote:
+            emit(
+                {
+                    "event_type": "progress",
+                    "phase": "baseline",
+                    "state": "running",
+                    "percent": 2,
+                    "title": "正在理解问题",
+                    "message": "正在结合学习画像构建离线安全基线，确保在线模型失败时仍有可用结果。",
+                }
+            )
+            baseline_callback = on_step
+        else:
+            emit(
+                {
+                    "event_type": "progress",
+                    "phase": "diagnosis",
+                    "state": "running",
+                    "percent": 2,
+                    "title": "正在理解问题",
+                    "message": "正在分析学习画像、研究意图和所选知识领域。",
+                }
+            )
+            offline_progress = {
+                "diagnosis": ("diagnosis", 12, "学情诊断完成"),
+                "intent": ("intent", 22, "研究意图识别完成"),
+                "graph_retrieval": ("graph_retrieval", 35, "图谱检索完成"),
+                "retrieval": ("retrieval", 48, "本地证据检索完成"),
+                "extraction": ("extraction", 60, "论文索引检查完成"),
+                "关联提出": ("proposal", 72, "候选命题生成完成"),
+                "反证与约束": ("critique", 84, "反证检查完成"),
+                "置信裁决": ("adjudication", 94, "置信裁决完成"),
+                "resources": ("resources", 97, "个性化资源生成完成"),
+            }
+
+            def baseline_callback(step: dict[str, Any]) -> None:
+                emit(step)
+                key = str(step.get("stage") or step.get("role") or "")
+                mapped = offline_progress.get(key)
+                if mapped is None:
+                    return
+                phase, percent, title = mapped
+                emit(
+                    {
+                        "event_type": "progress",
+                        "phase": phase,
+                        "state": "completed",
+                        "percent": percent,
+                        "title": title,
+                        "message": str(step.get("summary") or title),
+                    }
+                )
+
         result = self.run(
             profile_id,
             query,
             0,
             domain_id=domain_id,
-            on_step=on_step,
+            include_ablation=include_ablation,
+            on_step=baseline_callback,
         )
+        if is_remote:
+            emit(
+                {
+                    "event_type": "progress",
+                    "phase": "baseline",
+                    "state": "completed",
+                    "percent": 12,
+                    "title": "问题理解与安全基线完成",
+                    "message": (
+                        f"已准备离线基线：{len(result['papers'])} 篇本地论文、"
+                        f"{len(result['claims'])} 条基线命题。"
+                    ),
+                    "metrics": {
+                        "paper_count": len(result["papers"]),
+                        "claim_count": len(result["claims"]),
+                    },
+                }
+            )
         if provider_config is None or provider_config.provider == "mock":
             public = (
                 provider_config.public_dict()
@@ -431,9 +507,52 @@ class ScholarlyTraceOrchestrator:
 
         provider = create_provider(provider_config)
         kb, _, _ = self._runtime(domain_id)
-        service = LiveResearchService(provider, provider_config, kb)
+        service = LiveResearchService(
+            provider,
+            provider_config,
+            kb,
+            on_progress=on_step,
+        )
         active_profile = self.profiles[profile_id]
-        live = service.run(query, active_profile, result["diagnosis"])
+        try:
+            live = service.run(query, active_profile, result["diagnosis"])
+        except ProviderError as exc:
+            emit(
+                {
+                    "event_type": "progress",
+                    "phase": "fallback",
+                    "state": "degraded",
+                    "percent": 97,
+                    "title": "已切换到离线安全基线",
+                    "message": "在线模型阶段未完成，已保留并返回可用的离线循证结果。",
+                    "metrics": {"reason": str(exc)[:360]},
+                }
+            )
+            result["provider_run"] = {
+                **provider_config.public_dict(),
+                "mode": "degraded_offline",
+                "source_mode": "local_knowledge_base",
+                "source_counts": {"local_knowledge_base": len(result["papers"])},
+                "selected_paper_count": len(result["papers"]),
+                "calls": [],
+                "usage": {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0},
+                "llm_duration_ms": 0.0,
+                "retrieval_duration_ms": 0.0,
+                "warnings": [f"实时模型链路失败，已返回离线基线：{exc}"],
+                "degraded": True,
+                "api_key_persisted": False,
+            }
+            result["mock_baseline"] = {
+                "domain": (
+                    result["domain"]["domain_id"]
+                    if isinstance(result["domain"], dict)
+                    else str(result["domain"])
+                ),
+                "paper_count": len(result["papers"]),
+                "claim_count": len(result["claims"]),
+                "preserved_as_provider": "mock",
+            }
+            return result
         baseline_summary = {
             "domain": (
                 result["domain"]["domain_id"]

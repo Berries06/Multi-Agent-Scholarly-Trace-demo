@@ -1,8 +1,10 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Alert, Button, ConfigProvider, Drawer, Form, Input, Space, Spin, Typography } from 'antd'
+import { ExperimentOutlined, FileSearchOutlined, LoginOutlined, NodeIndexOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons'
 import { getAuth, getHealth, login, logout, updateProfile } from './api'
 import type { AuthState, Health, LearnerProfile } from './types'
 import { appTheme } from './theme'
+import brandMark from './assets/multi-agent-mark.png'
 
 const ExperimentPage = lazy(() => import('./ExperimentPage'))
 const EvidenceAtlasPage = lazy(() => import('./EvidenceAtlasPage'))
@@ -11,11 +13,11 @@ const ProductPage = lazy(() => import('./ProductPage'))
 
 type Workspace = 'product' | 'lab' | 'atlas' | 'experiments'
 
-const workspaces: Array<{ key: Workspace; index: string; label: string; description: string }> = [
-  { key: 'product', index: '01', label: '研究工作台', description: '问题、证据与裁决' },
-  { key: 'lab', index: '02', label: '论文摄入', description: '抽取、复核与入图' },
-  { key: 'atlas', index: '03', label: '证据图谱', description: '联动阅读与发现' },
-  { key: 'experiments', index: '04', label: '实验账本', description: '复现、校验与对比' },
+const workspaces = [
+  { key: 'product' as const, label: '研究工作台', icon: <SearchOutlined /> },
+  { key: 'lab' as const, label: '论文摄入', icon: <FileSearchOutlined /> },
+  { key: 'atlas' as const, label: '证据图谱', icon: <NodeIndexOutlined /> },
+  { key: 'experiments' as const, label: '实验账本', icon: <ExperimentOutlined /> },
 ]
 
 export default function App() {
@@ -57,26 +59,27 @@ export default function App() {
     <ConfigProvider theme={appTheme}>
       <div className="research-app">
         <header className="masthead">
-          <div className="masthead__edition"><span>循证科研智能系统</span><span>统一产品版 · FASTAPI + REACT</span></div>
           <div className="masthead__identity">
-            <div>
-              <p className="eyebrow">EVIDENCE-GROUNDED RESEARCH INTELLIGENCE</p>
-              <h1>研海寻踪</h1>
-              <p className="masthead__subtitle">多智能体博弈推理的科研知识图谱与个性化训练系统</p>
+            <div className="masthead__brand">
+              <img className="masthead__logo" src={brandMark} alt="研海寻踪多智能体标识" />
+              <div>
+                <h1>研海寻踪</h1>
+                <p className="masthead__subtitle">循证科研与个性化训练</p>
+              </div>
             </div>
             <div className="masthead__account">
-              <div className="system-proof" aria-live="polite">
+              <div className="system-proof" aria-live="polite" title={health ? `${health.domain_count} 个领域 · ${health.core_agents} 个核心 Agent` : '等待服务响应'}>
                 <span className={`system-proof__dot ${health ? 'is-online' : ''}`} />
-                <div><strong>{health ? '系统可用' : '正在连接'}</strong><small>{health ? `${health.domain_count} 个领域 · ${health.core_agents} 个核心 Agent` : '等待服务响应'}</small></div>
+                <strong>{health ? '系统可用' : '正在连接'}</strong>
               </div>
-              {auth?.authenticated && <Button onClick={() => setAccountOpen(true)}>{auth.user?.nickname} · 我的账号</Button>}
+              {auth?.authenticated && <Button icon={<UserOutlined />} onClick={() => setAccountOpen(true)}>{auth.user?.nickname}</Button>}
             </div>
           </div>
           {auth?.authenticated && (
             <nav className="workspace-nav" aria-label="主要工作区">
               {workspaces.map((workspace) => (
                 <button key={workspace.key} type="button" className={mode === workspace.key ? 'is-active' : ''} onClick={() => setMode(workspace.key)}>
-                  <span>{workspace.index}</span><strong>{workspace.label}</strong><small>{workspace.description}</small>
+                  <span className="workspace-nav__icon">{workspace.icon}</span><strong>{workspace.label}</strong>
                 </button>
               ))}
             </nav>
@@ -86,14 +89,14 @@ export default function App() {
         <main className="research-main">
           {auth === null ? <div className="login-gate"><Spin size="large" /></div> : !auth.authenticated ? (
             <section className="login-gate">
-              <div className="login-gate__copy"><p className="section-index">MEMBER ACCESS</p><h2>登录后开始循证科研训练</h2><p>所有运行都会绑定账号并默认保存，便于复盘证据、画像变化和实验结果。公开注册已暂停，请联系服务器管理员创建账号。</p></div>
+              <div className="login-gate__copy"><h2>登录研海寻踪</h2><p>使用管理员创建的账号继续。</p></div>
               <Form className="login-card" layout="vertical" onFinish={signIn}>
                 <Typography.Title level={3}>成员登录</Typography.Title>
                 <Form.Item label="邮箱或昵称" name="identifier" rules={[{ required: true }]}><Input autoComplete="username" /></Form.Item>
                 <Form.Item label="密码" name="password" rules={[{ required: true, min: 8 }]}><Input.Password autoComplete="current-password" /></Form.Item>
                 {authError && <Alert type="error" message={authError} showIcon />}
-                <Button type="primary" htmlType="submit" loading={busy} block size="large">登录</Button>
-                <Typography.Text type="secondary">账号仅能由服务器管理员创建，产品端不提供注册入口。</Typography.Text>
+                <Button icon={<LoginOutlined />} type="primary" htmlType="submit" loading={busy} block size="large">登录</Button>
+                <Typography.Text type="secondary">暂无公开注册。</Typography.Text>
               </Form>
             </section>
           ) : (
@@ -106,7 +109,7 @@ export default function App() {
           )}
         </main>
 
-        <footer className="research-footer"><span>研海寻踪 · YANHAI TRACE</span><span>证据先于断言，测量先于结论。</span></footer>
+        <footer className="research-footer">证据先于断言，测量先于结论。</footer>
       </div>
 
       {auth?.user && (

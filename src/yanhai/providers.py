@@ -9,6 +9,9 @@ from typing import Any, Callable
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError
+
 
 PROVIDER_REGISTRY: dict[str, dict[str, Any]] = {
     "mock": {
@@ -157,6 +160,8 @@ class LLMResponse:
     duration_ms: float
     usage: dict[str, int]
     request_id: str | None = None
+    finish_reason: str | None = None
+    attempts: int = 1
 
     def public_dict(self) -> dict[str, Any]:
         return {
@@ -165,6 +170,8 @@ class LLMResponse:
             "duration_ms": round(self.duration_ms, 2),
             "usage": dict(self.usage),
             "request_id": self.request_id,
+            "finish_reason": self.finish_reason,
+            "attempts": self.attempts,
         }
 
 
@@ -172,6 +179,7 @@ JsonTransport = Callable[
     [str, dict[str, str], dict[str, Any], float],
     tuple[dict[str, Any], dict[str, str]],
 ]
+ProviderEventCallback = Callable[[dict[str, Any]], None]
 
 
 def _default_transport(
@@ -226,6 +234,24 @@ def _parse_json_object(content: str) -> dict[str, Any]:
     return value
 
 
+def _validate_json_schema(
+    value: dict[str, Any],
+    schema: dict[str, Any],
+    schema_name: str,
+) -> None:
+    try:
+        validator = Draft202012Validator(schema)
+        error = next(validator.iter_errors(value), None)
+    except SchemaError as exc:
+        raise ProviderError(f"JSON Schema {schema_name} 配置无效。") from exc
+    if error is None:
+        return
+    path = ".".join(str(item) for item in error.absolute_path) or "<root>"
+    raise ProviderError(
+        f"模型返回的 JSON 不符合 {schema_name} Schema：{path}：{error.message[:240]}"
+    )
+
+
 class BaseProvider:
     endpoint: str
 
@@ -236,6 +262,19 @@ class BaseProvider:
     ) -> None:
         self.config = config
         self.transport = transport or _default_transport
+        self.event_callback: ProviderEventCallback | None = None
+
+    def set_event_callback(self, callback: ProviderEventCallback | None) -> None:
+        self.event_callback = callback
+
+    def _emit_event(self, event: dict[str, Any]) -> None:
+        if self.event_callback is None:
+            return
+        try:
+            self.event_callback(event)
+        except Exception:
+            # 可观测性回调不得影响模型主请求。
+            return
 
     def complete(
         self,
@@ -459,7 +498,7 @@ class OpenAIChatProvider(BaseProvider):
         schema: dict[str, Any],
         max_tokens: int = 4096,
     ) -> tuple[dict[str, Any], LLMResponse]:
-        payload = {
+        payload: dict[str, Any] = {
             "model": self.config.model,
             "messages": [
                 {
@@ -476,32 +515,112 @@ class OpenAIChatProvider(BaseProvider):
             "stream": False,
             "response_format": {"type": "json_object"},
         }
-        data, response_headers, duration = self._request(
-            {
-                "Authorization": f"Bearer {self.config.api_key}",
-                "Content-Type": "application/json",
-                "User-Agent": "yanhai-trace/0.2",
-            },
-            payload,
-        )
-        try:
-            content = str(data["choices"][0]["message"]["content"])
-        except (KeyError, IndexError, TypeError) as exc:
-            raise ProviderError("供应商响应中没有 JSON 内容。") from exc
-        usage = data.get("usage") or {}
-        response = LLMResponse(
-            content=content,
-            provider=self.config.provider,
-            model=str(data.get("model") or self.config.model),
-            duration_ms=duration,
-            usage={
+        if self.config.provider in {"deepseek", "free-deepseek"}:
+            payload.update(
+                thinking={"type": "disabled"},
+                temperature=0,
+            )
+
+        headers = {
+            "Authorization": f"Bearer {self.config.api_key}",
+            "Content-Type": "application/json",
+            "User-Agent": "yanhai-trace/0.2",
+        }
+        aggregate_usage = {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0}
+        aggregate_duration = 0.0
+        last_error: ProviderError | None = None
+
+        for attempt in range(1, 3):
+            request_payload = dict(payload)
+            if attempt > 1:
+                request_payload["messages"] = [
+                    dict(payload["messages"][0]),
+                    {
+                        "role": "user",
+                        "content": (
+                            str(payload["messages"][1]["content"])
+                            + "\n这是结构化输出重试。请缩短文字，只保留 Schema 要求字段，"
+                            "并确保 JSON 完整闭合。上次失败原因："
+                            + str(last_error)[:360]
+                        ),
+                    },
+                ]
+                if last_error is not None and "截断" in str(last_error):
+                    request_payload["max_tokens"] = min(
+                        8192,
+                        max(max_tokens + 1024, int(max_tokens * 1.5)),
+                    )
+
+            data, response_headers, duration = self._request(headers, request_payload)
+            aggregate_duration += duration
+            usage = data.get("usage") or {}
+            current_usage = {
                 "input_tokens": int(usage.get("prompt_tokens", 0)),
                 "output_tokens": int(usage.get("completion_tokens", 0)),
                 "total_tokens": int(usage.get("total_tokens", 0)),
-            },
-            request_id=response_headers.get("x-request-id") or data.get("id"),
-        )
-        return _parse_json_object(response.content), response
+            }
+            for key, value in current_usage.items():
+                aggregate_usage[key] += value
+
+            try:
+                choice = data["choices"][0]
+                message = choice["message"]
+            except (KeyError, IndexError, TypeError) as exc:
+                last_error = ProviderError(
+                    f"{schema_name}：供应商响应中没有 JSON 消息。"
+                )
+                if attempt == 1:
+                    continue
+                raise last_error from exc
+
+            finish_reason = str(choice.get("finish_reason") or "") or None
+            request_id = response_headers.get("x-request-id") or data.get("id")
+            raw_content = message.get("content")
+            content = raw_content if isinstance(raw_content, str) else ""
+            response = LLMResponse(
+                content=content,
+                provider=self.config.provider,
+                model=str(data.get("model") or self.config.model),
+                duration_ms=aggregate_duration,
+                usage=aggregate_usage,
+                request_id=request_id,
+                finish_reason=finish_reason,
+                attempts=attempt,
+            )
+
+            if finish_reason == "length":
+                last_error = ProviderError(
+                    f"{schema_name}：模型输出因 token 上限被截断。"
+                )
+            elif not content.strip():
+                last_error = ProviderError(
+                    f"{schema_name}：供应商返回了空 JSON 内容。"
+                )
+            elif finish_reason in {"content_filter", "insufficient_system_resource"}:
+                last_error = ProviderError(
+                    f"{schema_name}：模型未正常完成，finish_reason={finish_reason}。"
+                )
+            else:
+                try:
+                    value = _parse_json_object(content)
+                    _validate_json_schema(value, schema, schema_name)
+                    return value, response
+                except ProviderError as exc:
+                    last_error = ProviderError(f"{schema_name}：{exc}")
+
+            if attempt == 2:
+                raise last_error
+            self._emit_event(
+                {
+                    "kind": "structured_retry",
+                    "schema_name": schema_name,
+                    "attempt": attempt + 1,
+                    "max_attempts": 2,
+                    "reason": str(last_error)[:360],
+                }
+            )
+
+        raise last_error or ProviderError(f"{schema_name}：结构化输出失败。")
 
 
 class AnthropicMessagesProvider(BaseProvider):

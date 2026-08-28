@@ -108,6 +108,8 @@ class ProductApiClient:
         *,
         on_started: Callable[[dict[str, Any]], None] | None = None,
         on_step: Callable[[dict[str, Any]], None] | None = None,
+        on_progress: Callable[[dict[str, Any]], None] | None = None,
+        on_heartbeat: Callable[[dict[str, Any]], None] | None = None,
     ) -> dict[str, Any]:
         """消费真实 SSE；返回 completed 事件中的完整运行结果。"""
         try:
@@ -132,6 +134,10 @@ class ProductApiClient:
                             on_started(data)
                         elif event_name == "agent_step" and on_step:
                             on_step(dict(data.get("step") or {}))
+                        elif event_name == "progress" and on_progress:
+                            on_progress(dict(data.get("progress") or {}))
+                        elif event_name == "heartbeat" and on_heartbeat:
+                            on_heartbeat(data)
                         elif event_name == "error":
                             raise ProductApiError(
                                 str(data.get("message") or "流式运行失败。"),
@@ -151,4 +157,3 @@ class ProductApiClient:
                 retryable=True,
             ) from exc
         raise ProductApiError("运行流结束但没有完成结果。", code="stream_incomplete", retryable=True)
-

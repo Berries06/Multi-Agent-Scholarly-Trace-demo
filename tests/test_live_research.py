@@ -163,11 +163,13 @@ class LiveResearchTests(unittest.TestCase):
                 "required_concepts": ["证据"],
             }
         )
+        progress: list[dict[str, Any]] = []
         result = LiveResearchService(
             StubProvider(),
             config,
             kb,
             StubRetriever(),
+            on_progress=progress.append,
         ).run(
             "多智能体如何降低科研幻觉？",
             profile,
@@ -186,6 +188,33 @@ class LiveResearchTests(unittest.TestCase):
         self.assertNotIn("never-return-this-key", str(result))
         self.assertFalse(result["provider_run"]["api_key_persisted"])
         self.assertEqual(45, result["provider_run"]["usage"]["total_tokens"])
+        self.assertEqual(
+            ["planning", "retrieval", "proposal", "review", "validation"],
+            list(dict.fromkeys(event["phase"] for event in progress)),
+        )
+        self.assertEqual(97, progress[-1]["percent"])
+        self.assertEqual("completed", progress[-1]["state"])
+        artifact_events = [event for event in progress if event.get("details")]
+        self.assertEqual(
+            ["model", "retrieval", "model", "model", "system"],
+            [event["content_origin"] for event in artifact_events],
+        )
+        detail_kinds = {
+            detail["kind"]
+            for event in artifact_events
+            for detail in event["details"]
+        }
+        self.assertTrue(
+            {"query", "question", "evidence", "claim", "review", "metric"}.issubset(
+                detail_kinds
+            )
+        )
+        self.assertEqual("live-1", next(
+            detail["reference"]
+            for event in artifact_events
+            for detail in event["details"]
+            if detail["kind"] == "evidence"
+        ))
 
     def test_zero_proposals_returns_structured_abstention(self) -> None:
         provider = StubProvider()

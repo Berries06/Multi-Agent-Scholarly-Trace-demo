@@ -30,6 +30,12 @@ cmd /c npm run dev
 
 Vite 地址为 `http://127.0.0.1:5173/`，`/api` 自动代理到 FastAPI。
 
+日常演示可直接双击根目录的 `启动产品.bat`。它会安全替换本项目占用的旧进程、检查本地 DeepSeek 密钥、等待前后端就绪，并以“免费 DeepSeek (Flash)”打开网页；账号和运行记录复用现有本地数据库。命令行启动且不打开浏览器时可运行：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/环境/启动产品.ps1 -NoBrowser
+```
+
 ## 创建账号
 
 产品端没有注册接口。管理员在服务器工作目录运行：

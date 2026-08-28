@@ -8,6 +8,7 @@ import type {
   IngestResult,
   LearnerProfile,
   ProviderOption,
+  ResearchProgressEvent,
   RunResult,
   UserAccount,
 } from './types'
@@ -66,7 +67,12 @@ export const runPipeline = (payload: RunPayload): Promise<RunResult> =>
 
 export async function streamPipeline(
   payload: RunPayload,
-  handlers: { onStarted?: (operationId: string) => void; onStep?: (step: AgentTraceStep) => void },
+  handlers: {
+    onStarted?: (operationId: string) => void
+    onStep?: (step: AgentTraceStep) => void
+    onProgress?: (progress: ResearchProgressEvent) => void
+    onHeartbeat?: (elapsedMs: number) => void
+  },
 ): Promise<RunResult> {
   const response = await fetch(apiPath('/api/run/stream'), {
     method: 'POST', credentials: 'include', headers: { ...jsonHeaders, Accept: 'text/event-stream' }, body: JSON.stringify(payload),
@@ -91,6 +97,8 @@ export async function streamPipeline(
       const data = JSON.parse(raw) as Record<string, unknown>
       if (event === 'started') handlers.onStarted?.(String(data.operation_id ?? ''))
       if (event === 'agent_step') handlers.onStep?.(data.step as AgentTraceStep)
+      if (event === 'progress') handlers.onProgress?.(data.progress as ResearchProgressEvent)
+      if (event === 'heartbeat') handlers.onHeartbeat?.(Number(data.elapsed_ms ?? 0))
       if (event === 'error') throw new Error(String(data.message ?? '运行中断'))
       if (event === 'completed') result = data.result as RunResult
     }

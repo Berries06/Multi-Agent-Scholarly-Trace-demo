@@ -19,9 +19,11 @@ import {
   Typography,
   Upload,
 } from 'antd'
+import { InboxOutlined, PlayCircleOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
 import AgentTrace from './AgentTrace'
 import DiagnosisRadar from './DiagnosisRadar'
+import ResourceSummary from './ResourceSummary'
 import { getProfiles, ingestPaper, ingestPdf } from './api'
 import type {
   DecisionClaim,
@@ -31,7 +33,7 @@ import type {
   LearnerProfile,
 } from './types'
 
-const { Text, Paragraph } = Typography
+const { Text } = Typography
 const { TextArea } = Input
 
 const EXAMPLE_PAPER = `# 面向科研文献的多智能体证据裁决系统
@@ -166,36 +168,19 @@ export default function LabPage() {
     confidence: e.confidence,
   }))
 
-  // 思考过程直接消费后端返回的真实轨迹（specialist + 三决策智能体），
-  // 前端不再自行拼装任何写死的步骤文案。
   const thinkingSteps = result
     ? [...result.specialist_agent_trace, ...result.agent_trace]
     : []
 
   return (
     <div className="lab-page">
-      <section className="page-lede page-lede--compact" aria-labelledby="intake-title">
-        <div>
-          <p className="section-kicker">02 / PAPER INTAKE</p>
-          <h2 id="intake-title">让每一次抽取，都留下可复核的中间量。</h2>
-          <p className="page-lede__summary">
-            输入有文本层的 PDF 或结构化正文，依次检查章节、实体、关系、画像与三方裁决；失败项不会静默入图。
-          </p>
-        </div>
-        <dl className="method-facts">
-          <div><dt>输入边界</dt><dd>PDF ≤ 5MB</dd></div>
-          <div><dt>裁决协议</dt><dd>Propose · Critique · Judge</dd></div>
-          <div><dt>输出要求</dt><dd>运行指纹 + 证据跨度</dd></div>
-        </dl>
+      <section className="page-lede page-lede--simple" aria-labelledby="intake-title">
+        <div><h2 id="intake-title">论文摄入</h2><p className="page-lede__summary">抽取实体与关系，再由三个智能体复核。</p></div>
       </section>
 
       <Card className="intake-card" variant="outlined">
         <div className="intake-heading">
-          <div>
-            <span className="card-kicker">INGESTION PROTOCOL</span>
-            <h3>登记论文与裁决条件</h3>
-          </div>
-          <p>正文用于透明调试；上传 PDF 时优先采用解析后的章节文本。</p>
+          <h3>论文与裁决设置</h3>
         </div>
 
         <div className="intake-grid">
@@ -226,15 +211,14 @@ export default function LabPage() {
               onChange={setThreshold}
             />
           </label>
-          <Button className="intake-run" type="primary" onClick={run} loading={loading} block>
-            运行完整流水线
+          <Button icon={<PlayCircleOutlined />} className="intake-run" type="primary" onClick={run} loading={loading} block>
+            开始摄入
           </Button>
         </div>
-        <Alert
-          style={{ marginTop: 16 }} type="info" showIcon
-          message="默认只保存抽取与裁决结果"
-          description={<Checkbox checked={saveSource} onChange={(event) => setSaveSource(event.target.checked)}>我明确同意将本次论文原文或 PDF 解析正文保存到服务器</Checkbox>}
-        />
+        <div className="source-consent">
+          <Checkbox checked={saveSource} onChange={(event) => setSaveSource(event.target.checked)}>保存论文原文</Checkbox>
+          <Text type="secondary">默认不保存</Text>
+        </div>
 
         <Upload.Dragger
           className="paper-dropzone"
@@ -247,6 +231,7 @@ export default function LabPage() {
           onRemove={() => setPdfFile(null)}
           fileList={pdfFile ? [{ uid: 'pdf-1', name: pdfFile.name }] : []}
         >
+          <InboxOutlined className="dropzone-icon" />
           <p className="dropzone-title">拖入 PDF，或点击选择</p>
           <p className="dropzone-note">≤ 5MB · 需要文本层 · 扫描件请先 OCR</p>
         </Upload.Dragger>
@@ -274,58 +259,47 @@ export default function LabPage() {
 
       {result && !loading && (
         <>
-          <Card title={`思考过程 · ${thinkingSteps.length} 个 Agent`} style={{ marginTop: 16 }}>
+          <Card title={`智能体轨迹 · ${thinkingSteps.length}`} style={{ marginTop: 16 }}>
             <AgentTrace steps={thinkingSteps} />
           </Card>
 
-          <Row gutter={16} style={{ marginTop: 16 }}>
-            <Col span={6}>
+          <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
+            <Col xs={12} md={6}>
               <Card><Statistic title="实体数" value={result.summary.entity_count} /></Card>
             </Col>
-            <Col span={6}>
+            <Col xs={12} md={6}>
               <Card><Statistic title="关系候选" value={result.summary.candidate_relation_count} /></Card>
             </Col>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="accepted / rejected"
-                  value={result.summary.accepted_count}
-                  suffix={`/ ${result.summary.rejected_count}`}
-                />
-              </Card>
+            <Col xs={12} md={6}>
+              <Card><Statistic title="已接受" value={result.summary.accepted_count} /></Card>
             </Col>
-            <Col span={6}>
-              <Card>
-                <Statistic
-                  title="护栏：无证据 accepted"
-                  value={result.summary.accepted_without_evidence_count}
-                  valueStyle={{ color: result.summary.accepted_without_evidence_count === 0 ? '#3f8600' : '#cf1322' }}
-                />
-              </Card>
+            <Col xs={12} md={6}>
+              <Card><Statistic title="待复核" value={result.summary.needs_review_count} /></Card>
             </Col>
           </Row>
 
-          <Card title="运行指纹" style={{ marginTop: 16 }}>
-            <Descriptions size="small" column={3}>
-              <Descriptions.Item label="论文 ID">{result.fingerprint.paper_id}</Descriptions.Item>
-              <Descriptions.Item label="标题">{result.fingerprint.title}</Descriptions.Item>
-              <Descriptions.Item label="字符数">{result.fingerprint.text_char_count}</Descriptions.Item>
-              <Descriptions.Item label="画像">{result.fingerprint.profile_id}</Descriptions.Item>
-              <Descriptions.Item label="接收阈值">{result.fingerprint.accept_threshold}</Descriptions.Item>
-              <Descriptions.Item label="schema 版本">{result.fingerprint.schema_version}</Descriptions.Item>
-            </Descriptions>
-          </Card>
+          <Collapse
+            className="technical-details"
+            items={[{
+              key: 'details',
+              label: '运行与解析详情',
+              children: <>
+                <Descriptions size="small" column={3}>
+                  <Descriptions.Item label="论文 ID">{result.fingerprint.paper_id}</Descriptions.Item>
+                  <Descriptions.Item label="标题">{result.fingerprint.title}</Descriptions.Item>
+                  <Descriptions.Item label="字符数">{result.fingerprint.text_char_count}</Descriptions.Item>
+                  <Descriptions.Item label="画像">{result.fingerprint.profile_id}</Descriptions.Item>
+                  <Descriptions.Item label="接收阈值">{result.fingerprint.accept_threshold}</Descriptions.Item>
+                  <Descriptions.Item label="schema">{result.fingerprint.schema_version}</Descriptions.Item>
+                </Descriptions>
+                {Object.entries(result.document.sections).map(([name, content]) => (
+                  <div key={name} style={{ marginTop: 12 }}><Text strong>{name}</Text><pre>{content}</pre></div>
+                ))}
+              </>,
+            }]}
+          />
 
-          <Card title="1. 结构解析（章节与原文）" style={{ marginTop: 16 }}>
-            {Object.entries(result.document.sections).map(([name, content]) => (
-              <div key={name} style={{ marginBottom: 12 }}>
-                <Text strong>{name}</Text>（{content.length} 字符）
-                <pre style={{ whiteSpace: 'pre-wrap', background: '#fafafa', padding: 12, borderRadius: 6 }}>{content}</pre>
-              </div>
-            ))}
-          </Card>
-
-          <Card title="2. 实体 / 关系抽取" style={{ marginTop: 16 }}>
+          <Card title="实体与关系" style={{ marginTop: 16 }}>
             <Text strong>实体（{entityRows.length}）</Text>
             <Table
               size="small"
@@ -357,7 +331,7 @@ export default function LabPage() {
 
           <Row gutter={16} style={{ marginTop: 16 }}>
             <Col span={10}>
-              <Card title="3. 学情诊断">
+              <Card title="学情诊断">
                 {selectedProfile && <DiagnosisRadar profile={selectedProfile} />}
                 <Descriptions size="small" column={1}>
                   <Descriptions.Item label="准备度">{result.diagnosis.readiness_score}</Descriptions.Item>
@@ -368,7 +342,7 @@ export default function LabPage() {
               </Card>
             </Col>
             <Col span={14}>
-              <Card title="4. 三智能体裁决">
+              <Card title="三智能体裁决">
                 <Collapse
                   items={[
                     {
@@ -423,37 +397,8 @@ export default function LabPage() {
             </Col>
           </Row>
 
-          <Card title="5. 个性化资源" style={{ marginTop: 16 }}>
-            <Collapse
-              items={[
-                {
-                  key: 'briefing',
-                  label: '导读',
-                  children: (
-                    <Paragraph>
-                      <Text strong>{result.resources.briefing.title}</Text>
-                      <br />
-                      {result.resources.briefing.strategy}
-                    </Paragraph>
-                  ),
-                },
-                {
-                  key: 'guide',
-                  label: '实操指南',
-                  children: <pre>{JSON.stringify(result.resources.practical_guide, null, 2)}</pre>,
-                },
-                {
-                  key: 'quiz',
-                  label: '分阶测评',
-                  children: <pre>{JSON.stringify(result.resources.quiz, null, 2)}</pre>,
-                },
-                {
-                  key: 'blue',
-                  label: '蓝海 Idea（待验证假设）',
-                  children: <Paragraph>{result.resources.blue_ocean.hypothesis}</Paragraph>,
-                },
-              ]}
-            />
+          <Card title="个性化资源" style={{ marginTop: 16 }}>
+            <ResourceSummary resources={result.resources} />
           </Card>
         </>
       )}

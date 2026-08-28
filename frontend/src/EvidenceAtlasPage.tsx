@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Alert, Button, Card, Col, Input, List, Row, Select, Space, Spin, Typography } from 'antd'
+import { Alert, Button, Card, Col, Collapse, Input, List, Row, Select, Spin, Typography } from 'antd'
+import { SearchOutlined } from '@ant-design/icons'
 import { getDomains, getExtractedGraph, getHistory, queryGraph } from './api'
 import KnowledgeGraphView from './KnowledgeGraphView'
 import type { Domain, GraphData } from './types'
@@ -33,23 +34,39 @@ export default function EvidenceAtlasPage() {
     finally { setLoading(false) }
   }
 
+  const answerBody = answer?.answer && typeof answer.answer === 'object' ? answer.answer as Record<string, unknown> : null
+  const recommendedPapers = answer && Array.isArray(answer.recommended_papers)
+    ? answer.recommended_papers.filter((item): item is Record<string, unknown> => Boolean(item) && typeof item === 'object')
+    : []
+
   return (
     <div className="research-page">
-      <section className="page-lede page-lede--compact">
-        <div><p className="section-index">03 / EVIDENCE ATLAS</p><h2>把知识图谱当作研究计算底座，而不是装饰图。</h2><p className="page-lede__summary">按领域查看论文、证据跨度、实体和裁决关系；每次图查询都返回可追溯的路径、推荐与后续问题。</p></div>
+      <section className="page-lede page-lede--simple">
+        <div><h2>证据图谱</h2><p className="page-lede__summary">沿关系和原文证据追踪研究脉络。</p></div>
       </section>
       {error && <Alert type="error" showIcon message={error} style={{ marginBottom: 16 }} />}
       <Card title="图谱问答与路径检索">
-        <Space.Compact style={{ width: '100%' }}>
+        <div className="graph-query-controls">
           <Select style={{ width: 280 }} value={domainId} options={domains.map((item) => ({ value: item.domain_id, label: item.domain_name }))} onChange={setDomainId} />
           <Input value={query} onChange={(event) => setQuery(event.target.value)} onPressEnter={ask} />
-          <Button type="primary" loading={loading} onClick={ask}>查询图谱</Button>
-        </Space.Compact>
+          <Button icon={<SearchOutlined />} type="primary" loading={loading} onClick={ask}>查询</Button>
+        </div>
         {loading && <Spin style={{ marginTop: 20 }} />}
-        {answer && <pre style={{ marginTop: 16 }}>{JSON.stringify(answer, null, 2)}</pre>}
+        {answer && (
+          <div className="graph-query-result">
+            <Paragraph>{String(answerBody?.summary ?? '查询完成。')}</Paragraph>
+            <List
+              size="small"
+              header={recommendedPapers.length ? '相关论文' : undefined}
+              dataSource={recommendedPapers}
+              renderItem={(paper) => <List.Item><List.Item.Meta title={String(paper.title ?? '未命名论文')} description={String(paper.recommendation_reason ?? '')} /></List.Item>}
+            />
+            <Collapse ghost items={[{ key: 'raw', label: '检索详情', children: <pre>{JSON.stringify(answer, null, 2)}</pre> }]} />
+          </div>
+        )}
       </Card>
       <Row gutter={16} style={{ marginTop: 16 }}>
-        <Col xs={24} xl={17}><Card title="全局证据图谱">{graph ? <KnowledgeGraphView data={graph} /> : <Paragraph type="secondary">正在加载图谱…</Paragraph>}</Card></Col>
+        <Col xs={24} xl={17}><Card title="关系网络">{graph ? <KnowledgeGraphView data={graph} /> : <Paragraph type="secondary">正在加载图谱…</Paragraph>}</Card></Col>
         <Col xs={24} xl={7}>
           <Card title="我的最近运行">
             <List dataSource={history} locale={{ emptyText: '尚无保存的运行' }} renderItem={(item) => (
