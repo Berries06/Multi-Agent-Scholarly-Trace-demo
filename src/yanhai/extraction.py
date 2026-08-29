@@ -372,6 +372,11 @@ class SchemaGuidedExtractor:
                     (alias, concept["canonical"], concept["entity_type"])
                 )
         self.alias_entries.sort(key=lambda item: len(item[0]), reverse=True)
+        # Pre-compile alias regexes once instead of re-compiling per sentence.
+        self.compiled_aliases: list[tuple[re.Pattern[str], str, str, str]] = [
+            (self._alias_pattern(alias), alias, canonical, entity_type)
+            for alias, canonical, entity_type in self.alias_entries
+        ]
 
     @classmethod
     def from_path(cls, path: Path, *, accept_threshold: float = 0.72) -> "SchemaGuidedExtractor":
@@ -438,8 +443,8 @@ class SchemaGuidedExtractor:
                     )
                     seen_mentions: set[tuple[str, int, int]] = set()
                     occupied_spans: list[tuple[int, int]] = []
-                    for alias, canonical, entity_type in self.alias_entries:
-                        for match in self._alias_pattern(alias).finditer(sentence):
+                    for pattern, alias, canonical, entity_type in self.compiled_aliases:
+                        for match in pattern.finditer(sentence):
                             if any(
                                 match.start() < occupied_end
                                 and occupied_start < match.end()

@@ -27,481 +27,1876 @@
     {
       "canonical": "multi-agent system",
       "entity_type": "METHOD",
-      "aliases": ["multi-agent", "multiagent", "multiple agents", "多智能体", "多智能体系统"]
+      "aliases": [
+        "multi-agent",
+        "multiagent",
+        "multiple agents",
+        "多智能体",
+        "多智能体系统"
+      ]
     },
     {
       "canonical": "multi-agent debate",
       "entity_type": "METHOD",
-      "aliases": ["multi-agent debate", "multiagent debate", "多智能体辩论", "辩论机制"]
+      "aliases": [
+        "multi-agent debate",
+        "multiagent debate",
+        "多智能体辩论",
+        "辩论机制"
+      ]
     },
     {
       "canonical": "role-playing collaboration",
       "entity_type": "METHOD",
-      "aliases": ["role-playing", "role playing", "角色扮演", "角色协作", "角色扮演协作"]
+      "aliases": [
+        "role-playing",
+        "role playing",
+        "角色扮演",
+        "角色协作",
+        "角色扮演协作"
+      ]
     },
     {
       "canonical": "retrieval-augmented generation",
       "entity_type": "METHOD",
-      "aliases": ["retrieval-augmented generation", "retrieval augmented generation", "RAG", "检索增强生成"]
+      "aliases": [
+        "retrieval-augmented generation",
+        "retrieval augmented generation",
+        "RAG",
+        "检索增强生成"
+      ]
     },
     {
       "canonical": "evidence-grounded retrieval",
       "entity_type": "METHOD",
-      "aliases": ["evidence-grounded", "grounding", "evidence retrieval", "证据检索", "证据约束检索"]
+      "aliases": [
+        "evidence-grounded",
+        "grounding",
+        "evidence retrieval",
+        "证据检索",
+        "证据约束检索"
+      ]
     },
     {
       "canonical": "reflection",
       "entity_type": "METHOD",
-      "aliases": ["reflection", "reflexion", "verbal feedback", "反思", "语言反馈"]
+      "aliases": [
+        "reflection",
+        "reflexion",
+        "verbal feedback",
+        "反思",
+        "语言反馈"
+      ]
     },
     {
       "canonical": "agent orchestration",
       "entity_type": "METHOD",
-      "aliases": ["orchestration", "multi-agent conversation", "agent collaboration", "智能体编排", "协同调度"]
+      "aliases": [
+        "orchestration",
+        "multi-agent conversation",
+        "agent collaboration",
+        "智能体编排",
+        "协同调度"
+      ]
     },
     {
       "canonical": "scientific discovery",
       "entity_type": "TASK",
-      "aliases": ["scientific discovery", "research discovery", "科研发现", "科学发现"]
+      "aliases": [
+        "scientific discovery",
+        "research discovery",
+        "科研发现",
+        "科学发现"
+      ]
     },
     {
       "canonical": "scientific question answering",
       "entity_type": "TASK",
-      "aliases": ["scientific question-answering", "scientific QA", "科研问答", "科学问答"]
+      "aliases": [
+        "scientific question-answering",
+        "scientific QA",
+        "科研问答",
+        "科学问答"
+      ]
     },
     {
       "canonical": "hallucination control",
       "entity_type": "TASK",
-      "aliases": ["hallucination", "hallucinations", "幻觉", "幻觉控制"]
+      "aliases": [
+        "hallucination",
+        "hallucinations",
+        "幻觉",
+        "幻觉控制"
+      ]
     },
     {
       "canonical": "factuality",
       "entity_type": "METRIC",
-      "aliases": ["factuality", "faithfulness", "事实性", "忠实度"]
+      "aliases": [
+        "factuality",
+        "faithfulness",
+        "事实性",
+        "忠实度"
+      ]
     },
     {
       "canonical": "knowledge coverage",
       "entity_type": "METRIC",
-      "aliases": ["coverage", "knowledge coverage", "知识覆盖", "知识覆盖率"]
+      "aliases": [
+        "coverage",
+        "knowledge coverage",
+        "知识覆盖",
+        "知识覆盖率"
+      ]
     },
     {
       "canonical": "uncertainty",
       "entity_type": "LIMITATION",
-      "aliases": ["uncertainty", "uncertain", "不确定性"]
+      "aliases": [
+        "uncertainty",
+        "uncertain",
+        "不确定性"
+      ]
     },
     {
       "canonical": "scientific literature",
       "entity_type": "DOMAIN",
-      "aliases": ["scientific literature", "scholarly articles", "research papers", "科研文献", "学术论文"]
+      "aliases": [
+        "scientific literature",
+        "scholarly articles",
+        "research papers",
+        "科研文献",
+        "学术论文"
+      ]
     },
     {
       "canonical": "scientific information extraction",
       "entity_type": "TASK",
-      "aliases": ["scientific information extraction", "SciIE task", "科学信息抽取", "科研信息抽取"]
+      "aliases": [
+        "scientific information extraction",
+        "SciIE task",
+        "科学信息抽取",
+        "科研信息抽取"
+      ]
     },
     {
       "canonical": "scientific knowledge graph construction",
       "entity_type": "TASK",
-      "aliases": ["scientific knowledge graph construction", "scientific knowledge graph", "科研知识图谱构建"]
+      "aliases": [
+        "scientific knowledge graph construction",
+        "scientific knowledge graph",
+        "科研知识图谱构建"
+      ]
     },
     {
       "canonical": "entity extraction",
       "entity_type": "TASK",
-      "aliases": ["entity extraction", "entity recognition", "实体抽取", "实体识别"]
+      "aliases": [
+        "entity extraction",
+        "entity recognition",
+        "实体抽取",
+        "实体识别"
+      ]
     },
     {
       "canonical": "relation extraction",
       "entity_type": "TASK",
-      "aliases": ["relation extraction", "关系抽取"]
+      "aliases": [
+        "relation extraction",
+        "关系抽取"
+      ]
     },
     {
       "canonical": "document-level information extraction",
       "entity_type": "TASK",
-      "aliases": ["document-level information extraction", "document level IE", "文档级信息抽取"]
+      "aliases": [
+        "document-level information extraction",
+        "document level IE",
+        "文档级信息抽取"
+      ]
     },
     {
       "canonical": "n-ary relation extraction",
       "entity_type": "TASK",
-      "aliases": ["n-ary relation extraction", "N-ary relation extraction", "N 元关系抽取"]
+      "aliases": [
+        "n-ary relation extraction",
+        "N-ary relation extraction",
+        "N 元关系抽取"
+      ]
     },
     {
       "canonical": "full-text scientific information extraction",
       "entity_type": "TASK",
-      "aliases": ["full-text scientific information extraction", "full-text extraction", "全文科学信息抽取"]
+      "aliases": [
+        "full-text scientific information extraction",
+        "full-text extraction",
+        "全文科学信息抽取"
+      ]
     },
     {
       "canonical": "open-type entity recognition",
       "entity_type": "TASK",
-      "aliases": ["open-type entity recognition", "open type NER", "开放类型实体识别"]
+      "aliases": [
+        "open-type entity recognition",
+        "open type NER",
+        "开放类型实体识别"
+      ]
     },
     {
       "canonical": "zero-shot relation extraction",
       "entity_type": "TASK",
-      "aliases": ["zero-shot relation extraction", "zero shot relation extraction", "零样本关系抽取"]
+      "aliases": [
+        "zero-shot relation extraction",
+        "zero shot relation extraction",
+        "零样本关系抽取"
+      ]
     },
     {
       "canonical": "zero-shot extraction",
       "entity_type": "TASK",
-      "aliases": ["zero-shot extraction", "zero shot extraction", "零样本抽取"]
+      "aliases": [
+        "zero-shot extraction",
+        "zero shot extraction",
+        "零样本抽取"
+      ]
     },
     {
       "canonical": "coreference",
       "entity_type": "TASK",
-      "aliases": ["coreference", "coreference resolution", "共指", "共指消解"]
+      "aliases": [
+        "coreference",
+        "coreference resolution",
+        "共指",
+        "共指消解"
+      ]
     },
     {
       "canonical": "SciERC",
       "entity_type": "DATASET",
-      "aliases": ["SciERC"]
+      "aliases": [
+        "SciERC"
+      ]
     },
     {
       "canonical": "SciREX",
       "entity_type": "DATASET",
-      "aliases": ["SciREX"]
+      "aliases": [
+        "SciREX"
+      ]
     },
     {
       "canonical": "SciER",
       "entity_type": "DATASET",
-      "aliases": ["SciER"]
+      "aliases": [
+        "SciER"
+      ]
     },
     {
       "canonical": "SciNLP",
       "entity_type": "DATASET",
-      "aliases": ["SciNLP"]
+      "aliases": [
+        "SciNLP"
+      ]
     },
     {
       "canonical": "DyGIE++",
       "entity_type": "METHOD",
-      "aliases": ["DyGIE++", "DyGIE"]
+      "aliases": [
+        "DyGIE++",
+        "DyGIE"
+      ]
     },
     {
       "canonical": "SciIE",
       "entity_type": "METHOD",
-      "aliases": ["SciIE"]
+      "aliases": [
+        "SciIE"
+      ]
     },
     {
       "canonical": "ReSel",
       "entity_type": "METHOD",
-      "aliases": ["ReSel"]
+      "aliases": [
+        "ReSel"
+      ]
     },
     {
       "canonical": "GLiNER",
       "entity_type": "METHOD",
-      "aliases": ["GLiNER"]
+      "aliases": [
+        "GLiNER"
+      ]
     },
     {
       "canonical": "GLiREL",
       "entity_type": "METHOD",
-      "aliases": ["GLiREL"]
+      "aliases": [
+        "GLiREL"
+      ]
     },
     {
       "canonical": "contextualized span representations",
       "entity_type": "METHOD",
-      "aliases": ["contextualized span representations", "shared span representations", "上下文跨度表示"]
+      "aliases": [
+        "contextualized span representations",
+        "shared span representations",
+        "上下文跨度表示"
+      ]
     },
     {
       "canonical": "bidirectional transformer",
       "entity_type": "METHOD",
-      "aliases": ["bidirectional transformer", "双向 Transformer"]
+      "aliases": [
+        "bidirectional transformer",
+        "双向 Transformer"
+      ]
     },
     {
       "canonical": "text-table evidence",
       "entity_type": "METHOD",
-      "aliases": ["text-table evidence", "text and tables", "文本表格证据"]
+      "aliases": [
+        "text-table evidence",
+        "text and tables",
+        "文本表格证据"
+      ]
     },
     {
       "canonical": "cross-modal entity graph",
       "entity_type": "METHOD",
-      "aliases": ["cross-modal entity graph", "cross-modal entity correlation graph", "跨模态实体图"]
+      "aliases": [
+        "cross-modal entity graph",
+        "cross-modal entity correlation graph",
+        "跨模态实体图"
+      ]
     },
     {
       "canonical": "open relation schema",
       "entity_type": "METHOD",
-      "aliases": ["open relation schema", "开放关系模式"]
+      "aliases": [
+        "open relation schema",
+        "开放关系模式"
+      ]
     },
     {
       "canonical": "out-of-distribution evaluation",
       "entity_type": "METRIC",
-      "aliases": ["out-of-distribution evaluation", "OOD evaluation", "分布外评测"]
+      "aliases": [
+        "out-of-distribution evaluation",
+        "OOD evaluation",
+        "分布外评测"
+      ]
     },
     {
       "canonical": "106 full-text papers",
       "entity_type": "METRIC",
-      "aliases": ["106 full-text papers", "106 篇全文"]
+      "aliases": [
+        "106 full-text papers",
+        "106 篇全文"
+      ]
     },
     {
       "canonical": "24k entities",
       "entity_type": "METRIC",
-      "aliases": ["24k entities", "24,000 entities", "24000 entities", "超过 24k 实体"]
+      "aliases": [
+        "24k entities",
+        "24,000 entities",
+        "24000 entities",
+        "超过 24k 实体"
+      ]
     },
     {
       "canonical": "12k relations",
       "entity_type": "METRIC",
-      "aliases": ["12k relations", "12,000 relations", "12000 relations", "超过 12k 关系"]
+      "aliases": [
+        "12k relations",
+        "12,000 relations",
+        "12000 relations",
+        "超过 12k 关系"
+      ]
     },
     {
       "canonical": "NLP knowledge graph",
       "entity_type": "FINDING",
-      "aliases": ["NLP knowledge graph", "fine-grained NLP knowledge graph", "NLP 知识图谱"]
+      "aliases": [
+        "NLP knowledge graph",
+        "fine-grained NLP knowledge graph",
+        "NLP 知识图谱"
+      ]
     },
     {
       "canonical": "crystal graph convolutional neural network",
       "entity_type": "METHOD",
-      "aliases": ["CGCNN", "crystal graph convolutional neural network", "晶体图卷积神经网络"]
+      "aliases": [
+        "CGCNN",
+        "crystal graph convolutional neural network",
+        "晶体图卷积神经网络"
+      ]
     },
     {
       "canonical": "MEGNet",
       "entity_type": "METHOD",
-      "aliases": ["MEGNet", "Materials Graph Network"]
+      "aliases": [
+        "MEGNet",
+        "Materials Graph Network"
+      ]
     },
     {
       "canonical": "M3GNet",
       "entity_type": "METHOD",
-      "aliases": ["M3GNet"]
+      "aliases": [
+        "M3GNet"
+      ]
     },
     {
       "canonical": "GNoME",
       "entity_type": "METHOD",
-      "aliases": ["GNoME", "Graph Networks for Materials Exploration"]
+      "aliases": [
+        "GNoME",
+        "Graph Networks for Materials Exploration"
+      ]
     },
     {
       "canonical": "graph neural network",
       "entity_type": "METHOD",
-      "aliases": ["graph neural network", "graph networks", "GNN", "图神经网络"]
+      "aliases": [
+        "graph neural network",
+        "graph networks",
+        "GNN",
+        "图神经网络"
+      ]
     },
     {
       "canonical": "active learning",
       "entity_type": "METHOD",
-      "aliases": ["active learning", "主动学习"]
+      "aliases": [
+        "active learning",
+        "主动学习"
+      ]
     },
     {
       "canonical": "density functional theory",
       "entity_type": "METHOD",
-      "aliases": ["density functional theory", "DFT", "密度泛函理论"]
+      "aliases": [
+        "density functional theory",
+        "DFT",
+        "密度泛函理论"
+      ]
     },
     {
       "canonical": "three-body interactions",
       "entity_type": "METHOD",
-      "aliases": ["three-body interactions", "三体相互作用"]
+      "aliases": [
+        "three-body interactions",
+        "三体相互作用"
+      ]
     },
     {
       "canonical": "global state attributes",
       "entity_type": "METHOD",
-      "aliases": ["global state attributes", "global state", "全局状态属性"]
+      "aliases": [
+        "global state attributes",
+        "global state",
+        "全局状态属性"
+      ]
     },
     {
       "canonical": "Materials Project",
       "entity_type": "DATASET",
-      "aliases": ["Materials Project", "材料项目数据库"]
+      "aliases": [
+        "Materials Project",
+        "材料项目数据库"
+      ]
     },
     {
       "canonical": "material property prediction",
       "entity_type": "TASK",
-      "aliases": ["material property prediction", "materials property prediction", "材料性质预测"]
+      "aliases": [
+        "material property prediction",
+        "materials property prediction",
+        "材料性质预测"
+      ]
     },
     {
       "canonical": "stable material discovery",
       "entity_type": "TASK",
-      "aliases": ["stable material discovery", "materials discovery", "稳定材料发现", "材料发现"]
+      "aliases": [
+        "stable material discovery",
+        "materials discovery",
+        "稳定材料发现",
+        "材料发现"
+      ]
     },
     {
       "canonical": "interatomic potential learning",
       "entity_type": "TASK",
-      "aliases": ["interatomic potential learning", "interatomic potential", "原子间势学习"]
+      "aliases": [
+        "interatomic potential learning",
+        "interatomic potential",
+        "原子间势学习"
+      ]
     },
     {
       "canonical": "crystal structure relaxation",
       "entity_type": "TASK",
-      "aliases": ["crystal structure relaxation", "structure relaxation", "晶体结构弛豫"]
+      "aliases": [
+        "crystal structure relaxation",
+        "structure relaxation",
+        "晶体结构弛豫"
+      ]
     },
     {
       "canonical": "2.2 million stable structures",
       "entity_type": "METRIC",
-      "aliases": ["2.2 million stable structures", "2.2 million structures", "220 万个稳定结构"]
+      "aliases": [
+        "2.2 million stable structures",
+        "2.2 million structures",
+        "220 万个稳定结构"
+      ]
     },
     {
       "canonical": "381,000 new stable structures",
       "entity_type": "METRIC",
-      "aliases": ["381,000 new stable structures", "381k new stable structures", "38.1 万个新稳定结构"]
+      "aliases": [
+        "381,000 new stable structures",
+        "381k new stable structures",
+        "38.1 万个新稳定结构"
+      ]
     },
     {
       "canonical": "736 experimental structures",
       "entity_type": "METRIC",
-      "aliases": ["736 experimental structures", "736 structures", "736 个实验结构"]
+      "aliases": [
+        "736 experimental structures",
+        "736 structures",
+        "736 个实验结构"
+      ]
     },
     {
       "canonical": "knowledge tracing",
       "entity_type": "TASK",
-      "aliases": ["knowledge tracing", "KT", "知识追踪"]
+      "aliases": [
+        "knowledge tracing",
+        "KT",
+        "知识追踪"
+      ]
     },
     {
       "canonical": "learner performance prediction",
       "entity_type": "TASK",
-      "aliases": ["learner performance prediction", "student performance prediction", "学习表现预测"]
+      "aliases": [
+        "learner performance prediction",
+        "student performance prediction",
+        "学习表现预测"
+      ]
     },
     {
       "canonical": "Deep Knowledge Tracing",
       "entity_type": "METHOD",
-      "aliases": ["Deep Knowledge Tracing", "DKT", "深度知识追踪"]
+      "aliases": [
+        "Deep Knowledge Tracing",
+        "DKT",
+        "深度知识追踪"
+      ]
     },
     {
       "canonical": "recurrent neural network",
       "entity_type": "METHOD",
-      "aliases": ["recurrent neural network", "RNN", "循环神经网络"]
+      "aliases": [
+        "recurrent neural network",
+        "RNN",
+        "循环神经网络"
+      ]
     },
     {
       "canonical": "DKVMN",
       "entity_type": "METHOD",
-      "aliases": ["DKVMN", "Dynamic Key-Value Memory Network"]
+      "aliases": [
+        "DKVMN",
+        "Dynamic Key-Value Memory Network"
+      ]
     },
     {
       "canonical": "key-value memory network",
       "entity_type": "METHOD",
-      "aliases": ["key-value memory network", "key-value memory", "键值记忆网络"]
+      "aliases": [
+        "key-value memory network",
+        "key-value memory",
+        "键值记忆网络"
+      ]
     },
     {
       "canonical": "SAINT",
       "entity_type": "METHOD",
-      "aliases": ["SAINT"]
+      "aliases": [
+        "SAINT"
+      ]
     },
     {
       "canonical": "self-attention",
       "entity_type": "METHOD",
-      "aliases": ["self-attention", "self attention", "自注意力"]
+      "aliases": [
+        "self-attention",
+        "self attention",
+        "自注意力"
+      ]
     },
     {
       "canonical": "AKT",
       "entity_type": "METHOD",
-      "aliases": ["AKT", "Attentive Knowledge Tracing"]
+      "aliases": [
+        "AKT",
+        "Attentive Knowledge Tracing"
+      ]
     },
     {
       "canonical": "monotonic attention",
       "entity_type": "METHOD",
-      "aliases": ["monotonic attention", "单调注意力"]
+      "aliases": [
+        "monotonic attention",
+        "单调注意力"
+      ]
     },
     {
       "canonical": "Rasch model",
       "entity_type": "METHOD",
-      "aliases": ["Rasch model", "Rasch regularization", "Rasch 模型"]
+      "aliases": [
+        "Rasch model",
+        "Rasch regularization",
+        "Rasch 模型"
+      ]
     },
     {
       "canonical": "pyKT",
       "entity_type": "METHOD",
-      "aliases": ["pyKT"]
+      "aliases": [
+        "pyKT"
+      ]
     },
     {
       "canonical": "standardized preprocessing",
       "entity_type": "METHOD",
-      "aliases": ["standardized preprocessing", "统一预处理"]
+      "aliases": [
+        "standardized preprocessing",
+        "统一预处理"
+      ]
     },
     {
       "canonical": "ASSISTments",
       "entity_type": "DATASET",
-      "aliases": ["ASSISTments", "ASSISTments dataset"]
+      "aliases": [
+        "ASSISTments",
+        "ASSISTments dataset"
+      ]
     },
     {
       "canonical": "EdNet",
       "entity_type": "DATASET",
-      "aliases": ["EdNet", "EdNet dataset"]
+      "aliases": [
+        "EdNet",
+        "EdNet dataset"
+      ]
     },
     {
       "canonical": "label leakage",
       "entity_type": "LIMITATION",
-      "aliases": ["label leakage", "标签泄漏"]
+      "aliases": [
+        "label leakage",
+        "标签泄漏"
+      ]
     },
     {
       "canonical": "784,309 learners",
       "entity_type": "METRIC",
-      "aliases": ["784,309 students", "784,309 learners", "784309 students", "784,309 名学习者"]
+      "aliases": [
+        "784,309 students",
+        "784,309 learners",
+        "784309 students",
+        "784,309 名学习者"
+      ]
     },
     {
       "canonical": "131 million interactions",
       "entity_type": "METRIC",
-      "aliases": ["131 million interactions", "131,441,538 interactions", "1.31 亿次交互"]
+      "aliases": [
+        "131 million interactions",
+        "131,441,538 interactions",
+        "1.31 亿次交互"
+      ]
+    },
+    {
+      "canonical": "Seurat",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Seurat",
+        "Seurat v3",
+        "Seurat v4",
+        "Seurat v5"
+      ]
+    },
+    {
+      "canonical": "Scanpy",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Scanpy",
+        "SCANPY",
+        "scanpy"
+      ]
+    },
+    {
+      "canonical": "scVI",
+      "entity_type": "METHOD",
+      "aliases": [
+        "scVI",
+        "single-cell variational inference"
+      ]
+    },
+    {
+      "canonical": "scANVI",
+      "entity_type": "METHOD",
+      "aliases": [
+        "scANVI",
+        "scANVI model"
+      ]
+    },
+    {
+      "canonical": "Harmony",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Harmony",
+        "harmony integration"
+      ]
+    },
+    {
+      "canonical": "CellTypist",
+      "entity_type": "METHOD",
+      "aliases": [
+        "CellTypist",
+        "cell typist"
+      ]
+    },
+    {
+      "canonical": "scVelo",
+      "entity_type": "METHOD",
+      "aliases": [
+        "scVelo",
+        "scvelo"
+      ]
+    },
+    {
+      "canonical": "Squidpy",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Squidpy",
+        "squidpy"
+      ]
+    },
+    {
+      "canonical": "totalVI",
+      "entity_type": "METHOD",
+      "aliases": [
+        "totalVI",
+        "total vi"
+      ]
+    },
+    {
+      "canonical": "BBKNN",
+      "entity_type": "METHOD",
+      "aliases": [
+        "BBKNN",
+        "bbknn"
+      ]
+    },
+    {
+      "canonical": "LIGER",
+      "entity_type": "METHOD",
+      "aliases": [
+        "LIGER",
+        "integrative NMF"
+      ]
+    },
+    {
+      "canonical": "Monocle",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Monocle",
+        "Monocle 2",
+        "Monocle 3"
+      ]
+    },
+    {
+      "canonical": "Slingshot",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Slingshot",
+        "slingshot"
+      ]
+    },
+    {
+      "canonical": "PAGA",
+      "entity_type": "METHOD",
+      "aliases": [
+        "PAGA",
+        "partition-based graph abstraction"
+      ]
+    },
+    {
+      "canonical": "CellRank",
+      "entity_type": "METHOD",
+      "aliases": [
+        "CellRank",
+        "cell rank"
+      ]
+    },
+    {
+      "canonical": "CellChat",
+      "entity_type": "METHOD",
+      "aliases": [
+        "CellChat",
+        "cellchat"
+      ]
+    },
+    {
+      "canonical": "SCENIC",
+      "entity_type": "METHOD",
+      "aliases": [
+        "SCENIC",
+        "single-cell regulatory network inference"
+      ]
+    },
+    {
+      "canonical": "ArchR",
+      "entity_type": "METHOD",
+      "aliases": [
+        "ArchR",
+        "archr"
+      ]
+    },
+    {
+      "canonical": "Cell2location",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Cell2location",
+        "cell2location"
+      ]
+    },
+    {
+      "canonical": "Tangram",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Tangram",
+        "tangram alignment"
+      ]
+    },
+    {
+      "canonical": "Giotto",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Giotto",
+        "giotto toolbox"
+      ]
+    },
+    {
+      "canonical": "Scanorama",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Scanorama",
+        "scanorama"
+      ]
+    },
+    {
+      "canonical": "MOFA+",
+      "entity_type": "METHOD",
+      "aliases": [
+        "MOFA+",
+        "MOFA",
+        "multi-omics factor analysis"
+      ]
+    },
+    {
+      "canonical": "sctransform",
+      "entity_type": "METHOD",
+      "aliases": [
+        "sctransform",
+        "regularized negative binomial regression"
+      ]
+    },
+    {
+      "canonical": "scater",
+      "entity_type": "METHOD",
+      "aliases": [
+        "scater",
+        "Scater"
+      ]
+    },
+    {
+      "canonical": "MAST",
+      "entity_type": "METHOD",
+      "aliases": [
+        "MAST",
+        "hurdle model"
+      ]
+    },
+    {
+      "canonical": "mutual nearest neighbors",
+      "entity_type": "METHOD",
+      "aliases": [
+        "mutual nearest neighbors",
+        "MNN",
+        "MNN pairing"
+      ]
+    },
+    {
+      "canonical": "CEL-Seq2",
+      "entity_type": "METHOD",
+      "aliases": [
+        "CEL-Seq2",
+        "CEL-Seq",
+        "cell expression by linear amplification"
+      ]
+    },
+    {
+      "canonical": "Symphony",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Symphony",
+        "symphony integration"
+      ]
+    },
+    {
+      "canonical": "SingleR",
+      "entity_type": "METHOD",
+      "aliases": [
+        "SingleR",
+        "singleR"
+      ]
+    },
+    {
+      "canonical": "scDeepSort",
+      "entity_type": "METHOD",
+      "aliases": [
+        "scDeepSort",
+        "scdeepsort"
+      ]
+    },
+    {
+      "canonical": "ACTINN",
+      "entity_type": "METHOD",
+      "aliases": [
+        "ACTINN",
+        "automated cell type identification"
+      ]
+    },
+    {
+      "canonical": "Cell BLAST",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Cell BLAST",
+        "cellblast"
+      ]
+    },
+    {
+      "canonical": "scGNN",
+      "entity_type": "METHOD",
+      "aliases": [
+        "scGNN",
+        "scgnn"
+      ]
+    },
+    {
+      "canonical": "DESC",
+      "entity_type": "METHOD",
+      "aliases": [
+        "DESC",
+        "deep embedding for single-cell clustering"
+      ]
+    },
+    {
+      "canonical": "batch correction",
+      "entity_type": "METHOD",
+      "aliases": [
+        "batch correction",
+        "batch effect correction",
+        "batch alignment"
+      ]
+    },
+    {
+      "canonical": "trajectory inference",
+      "entity_type": "METHOD",
+      "aliases": [
+        "trajectory inference",
+        "pseudotime",
+        "pseudotemporal ordering"
+      ]
+    },
+    {
+      "canonical": "RNA velocity",
+      "entity_type": "METHOD",
+      "aliases": [
+        "RNA velocity",
+        "rna velocity",
+        "velocity inference"
+      ]
+    },
+    {
+      "canonical": "spatial transcriptomics",
+      "entity_type": "METHOD",
+      "aliases": [
+        "spatial transcriptomics",
+        "spatially resolved transcriptomics",
+        "spatial omics"
+      ]
+    },
+    {
+      "canonical": "cell-cell communication",
+      "entity_type": "METHOD",
+      "aliases": [
+        "cell-cell communication",
+        "cell-cell interaction",
+        "cell-to-cell communication"
+      ]
+    },
+    {
+      "canonical": "variational autoencoder",
+      "entity_type": "METHOD",
+      "aliases": [
+        "variational autoencoder",
+        "VAE",
+        "deep generative model"
+      ]
+    },
+    {
+      "canonical": "dictionary learning",
+      "entity_type": "METHOD",
+      "aliases": [
+        "dictionary learning",
+        "online dictionary learning"
+      ]
+    },
+    {
+      "canonical": "foundation model",
+      "entity_type": "METHOD",
+      "aliases": [
+        "foundation model",
+        "pretrained model",
+        "self-supervised model"
+      ]
+    },
+    {
+      "canonical": "deep count autoencoder",
+      "entity_type": "METHOD",
+      "aliases": [
+        "deep count autoencoder",
+        "DCA",
+        "count autoencoder"
+      ]
+    },
+    {
+      "canonical": "cell hashing",
+      "entity_type": "METHOD",
+      "aliases": [
+        "cell hashing",
+        "cell hashing with barcoded antibodies",
+        "hashtag oligo"
+      ]
+    },
+    {
+      "canonical": "doublet detection",
+      "entity_type": "METHOD",
+      "aliases": [
+        "doublet detection",
+        "doublet finder",
+        "Scrublet"
+      ]
+    },
+    {
+      "canonical": "Slide-seq",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Slide-seq",
+        "Slide-seqV2",
+        "slide seq"
+      ]
+    },
+    {
+      "canonical": "CUT&Tag",
+      "entity_type": "METHOD",
+      "aliases": [
+        "CUT&Tag",
+        "cut and tag"
+      ]
+    },
+    {
+      "canonical": "cell type annotation",
+      "entity_type": "TASK",
+      "aliases": [
+        "cell type annotation",
+        "cell type identification",
+        "cell type classification",
+        "automatic annotation"
+      ]
+    },
+    {
+      "canonical": "single-cell data integration",
+      "entity_type": "TASK",
+      "aliases": [
+        "data integration",
+        "single-cell integration",
+        "atlas-level integration",
+        "integrative analysis"
+      ]
+    },
+    {
+      "canonical": "single-cell clustering",
+      "entity_type": "TASK",
+      "aliases": [
+        "clustering",
+        "single-cell clustering",
+        "unsupervised clustering"
+      ]
+    },
+    {
+      "canonical": "dimensionality reduction",
+      "entity_type": "TASK",
+      "aliases": [
+        "dimensionality reduction",
+        "t-SNE",
+        "UMAP",
+        "PCA"
+      ]
+    },
+    {
+      "canonical": "differential expression",
+      "entity_type": "TASK",
+      "aliases": [
+        "differential expression",
+        "differential expression analysis",
+        "DE analysis"
+      ]
+    },
+    {
+      "canonical": "single-cell normalization",
+      "entity_type": "TASK",
+      "aliases": [
+        "normalization",
+        "variance stabilization",
+        "normalization and variance stabilization"
+      ]
+    },
+    {
+      "canonical": "single-cell imputation",
+      "entity_type": "TASK",
+      "aliases": [
+        "imputation",
+        "denoising",
+        "single-cell denoising"
+      ]
+    },
+    {
+      "canonical": "gene regulatory network inference",
+      "entity_type": "TASK",
+      "aliases": [
+        "gene regulatory network",
+        "regulatory network inference",
+        "GRN inference"
+      ]
+    },
+    {
+      "canonical": "single-cell RNA-seq",
+      "entity_type": "DOMAIN",
+      "aliases": [
+        "single-cell RNA-seq",
+        "scRNA-seq",
+        "single cell RNA sequencing",
+        "single-cell transcriptomics",
+        "single-cell transcriptomic"
+      ]
+    },
+    {
+      "canonical": "single-cell analysis",
+      "entity_type": "DOMAIN",
+      "aliases": [
+        "single-cell analysis",
+        "single cell analysis",
+        "single-cell data science"
+      ]
+    },
+    {
+      "canonical": "bioinformatics",
+      "entity_type": "DOMAIN",
+      "aliases": [
+        "bioinformatics",
+        "computational biology"
+      ]
+    },
+    {
+      "canonical": "PBMC",
+      "entity_type": "DATASET",
+      "aliases": [
+        "PBMC",
+        "peripheral blood mononuclear cells",
+        "PBMCs"
+      ]
+    },
+    {
+      "canonical": "Human Cell Atlas",
+      "entity_type": "DATASET",
+      "aliases": [
+        "Human Cell Atlas",
+        "HCA",
+        "cell atlas"
+      ]
+    },
+    {
+      "canonical": "Tabula Muris",
+      "entity_type": "DATASET",
+      "aliases": [
+        "Tabula Muris",
+        "tabula muris"
+      ]
+    },
+    {
+      "canonical": "Fly Cell Atlas",
+      "entity_type": "DATASET",
+      "aliases": [
+        "Fly Cell Atlas",
+        "fruit fly atlas"
+      ]
+    },
+    {
+      "canonical": "surface code",
+      "entity_type": "METHOD",
+      "aliases": [
+        "surface code",
+        "surface codes",
+        "surface-code"
+      ]
+    },
+    {
+      "canonical": "transmon qubit",
+      "entity_type": "METHOD",
+      "aliases": [
+        "transmon",
+        "transmon qubit",
+        "transmon qubits",
+        "superconducting transmon"
+      ]
+    },
+    {
+      "canonical": "superconducting qubit",
+      "entity_type": "METHOD",
+      "aliases": [
+        "superconducting qubit",
+        "superconducting qubits",
+        "superconducting circuit",
+        "superconducting quantum circuit"
+      ]
+    },
+    {
+      "canonical": "trapped ion",
+      "entity_type": "METHOD",
+      "aliases": [
+        "trapped ion",
+        "trapped-ion",
+        "trapped ions",
+        "ion trap",
+        "ion-trap"
+      ]
+    },
+    {
+      "canonical": "variational quantum eigensolver",
+      "entity_type": "METHOD",
+      "aliases": [
+        "variational quantum eigensolver",
+        "VQE",
+        "variational quantum eigenvalue solver"
+      ]
+    },
+    {
+      "canonical": "quantum approximate optimization algorithm",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum approximate optimization algorithm",
+        "QAOA"
+      ]
+    },
+    {
+      "canonical": "quantum error correction",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum error correction",
+        "QEC",
+        "quantum error correcting code",
+        "error correction code"
+      ]
+    },
+    {
+      "canonical": "fault-tolerant quantum computing",
+      "entity_type": "METHOD",
+      "aliases": [
+        "fault-tolerant",
+        "fault tolerant",
+        "fault-tolerant quantum computing",
+        "fault tolerance"
+      ]
+    },
+    {
+      "canonical": "quantum supremacy",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum supremacy",
+        "quantum computational supremacy"
+      ]
+    },
+    {
+      "canonical": "quantum advantage",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum advantage",
+        "quantum computational advantage"
+      ]
+    },
+    {
+      "canonical": "Sycamore processor",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Sycamore",
+        "Sycamore processor",
+        "Google Sycamore"
+      ]
+    },
+    {
+      "canonical": "logical qubit",
+      "entity_type": "METHOD",
+      "aliases": [
+        "logical qubit",
+        "logical qubits",
+        "logical quantum processor"
+      ]
+    },
+    {
+      "canonical": "quantum memory",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum memory",
+        "quantum memories",
+        "fault-tolerant quantum memory"
+      ]
+    },
+    {
+      "canonical": "quantum simulation",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum simulation",
+        "quantum simulator",
+        "quantum simulators",
+        "quantum simulations"
+      ]
+    },
+    {
+      "canonical": "quantum circuit",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum circuit",
+        "quantum circuits",
+        "quantum circuit learning"
+      ]
+    },
+    {
+      "canonical": "quantum gate",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum gate",
+        "quantum gates",
+        "two-qubit gate",
+        "multiqubit gate",
+        "entangling gate"
+      ]
+    },
+    {
+      "canonical": "decoherence",
+      "entity_type": "METHOD",
+      "aliases": [
+        "decoherence",
+        "decoherence-free",
+        "coherence time"
+      ]
+    },
+    {
+      "canonical": "error mitigation",
+      "entity_type": "METHOD",
+      "aliases": [
+        "error mitigation",
+        "quantum error mitigation",
+        "zero-noise extrapolation"
+      ]
+    },
+    {
+      "canonical": "stabilizer code",
+      "entity_type": "METHOD",
+      "aliases": [
+        "stabilizer code",
+        "stabilizer codes",
+        "repetition code",
+        "error detection code"
+      ]
+    },
+    {
+      "canonical": "topological quantum computing",
+      "entity_type": "METHOD",
+      "aliases": [
+        "topological quantum computing",
+        "topological quantum computation",
+        "Majorana zero mode",
+        "Majorana fermion"
+      ]
+    },
+    {
+      "canonical": "quantum volume",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum volume"
+      ]
+    },
+    {
+      "canonical": "boson sampling",
+      "entity_type": "METHOD",
+      "aliases": [
+        "boson sampling",
+        "boson sampler",
+        "Gaussian boson sampling"
+      ]
+    },
+    {
+      "canonical": "quantum neural network",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum neural network",
+        "quantum neural networks",
+        "quantum machine learning"
+      ]
+    },
+    {
+      "canonical": "barren plateau",
+      "entity_type": "METHOD",
+      "aliases": [
+        "barren plateau",
+        "barren plateaus"
+      ]
+    },
+    {
+      "canonical": "variational ansatz",
+      "entity_type": "METHOD",
+      "aliases": [
+        "ansatz",
+        "variational ansatz",
+        "hardware-efficient ansatz",
+        "ADAPT-VQE"
+      ]
+    },
+    {
+      "canonical": "quantum key distribution",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum key distribution",
+        "QKD",
+        "quantum cryptography"
+      ]
+    },
+    {
+      "canonical": "quantum network",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum network",
+        "quantum networks",
+        "quantum internet",
+        "quantum repeater"
+      ]
+    },
+    {
+      "canonical": "quantum teleportation",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum teleportation",
+        "qubit teleportation"
+      ]
+    },
+    {
+      "canonical": "quantum walk",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum walk",
+        "quantum walks"
+      ]
+    },
+    {
+      "canonical": "Kerr-cat qubit",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Kerr-cat",
+        "Kerr cat",
+        "cat qubit",
+        "Schrödinger cat"
+      ]
+    },
+    {
+      "canonical": "Rydberg atom",
+      "entity_type": "METHOD",
+      "aliases": [
+        "Rydberg atom",
+        "Rydberg atoms",
+        "Rydberg-atom",
+        "neutral atom",
+        "neutral atoms",
+        "reconfigurable atom array"
+      ]
+    },
+    {
+      "canonical": "spin qubit",
+      "entity_type": "METHOD",
+      "aliases": [
+        "spin qubit",
+        "spin qubits",
+        "silicon qubit",
+        "quantum dot qubit"
+      ]
+    },
+    {
+      "canonical": "quantum LDPC code",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum LDPC",
+        "quantum low-density parity-check",
+        "LDPC code"
+      ]
+    },
+    {
+      "canonical": "fusion-based quantum computation",
+      "entity_type": "METHOD",
+      "aliases": [
+        "fusion-based quantum computation",
+        "fusion-based quantum computing"
+      ]
+    },
+    {
+      "canonical": "randomized benchmarking",
+      "entity_type": "METHOD",
+      "aliases": [
+        "randomized benchmarking",
+        "gate set tomography",
+        "benchmarking"
+      ]
+    },
+    {
+      "canonical": "quantum processor",
+      "entity_type": "METHOD",
+      "aliases": [
+        "quantum processor",
+        "quantum processing unit",
+        "QPU",
+        "programmable quantum processor"
+      ]
+    },
+    {
+      "canonical": "NISQ",
+      "entity_type": "METHOD",
+      "aliases": [
+        "NISQ",
+        "noisy intermediate-scale quantum",
+        "near-term quantum"
+      ]
+    },
+    {
+      "canonical": "variational quantum algorithm",
+      "entity_type": "METHOD",
+      "aliases": [
+        "variational quantum algorithm",
+        "variational quantum algorithms",
+        "VQA"
+      ]
+    },
+    {
+      "canonical": "quantum chemistry",
+      "entity_type": "TASK",
+      "aliases": [
+        "quantum chemistry",
+        "electronic structure",
+        "molecular energy",
+        "molecular simulation",
+        "ground-state energy"
+      ]
+    },
+    {
+      "canonical": "quantum optimization",
+      "entity_type": "TASK",
+      "aliases": [
+        "quantum optimization",
+        "combinatorial optimization",
+        "quantum approximate optimization"
+      ]
+    },
+    {
+      "canonical": "quantum algorithm",
+      "entity_type": "TASK",
+      "aliases": [
+        "quantum algorithm",
+        "quantum algorithms",
+        "Shor's algorithm",
+        "Grover's algorithm"
+      ]
+    },
+    {
+      "canonical": "quantum error detection",
+      "entity_type": "TASK",
+      "aliases": [
+        "quantum error detection",
+        "error detection",
+        "repetitive error detection"
+      ]
+    },
+    {
+      "canonical": "gate fidelity",
+      "entity_type": "METRIC",
+      "aliases": [
+        "gate fidelity",
+        "fidelity",
+        "two-qubit gate fidelity",
+        "operation fidelity"
+      ]
+    },
+    {
+      "canonical": "logical error rate",
+      "entity_type": "METRIC",
+      "aliases": [
+        "logical error rate",
+        "error rate",
+        "error rates",
+        "logical error"
+      ]
+    },
+    {
+      "canonical": "quantum computing",
+      "entity_type": "DOMAIN",
+      "aliases": [
+        "quantum computing",
+        "quantum computation",
+        "quantum information processing"
+      ]
+    },
+    {
+      "canonical": "quantum information",
+      "entity_type": "DOMAIN",
+      "aliases": [
+        "quantum information",
+        "quantum information science"
+      ]
     }
   ],
   "relation_constraints": {
     "IMPROVES": {
-      "source": ["METHOD"],
-      "target": ["TASK", "METRIC", "FINDING"]
+      "source": [
+        "METHOD"
+      ],
+      "target": [
+        "TASK",
+        "METRIC",
+        "FINDING"
+      ]
     },
     "ENABLES": {
-      "source": ["METHOD", "DATASET"],
-      "target": ["TASK", "FINDING"]
+      "source": [
+        "METHOD",
+        "DATASET"
+      ],
+      "target": [
+        "TASK",
+        "FINDING"
+      ]
     },
     "USES": {
-      "source": ["METHOD"],
-      "target": ["METHOD", "DATASET"]
+      "source": [
+        "METHOD"
+      ],
+      "target": [
+        "METHOD",
+        "DATASET"
+      ]
     },
     "EVALUATES_ON": {
-      "source": ["METHOD"],
-      "target": ["DATASET"]
+      "source": [
+        "METHOD"
+      ],
+      "target": [
+        "DATASET"
+      ]
     },
     "REPORTS": {
-      "source": ["METHOD", "DATASET"],
-      "target": ["METRIC", "FINDING"]
+      "source": [
+        "METHOD",
+        "DATASET"
+      ],
+      "target": [
+        "METRIC",
+        "FINDING"
+      ]
     },
     "SUPPORTS": {
-      "source": ["METHOD", "DATASET", "FINDING"],
-      "target": ["TASK", "FINDING", "METRIC"]
+      "source": [
+        "METHOD",
+        "DATASET",
+        "FINDING"
+      ],
+      "target": [
+        "TASK",
+        "FINDING",
+        "METRIC"
+      ]
     },
     "CONTRADICTS": {
-      "source": ["FINDING"],
-      "target": ["FINDING"]
+      "source": [
+        "FINDING"
+      ],
+      "target": [
+        "FINDING"
+      ]
     },
     "EXTENDS": {
-      "source": ["METHOD"],
-      "target": ["METHOD"]
+      "source": [
+        "METHOD"
+      ],
+      "target": [
+        "METHOD"
+      ]
     },
     "ADDRESSES": {
-      "source": ["METHOD"],
-      "target": ["TASK"]
+      "source": [
+        "METHOD"
+      ],
+      "target": [
+        "TASK"
+      ]
     },
     "BENCHMARKS": {
-      "source": ["DATASET"],
-      "target": ["TASK"]
+      "source": [
+        "DATASET"
+      ],
+      "target": [
+        "TASK"
+      ]
     }
   },
   "relation_patterns": [
     {
       "relation_type": "IMPROVES",
-      "triggers": ["improve", "improves", "improving", "enhance", "提升", "改善", "提高", "降低", "减少"]
+      "triggers": [
+        "improve",
+        "improves",
+        "improving",
+        "enhance",
+        "提升",
+        "改善",
+        "提高",
+        "降低",
+        "减少"
+      ]
     },
     {
       "relation_type": "ENABLES",
-      "triggers": ["enable", "enables", "allow", "allows", "实现", "使得", "支持"]
+      "triggers": [
+        "enable",
+        "enables",
+        "allow",
+        "allows",
+        "实现",
+        "使得",
+        "支持"
+      ]
     },
     {
       "relation_type": "USES",
-      "triggers": ["use", "uses", "using", "utilize", "采用", "使用", "通过", "基于"]
+      "triggers": [
+        "use",
+        "uses",
+        "using",
+        "utilize",
+        "采用",
+        "使用",
+        "通过",
+        "基于"
+      ]
     },
     {
       "relation_type": "EVALUATES_ON",
-      "triggers": ["evaluate on", "evaluates on", "evaluated on", "在数据集上", "在……上评测"]
+      "triggers": [
+        "evaluate on",
+        "evaluates on",
+        "evaluated on",
+        "在数据集上",
+        "在……上评测"
+      ]
     },
     {
       "relation_type": "REPORTS",
-      "triggers": ["report", "reports", "show", "shows", "表明", "发现", "结果显示"]
+      "triggers": [
+        "report",
+        "reports",
+        "show",
+        "shows",
+        "表明",
+        "发现",
+        "结果显示"
+      ]
     },
     {
       "relation_type": "SUPPORTS",
-      "triggers": ["support", "supports", "evidence", "证据支持", "佐证"]
+      "triggers": [
+        "support",
+        "supports",
+        "evidence",
+        "证据支持",
+        "佐证"
+      ]
     },
     {
       "relation_type": "CONTRADICTS",
-      "triggers": ["contradict", "conflict", "inconsistent", "矛盾", "冲突", "不一致"]
+      "triggers": [
+        "contradict",
+        "conflict",
+        "inconsistent",
+        "矛盾",
+        "冲突",
+        "不一致"
+      ]
     },
     {
       "relation_type": "EXTENDS",
-      "triggers": ["extend", "extends", "build upon", "扩展", "改进自"]
+      "triggers": [
+        "extend",
+        "extends",
+        "build upon",
+        "扩展",
+        "改进自"
+      ]
     },
     {
       "relation_type": "ADDRESSES",
-      "triggers": ["address", "addresses", "solve", "target", "针对", "解决", "缓解"]
+      "triggers": [
+        "address",
+        "addresses",
+        "solve",
+        "target",
+        "针对",
+        "解决",
+        "缓解"
+      ]
     },
     {
       "relation_type": "BENCHMARKS",
-      "triggers": ["benchmark", "benchmarks", "基准", "评测任务"]
+      "triggers": [
+        "benchmark",
+        "benchmarks",
+        "基准",
+        "评测任务"
+      ]
     }
   ]
 }

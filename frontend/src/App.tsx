@@ -1,23 +1,23 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { Alert, Button, ConfigProvider, Drawer, Form, Input, Space, Spin, Typography } from 'antd'
-import { ExperimentOutlined, FileSearchOutlined, LoginOutlined, NodeIndexOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons'
+import { Alert, Button, ConfigProvider, Drawer, Form, Input, Space, Typography } from 'antd'
+import { LoginOutlined, UserOutlined } from '@ant-design/icons'
 import { getAuth, getHealth, login, logout, updateProfile } from './api'
 import type { AuthState, Health, LearnerProfile } from './types'
 import { appTheme } from './theme'
 import brandMark from './assets/multi-agent-mark.png'
 
 const ExperimentPage = lazy(() => import('./ExperimentPage'))
-const EvidenceAtlasPage = lazy(() => import('./EvidenceAtlasPage'))
 const LabPage = lazy(() => import('./LabPage'))
 const ProductPage = lazy(() => import('./ProductPage'))
+const AtlasPage = lazy(() => import('./atlas/AtlasPage'))
 
 type Workspace = 'product' | 'lab' | 'atlas' | 'experiments'
 
-const workspaces = [
-  { key: 'product' as const, label: '研究工作台', icon: <SearchOutlined /> },
-  { key: 'lab' as const, label: '论文摄入', icon: <FileSearchOutlined /> },
-  { key: 'atlas' as const, label: '证据图谱', icon: <NodeIndexOutlined /> },
-  { key: 'experiments' as const, label: '实验账本', icon: <ExperimentOutlined /> },
+const workspaces: Array<{ key: Workspace; index: string; label: string; description: string }> = [
+  { key: 'product', index: '01', label: '研究工作台', description: '问题、证据与裁决' },
+  { key: 'lab', index: '02', label: '论文摄入', description: '抽取、复核与入图' },
+  { key: 'atlas', index: '03', label: '证据图谱', description: '联动阅读 · 5 领域 290 篇' },
+  { key: 'experiments', index: '04', label: '实验账本', description: '复现、校验与对比' },
 ]
 
 export default function App() {
@@ -31,7 +31,7 @@ export default function App() {
   useEffect(() => {
     Promise.all([getHealth(), getAuth()])
       .then(([healthResult, authResult]) => { setHealth(healthResult); setAuth(authResult) })
-      .catch((error: Error) => { setAuth({ authenticated: false, user: null }); setAuthError(error.message) })
+      .catch(() => { setAuth({ authenticated: false, user: null }) })
   }, [])
 
   const signIn = async (values: { identifier: string; password: string }) => {
@@ -58,6 +58,7 @@ export default function App() {
   return (
     <ConfigProvider theme={appTheme}>
       <div className="research-app">
+        {mode !== 'atlas' && (
         <header className="masthead">
           <div className="masthead__identity">
             <div className="masthead__brand">
@@ -76,40 +77,67 @@ export default function App() {
             </div>
           </div>
           {auth?.authenticated && (
-            <nav className="workspace-nav" aria-label="主要工作区">
-              {workspaces.map((workspace) => (
-                <button key={workspace.key} type="button" className={mode === workspace.key ? 'is-active' : ''} onClick={() => setMode(workspace.key)}>
-                  <span className="workspace-nav__icon">{workspace.icon}</span><strong>{workspace.label}</strong>
-                </button>
-              ))}
-            </nav>
+          <nav className="workspace-nav" aria-label="主要工作区">
+            {workspaces.map((workspace) => (
+              <button
+                key={workspace.key}
+                type="button"
+                className={mode === workspace.key ? 'is-active' : ''}
+                onClick={() => setMode(workspace.key)}
+                aria-current={mode === workspace.key ? 'page' : undefined}
+              >
+                <span>{workspace.index}</span>
+                <strong>{workspace.label}</strong>
+                <small>{workspace.description}</small>
+              </button>
+            ))}
+          </nav>
           )}
         </header>
+        )}
 
-        <main className="research-main">
-          {auth === null ? <div className="login-gate"><Spin size="large" /></div> : !auth.authenticated ? (
+        {auth === null ? (
+          <main className="research-main"><div className="ledger-loading">正在连接服务…</div></main>
+        ) : !auth.authenticated ? (
+          <main className="research-main">
             <section className="login-gate">
-              <div className="login-gate__copy"><h2>登录研海寻踪</h2><p>使用管理员创建的账号继续。</p></div>
-              <Form className="login-card" layout="vertical" onFinish={signIn}>
-                <Typography.Title level={3}>成员登录</Typography.Title>
-                <Form.Item label="邮箱或昵称" name="identifier" rules={[{ required: true }]}><Input autoComplete="username" /></Form.Item>
-                <Form.Item label="密码" name="password" rules={[{ required: true, min: 8 }]}><Input.Password autoComplete="current-password" /></Form.Item>
-                {authError && <Alert type="error" message={authError} showIcon />}
-                <Button icon={<LoginOutlined />} type="primary" htmlType="submit" loading={busy} block size="large">登录</Button>
-                <Typography.Text type="secondary">暂无公开注册。</Typography.Text>
-              </Form>
+              <div className="login-gate__copy">
+                <p className="eyebrow">MEMBERS-ONLY RESEARCH WORKSPACE</p>
+                <h2>科研工作台需要成员账号</h2>
+                <p>研海寻踪以真实科研流程为基线：证据优先于断言，测量优先于主张。账号由团队管理员统一分配，请使用邮箱或昵称登录，所有检索、摄入、裁决与实验都会留痕可查。</p>
+              </div>
+              <div className="login-card">
+                <Form layout="vertical" onFinish={signIn}>
+                  <Form.Item label="邮箱或昵称" name="identifier" rules={[{ required: true, message: '请输入邮箱或昵称' }]}>
+                    <Input autoFocus autoComplete="username" />
+                  </Form.Item>
+                  <Form.Item label="密码" name="password" rules={[{ required: true, min: 8, message: '请输入至少 8 位密码' }]}>
+                    <Input.Password autoComplete="current-password" />
+                  </Form.Item>
+                  {authError && <Alert type="error" showIcon message={authError} style={{ marginBottom: 16 }} />}
+                  <Button icon={<LoginOutlined />} type="primary" htmlType="submit" block loading={busy}>进入工作台</Button>
+                  <Typography.Text type="secondary">暂无公开注册。</Typography.Text>
+                </Form>
+              </div>
             </section>
-          ) : (
-            <Suspense fallback={<div className="ledger-loading">正在加载工作区…</div>}>
-              {mode === 'product' && <ProductPage />}
-              {mode === 'lab' && <LabPage />}
-              {mode === 'atlas' && <EvidenceAtlasPage />}
-              {mode === 'experiments' && <ExperimentPage />}
-            </Suspense>
-          )}
+          </main>
+        ) : (
+        <main className={`research-main ${mode === 'atlas' ? 'research-main--atlas' : ''}`}>
+          <Suspense fallback={<div className="ledger-loading">正在装载研究工作区</div>}>
+            {mode === 'product' && <ProductPage />}
+            {mode === 'lab' && <LabPage />}
+            {mode === 'atlas' && <AtlasPage onExit={() => setMode('product')} />}
+            {mode === 'experiments' && <ExperimentPage />}
+          </Suspense>
         </main>
+        )}
 
-        <footer className="research-footer">证据先于断言，测量先于结论。</footer>
+        {mode !== 'atlas' && (
+        <footer className="research-footer">
+          <span>研海寻踪 · YANHAI TRACE</span>
+          <span>Evidence before assertion. Measurement before claim.</span>
+        </footer>
+        )}
       </div>
 
       {auth?.user && (

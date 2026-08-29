@@ -7,10 +7,44 @@ export interface Health {
   system_agents: number
 }
 
+// —— LLM 供应商配置 ——
+
+export interface ProviderInfo {
+  id: string
+  label: string
+  default_model: string
+  models: string[]
+  requires_api_key: boolean
+  protocol: string
+  available?: boolean
+  access_mode?: string
+}
+
+export type ProviderOption = ProviderInfo
+
+export interface LlmConfig {
+  provider: string
+  model?: string
+  api_key?: string
+  timeout_seconds?: number
+}
+
+export interface ProviderTestResult {
+  ok: boolean
+  provider: string
+  model: string
+  message?: string
+  duration_ms?: number
+  usage?: Record<string, number>
+}
+
 export interface UserAccount {
   user_id: string
   email: string
   nickname: string
+  status: string
+  created_at: string
+  last_login_at: string | null
   profile_version: number
   profile: LearnerProfile
 }
@@ -18,17 +52,6 @@ export interface UserAccount {
 export interface AuthState {
   authenticated: boolean
   user: UserAccount | null
-}
-
-export interface ProviderOption {
-  id: string
-  label: string
-  description: string
-  default_model: string
-  models: string[]
-  requires_api_key: boolean
-  access_mode: 'offline' | 'free' | 'byok'
-  available: boolean
 }
 
 export interface LearnerProfile {
@@ -211,6 +234,12 @@ export interface RunResult {
       attempts?: number
       usage: { input_tokens: number; output_tokens: number; total_tokens: number }
     }>
+    [key: string]: unknown
+  }
+  decision_layer?: {
+    mode: string
+    provider: Record<string, unknown> | null
+    usage: Record<string, number>
   }
   graph_insights?: {
     timeline?: Array<Record<string, unknown>>
@@ -219,7 +248,7 @@ export interface RunResult {
   }
   graph_retrieval?: Record<string, unknown>
   persistence?: {
-    saved: boolean
+    saved?: boolean
     research_session_id?: string
     ingestion_id?: string
     source_saved?: boolean
@@ -228,7 +257,7 @@ export interface RunResult {
     duration_ms: number
     completed_at: number
   }
-  feedback?: { decision?: string }
+  feedback?: { decision?: string; adjustment?: number }
 }
 
 // —— 实验台（粘贴论文）返回结构 ——
@@ -330,6 +359,11 @@ export interface IngestResult {
   specialist_agent_trace: AgentTraceStep[]
   resources: Resources
   summary: IngestSummary
+  decision_layer?: {
+    mode: string
+    provider: Record<string, unknown> | null
+    usage: Record<string, number>
+  }
 }
 
 // —— 证据知识图谱（/api/extracted-graph）——
@@ -359,4 +393,77 @@ export interface GraphEdge {
 export interface GraphData {
   nodes: GraphNode[]
   edges: GraphEdge[]
+}
+
+// —— 证据图谱工作区（/api/atlas）——
+
+export interface AtlasDomainSummary {
+  domain_id: string
+  domain_name: string
+  description: string
+  query_example: string
+  paper_count: number
+  evidence_paper_count: number
+  metadata_only_count: number
+  entity_count: number
+  relation_count: number
+}
+
+export interface AtlasPaper {
+  paper_id: string
+  title: string
+  authors: string[]
+  year: number
+  venue: string
+  doi: string
+  source_url: string
+  citation_count: number
+  evidence_tier: 'evidence_card' | 'metadata_only'
+  summary: string
+  concepts: string[]
+}
+
+export interface AtlasEntity {
+  entity_id: string
+  canonical_name: string
+  entity_type: string
+  confidence: number
+  mention_count: number
+  aliases: string[]
+}
+
+export interface AtlasRelation {
+  relation_id: string
+  source_id: string
+  target_id: string
+  source_name: string
+  target_name: string
+  source_type: string
+  target_type: string
+  relation_type: string
+  confidence: number
+  status: string
+  evidence_ids: string[]
+}
+
+export interface AtlasEvidence {
+  evidence_id: string
+  paper_id: string
+  section_id: string
+  text: string
+  char_start: number
+  char_end: number
+}
+
+export interface AtlasDomainData {
+  domain_id: string
+  domain_name: string
+  description: string
+  query_example: string
+  papers: AtlasPaper[]
+  entities: AtlasEntity[]
+  relations: AtlasRelation[]
+  evidence: AtlasEvidence[]
+  paper_entities: Record<string, string[]>
+  cards: Record<string, string>
 }

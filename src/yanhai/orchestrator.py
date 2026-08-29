@@ -21,6 +21,7 @@ from .discovery import GraphInsightEngine
 from .graph_rag import GraphRAGLiteEngine
 from .knowledge import KnowledgeBase
 from .live_research import LiveResearchService
+from .llm_decision import LLMCritic, LLMJudge, UsageAccumulator
 from .models import AgentTrace, LearnerProfile
 from .providers import ProviderConfig, ProviderError, create_provider
 
@@ -120,6 +121,7 @@ class ScholarlyTraceOrchestrator:
         *,
         include_ablation: bool = True,
         on_step: Callable[[dict[str, Any]], None] | None = None,
+        provider_config: ProviderConfig | None = None,
     ) -> dict[str, Any]:
         if profile_id not in self.profiles:
             raise KeyError(f"Unknown profile: {profile_id}")
@@ -127,6 +129,19 @@ class ScholarlyTraceOrchestrator:
         profile = self.profiles[profile_id]
         traces: list[AgentTrace] = []
         emit = on_step or (lambda step: None)
+
+        # 当提供非 mock 的 provider_config 时，三智能体裁决层切换为 LLM 版；
+        # 使用局部变量而非修改 self.*，保证单例 orchestrator 在线程并发下安全。
+        decision_stats = UsageAccumulator()
+        if provider_config is not None and provider_config.provider != "mock":
+            provider = create_provider(provider_config)
+            critic = LLMCritic(provider, stats=decision_stats)
+            judge = LLMJudge(provider, stats=decision_stats)
+            decision_mode = "llm"
+        else:
+            critic = self.critic
+            judge = self.judge
+            decision_mode = "rules"
 
         diagnosis = self.diagnoser.diagnose(profile, difficulty_adjustment)
         emit(
@@ -232,7 +247,7 @@ class ScholarlyTraceOrchestrator:
         emit(traces[-1].to_dict())
 
         started = time.perf_counter()
-        claims = self.critic.critique(claims, kb)
+        claims = critic.critique(claims, kb)
         critic_ms = (time.perf_counter() - started) * 1000
         flagged = sum(
             1
@@ -241,7 +256,7 @@ class ScholarlyTraceOrchestrator:
         )
         traces.append(
             AgentTrace(
-                agent=self.critic.name,
+                agent=critic.name,
                 role="反证与约束",
                 status="completed",
                 summary=f"完成证据交叉检查，标记 {flagged} 条高风险命题。",
@@ -251,13 +266,13 @@ class ScholarlyTraceOrchestrator:
         emit(traces[-1].to_dict())
 
         started = time.perf_counter()
-        claims = self.judge.adjudicate(claims, kb)
+        claims = judge.adjudicate(claims, kb)
         judge_ms = (time.perf_counter() - started) * 1000
         accepted = sum(claim.status == "accepted" for claim in claims)
         rejected = sum(claim.status == "rejected" for claim in claims)
         traces.append(
             AgentTrace(
-                agent=self.judge.name,
+                agent=judge.name,
                 role="置信裁决",
                 status="completed",
                 summary=f"通过 {accepted} 条，拒绝 {rejected} 条；无证据强断言未进入资源。",
@@ -297,6 +312,15 @@ class ScholarlyTraceOrchestrator:
             "query": query,
             "profile": profile.public_dict(),
             "diagnosis": diagnosis,
+            "decision_layer": {
+                "mode": decision_mode,
+                "provider": (
+                    provider_config.public_dict()
+                    if provider_config is not None
+                    else None
+                ),
+                "usage": decision_stats.snapshot(),
+            },
             "agent_trace": [trace.to_dict() for trace in traces],
             "specialist_agent_trace": [
                 {
@@ -381,15 +405,17 @@ class ScholarlyTraceOrchestrator:
         query: str = DEFAULT_QUERY,
         domain_id: str | None = None,
         provider_config: ProviderConfig | None = None,
-        on_step: Callable[[dict[str, Any]], None] | None = None,
+        *,
         include_ablation: bool = True,
+        on_step: Callable[[dict[str, Any]], None] | None = None,
     ) -> dict[str, Any]:
         """运行确定性的离线基线，或走实时、证据支撑的 LLM 路径。
 
         当未提供 ``provider_config`` 或 ``provider == "mock"`` 时，结果为保留的
-        确定性流水线，并带 ``offline_mock`` 的 ``provider_run`` 标记。否则针对所选
-        领域知识库创建 ``LiveResearchService``，用其证据支撑的回答替换基线回答，
-        同时保留确定性的 report、metrics 与 ablation。
+        确定性流水线，并带 ``offline_mock`` 的 ``provider_run`` 标记。否则三智能体
+        裁决层（批判者/裁判）切换为 LLM 版，并针对所选领域知识库创建
+        ``LiveResearchService``，用其证据支撑的回答替换基线回答，同时保留确定性的
+        report、metrics 与 ablation。
         """
         emit = on_step or (lambda event: None)
         is_remote = provider_config is not None and provider_config.provider != "mock"
@@ -454,6 +480,7 @@ class ScholarlyTraceOrchestrator:
             domain_id=domain_id,
             include_ablation=include_ablation,
             on_step=baseline_callback,
+            provider_config=provider_config,
         )
         if is_remote:
             emit(

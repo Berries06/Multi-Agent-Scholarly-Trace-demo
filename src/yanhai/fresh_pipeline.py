@@ -22,7 +22,9 @@ from .agents import (
 )
 from .extraction import PlainTextParser, SchemaGuidedExtractor, ScientificDocument
 from .fresh_kb import FreshPaperKB
+from .llm_decision import LLMCritic, LLMJudge, UsageAccumulator
 from .models import LearnerProfile, Paper
+from .providers import ProviderConfig, create_provider
 
 
 def load_schema(schema_path: Path) -> dict[str, Any]:
@@ -35,6 +37,7 @@ def run_fresh_document_pipeline(
     profile: LearnerProfile,
     schema_path: Path,
     accept_threshold: float = 0.72,
+    provider_config: ProviderConfig | None = None,
 ) -> dict[str, Any]:
     """Run the full pipeline on an already-parsed document (text or PDF pages)."""
     schema = load_schema(schema_path)
@@ -57,18 +60,30 @@ def run_fresh_document_pipeline(
 
     diagnosis = DiagnosisAgent().diagnose(profile)
 
+    # 三智能体裁决层：提供非 mock provider 时切换为 LLM 版，否则用规则基线。
+    decision_stats = UsageAccumulator()
+    if provider_config is not None and provider_config.provider != "mock":
+        provider = create_provider(provider_config)
+        critic = LLMCritic(provider, stats=decision_stats)
+        judge = LLMJudge(provider, stats=decision_stats)
+        decision_mode = "llm"
+    else:
+        critic = CriticAgent()
+        judge = JudgeAgent()
+        decision_mode = "rules"
+
     started = time.perf_counter()
     claims = ProposerAgent().propose(kb, [paper])
     proposer_ms = (time.perf_counter() - started) * 1000
     proposed_claims = [claim.to_dict() for claim in claims]
 
     started = time.perf_counter()
-    claims = CriticAgent().critique(claims, kb)
+    claims = critic.critique(claims, kb)
     critic_ms = (time.perf_counter() - started) * 1000
     critiqued_claims = [claim.to_dict() for claim in claims]
 
     started = time.perf_counter()
-    claims = JudgeAgent().adjudicate(claims, kb)
+    claims = judge.adjudicate(claims, kb)
     judge_ms = (time.perf_counter() - started) * 1000
     adjudicated_claims = [claim.to_dict() for claim in claims]
 
@@ -105,7 +120,7 @@ def run_fresh_document_pipeline(
             "duration_ms": round(proposer_ms, 2),
         },
         {
-            "agent": "CriticAgent",
+            "agent": critic.name,
             "role": "反证与约束",
             "status": "completed",
             "summary": (
@@ -119,7 +134,7 @@ def run_fresh_document_pipeline(
             "duration_ms": round(critic_ms, 2),
         },
         {
-            "agent": "JudgeAgent",
+            "agent": judge.name,
             "role": "置信裁决",
             "status": "completed",
             "summary": (
@@ -200,6 +215,15 @@ def run_fresh_document_pipeline(
         "agent_trace": agent_trace,
         "specialist_agent_trace": specialist_agent_trace,
         "resources": resources,
+        "decision_layer": {
+            "mode": decision_mode,
+            "provider": (
+                provider_config.public_dict()
+                if provider_config is not None
+                else None
+            ),
+            "usage": decision_stats.snapshot(),
+        },
         "summary": {
             "entity_count": len(extraction["entities"]),
             "candidate_relation_count": len(extraction["relations"]),
@@ -220,6 +244,7 @@ def run_fresh_paper_pipeline(
     profile: LearnerProfile,
     schema_path: Path,
     accept_threshold: float = 0.72,
+    provider_config: ProviderConfig | None = None,
 ) -> dict[str, Any]:
     """Run the full pipeline on one pasted paper and return staged intermediates."""
     document = PlainTextParser().parse_text(
@@ -233,4 +258,5 @@ def run_fresh_paper_pipeline(
         profile=profile,
         schema_path=schema_path,
         accept_threshold=accept_threshold,
+        provider_config=provider_config,
     )

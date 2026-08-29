@@ -1,5 +1,7 @@
 import type {
   AgentTraceStep,
+  AtlasDomainData,
+  AtlasDomainSummary,
   AuthState,
   Domain,
   ExperimentLedger,
@@ -7,7 +9,9 @@ import type {
   Health,
   IngestResult,
   LearnerProfile,
-  ProviderOption,
+  LlmConfig,
+  ProviderInfo,
+  ProviderTestResult,
   ResearchProgressEvent,
   RunResult,
   UserAccount,
@@ -34,10 +38,30 @@ export const logout = (): Promise<AuthState> => request('/api/auth/logout', { me
 export const updateProfile = (profile: LearnerProfile): Promise<{ profile: LearnerProfile } & UserAccount> =>
   request('/api/me/profile', { method: 'PUT', headers: jsonHeaders, body: JSON.stringify(profile) })
 
-export const getProfiles = (): Promise<LearnerProfile[]> => request('/api/profiles')
-export const getDomains = (): Promise<Domain[]> => request('/api/domains')
-export const getProviders = (): Promise<ProviderOption[]> => request('/api/providers')
-export const getExperimentLedger = (): Promise<ExperimentLedger> => request('/api/experiments')
+export function getProfiles(): Promise<LearnerProfile[]> {
+  return request('/api/profiles')
+}
+
+export function getDomains(): Promise<Domain[]> {
+  return request('/api/domains')
+}
+
+export function getProviders(): Promise<{ providers: ProviderInfo[]; free_deepseek_ready: boolean }> {
+  return request('/api/providers')
+}
+
+export function testProvider(config: LlmConfig): Promise<ProviderTestResult> {
+  return request('/api/provider/test', {
+    method: 'POST',
+    headers: jsonHeaders,
+    body: JSON.stringify(config),
+  })
+}
+
+export function getExperimentLedger(): Promise<ExperimentLedger> {
+  return request('/api/experiments')
+}
+
 export const getHistory = (): Promise<Array<Record<string, unknown>>> => request('/api/history')
 export const getIngestions = (): Promise<Array<Record<string, unknown>>> => request('/api/ingestions')
 
@@ -59,7 +83,7 @@ export interface RunPayload {
   query: string
   domain_id?: string | null
   include_ablation?: boolean
-  llm: ProviderPayload
+  llm?: LlmConfig | null
 }
 
 export const runPipeline = (payload: RunPayload): Promise<RunResult> =>
@@ -108,9 +132,6 @@ export async function streamPipeline(
   return result
 }
 
-export const testProvider = (payload: ProviderPayload): Promise<Record<string, unknown>> =>
-  request('/api/providers/test', { method: 'POST', headers: jsonHeaders, body: JSON.stringify(payload) })
-
 export const sendFeedback = (payload: {
   profile_id: string; query: string; domain_id?: string | null; feedback: 'too_hard' | 'suitable' | 'too_easy'
 }): Promise<RunResult> => request('/api/feedback', { method: 'POST', headers: jsonHeaders, body: JSON.stringify(payload) })
@@ -127,6 +148,7 @@ export interface IngestPayload {
   text: string
   profile_id: string
   accept_threshold: number
+  llm?: LlmConfig | null
   save_source?: boolean
 }
 
@@ -134,7 +156,13 @@ export const ingestPaper = (payload: IngestPayload): Promise<IngestResult> =>
   request('/api/ingest-paper', { method: 'POST', headers: jsonHeaders, body: JSON.stringify(payload) })
 
 export function ingestPdf(payload: {
-  file: File; profile_id: string; paper_id: string; title: string; accept_threshold: number; save_source?: boolean
+  file: File
+  profile_id: string
+  paper_id: string
+  title: string
+  accept_threshold: number
+  llm?: LlmConfig | null
+  save_source?: boolean
 }): Promise<IngestResult> {
   const form = new FormData()
   form.append('file', payload.file)
@@ -142,6 +170,15 @@ export function ingestPdf(payload: {
   form.append('paper_id', payload.paper_id)
   form.append('title', payload.title)
   form.append('accept_threshold', String(payload.accept_threshold))
+  if (payload.llm) form.append('llm', JSON.stringify(payload.llm))
   form.append('save_source', String(payload.save_source ?? false))
   return request('/api/ingest-pdf', { method: 'POST', body: form })
+}
+
+export function getAtlasDomains(): Promise<{ domains: AtlasDomainSummary[] }> {
+  return request('/api/atlas/domains')
+}
+
+export function getAtlasDomain(domainId: string): Promise<AtlasDomainData> {
+  return request(`/api/atlas/${encodeURIComponent(domainId)}`)
 }

@@ -22,12 +22,20 @@ from pydantic import BaseModel, Field
 from .extraction import PyPDFParser
 from .experiment_ledger import build_experiment_ledger
 from .fresh_pipeline import run_fresh_document_pipeline, run_fresh_paper_pipeline
-from . import __version__
 from .harness import CircuitBreaker, RuntimeConfig
 from .online_rag import OnlineRAG
-from .orchestrator import DEFAULT_QUERY, ScholarlyTraceOrchestrator
-from .providers import ProviderConfig, ProviderError, create_provider, list_providers
+from .orchestrator import ScholarlyTraceOrchestrator
+from . import __version__
+from .providers import (
+    ProviderConfig,
+    ProviderError,
+    create_provider,
+    list_providers,
+)
 from .resources import database_path, project_root
+from .skills import conduct_research, diagnose, humanize, quality_gate
+from .skills.pdf_processor import extract_pdf
+from .sources import search_multi_source
 from .storage import AppRepository
 
 SESSION_COOKIE = "yanhai_session"
@@ -52,11 +60,49 @@ class ProfileUpdateRequest(BaseModel):
     required_concepts: list[str] = Field(default_factory=list)
 
 
-class ProviderRequest(BaseModel):
-    provider: str = "mock"
-    model: str | None = None
-    api_key: str = Field("", max_length=500)
-    timeout_seconds: float = Field(60, ge=5, le=180)
+def _load_server_api_key() -> str:
+    """读取服务端托管的 DeepSeek API Key，供免费选项使用。"""
+    key_path = project_root() / "secret" / "DeepSeekAPI.txt"
+    if key_path.exists():
+        return key_path.read_text(encoding="utf-8").strip()
+    return ""
+
+
+SERVER_API_KEY = _load_server_api_key()
+
+
+def _provider_config_from_payload(
+    raw: dict[str, Any] | None,
+) -> ProviderConfig | None:
+    """从请求 payload 的 ``llm`` 字段构造 ProviderConfig。
+
+    - 缺省或 provider=mock → 返回 None，调用方走确定性规则基线；
+    - ``free-deepseek`` → 注入服务端托管 Key 并改走 deepseek 协议；
+    - 其他供应商 → 由前端传入 api_key（自备 Key）。
+    """
+    if not raw:
+        return None
+    payload = dict(raw)
+    provider = str(payload.get("provider", "mock")).strip().lower()
+    if provider == "mock":
+        return None
+    if provider == "free-deepseek":
+        if not SERVER_API_KEY:
+            raise HTTPException(
+                status_code=503,
+                detail="免费 DeepSeek 暂不可用（服务端未配置 Key），请自备 Key 选择 DeepSeek。",
+            )
+        payload["provider"] = "deepseek"
+        payload["api_key"] = SERVER_API_KEY
+    try:
+        return ProviderConfig.from_payload(payload)
+    except (ValueError, ProviderError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+DEFAULT_QUERY = (
+    "如何从科学论文中抽取可追溯知识图谱，并利用图谱理解技术脉络和生成研究想法？"
+)
 
 
 class RunRequest(BaseModel):
@@ -64,7 +110,7 @@ class RunRequest(BaseModel):
     query: str = Field(DEFAULT_QUERY, min_length=2, max_length=5000)
     domain_id: str | None = None
     include_ablation: bool = True
-    llm: ProviderRequest = Field(default_factory=ProviderRequest)
+    llm: dict[str, Any] | None = None
 
 
 class GraphQueryRequest(BaseModel):
@@ -85,6 +131,7 @@ class IngestPaperRequest(BaseModel):
     text: str = Field(min_length=20, max_length=2_000_000)
     profile_id: str = "my-profile"
     accept_threshold: float = Field(0.72, ge=0.50, le=0.95)
+    llm: dict[str, Any] | None = None
     save_source: bool = False
 
 
@@ -92,6 +139,21 @@ class SearchRequest(BaseModel):
     query: str = Field(min_length=2, max_length=1000)
     limit: int = Field(5, ge=1, le=10)
     allow_network: bool = False
+
+
+class ResearchRequest(BaseModel):
+    domain_id: str | None = None
+    topic: str = ""
+    discipline: str = "cs_ai"
+
+
+class HumanizeRequest(BaseModel):
+    text: str
+    intensity: str = Field("light", pattern="^(light|medium|heavy)$")
+
+
+class DiagnoseRequest(BaseModel):
+    text: str
 
 
 class ApiState:
@@ -140,6 +202,7 @@ def _cookie_options() -> dict[str, Any]:
 
 def create_app(*, root: Path | None = None, repository: AppRepository | None = None) -> FastAPI:
     state = ApiState(root or project_root())
+    orchestrator = state.orchestrator
     if repository is not None:
         state.repository = repository
     app = FastAPI(
@@ -207,9 +270,9 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
             raise _error(404, "unknown_profile", "画像不存在或不属于当前用户。")
         return profile
 
-    def provider_config(payload: ProviderRequest) -> tuple[ProviderConfig, dict[str, Any]]:
-        raw = payload.model_dump()
-        selected = raw["provider"]
+    def provider_config(payload: dict[str, Any] | None) -> tuple[ProviderConfig, dict[str, Any]]:
+        raw = dict(payload or {})
+        selected = str(raw.get("provider", "mock")).strip().lower()
         if selected == "free-deepseek":
             if not state.deepseek_key:
                 raise _error(503, "free_provider_unavailable", "服务器免费 DeepSeek 暂不可用。", retryable=True)
@@ -344,34 +407,168 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
         return [mine, *demos]
 
     @app.get("/api/providers")
-    def providers(_: dict[str, Any] = Depends(require_user)) -> list[dict[str, Any]]:
-        values = []
-        for item in list_providers():
-            public = dict(item)
-            public["available"] = item["id"] != "free-deepseek" or bool(state.deepseek_key)
-            public["access_mode"] = "offline" if item["id"] == "mock" else ("free" if item["id"] == "free-deepseek" else "byok")
-            values.append(public)
-        return values
-
-    @app.post("/api/providers/test")
-    def test_provider(payload: ProviderRequest, _: dict[str, Any] = Depends(require_user)) -> dict[str, Any]:
-        config, public = provider_config(payload)
-        if config.provider == "mock":
-            return {"ok": True, "provider": public, "message": "离线规则引擎可用。"}
-        try:
-            response = create_provider(config).test_connection()
-        except ProviderError as exc:
-            raise _error(exc.status_code or 502, "provider_unavailable", str(exc), retryable=True) from exc
-        return {"ok": True, "provider": public, "response": response.public_dict()}
+    def providers() -> dict[str, Any]:
+        """列出可用 LLM 供应商、默认模型与协议，并标记免费 Key 是否就绪。"""
+        items = list_providers()
+        free_ready = bool(SERVER_API_KEY)
+        for item in items:
+            item["available"] = item["id"] != "free-deepseek" or free_ready
+            item["access_mode"] = (
+                "offline" if item["id"] == "mock"
+                else "free" if item["id"] == "free-deepseek"
+                else "byok"
+            )
+        return {"providers": items, "free_deepseek_ready": free_ready}
 
     @app.get("/api/domains")
     def domains(_: dict[str, Any] = Depends(require_user)) -> list[dict[str, Any]]:
         return state.orchestrator.list_domains()
 
+    @app.post("/api/provider/test")
+    def provider_test(payload: dict[str, Any]) -> dict[str, Any]:
+        """用本次提交的配置做最小连接测试（只回复 OK）。"""
+        provider_config = _provider_config_from_payload(payload)
+        if provider_config is None:
+            return {
+                "ok": True,
+                "provider": "mock",
+                "model": "offline-rules",
+                "message": "离线规则引擎无需连接测试。",
+            }
+        try:
+            provider = create_provider(provider_config)
+            response = provider.test_connection()
+        except (ProviderError, ValueError) as exc:
+            raise HTTPException(status_code=502, detail=str(exc)) from exc
+        return {
+            "ok": True,
+            "provider": provider_config.provider,
+            "model": provider_config.model,
+            "duration_ms": response.duration_ms,
+            "usage": response.usage,
+        }
+
     @app.get("/api/extracted-graph")
     def extracted_graph(domain_id: str | None = None, _: dict[str, Any] = Depends(require_user)) -> dict[str, Any]:
         kb, _, _ = state.orchestrator._runtime(domain_id)
         return kb.extracted_paper_graph()
+
+    @app.get("/api/atlas/domains")
+    def atlas_domains() -> dict[str, Any]:
+        """所有领域的摘要信息，供证据图谱工作区切换。"""
+        result = []
+        for did, cfg in orchestrator.kb.domain_configs.items():
+            kb, _, _ = orchestrator._runtime(did)
+            corpus = kb.vertical_corpus
+            result.append({
+                "domain_id": did,
+                "domain_name": cfg.get("domain_name", did),
+                "description": cfg.get("description", ""),
+                "query_example": cfg.get("query_example", ""),
+                "paper_count": len(corpus.papers),
+                "evidence_paper_count": len(corpus.evidence_papers),
+                "metadata_only_count": len(corpus.papers) - len(corpus.evidence_papers),
+                "entity_count": len(corpus.extraction_dict().get("entities", [])),
+                "relation_count": len(corpus.extraction_dict().get("relations", [])),
+            })
+        return {"domains": result}
+
+    @app.get("/api/atlas/{domain_id}")
+    def atlas_domain(domain_id: str) -> dict[str, Any]:
+        """单个领域的完整图谱数据：论文、实体、关系、证据卡。"""
+        if domain_id not in orchestrator.kb.domain_configs:
+            raise HTTPException(status_code=404, detail=f"Unknown domain: {domain_id}")
+        kb, _, _ = orchestrator._runtime(domain_id)
+        corpus = kb.vertical_corpus
+        ext = corpus.extraction_dict()
+        cfg = orchestrator.kb.domain_configs[domain_id]
+        ent_map = {e["entity_id"]: e for e in ext.get("entities", [])}
+
+        papers = []
+        for paper in corpus.papers:
+            rec = corpus.paper_records[paper.paper_id]
+            papers.append({
+                "paper_id": paper.paper_id,
+                "title": paper.title,
+                "authors": rec.get("authors", []),
+                "year": paper.year,
+                "venue": rec.get("venue", ""),
+                "doi": rec.get("doi", ""),
+                "source_url": paper.source_url,
+                "citation_count": rec.get("citation_count_snapshot", 0),
+                "evidence_tier": rec.get("evidence_tier", "metadata_only"),
+                "summary": rec.get("summary", ""),
+                "concepts": rec.get("concepts", []),
+            })
+
+        entities = [{
+            "entity_id": e["entity_id"],
+            "canonical_name": e["canonical_name"],
+            "entity_type": e["entity_type"],
+            "confidence": e["confidence"],
+            "mention_count": len(e.get("mentions", [])),
+            "aliases": e.get("aliases", []),
+        } for e in ext.get("entities", [])]
+
+        relations = []
+        for r in ext.get("relations", []):
+            src = ent_map.get(r["source_id"], {})
+            tgt = ent_map.get(r["target_id"], {})
+            relations.append({
+                "relation_id": r["relation_id"],
+                "source_id": r["source_id"],
+                "target_id": r["target_id"],
+                "source_name": src.get("canonical_name", r["source_id"]),
+                "target_name": tgt.get("canonical_name", r["target_id"]),
+                "source_type": src.get("entity_type", ""),
+                "target_type": tgt.get("entity_type", ""),
+                "relation_type": r["relation_type"],
+                "confidence": r["confidence"],
+                "status": r.get("status", "accepted"),
+                "evidence_ids": r.get("evidence_ids", []),
+            })
+
+        ev_ids: set[str] = set()
+        for r in relations:
+            ev_ids.update(r.get("evidence_ids", []))
+        evidence = [{
+            "evidence_id": ev["evidence_id"],
+            "paper_id": ev["paper_id"],
+            "section_id": ev["section_id"],
+            "text": ev["text"],
+            "char_start": ev["char_start"],
+            "char_end": ev["char_end"],
+        } for ev in ext.get("evidence", []) if ev["evidence_id"] in ev_ids]
+
+        paper_entities: dict[str, list[str]] = {}
+        for e in ext.get("entities", []):
+            for m in e.get("mentions", []):
+                parts = m["evidence_id"].split(":")
+                if len(parts) >= 3:
+                    paper_entities.setdefault(parts[1], []).append(e["entity_id"])
+
+        cards: dict[str, str] = {}
+        vertical_root = Path(project_root()) / "data" / "vertical_kb" / "domains" / domain_id
+        for paper in corpus.evidence_papers:
+            rec = corpus.paper_records[paper.paper_id]
+            doc_path = rec.get("document_path", "")
+            if doc_path:
+                card_file = vertical_root / doc_path
+                if card_file.exists():
+                    cards[paper.paper_id] = card_file.read_text(encoding="utf-8")[:4000]
+
+        return {
+            "domain_id": domain_id,
+            "domain_name": cfg.get("domain_name", domain_id),
+            "description": cfg.get("description", ""),
+            "query_example": cfg.get("query_example", ""),
+            "papers": papers,
+            "entities": entities,
+            "relations": relations,
+            "evidence": evidence,
+            "paper_entities": paper_entities,
+            "cards": cards,
+        }
 
     @app.get("/api/ablation")
     def ablation(_: dict[str, Any] = Depends(require_user)) -> dict[str, Any]:
@@ -396,12 +593,8 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
 
     @app.post("/api/run")
     async def run(payload: RunRequest, user: dict[str, Any] = Depends(require_user)) -> dict[str, Any]:
-        try:
-            return await asyncio.to_thread(execute_run, payload, user)
-        except KeyError as exc:
-            raise _error(404, "unknown_resource", str(exc)) from exc
-        except ProviderError as exc:
-            raise _error(exc.status_code or 502, "provider_failed", str(exc), retryable=True) from exc
+        # execute_run 内部已按用户持久化（persist_run），此处不再重复保存。
+        return await asyncio.to_thread(execute_run, payload, user)
 
     @app.post("/api/run/stream")
     async def run_stream(payload: RunRequest, user: dict[str, Any] = Depends(require_user)) -> StreamingResponse:
@@ -440,8 +633,12 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
         return state.repository.user_ingestions(str(user["user_id"]), limit)
 
     @app.post("/api/ingest-paper")
-    async def ingest_paper(payload: IngestPaperRequest, user: dict[str, Any] = Depends(require_user)) -> dict[str, Any]:
+    async def ingest_paper(
+        payload: IngestPaperRequest,
+        user: dict[str, Any] = Depends(require_user),
+    ) -> dict[str, Any]:
         profile = active_profile(payload.profile_id, user)
+        provider_config = _provider_config_from_payload(payload.llm)
         schema_path = state.root / "data" / "knowledge" / "extraction_schema.json"
         result = await asyncio.to_thread(
             run_fresh_paper_pipeline,
@@ -451,11 +648,18 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
             profile=profile,
             schema_path=schema_path,
             accept_threshold=payload.accept_threshold,
+            provider_config=provider_config,
         )
-        result["persistence"] = state.repository.save_ingestion(
-            user_id=str(user["user_id"]), paper_id=payload.paper_id, title=payload.title,
-            source_kind="text", source_text=payload.text, save_source=payload.save_source, result=result,
+        saved = state.repository.save_ingestion(
+            user_id=str(user["user_id"]),
+            paper_id=payload.paper_id,
+            title=payload.title,
+            source_kind="text",
+            source_text=payload.text,
+            save_source=payload.save_source,
+            result=result,
         )
+        result["persistence"] = {"saved": True, **saved}
         return result
 
     @app.post("/api/ingest-pdf")
@@ -465,18 +669,29 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
         paper_id: str = Form("uploaded-paper"),
         title: str = Form(""),
         accept_threshold: float = Form(0.72, ge=0.5, le=0.95),
-        save_source: bool = Form(False),
+        llm: str = Form(""),
         user: dict[str, Any] = Depends(require_user),
     ) -> dict[str, Any]:
         profile = active_profile(profile_id, user)
-        chunks: list[bytes] = []
-        size = 0
-        while chunk := await file.read(1_000_000):
-            size += len(chunk)
-            if size > MAX_PDF_BYTES:
-                raise _error(413, "pdf_too_large", "PDF 超过 5MB 限制。")
-            chunks.append(chunk)
-        raw_pdf = b"".join(chunks)
+        llm_payload: dict[str, Any] | None = None
+        if llm and llm.strip():
+            try:
+                llm_payload = json.loads(llm)
+            except json.JSONDecodeError as exc:
+                raise HTTPException(
+                    status_code=400, detail=f"llm 字段不是合法 JSON: {exc}"
+                ) from exc
+        provider_config = _provider_config_from_payload(llm_payload)
+        # 分块读取并在超限时尽早拒绝，避免把超大文件完整读入内存。
+        raw_pdf = b""
+        chunk_size = 1_000_000
+        while True:
+            chunk = await file.read(chunk_size)
+            if not chunk:
+                break
+            raw_pdf += chunk
+            if len(raw_pdf) > 5_000_000:
+                raise HTTPException(status_code=413, detail="PDF 超过 5MB 限制。")
         try:
             document = PyPDFParser().parse_bytes(raw_pdf, paper_id=paper_id, title=title)
         except RuntimeError as exc:
@@ -487,17 +702,101 @@ def create_app(*, root: Path | None = None, repository: AppRepository | None = N
             profile=profile,
             schema_path=state.root / "data" / "knowledge" / "extraction_schema.json",
             accept_threshold=accept_threshold,
+            provider_config=provider_config,
         )
-        source_text = "\n\n".join(document.sections.values())
-        result["persistence"] = state.repository.save_ingestion(
-            user_id=str(user["user_id"]), paper_id=paper_id, title=title,
-            source_kind="pdf_extracted_text", source_text=source_text, save_source=save_source, result=result,
+        saved = state.repository.save_ingestion(
+            user_id=str(user["user_id"]),
+            paper_id=paper_id,
+            title=title,
+            source_kind="pdf",
+            source_text="",
+            save_source=False,
+            result=result,
         )
+        result["persistence"] = {"saved": True, **saved}
         return result
 
-    dist = state.root / "frontend" / "dist"
-    if dist.is_dir():
-        app.mount("/", StaticFiles(directory=dist, html=True), name="frontend")
+    # ── 学术 Skills ──────────────────────────────────────
+
+    @app.get("/api/skills")
+    def list_skills() -> dict[str, Any]:
+        return {
+            "skills": [
+                {
+                    "id": "academic-researcher",
+                    "name": "学术文献调研",
+                    "description": "证据分级、引用核验、主题聚类、争议与空白识别",
+                    "endpoints": ["/api/skills/research"],
+                },
+                {
+                    "id": "pdf-processor",
+                    "name": "PDF 论文解析",
+                    "description": "文本、表格、图片提取，扫描件检测，质量检查",
+                    "endpoints": ["/api/skills/pdf/extract"],
+                },
+                {
+                    "id": "human-signal",
+                    "name": "去 AI 味",
+                    "description": "六层 AI 味诊断、评分、轻度/中度/重度改写",
+                    "endpoints": ["/api/skills/diagnose", "/api/skills/humanize"],
+                },
+            ]
+        }
+
+    @app.post("/api/skills/research")
+    def skills_research(payload: ResearchRequest) -> dict[str, Any]:
+        kb, _, _ = orchestrator._runtime(payload.domain_id)
+        papers = list(kb.paper_by_id.values())
+        if not papers:
+            raise HTTPException(status_code=404, detail="该领域没有论文数据")
+        report = conduct_research(
+            papers,
+            topic=payload.topic,
+            discipline=payload.discipline,
+        )
+        return report.to_dict()
+
+    @app.post("/api/skills/diagnose")
+    def skills_diagnose(payload: DiagnoseRequest) -> dict[str, Any]:
+        result = diagnose(payload.text)
+        gate = quality_gate(payload.text)
+        return {"diagnosis": result.to_dict(), "quality_gate": gate}
+
+    @app.post("/api/skills/humanize")
+    def skills_humanize(payload: HumanizeRequest) -> dict[str, Any]:
+        original = payload.text
+        revised = humanize(original, intensity=payload.intensity)
+        before = diagnose(original)
+        after = diagnose(revised)
+        return {
+            "original": original,
+            "revised": revised,
+            "intensity": payload.intensity,
+            "before_score": before.ai_score,
+            "after_score": after.ai_score,
+            "improvement": before.ai_score - after.ai_score,
+        }
+
+    @app.post("/api/skills/pdf/extract")
+    async def skills_pdf_extract(
+        file: UploadFile = File(...),
+        extract_tables: bool = Form(True),
+    ) -> dict[str, Any]:
+        if not file.filename or not file.filename.lower().endswith(".pdf"):
+            raise HTTPException(status_code=400, detail="请上传 PDF 文件")
+        content = await file.read()
+        tmp_dir = Path(project_root()) / "data" / "tmp"
+        tmp_dir.mkdir(parents=True, exist_ok=True)
+        tmp_path = tmp_dir / f"upload_{file.filename}"
+        tmp_path.write_bytes(content)
+        try:
+            result = extract_pdf(tmp_path, extract_tables=extract_tables)
+            return result.to_dict()
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"PDF 解析失败：{exc}") from exc
+        finally:
+            tmp_path.unlink(missing_ok=True)
+
     return app
 
 

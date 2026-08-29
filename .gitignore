@@ -8,6 +8,7 @@ __pycache__/
 .venv-product/
 .venv-win/
 .venv-local/
+.venv-lab/
 .mlflow/
 .hf-lab-cache/
 node_modules/
@@ -16,12 +17,15 @@ frontend/dist/
 *.env
 !*.env.example
 !deploy/*.env.example
+secret/*
+!secret/*.example
 outputs/*.json
 outputs/*.db
 outputs/*.log
 outputs/*.jsonl
 outputs/*.pid
 outputs/*.csv
+outputs/runtime/
 papers/**/*.pdf
 tmp/
 .tmp/
@@ -35,9 +39,6 @@ build/
 .codex/
 
 # runtime secrets & release artifacts (re-added after upstream merge)
-secret/
-secret/*
-!secret/.gitkeep
 release/
 *.sqlite3
 outputs/runtime/

@@ -10,7 +10,6 @@ import {
   Select,
   Space,
   Statistic,
-  Table,
   Tag,
   Typography,
 } from 'antd'
@@ -23,7 +22,6 @@ import {
   SafetyCertificateOutlined,
   UserOutlined,
 } from '@ant-design/icons'
-import type { ColumnsType } from 'antd/es/table'
 import AgentTrace from './AgentTrace'
 import DiagnosisRadar from './DiagnosisRadar'
 import KnowledgeGraphView from './KnowledgeGraphView'
@@ -31,7 +29,6 @@ import ResourceSummary from './ResourceSummary'
 import ResearchProgress from './ResearchProgress'
 import { getDomains, getExtractedGraph, getProfiles, getProviders, searchOnline, sendFeedback, streamPipeline, testProvider } from './api'
 import type {
-  Claim,
   Domain,
   GraphData,
   LearnerProfile,
@@ -43,27 +40,11 @@ import type {
 const { Text, Paragraph } = Typography
 
 const requestedProvider = new URLSearchParams(window.location.search).get('provider')
-
-interface ClaimRow {
-  key: string
-  claim: string
-  status: string
-  score: number
-  criticisms: string
-}
-
 function statusTag(status: string) {
   if (status === 'accepted') return <Tag color="green">accepted</Tag>
   if (status === 'rejected') return <Tag color="red">rejected</Tag>
   return <Tag color="orange">needs_review</Tag>
 }
-
-const claimColumns: ColumnsType<ClaimRow> = [
-  { title: '命题', dataIndex: 'claim', key: 'claim' },
-  { title: '状态', dataIndex: 'status', key: 'status', render: statusTag },
-  { title: '裁判分', dataIndex: 'score', key: 'score' },
-  { title: '批判项', dataIndex: 'criticisms', key: 'criticisms' },
-]
 
 export default function ProductPage() {
   const [domains, setDomains] = useState<Domain[]>([])
@@ -83,6 +64,7 @@ export default function ProductPage() {
   const [apiKey, setApiKey] = useState('')
   const [onlineResult, setOnlineResult] = useState<Record<string, unknown> | null>(null)
   const [graph, setGraph] = useState<GraphData | null>(null)
+  const [selectedClaimId, setSelectedClaimId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -93,8 +75,8 @@ export default function ProductPage() {
         if (cancelled) return
         setDomains(domainsData)
         setProfiles(profilesData)
-        setProviders(providerData)
-        const startupProvider = providerData.find(
+        setProviders(providerData.providers)
+        const startupProvider = providerData.providers.find(
           (item) => item.id === requestedProvider && item.available,
         )
         if (startupProvider) {
@@ -144,6 +126,7 @@ export default function ProductPage() {
     setLoading(true)
     setError(null)
     setResult(null)
+    setSelectedClaimId(null)
     setProgressEvents([])
     setOperationId('')
     const startedAt = Date.now()
@@ -169,13 +152,23 @@ export default function ProductPage() {
     }
   }
 
-  const claimRows: ClaimRow[] = (result?.claims ?? []).map((claim: Claim) => ({
-    key: claim.claim_id,
-    claim: `${claim.source} -${claim.relation}-> ${claim.target}`,
-    status: claim.status,
-    score: claim.judge_score,
-    criticisms: claim.criticisms.join('；') || '—',
-  }))
+  // Highlight nodes related to the selected claim
+  const highlightIds = useMemo(() => {
+    if (!selectedClaimId || !result || !graph) return new Set<string>()
+    const claim = result.claims.find((c) => c.claim_id === selectedClaimId)
+    if (!claim) return new Set<string>()
+    const ids = new Set<string>()
+    for (const node of graph.nodes) {
+      if (node.label === claim.source || node.label === claim.target) ids.add(node.id)
+    }
+    for (const eid of claim.evidence_ids) ids.add(eid)
+    return ids
+  }, [selectedClaimId, result, graph])
+
+  const selectedClaim = result?.claims.find((c) => c.claim_id === selectedClaimId)
+  const selectedEvidence = selectedClaim
+    ? (result?.evidence_details?.[selectedClaim.claim_id] ?? [])
+    : []
 
   const thinkingSteps = result
     ? [...result.specialist_agent_trace, ...result.agent_trace]
@@ -323,47 +316,86 @@ export default function ProductPage() {
             </Col>
           </Row>
 
-          <Row gutter={16} style={{ marginTop: 16 }}>
+          <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
             <Col xs={24} lg={10}>
               <Card title="学习者知识画像">
                 <DiagnosisRadar profile={result.profile} />
               </Card>
             </Col>
             <Col xs={24} lg={14}>
-              <Card title="裁决命题">
-                <Table
-                  columns={claimColumns}
-                  dataSource={claimRows}
-                  pagination={false}
-                  size="small"
-                  scroll={{ x: 760 }}
-                  expandable={{
-                    expandedRowRender: (row) => {
-                      const spans = result.evidence_details?.[row.key] ?? []
-                      if (!spans.length) return <Text type="secondary">无证据跨度</Text>
-                      return (
-                        <div>
-                          {spans.map((span) => (
-                            <div key={span.evidence_id} style={{ marginBottom: 6 }}>
-                              <Text strong>{span.evidence_id}</Text>
-                              <Text type="secondary">
-                                {' '}· {span.section_id} · 字符 [{span.char_start}, {span.char_end})
-                              </Text>
-                              <div style={{ color: '#334155' }}>{span.text}</div>
-                            </div>
-                          ))}
-                        </div>
-                      )
-                    },
-                  }}
-                />
+              <Card title="裁决命题（点击命题联动图谱与证据原文）" extra={<Text type="secondary" style={{ fontSize: 11 }}>共 {result.claims.length} 条</Text>}>
+                <div style={{ maxHeight: 320, overflowY: 'auto' }}>
+                  {result.claims.map((claim) => (
+                    <div
+                      key={claim.claim_id}
+                      onClick={() => setSelectedClaimId(selectedClaimId === claim.claim_id ? null : claim.claim_id)}
+                      style={{
+                        padding: '8px 10px',
+                        marginBottom: 4,
+                        border: selectedClaimId === claim.claim_id ? '1px solid #a51931' : '1px solid #f0ece4',
+                        borderLeft: selectedClaimId === claim.claim_id ? '3px solid #a51931' : '3px solid transparent',
+                        borderRadius: 2,
+                        cursor: 'pointer',
+                        background: selectedClaimId === claim.claim_id ? '#fdf0f2' : '#fff',
+                        fontSize: 12,
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                        {statusTag(claim.status)}
+                        <Text strong style={{ fontSize: 12 }}>{claim.source}</Text>
+                        <Text type="secondary" style={{ fontSize: 11 }}>-{claim.relation}-&gt;</Text>
+                        <Text strong style={{ fontSize: 12 }}>{claim.target}</Text>
+                        <Text type="secondary" style={{ marginLeft: 'auto', fontSize: 11 }}>{(claim.judge_score * 100).toFixed(0)}%</Text>
+                      </div>
+                      {claim.criticisms.length > 0 && (
+                        <Text type="secondary" style={{ fontSize: 10 }}>批判: {claim.criticisms.join('；')}</Text>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </Card>
             </Col>
           </Row>
 
-          <Card title="证据图谱" style={{ marginTop: 16 }}>
+          <Card
+            title="证据知识图谱（命题→证据跨度→实体→关系，点击命题高亮联动）"
+            style={{ marginTop: 16 }}
+          >
             {graph ? (
-              <KnowledgeGraphView data={graph} />
+              <Row gutter={[12, 12]}>
+                <Col xs={24} lg={15}>
+                  <KnowledgeGraphView data={graph} highlightIds={highlightIds} height={480} />
+                </Col>
+                <Col xs={24} lg={9}>
+                  <div style={{ height: 480, overflowY: 'auto', border: '1px solid #f0ece4', borderRadius: 4, padding: 10 }}>
+                    {selectedClaim ? (
+                      <>
+                        <div style={{ marginBottom: 10, paddingBottom: 8, borderBottom: '1px solid #f0ece4' }}>
+                          <Text strong style={{ fontSize: 12 }}>{selectedClaim.source} → {selectedClaim.target}</Text>
+                          <br />
+                          <Text type="secondary" style={{ fontSize: 10 }}>
+                            {selectedClaim.relation_type} · {statusTag(selectedClaim.status)} · {(selectedClaim.judge_score * 100).toFixed(0)}% · {selectedEvidence.length} 条证据
+                          </Text>
+                        </div>
+                        {selectedEvidence.length > 0 ? selectedEvidence.map((span) => (
+                          <div key={span.evidence_id} style={{ marginBottom: 10, padding: 8, background: '#faf8f4', borderLeft: '3px solid #a51931', fontSize: 11, lineHeight: 1.6 }}>
+                            <Text type="secondary" style={{ fontSize: 9, display: 'block', marginBottom: 3 }}>
+                              {span.section_id} · 字符 [{span.char_start}, {span.char_end})
+                            </Text>
+                            <div style={{ color: '#334155' }}>{span.text}</div>
+                          </div>
+                        )) : (
+                          <Text type="secondary" style={{ fontSize: 11 }}>该命题无关联证据跨度。</Text>
+                        )}
+                      </>
+                    ) : (
+                      <div style={{ textAlign: 'center', paddingTop: 160, color: '#9a938a', fontSize: 12 }}>
+                        点击左侧命题查看<br />证据原文与图谱联动
+                      </div>
+                    )}
+                  </div>
+                </Col>
+              </Row>
             ) : (
               <Paragraph type="secondary">图谱加载中或不可用。</Paragraph>
             )}

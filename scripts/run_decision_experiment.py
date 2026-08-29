@@ -2,12 +2,15 @@
 
 用法：
   python scripts/run_decision_experiment.py --models "deepseek:deepseek-chat,zhipu:glm-4-flash"
-  省略 --models 时只跑规则基线（离线自检用，不产生费用）。
+  python scripts/run_decision_experiment.py --pairs "zhipu:glm-4-flash>deepseek:deepseek-v4-pro"
+  省略 --models/--pairs 时只跑规则基线（离线自检用，不产生费用）。
 
 组合矩阵：
   - baseline：规则批判者 + 规则裁判（对照）
   - 对每个模型 M：LLM 批判者(M) + LLM 裁判(M)（同模型三件套）
   - 模型数 ≤3 时：两两异质组合（批判者 A + 裁判 B）
+  - --pairs：只跑显式指定的 批判者>裁判 组合（与 --models 互斥，便于
+    12 组矩阵"每组一个独立 run 目录"且不重复烧同质基线）
 缺 Key 的组合会被跳过并注明（实验里不允许静默回退，否则结果不可比）。
 
 产物（outputs/experiments/decision-matrix-<时间戳>/）：
@@ -22,6 +25,7 @@ import csv
 import json
 import os
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Callable
@@ -104,36 +108,110 @@ def parse_models(spec: str) -> list[tuple[str, str]]:
     return models
 
 
+def parse_pairs(spec: str) -> list[tuple[str, str, str, str]]:
+    """解析 --pairs 的 批判者>裁判 列表。
+
+    形如 "zhipu:glm-4-flash>deepseek:deepseek-v4-pro,kimi:kimi-k2.6>kimi:kimi-k3"。
+    """
+    pairs: list[tuple[str, str, str, str]] = []
+    for item in spec.split(","):
+        item = item.strip()
+        if not item:
+            continue
+        if ">" not in item:
+            raise SystemExit(
+                f"配对写法应为 批判者>裁判（provider:model>provider:model）；收到 {item!r}"
+            )
+        critic, judge = item.split(">", 1)
+        if ":" not in critic or ":" not in judge:
+            raise SystemExit(f"配对两侧都必须是 provider:model；收到 {item!r}")
+        ca, cm = critic.strip().split(":", 1)
+        jp, jm = judge.strip().split(":", 1)
+        pairs.append((ca.strip(), cm.strip(), jp.strip(), jm.strip()))
+    return pairs
+
+
 def make_llm_runner(
     kb: KnowledgeBase,
     critic_provider: str,
     critic_model: str,
     judge_provider: str,
     judge_model: str,
+    workers: int,
 ) -> Runner:
     def runner(claims: list[Claim]) -> tuple[list[Claim], dict[str, Any]]:
         critic_cfg = load_config_from_env(critic_provider, critic_model)
         judge_cfg = load_config_from_env(judge_provider, judge_model)
-        critic = LLMCritic(
-            create_provider(critic_cfg), fallback_to_rules=False
-        )
-        judge = LLMJudge(create_provider(judge_cfg), fallback_to_rules=False)
-        claims = critic.critique(claims, kb)
-        claims = judge.adjudicate(claims, kb)
-        return claims, {
-            "critic": critic.stats.snapshot(),
-            "judge": judge.stats.snapshot(),
-        }
+        critic_factory = create_provider(critic_cfg)
+        judge_factory = create_provider(judge_cfg)
+
+        def zero() -> dict[str, Any]:
+            return {
+                "calls": 0,
+                "failed_calls": 0,
+                "retries": 0,
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "duration_ms": 0.0,
+            }
+
+        def one(claim: Claim) -> tuple[Claim, dict[str, Any], dict[str, Any]]:
+            # 每 claim 独立 accumulator，避免多线程并发自增丢计数。
+            critic = LLMCritic(critic_factory, fallback_to_rules=False)
+            judge = LLMJudge(judge_factory, fallback_to_rules=False)
+            critic.critique([claim], kb)
+            judge.adjudicate([claim], kb)
+            return claim, critic.stats.snapshot(), judge.stats.snapshot()
+
+        processed: list[Claim] = []
+        acc_critic = zero()
+        acc_judge = zero()
+
+        def merge(acc: dict[str, Any], piece: dict[str, Any]) -> None:
+            for key in acc:
+                acc[key] += piece[key]
+
+        if workers <= 1:
+            for claim in claims:
+                item, piece_c, piece_j = one(claim)
+                processed.append(item)
+                merge(acc_critic, piece_c)
+                merge(acc_judge, piece_j)
+        else:
+            with ThreadPoolExecutor(max_workers=workers) as pool:
+                for item, piece_c, piece_j in pool.map(one, claims):
+                    processed.append(item)
+                    merge(acc_critic, piece_c)
+                    merge(acc_judge, piece_j)
+        acc_critic["duration_ms"] = round(acc_critic["duration_ms"], 1)
+        acc_judge["duration_ms"] = round(acc_judge["duration_ms"], 1)
+        return processed, {"critic": acc_critic, "judge": acc_judge}
 
     return runner
 
 
 def main() -> None:
+    # Windows 中文控制台默认 GBK，报告含 ¥/中文会 UnicodeEncodeError；
+    # 统一按 UTF-8 输出，避免"实验成功但打印崩溃"的假失败。
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if callable(reconfigure):
+            try:
+                reconfigure(encoding="utf-8", errors="replace")
+            except OSError:
+                pass
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--models",
         default="",
         help="逗号分隔的 provider:model 列表；缺 Key 的组合会跳过。",
+    )
+    parser.add_argument(
+        "--pairs",
+        default="",
+        help="显式 批判者>裁判 组合列表（与 --models 互斥），"
+        "例：zhipu:glm-4-flash>deepseek:deepseek-v4-pro。",
     )
     parser.add_argument(
         "--max-cases",
@@ -151,10 +229,19 @@ def main() -> None:
         default="",
         help="案例集所属领域 ID；留空=默认领域（与 --cases 对应的知识库一致）。",
     )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=8,
+        help="并发调用数（>=1）；推理类模型单次调用可达百秒级，串行不可接受。",
+    )
     args = parser.parse_args()
 
     load_dotenv(PROJECT_ROOT / ".env")
+    if args.models and args.pairs:
+        raise SystemExit("--models 与 --pairs 互斥：同质组用 --models，异质组用 --pairs。")
     models = parse_models(args.models)
+    pairs = parse_pairs(args.pairs)
 
     kb = KnowledgeBase(
         PROJECT_ROOT / "data" / "knowledge",
@@ -179,29 +266,42 @@ def main() -> None:
     combos: list[tuple[str, Runner, str, str]] = [
         ("baseline_rule", baseline_runner, "rule", "rule"),
     ]
-    for provider, model in models:
-        key = f"{provider}:{model}"
-        combos.append(
-            (
-                f"llm_{provider}_{model}",
-                make_llm_runner(kb, provider, model, provider, model),
-                key,
-                key,
-            )
-        )
-    if 1 < len(models) <= 3:
-        for i, (pa, ma) in enumerate(models):
-            for j, (pb, mb) in enumerate(models):
-                if i == j:
-                    continue
-                combos.append(
-                    (
-                        f"hetero_{pa}_{ma}__{pb}_{mb}",
-                        make_llm_runner(kb, pa, ma, pb, mb),
-                        f"{pa}:{ma}",
-                        f"{pb}:{mb}",
-                    )
+    if pairs:
+        for pa, ma, pb, mb in pairs:
+            critic_key = f"{pa}:{ma}"
+            judge_key = f"{pb}:{mb}"
+            combos.append(
+                (
+                    f"pair_{pa}_{ma}__{pb}_{mb}",
+                    make_llm_runner(kb, pa, ma, pb, mb, args.workers),
+                    critic_key,
+                    judge_key,
                 )
+            )
+    else:
+        for provider, model in models:
+            key = f"{provider}:{model}"
+            combos.append(
+                (
+                    f"llm_{provider}_{model}",
+                    make_llm_runner(kb, provider, model, provider, model, args.workers),
+                    key,
+                    key,
+                )
+            )
+        if 1 < len(models) <= 3:
+            for i, (pa, ma) in enumerate(models):
+                for j, (pb, mb) in enumerate(models):
+                    if i == j:
+                        continue
+                    combos.append(
+                        (
+                            f"hetero_{pa}_{ma}__{pb}_{mb}",
+                            make_llm_runner(kb, pa, ma, pb, mb, args.workers),
+                            f"{pa}:{ma}",
+                            f"{pb}:{mb}",
+                        )
+                    )
 
     rows: list[dict[str, Any]] = []
     skipped: list[dict[str, str]] = []
@@ -236,6 +336,7 @@ def main() -> None:
                 "benchmark_id": benchmark["benchmark_id"],
                 "case_count": case_limit,
                 "models_requested": [f"{p}:{m}" for p, m in models],
+                "workers": args.workers,
                 "skipped": skipped,
                 "results": rows,
             },
@@ -252,6 +353,10 @@ def main() -> None:
     print(_markdown(rows, skipped, benchmark, case_limit))
 
 
+# 实验快照日（experiment_models.json snapshot_date）参考汇率；答辩口径以当天实际汇率为准。
+USD_TO_CNY = 7.2
+
+
 def _estimate_cost(row: dict[str, Any], prices: dict[str, Any]) -> float | None:
     parts: list[float] = []
     stats = row.get("stats") or {}
@@ -262,9 +367,12 @@ def _estimate_cost(row: dict[str, Any], prices: dict[str, Any]) -> float | None:
         price = prices.get(row.get(role, ""))
         if not price or price.get("input") is None or price.get("output") is None:
             return None
+        currency = str(price.get("currency", "CNY")).upper()
+        rate = USD_TO_CNY if currency == "USD" else 1.0
         parts.append(
-            entry["input_tokens"] / 1_000_000 * price["input"]
-            + entry["output_tokens"] / 1_000_000 * price["output"]
+            (entry["input_tokens"] / 1_000_000 * price["input"]
+             + entry["output_tokens"] / 1_000_000 * price["output"])
+            * rate
         )
     return round(sum(parts), 4) if parts else None
 

@@ -472,9 +472,14 @@ class OpenAIChatProvider(BaseProvider):
             payload,
         )
         try:
-            content = str(data["choices"][0]["message"]["content"])
+            message = data["choices"][0]["message"]
+            content = str(message.get("content") or message.get("reasoning_content") or "")
         except (KeyError, IndexError, TypeError) as exc:
             raise ProviderError("供应商响应中没有文本内容。") from exc
+        if not content.strip():
+            raise ProviderError(
+                "供应商把 max_tokens 全部耗在推理上、没有输出正文；请调大 max_tokens。"
+            )
         usage = data.get("usage") or {}
         return LLMResponse(
             content=content,
@@ -576,7 +581,10 @@ class OpenAIChatProvider(BaseProvider):
             finish_reason = str(choice.get("finish_reason") or "") or None
             request_id = response_headers.get("x-request-id") or data.get("id")
             raw_content = message.get("content")
+            reasoning_content = message.get("reasoning_content")
             content = raw_content if isinstance(raw_content, str) else ""
+            if not content.strip() and isinstance(reasoning_content, str):
+                content = reasoning_content
             response = LLMResponse(
                 content=content,
                 provider=self.config.provider,
@@ -706,4 +714,6 @@ def load_config_from_env(provider: str, model: str | None = None) -> ProviderCon
         provider=provider,
         model=model,
         api_key=api_key,
+        # 推理类模型（如 kimi-k2.6/k3）长输出远超 60s；实验路径统一放宽。
+        timeout_seconds=120.0,
     )

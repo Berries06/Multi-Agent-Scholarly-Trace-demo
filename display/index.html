@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>研海寻踪 · 证据图谱</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+</head>
+<body>
+  <!-- ─── Masthead ─── -->
+  <header class="masthead">
+    <div class="masthead__inner">
+      <div class="masthead__brand">
+        <div class="masthead__logo">研</div>
+        <div>
+          <h1 class="masthead__title">研海寻踪</h1>
+          <p class="masthead__subtitle">Evidence-Grounded Research Intelligence</p>
+        </div>
+      </div>
+      <nav class="domain-tabs" id="domainTabs"></nav>
+      <div class="masthead__tools">
+        <div class="view-toggle" id="viewToggle">
+          <button class="is-active" data-view="force">力导向</button>
+          <button data-view="timeline">时间轴</button>
+        </div>
+      </div>
+    </div>
+    <div class="masthead__rule"></div>
+    <div class="masthead__meta">
+      <span id="metaDomain">—</span>
+      <span class="masthead__sep">·</span>
+      <span id="metaCounts">—</span>
+      <span class="masthead__sep">·</span>
+      <span class="masthead__date">27 AUGUST 2026</span>
+    </div>
+  </header>
+
+  <!-- ─── Main three-column layout ─── -->
+  <main class="atlas">
+    <!-- Left: paper list -->
+    <aside class="panel panel--left" id="leftPanel">
+      <div class="panel__header">
+        <h2>文献索引</h2>
+        <button class="panel__collapse" id="collapseLeft" title="收起">‹</button>
+      </div>
+      <div class="panel__body">
+        <div class="search-box">
+          <input type="text" id="paperSearch" placeholder="搜索标题、作者、方法…" />
+        </div>
+        <div class="filter-row">
+          <label class="filter-label">年份</label>
+          <div class="year-range">
+            <input type="number" id="yearMin" min="2015" max="2026" placeholder="2015" />
+            <span>—</span>
+            <input type="number" id="yearMax" min="2015" max="2026" placeholder="2026" />
+          </div>
+        </div>
+        <div class="filter-row">
+          <label class="filter-label">排序</label>
+          <select id="sortBy">
+            <option value="citation_desc">引用量 ↓</option>
+            <option value="citation_asc">引用量 ↑</option>
+            <option value="year_desc">年份 ↓</option>
+            <option value="year_asc">年份 ↑</option>
+            <option value="title_asc">标题 A-Z</option>
+          </select>
+        </div>
+        <div class="filter-row">
+          <label class="filter-label">层级</label>
+          <div class="tier-toggle" id="tierToggle">
+            <label><input type="checkbox" value="evidence_card" checked /> 证据卡</label>
+            <label><input type="checkbox" value="metadata_only" checked /> 元数据</label>
+          </div>
+        </div>
+        <div class="entity-legend" id="entityLegend"></div>
+        <div class="paper-list" id="paperList"></div>
+      </div>
+    </aside>
+
+    <!-- Center: graph canvas -->
+    <section class="panel panel--center">
+      <div class="graph-canvas" id="graphCanvas"></div>
+      <div class="graph-hint" id="graphHint">
+        <kbd>滚轮</kbd> 缩放 · <kbd>拖拽</kbd> 平移 · <kbd>点击节点</kbd> 查看详情 · <kbd>点击空白</kbd> 取消
+      </div>
+      <div class="graph-loading" id="graphLoading">
+        <div class="graph-loading__spinner"></div>
+        <span>正在构建证据图谱…</span>
+      </div>
+    </section>
+
+    <!-- Right: detail panel -->
+    <aside class="panel panel--right" id="rightPanel">
+      <div class="panel__header">
+        <h2>详情</h2>
+        <button class="panel__collapse" id="collapseRight" title="收起">›</button>
+      </div>
+      <div class="panel__body" id="detailBody">
+        <div class="detail-empty">
+          <div class="detail-empty__icon">◎</div>
+          <p>点击图谱中的节点或左侧文献<br />查看论文元数据与证据卡</p>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- ─── Bottom status bar ─── -->
+  <footer class="statusbar">
+    <span id="statusNodes">节点 0</span>
+    <span class="statusbar__sep">|</span>
+    <span id="statusEdges">关系 0</span>
+    <span class="statusbar__sep">|</span>
+    <span id="statusEvidence">证据跨度 0</span>
+    <span class="statusbar__sep">|</span>
+    <span id="statusSelection">未选中</span>
+    <span class="statusbar__right">研海寻踪 · YANHAI TRACE · Evidence before assertion</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
