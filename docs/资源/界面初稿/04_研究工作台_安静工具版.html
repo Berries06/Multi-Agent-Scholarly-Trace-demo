@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>初稿 · 研究工作台（安静工具版）</title>
+<style>
+  /* 参照 arXiv 列表页 + GitHub/Linear 这类"给干活的人用"的界面：
+     去掉落地页外壳，层级只靠字重、字号、灰阶和细分割线，不靠卡片和阴影。
+     衬线和纸色保留，那是你们自己的底子。 */
+  :root {
+    --ink: #1c1b19;
+    --ink-2: #44423e;
+    --ink-3: #6f6d66;
+    --ink-4: #6b655d;           /* 元信息。原 #8d8a82 在纸底上只有 3.16，不达标 */
+    --paper: #f7f5f0;
+    --white: #fff;
+    --rule: #ddd8cd;
+    --rule-soft: #eae5db;
+    --accent: #a51931;          /* 只用在主操作和当前项，不再到处用 */
+    --bar: #1c1b19;
+    --serif: Georgia, "Noto Serif SC", "Songti SC", serif;
+    --mono: "Cascadia Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--white); color: var(--ink);
+    font: 13px/1.6 Inter, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── 顶栏：48px 细黑条，不再放大字号 ── */
+  .topbar { background: var(--bar); color: #e9e5dd; }
+  .topbar__inner {
+    width: min(1180px, calc(100% - 40px)); margin: 0 auto;
+    display: flex; align-items: center; gap: 20px; height: 48px;
+  }
+  .wordmark { font-family: var(--serif); font-size: 17px; font-weight: 700; letter-spacing: .02em; color: #fff; }
+  .wordmark small { font-family: inherit; font-weight: 400; font-size: 11px; color: #a8a29a; margin-left: 8px; letter-spacing: .06em; }
+  .topbar__right { margin-left: auto; display: flex; align-items: center; gap: 18px; font-size: 12px; color: #bdb7ae; }
+  .topbar__right a { color: #e9e5dd; }
+  .dot-ok { color: #7fbf8f; }
+
+  /* ── 工作区导航：下划线式，替掉原来那块黑底大标签 ── */
+  .tabs { border-bottom: 1px solid var(--rule); background: var(--white); }
+  .tabs__inner { width: min(1180px, calc(100% - 40px)); margin: 0 auto; display: flex; gap: 26px; }
+  .tabs a {
+    padding: 11px 0 10px; font-size: 13px; color: var(--ink-3); border-bottom: 2px solid transparent;
+    display: flex; align-items: baseline; gap: 6px;
+  }
+  .tabs a:hover { color: var(--ink); text-decoration: none; }
+  .tabs a.is-active { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+  .tabs .count { font-family: var(--mono); font-size: 11px; color: var(--ink-4); }
+
+  main { width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 22px 0 40px; }
+
+  /* ── 页头：一行标题 + 一行说明，没有 hero ── */
+  .page-head { padding-bottom: 14px; border-bottom: 1px solid var(--rule); margin-bottom: 20px; }
+  .page-head h1 { font-family: var(--serif); font-size: 23px; font-weight: 700; margin: 0 0 4px; letter-spacing: .01em; }
+  .page-head p { margin: 0; color: var(--ink-3); font-size: 12px; }
+
+  /* ── 表单：不用卡片，靠分割线分段 ── */
+  .row { display: grid; grid-template-columns: 156px minmax(0,1fr); gap: 20px; padding: 16px 0; border-bottom: 1px solid var(--rule-soft); }
+  .row > .label { font-size: 12px; color: var(--ink-3); padding-top: 3px; }
+  .row > .label b { display: block; font-weight: 600; color: var(--ink-2); font-size: 13px; margin-bottom: 2px; }
+
+  textarea {
+    width: 100%; min-height: 78px; resize: vertical; padding: 10px 12px;
+    font: 14px/1.7 inherit; color: var(--ink); background: var(--white);
+    border: 1px solid var(--rule); border-radius: 2px;
+  }
+  textarea:focus { outline: 2px solid rgba(165,25,49,.35); outline-offset: 1px; border-color: var(--accent); }
+  .hint { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: var(--ink-4); }
+
+  .config { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 16px; }
+  .field label { display: block; font-size: 11px; color: var(--ink-3); margin-bottom: 5px; }
+  .field select {
+    width: 100%; height: 34px; padding: 0 8px; font: 13px inherit; color: var(--ink);
+    background: var(--white); border: 1px solid var(--rule); border-radius: 2px;
+  }
+  .field select:focus { outline: 2px solid rgba(165,25,49,.35); outline-offset: 1px; }
+
+  /* ── 操作行：左对齐一组按钮，不用通栏深色条 ── */
+  .actions { display: flex; align-items: center; gap: 12px; padding: 18px 0 0; }
+  .actions .meta { font-size: 11px; color: var(--ink-4); margin-right: auto; font-family: var(--mono); }
+  button { font: 13px inherit; cursor: pointer; border-radius: 2px; min-height: 36px; padding: 0 16px; }
+  .btn-primary { background: var(--accent); border: 1px solid var(--accent); color: #fff; font-weight: 600; padding: 0 22px; }
+  .btn-primary:hover { background: #8d1529; }
+  .btn-quiet { background: var(--white); border: 1px solid var(--rule); color: var(--ink-2); }
+  .btn-quiet:hover { background: var(--paper); }
+
+  /* ── 文献列表：arXiv 那种排法，标题衬线加粗，其余靠灰阶 ── */
+  section { margin-top: 34px; }
+  .section-head { display: flex; align-items: baseline; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+  .section-head h2 { font-family: var(--serif); font-size: 16px; margin: 0; }
+  .section-head span { font-size: 11px; color: var(--ink-4); margin-left: auto; font-family: var(--mono); }
+  ol.papers { list-style: none; margin: 0; padding: 0; }
+  ol.papers li { padding: 11px 0 12px; border-bottom: 1px solid var(--rule-soft); display: grid; grid-template-columns: 34px minmax(0,1fr); gap: 12px; }
+  ol.papers .idx { font-family: var(--mono); font-size: 12px; color: var(--ink-4); padding-top: 2px; }
+  .paper-title { font-family: var(--serif); font-size: 15px; font-weight: 700; line-height: 1.45; margin: 0 0 3px; }
+  .paper-meta { font-size: 11px; color: var(--ink-3); }
+  .paper-meta em { font-style: normal; color: var(--ink-2); }
+  .paper-meta .sep { color: var(--rule); margin: 0 7px; }
+  .paper-meta .id { font-family: var(--mono); }
+  .tier { font-size: 10px; padding: 1px 5px; border: 1px solid var(--rule); color: var(--ink-3); border-radius: 2px; }
+  .tier--card { border-color: #bcd4c6; color: #2f6b53; }
+
+  /* ── 页脚：两段分开，靠 · 连 ── */
+  .footer {
+    width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 18px 0 30px;
+    border-top: 1px solid var(--rule); display: flex; gap: 14px; flex-wrap: wrap;
+    font-size: 11px; color: var(--ink-4);
+  }
+  .footer span + span::before { content: "·"; margin-right: 14px; color: var(--rule); }
+
+  @media (max-width: 860px) {
+    .config { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  }
+  @media (max-width: 640px) {
+    .topbar__inner, .tabs__inner, main, .footer { width: calc(100% - 24px); }
+    .wordmark small { display: none; }
+    .tabs { overflow-x: auto; }
+    .tabs__inner { gap: 18px; }
+    .tabs a { white-space: nowrap; min-height: 44px; align-items: center; }
+    .page-head h1 { font-size: 20px; }
+    .row { grid-template-columns: minmax(0,1fr); gap: 8px; }
+    .config { grid-template-columns: minmax(0,1fr); }
+    .actions { flex-wrap: wrap; }
+    .actions .meta { width: 100%; margin-bottom: 4px; }
+    .actions button { flex: 1; }
+    ol.papers li { grid-template-columns: 24px minmax(0,1fr); gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar__inner">
+    <span class="wordmark">研海寻踪<small>YANHAI TRACE</small></span>
+    <div class="topbar__right">
+      <span><span class="dot-ok">●</span> 服务正常 · 5 领域 · 3 画像</span>
+      <a href="#">我的账号</a>
+    </div>
+  </div>
+</div>
+
+<nav class="tabs">
+  <div class="tabs__inner">
+    <a href="#" class="is-active">研究工作台</a>
+    <a href="#">论文摄入</a>
+    <a href="#">证据图谱 <span class="count">290</span></a>
+    <a href="#">实验记录 <span class="count">15</span></a>
+  </div>
+</nav>
+
+<main>
+  <div class="page-head">
+    <h1>提出研究问题</h1>
+    <p>系统先检索论文证据，再由提出者、批判者、裁判三方裁决；每条结论都能回到原文和证据 ID。</p>
+  </div>
+
+  <div class="row">
+    <div class="label"><b>研究问题</b>要验证的关系或机制</div>
+    <div>
+      <textarea>如何从科学论文中抽取可追溯知识图谱，并利用图谱理解技术脉络和生成研究想法？</textarea>
+      <div class="hint"><span>37 字</span><span>结论将绑定论文来源与证据 ID</span></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="label"><b>运行配置</b>决定检索范围与模型调用方式</div>
+    <div class="config">
+      <div class="field">
+        <label for="domain">垂直领域</label>
+        <select id="domain"><option>科学文献信息抽取与知识图谱构建</option></select>
+      </div>
+      <div class="field">
+        <label for="profile">学习者画像</label>
+        <select id="profile"><option>我的画像</option><option>演示画像 · 入门</option></select>
+      </div>
+      <div class="field">
+        <label for="provider">推理服务</label>
+        <select id="provider"><option>离线规则</option><option>免费 DeepSeek</option></select>
+      </div>
+      <div class="field">
+        <label for="model">模型</label>
+        <select id="model"><option>offline-rules</option></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <span class="meta">离线规则 · 本地知识库 · 不产生 API 费用</span>
+    <button class="btn-quiet">测试连接</button>
+    <button class="btn-primary">开始研究</button>
+  </div>
+
+  <!-- 文献/证据的列表排法示例，参照 arXiv：标题衬线加粗，其余全靠灰阶 -->
+  <section>
+    <div class="section-head">
+      <h2>本次检索到的证据</h2>
+      <span>24 条 · 按证据层级排序</span>
+    </div>
+    <ol class="papers">
+      <li>
+        <span class="idx">[1]</span>
+        <div>
+          <p class="paper-title">Quantum supremacy using a programmable superconducting processor</p>
+          <div class="paper-meta">
+            <em>Arute 等</em><span class="sep">·</span>Nature 2019<span class="sep">·</span>
+            <span class="id">D18-1360</span><span class="sep">·</span>字符跨度 0–142
+            <span class="sep">·</span><span class="tier tier--card">证据卡</span>
+          </div>
+        </div>
+      </li>
+      <li>
+        <span class="idx">[2]</span>
+        <div>
+          <p class="paper-title">Barren plateau in quantum neural network training landscapes</p>
+          <div class="paper-meta">
+            <em>McClean 等</em><span class="sep">·</span>Nature Communications 2018<span class="sep">·</span>
+            <span class="id">2024.emnlp-main.726</span><span class="sep">·</span>字符跨度 88–260
+            <span class="sep">·</span><span class="tier tier--card">证据卡</span>
+          </div>
+        </div>
+      </li>
+      <li>
+        <span class="idx">[3]</span>
+        <div>
+          <p class="paper-title">Variational quantum algorithms</p>
+          <div class="paper-meta">
+            <em>Cerezo 等</em><span class="sep">·</span>Nature Reviews Physics 2021<span class="sep">·</span>
+            <span class="id">metadata-060d0288902a</span><span class="sep">·</span>
+            <span class="tier">仅元数据</span>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </section>
+</main>
+
+<footer class="footer">
+  <span>研海寻踪 · YANHAI TRACE</span>
+  <span>证据先于断言，测量先于主张</span>
+</footer>
+</body>
+</html>

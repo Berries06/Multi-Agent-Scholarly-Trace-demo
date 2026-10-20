@@ -1,0 +1,3742 @@
+{
+ "status": "candidate_pending_human_review",
+ "status_note": "这是把机器挖的候选概念接进抽取器的实验输入，不是定下来的知识点清单；概念、别名、类型三样都要人对着证据签核。",
+ "domain_id": "materials-discovery-gnn",
+ "domain_name": "材料发现与图神经网络",
+ "source": "data/knowledge/domain_vocabulary/materials-discovery-gnn_候选概念.json",
+ "source_status": "candidate_pending_human_review",
+ "source_generated_at": "2026-10-17",
+ "filter": {
+  "field": "document_frequency",
+  "rule": ">= 3",
+  "meaning": "document_frequency 数的是这个词出现在多少篇不同的论文里（同一篇里出现多次只算 1 篇），由 scripts/语料/挖掘领域概念.py 统计"
+ },
+ "alias_cap": 6,
+ "canonical_rule": "canonical 过判据（第三轮加 functional/短缩写两条，第四轮加通用词一条）：是常见英文功能词的丢；长度 ≤3 且全大写的只有 definitions_found 里有它的括号定义、含数字、或候选 document_frequency ≥ 5 时才留；命中 GENERIC_STRUCTURAL_TERMS 且不是已定义缩写的丢（ENTITY/TASK 这一类）；其余长度 ≥4 的实词一律留。判定顺序与别名那几道一致，一条同时符合两条时记前面那条",
+ "alias_rule": "别名取候选 surface_forms 里出现次数最多的前 alias_cap 个（挖掘脚本落盘时已按出现次数从高到低排序），**先过那几道过滤再截断**：长度 <2 的不要；是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）的不要；长度 ≤3 且全大写的缩略语只有出现在挖掘结果的 definitions_found 里、含数字、或候选的 document_frequency ≥ 5 时才留。之后去重，并去掉与 canonical 逐字完全相同的写法",
+ "alias_filters": {
+  "common_english_function_words": [
+   "a",
+   "about",
+   "above",
+   "across",
+   "after",
+   "again",
+   "all",
+   "also",
+   "although",
+   "am",
+   "an",
+   "and",
+   "any",
+   "are",
+   "as",
+   "at",
+   "be",
+   "because",
+   "been",
+   "before",
+   "being",
+   "below",
+   "between",
+   "both",
+   "but",
+   "by",
+   "can",
+   "cannot",
+   "could",
+   "did",
+   "do",
+   "does",
+   "doing",
+   "done",
+   "down",
+   "during",
+   "each",
+   "else",
+   "etc",
+   "few",
+   "for",
+   "from",
+   "further",
+   "furthermore",
+   "had",
+   "has",
+   "have",
+   "having",
+   "he",
+   "hence",
+   "her",
+   "his",
+   "how",
+   "however",
+   "if",
+   "in",
+   "into",
+   "is",
+   "it",
+   "its",
+   "may",
+   "might",
+   "more",
+   "moreover",
+   "most",
+   "must",
+   "no",
+   "nor",
+   "not",
+   "of",
+   "off",
+   "on",
+   "once",
+   "only",
+   "onto",
+   "or",
+   "other",
+   "our",
+   "out",
+   "over",
+   "own",
+   "same",
+   "shall",
+   "she",
+   "should",
+   "so",
+   "some",
+   "such",
+   "than",
+   "that",
+   "the",
+   "their",
+   "them",
+   "then",
+   "therefore",
+   "these",
+   "they",
+   "this",
+   "those",
+   "though",
+   "through",
+   "thus",
+   "to",
+   "too",
+   "under",
+   "up",
+   "us",
+   "very",
+   "was",
+   "we",
+   "were",
+   "what",
+   "when",
+   "where",
+   "whereas",
+   "which",
+   "while",
+   "who",
+   "whom",
+   "whose",
+   "why",
+   "will",
+   "with",
+   "within",
+   "without",
+   "would",
+   "you"
+  ],
+  "common_english_function_words_source": "通用英语功能词（冠词、代词、介词、连词、助动词、指示词、常见副词与限定词），不是本项目发明的；任何一本英语语法书里的 function words 都是这一批",
+  "min_short_acronym_df": 5,
+  "reasons": {
+   "too_short": "长度小于 2（单字母没有区分度，抽取器那边全是版面碎片）",
+   "common_english_word": "是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）；抽取器别名正则大小写不敏感，1–3 个字母的全大写缩略语会匹配到普通英文词上（实测 OF 匹配 of，25607 次提及）",
+   "short_acronym_without_definition": "长度 ≤3 的全大写缩略语，挖掘结果里没有它的括号定义、也不含数字，候选的 document_frequency 还不到 5；大小写不敏感匹配下会被普通英文词吃掉（NA、IT、OR 这一类）",
+   "generic_structural_term": "是描述文档结构或泛泛类别的普通英文词（GENERIC_STRUCTURAL_TERMS），不指向具体技术；这一轮只用来判 canonical，别名这一道只报数不丢（见 generic_alias_candidates）"
+  },
+  "effect": "抽取器 src/yanhai/extraction.py 的 _alias_pattern 带 IGNORECASE，1–3 个字母的全大写缩略语会匹配到普通英文词上（实测 OF 匹配 of，25607 次提及）；这几道过滤就是拦这一类别名"
+ },
+ "rejected_alias_total": 0,
+ "rejected_aliases": [],
+ "rejected_aliases_note": "rejected_aliases 只列每条被丢掉的别名（alias / reason / canonical / domain_id），最多列前 200 条；完整条数看 rejected_alias_total，按原因分的计数看 rejected_reasons",
+ "rejected_reasons": {
+  "common_english_word": 0,
+  "generic_structural_term": 0,
+  "short_acronym_without_definition": 0,
+  "too_short": 0
+ },
+ "canonical_filters": {
+  "ran": "canonical 过滤在第三轮加上，跑过的每一份词表都带这一节；rejected_canonical_total 是 0 就说明这一批候选里没有该丢的 canonical，不是这一道没跑",
+  "reasons": {
+   "common_english_word": "canonical 本身是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）；抽取器别名正则大小写不敏感，词表里一条 `OF` 会把每一句里的 `of` 都算成提及（第二轮实测主领域 25607 次），`IN`/`BY`/`OR`/`IT`/`AT`/`HE`/`HER` 同理",
+   "short_acronym_without_definition": "canonical 长度 ≤3 且全大写，挖掘结果里没有它的括号定义、也不含数字，候选的 document_frequency 还不到 5；这类名字在大小写不敏感匹配下会被普通英文词吃掉（`NA` 命中 `na`，`IT` 命中 `it`），真缩写（`KG`/`GPT`/`AI`/`GNN`/`DKT`/`CGCNN`）只要在 definitions_found 里有定义、含数字、或 DF ≥ 5，就不受这一条影响",
+   "generic_structural_term": "canonical 是描述文档结构或泛泛类别的普通英文词（GENERIC_STRUCTURAL_TERMS，例如 `ENTITY`/`TASK`/`CONTEXT`/`CLAIM`）；它们是被『长度 ≥4 一律保留』那一条放进来的，本身不指向具体技术。同时在 definitions_found 里有括号定义的（`AI` 这类真缩写）不受这一条影响"
+  },
+  "min_short_acronym_df": 5,
+  "generic_structural_terms": [
+   "accuracy",
+   "acknowledgements",
+   "acknowledgment",
+   "acknowledgments",
+   "answer",
+   "answers",
+   "appendices",
+   "appendix",
+   "application",
+   "applications",
+   "approach",
+   "approaches",
+   "author",
+   "authors",
+   "baseline",
+   "baselines",
+   "bibliographies",
+   "bibliography",
+   "case",
+   "cases",
+   "claim",
+   "claims",
+   "context",
+   "contexts",
+   "data",
+   "entities",
+   "entity",
+   "example",
+   "examples",
+   "feature",
+   "features",
+   "figure",
+   "figures",
+   "footnote",
+   "footnotes",
+   "image",
+   "images",
+   "information",
+   "input",
+   "inputs",
+   "item",
+   "items",
+   "knowledge",
+   "language",
+   "languages",
+   "level",
+   "levels",
+   "number",
+   "numbers",
+   "one",
+   "ones",
+   "output",
+   "outputs",
+   "paper",
+   "papers",
+   "paragraph",
+   "paragraphs",
+   "part",
+   "parts",
+   "performance",
+   "process",
+   "processes",
+   "quality",
+   "question",
+   "questions",
+   "reference",
+   "references",
+   "result",
+   "results",
+   "score",
+   "scores",
+   "section",
+   "sections",
+   "sentence",
+   "sentences",
+   "size",
+   "state",
+   "states",
+   "step",
+   "steps",
+   "studies",
+   "study",
+   "supplementary",
+   "system",
+   "systems",
+   "table",
+   "tables",
+   "task",
+   "tasks",
+   "text",
+   "texts",
+   "time",
+   "type",
+   "types",
+   "user",
+   "users",
+   "value",
+   "values",
+   "word",
+   "words"
+  ],
+  "generic_structural_terms_note": "**这是一条判断，不是客观标准**：收的是描述文档结构或泛泛类别、不指向具体技术的单 token 普通英文词。`model`/`method`/`dataset`/`annotation`/`metric` 故意不在表里——它们在本体里本身就是合法类型（METHOD/DATASET/METRIC），收进来会误伤真概念。（第四轮加的。第三轮记录第五、六节列出的 ENTITY/TASK/CONTEXT/CLAIM/QUESTION/OUTPUT 那一批就是这么进来的。第五轮又补进 REFERENCES/REFERENCE/BIBLIOGRAPHY/ACKNOWLEDGEMENTS/ACKNOWLEDGMENT/APPENDIX/SUPPLEMENTARY/FOOTNOTE 这一批段落标题词——`quantum::REFERENCES`（原始 DF 33）就是这么一条噪声。）",
+  "rules": [
+   "canonical 是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）→ 丢；整条名字当一个词查一次，含空格时要求每个词都是功能词",
+   "canonical 长度 ≤3 且全大写：只有 definitions_found 里有它的括号定义、含数字、或候选 document_frequency ≥ 5 时才留，否则丢（KG/GPT/AI/DKT/CGCNN 这类留，OF/IN/BY/NA/IT 丢）",
+   "canonical 命中 GENERIC_STRUCTURAL_TERMS（ENTITY/TASK/CONTEXT/CLAIM 这一类）且不是已定义缩写 → 丢；这一条拦的是『长度 ≥4 一律保留』放进来的那批",
+   "长度 ≥4 的实词一律保留（不受全大写影响，CGCNN/MEGNet/SciERC 都留）"
+  ],
+  "why": "抽取器建别名表时是 {canonical, *aliases}（src/yanhai/extraction.py 的 SchemaGuidedExtractor.__init__），canonical 也算一条别名；正则带 IGNORECASE，所以词表里一条 `OF` 会把每一句里的 `of` 都算成提及（第二轮实测主领域 25607 次，1–3 位全大写实体占提及 52.0%）。噪声坐在名字这一层，只过滤别名拦不到",
+  "note": "判定顺序：先常见英文功能词，再短全大写，最后通用/结构性词；一条同时符合两条时记前面那条，与别名那几道是同一个约定"
+ },
+ "rejected_canonical_total": 64,
+ "rejected_canonicals": [
+  {
+   "canonical": "OF",
+   "reason": "common_english_word",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 6,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RESULTS",
+   "reason": "generic_structural_term",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 6,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "AUTHOR",
+   "reason": "generic_structural_term",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 5,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "FF",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "VBM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "EXC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "BCC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "VO",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "AB",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "UV",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "FCC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GPT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ST",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RDF",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PI",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "NEB",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SO",
+   "reason": "common_english_word",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "UQ",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GV",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "EML",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "FE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "EFG",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IIA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MTP",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CBM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DNN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "KV",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "AE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IN",
+   "reason": "common_english_word",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RGB",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CI",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "XC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "FC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TP",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "BY",
+   "reason": "common_english_word",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MOE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PL",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PV",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CL",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GW",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HER",
+   "reason": "common_english_word",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ID",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IIB",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "LDA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ON",
+   "reason": "common_english_word",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RAM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RTX",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "AIP",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DATA",
+   "reason": "generic_structural_term",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DES",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GCS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GTX",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "INFORMATION",
+   "reason": "generic_structural_term",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "LLC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "materials-discovery-gnn",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  }
+ ],
+ "rejected_canonicals_note": "rejected_canonicals 只列每条被丢掉的 canonical（canonical / reason / domain_id / document_frequency / entity_type），最多列前 500 条；完整条数看 rejected_canonical_total，按原因分的计数看 rejected_canonical_reasons",
+ "rejected_canonical_reasons": {
+  "common_english_word": 6,
+  "generic_structural_term": 4,
+  "short_acronym_without_definition": 54
+ },
+ "generic_alias_candidates": {
+  "note": "第四轮的通用/结构性词判据只落在 canonical 这一层，别名沿用原来那几道，所以这一节**只报数、不当场丢**：这些是留在词表别名里、归一后命中 GENERIC_STRUCTURAL_TERMS 的写法。要不要下一轮一起清，要人定",
+  "total": 0,
+  "items": []
+ },
+ "kept_short_uppercase": {
+  "note": "canonical 判据与别名那几道过滤都跑完之后，还留在词表里的 1–3 位全大写名字。这一节留下的分两种：挖掘结果 definitions_found 里有括号定义的，或者候选 document_frequency ≥ 5（跨论文原样出现过）的，看 kept_by 这一项。含数字的写法（GPT-4、3DG）虽然也留，但不算『全大写』这一类、不进这一节。长度 ≥4 的全大写名字（CGCNN/MEGNet/SciERC）不受判据影响，也不进这一节",
+  "canonical_count": 71,
+  "canonical_by_definition": 44,
+  "canonical_by_document_frequency": 27,
+  "alias_count": 0,
+  "items": [
+   {
+    "canonical": "ML",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "DFT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "MAE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "GNN",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "MD",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "PBE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "MP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "NN",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "MSE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "MA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "AI",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "TS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "MLP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "SI",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "PCA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "PES",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "RF",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "GGA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ASE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "DOS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "CNN",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "AUC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "MAD",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "SVM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "CO",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "XRD",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "ASP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NVT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "CV",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "ACE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ROC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "SNE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "RBF",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ACS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "FP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "GB",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "DE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "GPR",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "MOF",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "IR",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "KRR",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "GAP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "PAW",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "SVR",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "EAM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "HSE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NX",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "CIF",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "KS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "GP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "DL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "OH",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "HEA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NSF",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "FN",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "SC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "LLM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "LR",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "KL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "GCN",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "MC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "OPT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "KNN",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "GC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "RE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "MBJ",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "GBR",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "PSC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "VRH",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ERC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "RMS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   }
+  ]
+ },
+ "type_mapping": {
+  "accepted_entity_types": [
+   "DATASET",
+   "DOMAIN",
+   "FINDING",
+   "LIMITATION",
+   "METHOD",
+   "METRIC",
+   "TASK"
+  ],
+  "fallback": "METHOD",
+  "rule": "候选的 guess_type 只保留抽取本体 entity_types 里有的 7 类（METHOD/TASK/DATASET/METRIC/FINDING/LIMITATION/DOMAIN）；guess_type 为空、缺失或不在其中（例如猜测出的 'OTHER'、'MODEL'）一律落到 METHOD。落 METHOD 的理由：抽不出类型的候选多半是缩写词、模型名、系统名，METHOD 是其中最多的一类；METHOD 在 relation_constraints 里也几乎不受限，不会因为类型对不上把整条关系判成 schema_type_mismatch。",
+  "observed": {
+   "METHOD": 249,
+   "DOMAIN": 120,
+   "DATASET": 6,
+   "TASK": 1
+  }
+ },
+ "generated_by": "scripts/抽取/生成抽取词表.py",
+ "generated_on": "2026-10-17",
+ "schema_untouched": "data/knowledge/extraction_schema.json 未被本脚本修改；本文件是另写的一份，由 scripts/抽取/构建全文知识库.py --vocabulary 追加进抽取器。",
+ "concept_count": 376,
+ "alias_count": 410,
+ "duplicates_merged": 29,
+ "duplicates_merged_note": "挖掘脚本按 (来源类别, 归一键) 存候选，同一个词可能落成多条；这里按 canonical只留第一条（出现篇数多的在前），类型以先到的为准，别名并到一起",
+ "concepts": [
+  {
+   "canonical": "ML",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DFT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Machine learning",
+    "machine learning model",
+    "the machine learning",
+    "Machine Learning",
+    "machine learning framework",
+    "The machine learning"
+   ]
+  },
+  {
+   "canonical": "MAE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "material project",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Materials Project",
+    "The Materials Project",
+    "Material Project",
+    "Material Projects"
+   ]
+  },
+  {
+   "canonical": "RMSE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "crystal structure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the crystal structure",
+    "Crystal structure",
+    "The crystal structure",
+    "Crystal Structure",
+    "the crystal structure. The method"
+   ]
+  },
+  {
+   "canonical": "GNN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CGCNN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "neural network",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the neural network",
+    "Neural Network",
+    "deep neural network",
+    "Neural network",
+    "neural networks in the task",
+    "Neural Networks"
+   ]
+  },
+  {
+   "canonical": "formation energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the formation energy",
+    "Formation energy",
+    "The formation energy",
+    "Formation Energy",
+    "formation energy dataset",
+    "formation energy model"
+   ]
+  },
+  {
+   "canonical": "PBE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GNNs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GPa",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ml model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "ML model",
+    "the ML model",
+    "The ML model",
+    "deep ML model"
+   ]
+  },
+  {
+   "canonical": "crystal graph",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Crystal Graph",
+    "the crystal graph",
+    "Crystal graph",
+    "the Crystal Graph"
+   ]
+  },
+  {
+   "canonical": "DISCUSSION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MAEs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "VASP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CONCLUSION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "METHODS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ALIGNN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MSE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "total energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the total energy",
+    "Total Energy",
+    "Total energy",
+    "The total energy"
+   ]
+  },
+  {
+   "canonical": "graph neural",
+   "entity_type": "METHOD",
+   "aliases": [
+    "graph neural network",
+    "Graph Neural Network",
+    "Graph neural network",
+    "the Graph Neural Network",
+    "the graph neural network"
+   ]
+  },
+  {
+   "canonical": "MA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "AI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "linear regression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Linear regression",
+    "Linear Regression",
+    "the linear regression",
+    "used. Linear regression"
+   ]
+  },
+  {
+   "canonical": "JARVIS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MEGNet",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "active learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the active learning",
+    "Active learning",
+    "the active learning algorithm",
+    "Active Learning",
+    "active learning algorithm"
+   ]
+  },
+  {
+   "canonical": "monte carlo",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Monte Carlo",
+    "Monte-Carlo"
+   ]
+  },
+  {
+   "canonical": "PyTorch",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "supplementary information",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Supplementary Information",
+    "Supplementary Informations"
+   ]
+  },
+  {
+   "canonical": "MLP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PCA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PES",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SchNet",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "unit cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the unit cell",
+    "the unit cell. The model"
+   ]
+  },
+  {
+   "canonical": "RF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SOAP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GGA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "training dataset",
+   "entity_type": "DATASET",
+   "aliases": [
+    "the training dataset",
+    "The training dataset",
+    "Training Dataset"
+   ]
+  },
+  {
+   "canonical": "target property",
+   "entity_type": "TASK",
+   "aliases": [
+    "the target property",
+    "Target property",
+    "target property of the task",
+    "the target property. Dataset"
+   ]
+  },
+  {
+   "canonical": "ReLU",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ASE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "atomistic line graph neural",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Atomistic Line Graph Neural Network",
+    "Atomistic LIne Graph Neural Network",
+    "atomistic line graph neural network",
+    "Atomistic Line Graph Neural"
+   ]
+  },
+  {
+   "canonical": "RESUL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "M3GNet",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DOS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CNN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "AUC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ICSD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "potential energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the potential energy",
+    "Potential Energy",
+    "Potential energy",
+    "potentials Potential energy"
+   ]
+  },
+  {
+   "canonical": "NVIDIA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CONCLUSIONS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "transfer learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Transfer Learning"
+   ]
+  },
+  {
+   "canonical": "MACE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MAD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SVM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MLPs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "XRD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ASP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "material graph",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "MatErials Graph",
+    "MatErials Graph Network",
+    "materials graph",
+    "Materials Graph",
+    "Materials Graph Network",
+    "materials graph network"
+   ]
+  },
+  {
+   "canonical": "electronic structure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the electronic structure",
+    "A. Electronic Structure",
+    "electronic structure method"
+   ]
+  },
+  {
+   "canonical": "NVT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "atomistic line graph neural network",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Atomistic Line Graph Neural Network",
+    "Atomistic LIne Graph Neural Network",
+    "Our Atomistic Line Graph Neural Network"
+   ]
+  },
+  {
+   "canonical": "INTRODUCTION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CV",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MLFF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ACE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HOMO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ROC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SNE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LUMO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "gaussian process regression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Gaussian Process Regression",
+    "Gaussian process regression",
+    "Gaussian process regression model",
+    "the Gaussian process regression",
+    "Using Gaussian Process Regression"
+   ]
+  },
+  {
+   "canonical": "DimeNet",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "linear model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the linear model"
+   ]
+  },
+  {
+   "canonical": "atomistic line graph",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Atomistic Line Graph",
+    "the Atomistic Line Graph"
+   ]
+  },
+  {
+   "canonical": "band structure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the band structure",
+    "Band structure",
+    "The band structure",
+    "band–structure"
+   ]
+  },
+  {
+   "canonical": "crystal graph convolutional neural",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Crystal Graph Convolutional Neural",
+    "Crystal Graph Convolutional Neural Network",
+    "crystal graph convolutional neural network",
+    "Crystal graph convolutional neural network"
+   ]
+  },
+  {
+   "canonical": "graph neural network",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Graph Neural Network",
+    "Graph Neural Networks",
+    "Graph neural network"
+   ]
+  },
+  {
+   "canonical": "principal component analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the principal component analysis"
+   ]
+  },
+  {
+   "canonical": "SHAP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DFPT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RBF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "supporting information",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Supporting Information"
+   ]
+  },
+  {
+   "canonical": "NNs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QM9",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ACS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CNNs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "property prediction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the property prediction",
+    "the property prediction algorithm",
+    "the property prediction model",
+    "Property Prediction"
+   ]
+  },
+  {
+   "canonical": "GB",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "performance model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the performance of the model",
+    "performance of the model",
+    "The performance of the model",
+    "performance Model"
+   ]
+  },
+  {
+   "canonical": "single model",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "surrogate model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the surrogate model"
+   ]
+  },
+  {
+   "canonical": "DE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GPR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MOF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MOFs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TiO2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LASSO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MLIPs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "KRR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GAP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "OptB88vdW",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PAW",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SVR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MLIP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "random forest",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Random Forest",
+    "Random Forests",
+    "The Random Forest",
+    "random forest model",
+    "Random Forest model",
+    "Random forest model"
+   ]
+  },
+  {
+   "canonical": "EAM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MatBench",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "material property",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "materials property",
+    "Materials Property",
+    "the material property"
+   ]
+  },
+  {
+   "canonical": "MEGNET",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "band gap",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Band Gap"
+   ]
+  },
+  {
+   "canonical": "EDFT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HSE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LAMMPS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CIF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "KS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "kernel ridge regression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Kernel Ridge Regression",
+    "Kernel ridge regression"
+   ]
+  },
+  {
+   "canonical": "GPUs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SiLU",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "test dataset",
+   "entity_type": "DATASET",
+   "aliases": [
+    "the test dataset"
+   ]
+  },
+  {
+   "canonical": "AdamW",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "department of energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Department of Energy"
+   ]
+  },
+  {
+   "canonical": "for machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "for machine learning of potential",
+    "the datasets for machine learning"
+   ]
+  },
+  {
+   "canonical": "best model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the best model",
+    "The best model"
+   ]
+  },
+  {
+   "canonical": "graph representation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the graph representation",
+    "Graph representation"
+   ]
+  },
+  {
+   "canonical": "perdew burke ernzerhof",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Perdew-Burke-Ernzerhof",
+    "Perdew Burke-Ernzerhof"
+   ]
+  },
+  {
+   "canonical": "TION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "convolutional neural",
+   "entity_type": "METHOD",
+   "aliases": [
+    "convolutional neural network",
+    "Convolutional Neural Network"
+   ]
+  },
+  {
+   "canonical": "crystal graph convolutional neural network",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Crystal Graph Convolutional Neural Networks",
+    "Crystal Graph Convolutional Neural Network",
+    "Crystal graph convolutional neural network"
+   ]
+  },
+  {
+   "canonical": "GP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "AIMD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SLME",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MLFFs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SISSO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "UMAP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SNAP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "XGBoost",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CO2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "OH",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "OQMD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GitHub",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ridge regression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "ridge regression potential",
+    "Ridge regression",
+    "ridge-regression potential",
+    "the Ridge regression",
+    "Ridge Regression"
+   ]
+  },
+  {
+   "canonical": "H2O",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "gnn model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "GNN model",
+    "the GNN model",
+    "The GNN model"
+   ]
+  },
+  {
+   "canonical": "sensitivity analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Sensitivity analysis",
+    "sensitivity analysis on the model",
+    "the sensitivity analysis"
+   ]
+  },
+  {
+   "canonical": "exfoliation energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Exfoliation energy",
+    "the exfoliation energy"
+   ]
+  },
+  {
+   "canonical": "B3LYP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "atom graph",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the atom graph",
+    "Atom Graph",
+    "Atom graph",
+    "atom-based graph",
+    "atoms with graph"
+   ]
+  },
+  {
+   "canonical": "free energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Free energy",
+    "The free energy",
+    "the free energy"
+   ]
+  },
+  {
+   "canonical": "internal energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the internal energy"
+   ]
+  },
+  {
+   "canonical": "mean absolute error",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Mean Absolute Error",
+    "Mean-absolute-errors"
+   ]
+  },
+  {
+   "canonical": "SCAN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "national science foundation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "National Science Foundation"
+   ]
+  },
+  {
+   "canonical": "GemNet",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HEA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MODEL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MoS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NSF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "detailed analysis",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "hyperparameter optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Hyperparameter Optimization",
+    "the hyperparameter optimization",
+    "the hyperparameters optimization"
+   ]
+  },
+  {
+   "canonical": "accurate prediction",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "atomic structure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Atomic structure",
+    "Atomic Structure",
+    "atomic structure in the model"
+   ]
+  },
+  {
+   "canonical": "metal organic",
+   "entity_type": "METHOD",
+   "aliases": [
+    "metal–organic framework",
+    "Metal -Organic Framework",
+    "Metal organic framework",
+    "Metal-Organic Framework",
+    "Metal−Organic Framework"
+   ]
+  },
+  {
+   "canonical": "schematic representation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Schematic representation",
+    "Schematic representation of the framework"
+   ]
+  },
+  {
+   "canonical": "trained model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "The trained model",
+    "the trained model",
+    "trained the model",
+    "trained. Model"
+   ]
+  },
+  {
+   "canonical": "training model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "training the model",
+    "training The model"
+   ]
+  },
+  {
+   "canonical": "FN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GHz",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "atomic simulation environment",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Atomic Simulation Environment"
+   ]
+  },
+  {
+   "canonical": "datum mining",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "data mining",
+    "Data mining"
+   ]
+  },
+  {
+   "canonical": "discussion the",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Discussion The"
+   ]
+  },
+  {
+   "canonical": "for material property",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "datasets for material property",
+    "for materials property"
+   ]
+  },
+  {
+   "canonical": "inorganic crystal structure database",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Inorganic Crystal Structure Database"
+   ]
+  },
+  {
+   "canonical": "logistic regression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Logistic regression"
+   ]
+  },
+  {
+   "canonical": "of machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the potential of machine learning"
+   ]
+  },
+  {
+   "canonical": "of the machine learning",
+   "entity_type": "METHOD",
+   "aliases": [
+    "of the machine learning model",
+    "of the machine learning method",
+    "of the machine-learning model"
+   ]
+  },
+  {
+   "canonical": "simulation package",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Simulation Package"
+   ]
+  },
+  {
+   "canonical": "support vector regression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the Support Vector Regression",
+    "the support vector regression",
+    "Support Vector Regression"
+   ]
+  },
+  {
+   "canonical": "vienna ab",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Vienna Ab"
+   ]
+  },
+  {
+   "canonical": "CHGNet",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GPs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MoS2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TiO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MODNet",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "line graph",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the line graph",
+    "Line graph",
+    "line graph to the model",
+    "line-graph model"
+   ]
+  },
+  {
+   "canonical": "LLM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "KL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GCN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SiO2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "KVRH",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "OPT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PBEsol",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "photon energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Photon energy",
+    "the photon energy"
+   ]
+  },
+  {
+   "canonical": "MPa",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ZnO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "datum generation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "data generation",
+    "Data Generation",
+    "Data generation",
+    "the data generation",
+    "the ‘data generation"
+   ]
+  },
+  {
+   "canonical": "machine learned",
+   "entity_type": "METHOD",
+   "aliases": [
+    "machine-learned model",
+    "the machine-learned model",
+    "A. Machine-learned potential",
+    "The machine-learned model",
+    "machine -learned model",
+    "machine-learned potential"
+   ]
+  },
+  {
+   "canonical": "KNN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "adsorption energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the adsorption energy",
+    "adsorption -energy",
+    "Adsorption energy"
+   ]
+  },
+  {
+   "canonical": "fermi energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Fermi Energy",
+    "the Fermi energy",
+    "Fermi energy"
+   ]
+  },
+  {
+   "canonical": "interatomic potential",
+   "entity_type": "METHOD",
+   "aliases": [
+    "The interatomic potential",
+    "Interatomic Potential",
+    "Interatomic Potentials"
+   ]
+  },
+  {
+   "canonical": "us department energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the U.S. Department of Energy",
+    "U.S. Department of Energy"
+   ]
+  },
+  {
+   "canonical": "BaTiO3",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LEARNING",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SMILES",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "supervised learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Supervised Learning",
+    "Supervised learning",
+    "supervised learning method"
+   ]
+  },
+  {
+   "canonical": "NequIP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SrTiO3",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "embedded atom",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the embedded atom method",
+    "Embedded Atom Method",
+    "Embedded Atom Model",
+    "the embedded atom model"
+   ]
+  },
+  {
+   "canonical": "ensemble learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Ensemble learning",
+    "the ensemble learning"
+   ]
+  },
+  {
+   "canonical": "gibb free energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Gibbs free energy",
+    "the Gibbs free energy"
+   ]
+  },
+  {
+   "canonical": "BFGS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GATGNN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "contract no",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Contract No"
+   ]
+  },
+  {
+   "canonical": "feature extraction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the Feature Extraction",
+    "Feature Extraction"
+   ]
+  },
+  {
+   "canonical": "high energy",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "initial learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the initial learning"
+   ]
+  },
+  {
+   "canonical": "ionization energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Ionization Energy"
+   ]
+  },
+  {
+   "canonical": "low energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the low energy"
+   ]
+  },
+  {
+   "canonical": "minimum energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Minimum energy",
+    "the minimum energy"
+   ]
+  },
+  {
+   "canonical": "physical model",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "predictive model",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "projector augmented wave",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the projector augmented wave method",
+    "Projector augmented-wave method",
+    "The projector augmented wave method"
+   ]
+  },
+  {
+   "canonical": "rf model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the RF model",
+    "RF model"
+   ]
+  },
+  {
+   "canonical": "theory comput",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Theory Comput"
+   ]
+  },
+  {
+   "canonical": "DETAILS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "INFORMA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MatErials",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NOMAD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PhysNet",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TensorFlow",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "application of machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the application of machine learning",
+    "Application of machine learning"
+   ]
+  },
+  {
+   "canonical": "bayesian optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Bayesian optimization",
+    "Bayesian Optimization",
+    "the Bayesian Optimization"
+   ]
+  },
+  {
+   "canonical": "comprehensive representation",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "gnn architecture",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the GNN architecture",
+    "GNN architecture",
+    "deep GNN architecture"
+   ]
+  },
+  {
+   "canonical": "material structure",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "ml framework",
+   "entity_type": "METHOD",
+   "aliases": [
+    "ML framework",
+    "the ML Framework",
+    "the ML framework"
+   ]
+  },
+  {
+   "canonical": "molecular dynamic",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Molecular Dynamics"
+   ]
+  },
+  {
+   "canonical": "network architecture",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Network Architecture"
+   ]
+  },
+  {
+   "canonical": "on neural",
+   "entity_type": "METHOD",
+   "aliases": [
+    "on neural network"
+   ]
+  },
+  {
+   "canonical": "result and discussion",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Results and Discussion",
+    "Results and Discussions"
+   ]
+  },
+  {
+   "canonical": "structure graph",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the structure graph",
+    "the structure of the graph",
+    "the structures of graph"
+   ]
+  },
+  {
+   "canonical": "to train",
+   "entity_type": "METHOD",
+   "aliases": [
+    "to train the model",
+    "to train the network"
+   ]
+  },
+  {
+   "canonical": "transformer model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Transformer model",
+    "the Transformer 30 model"
+   ]
+  },
+  {
+   "canonical": "GC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MP-0",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LLMs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "STATEMENT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ZrO2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MegNet",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CCSD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MBJ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TBmBJ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QMOF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "AlN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IS2RE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MPtrj",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TDDFT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GBR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "regression model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Regression model",
+    "the regression model"
+   ]
+  },
+  {
+   "canonical": "shap analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "SHAP analysis",
+    "SHAP analysis of the model",
+    "the SHAP analysis"
+   ]
+  },
+  {
+   "canonical": "ACSFs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GVRH",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "STEM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "OC20",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SiO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "final model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Final model",
+    "the final model"
+   ]
+  },
+  {
+   "canonical": "for formation energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "for formation energy model",
+    "dataset for formation energy"
+   ]
+  },
+  {
+   "canonical": "ml method",
+   "entity_type": "METHOD",
+   "aliases": [
+    "ML method",
+    "the ML method",
+    "the ∆-ML method"
+   ]
+  },
+  {
+   "canonical": "PhDOS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ResNet",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SrTiO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "random structure",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "supplemental material",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Supplemental Material",
+    "Supplemental Materials"
+   ]
+  },
+  {
+   "canonical": "CGNN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "lawrence berkeley national laboratory",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Lawrence Berkeley National Laboratory"
+   ]
+  },
+  {
+   "canonical": "spectral neighbor analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Spectral Neighbor Analysis",
+    "Spectral Neighbor Analysis Potential",
+    "Spectral neighbor analysis",
+    "Spectral neighbor analysis method"
+   ]
+  },
+  {
+   "canonical": "ACSF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PSC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "VRH",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "crystal graph neural",
+   "entity_type": "METHOD",
+   "aliases": [
+    "crystal graph neural network",
+    "Crystal Graph Neural Network",
+    "benchmarks. Crystal graph neural network",
+    "the crystal graph neural network"
+   ]
+  },
+  {
+   "canonical": "for training",
+   "entity_type": "METHOD",
+   "aliases": [
+    "for training the model"
+   ]
+  },
+  {
+   "canonical": "helmholtz free energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Helmholtz free energy",
+    "the Helmholtz free energy"
+   ]
+  },
+  {
+   "canonical": "universal machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Universal Machine Learning",
+    "Universal Machine Learning Framework",
+    "universal machine learning potential"
+   ]
+  },
+  {
+   "canonical": "FAIR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TRAINING",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ZPVE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ability model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the ability of the model",
+    "ability to model"
+   ]
+  },
+  {
+   "canonical": "accuracy model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the accuracy of the model",
+    "The accuracy of the model"
+   ]
+  },
+  {
+   "canonical": "atom in the unit cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "atoms in the unit cell"
+   ]
+  },
+  {
+   "canonical": "becke johnson",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Becke Johnson",
+    "Becke-Johnson"
+   ]
+  },
+  {
+   "canonical": "cgcnn model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "CGCNN model",
+    "The CGCNN model",
+    "the CGCNN model"
+   ]
+  },
+  {
+   "canonical": "dataset we",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Datasets We",
+    "Dataset We"
+   ]
+  },
+  {
+   "canonical": "graph structure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the graph structure",
+    "Graph structure"
+   ]
+  },
+  {
+   "canonical": "improve model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "improve the model",
+    "improves the model"
+   ]
+  },
+  {
+   "canonical": "intel xeon",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Intel Xeon"
+   ]
+  },
+  {
+   "canonical": "jarvis dft",
+   "entity_type": "DATASET",
+   "aliases": [
+    "the JARVIS-DFT dataset",
+    "JARVIS-DFT dataset"
+   ]
+  },
+  {
+   "canonical": "large dataset",
+   "entity_type": "DATASET",
+   "aliases": []
+  },
+  {
+   "canonical": "megnet model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "MEGNet model",
+    "the MEGNET model",
+    "the megnet model"
+   ]
+  },
+  {
+   "canonical": "molecular structure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "The molecular structure"
+   ]
+  },
+  {
+   "canonical": "office of basic energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Office of Basic Energy"
+   ]
+  },
+  {
+   "canonical": "optimization algorithm",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "plane wave cut energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "plane wave cut-off energy"
+   ]
+  },
+  {
+   "canonical": "python material genomic",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Python Materials Genomics"
+   ]
+  },
+  {
+   "canonical": "representation learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Representation Learning",
+    "Representation learning"
+   ]
+  },
+  {
+   "canonical": "science and technology",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Science and Technology"
+   ]
+  },
+  {
+   "canonical": "specific property",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "speciﬁc property"
+   ]
+  },
+  {
+   "canonical": "statistical analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Statistical Analysis",
+    "the statistical analysis"
+   ]
+  },
+  {
+   "canonical": "AFLOW",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DISCUSSIONS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DeCost",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "EGNN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ERC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ImageNet",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "METHOD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MODELS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RMS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TERIAL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "acknowledgment this",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Acknowledgments This"
+   ]
+  },
+  {
+   "canonical": "allowing model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "allowing the model"
+   ]
+  },
+  {
+   "canonical": "atomic cluster expansion",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Atomic Cluster Expansion"
+   ]
+  },
+  {
+   "canonical": "author contribution",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Author Contributions"
+   ]
+  },
+  {
+   "canonical": "computational framework",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Computational Framework"
+   ]
+  },
+  {
+   "canonical": "datum analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "data analysis"
+   ]
+  },
+  {
+   "canonical": "enable prediction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "enables the prediction",
+    "enable the prediction"
+   ]
+  },
+  {
+   "canonical": "enabling model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "enabling the model"
+   ]
+  },
+  {
+   "canonical": "evaluate model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "evaluates model",
+    "evaluate the model"
+   ]
+  },
+  {
+   "canonical": "evolutionary algorithm",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "full dataset",
+   "entity_type": "DATASET",
+   "aliases": [
+    "the full dataset"
+   ]
+  },
+  {
+   "canonical": "gauss centre for supercomputing",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Gauss Centre for Supercomputing"
+   ]
+  },
+  {
+   "canonical": "gaussian process",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Gaussian Process model",
+    "Gaussian process model",
+    "the Gaussian process model",
+    "Gaussian Processes",
+    "Gaussian Process"
+   ]
+  },
+  {
+   "canonical": "general framework",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "gradient boosting regression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Gradient Boosting Regression"
+   ]
+  },
+  {
+   "canonical": "grant no",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Grant No",
+    "Grants No"
+   ]
+  },
+  {
+   "canonical": "graph network",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Graph Network",
+    "Graph Networks",
+    "Graph network"
+   ]
+  },
+  {
+   "canonical": "ground state energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the Ground state energy",
+    "the ground–state energy"
+   ]
+  },
+  {
+   "canonical": "highlight potential",
+   "entity_type": "METHOD",
+   "aliases": [
+    "highlight the potential",
+    "highlights the potential"
+   ]
+  },
+  {
+   "canonical": "including prediction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "including the prediction"
+   ]
+  },
+  {
+   "canonical": "initial structure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Initial Structure",
+    "the initial structure"
+   ]
+  },
+  {
+   "canonical": "input graph",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "The input graph",
+    "input to graph"
+   ]
+  },
+  {
+   "canonical": "input representation",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "introduction machine",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Introduction Machine"
+   ]
+  },
+  {
+   "canonical": "learning model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "deep learning model",
+    "deep-learning model",
+    "the deep-learning model"
+   ]
+  },
+  {
+   "canonical": "local structure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Local Structure",
+    "Local structure",
+    "the local structure"
+   ]
+  },
+  {
+   "canonical": "material graph network",
+   "entity_type": "METHOD",
+   "aliases": [
+    "MatErials Graph Network",
+    "materials graph network",
+    "Materials Graph Network"
+   ]
+  },
+  {
+   "canonical": "material property prediction",
+   "entity_type": "METHOD",
+   "aliases": [
+    "material property prediction. The algorithm",
+    "material property prediction. The architecture",
+    "material property prediction. The model"
+   ]
+  },
+  {
+   "canonical": "message passing",
+   "entity_type": "METHOD",
+   "aliases": [
+    "message passing architecture",
+    "message passing for the task",
+    "message-passing model",
+    "Message Passing"
+   ]
+  },
+  {
+   "canonical": "open quantum material database",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Open Quantum Materials Database"
+   ]
+  },
+  {
+   "canonical": "oxford university press",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Oxford University Press"
+   ]
+  },
+  {
+   "canonical": "performance of the ml",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Performance of the ML model",
+    "performance of the ML model",
+    "performance of the ∆-ML method"
+   ]
+  },
+  {
+   "canonical": "potential energy surface",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Potential-Energy Surfaces",
+    "Potential Energy Surface"
+   ]
+  },
+  {
+   "canonical": "primitive cell",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "reinforcement learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Reinforcement learning"
+   ]
+  },
+  {
+   "canonical": "royal society of chemistry",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "The Royal Society of Chemistry",
+    "Royal Society of Chemistry"
+   ]
+  },
+  {
+   "canonical": "show learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "show the learning",
+    "shows learning",
+    "shows the learning"
+   ]
+  },
+  {
+   "canonical": "show potential",
+   "entity_type": "METHOD",
+   "aliases": [
+    "shows the potential",
+    "show the potential"
+   ]
+  },
+  {
+   "canonical": "solar cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Solar cell"
+   ]
+  },
+  {
+   "canonical": "specific dataset",
+   "entity_type": "DATASET",
+   "aliases": [
+    "specific to the dataset",
+    "specific 𝑠𝑖 in the dataset"
+   ]
+  }
+ ]
+}

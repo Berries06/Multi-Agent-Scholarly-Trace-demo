@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snowsong's Learning Archive</title>
+<meta name="description" content="一个学生开发者的学习笔记与知识库。Linux · C++ · SLAM · 服务器运维。">
+<style>
+  /* ============================================================
+     SNOWSONG.TOP — Design System
+     Fusion: Brutalism × Wired
+     ============================================================ */
+
+  /* ── Reset ── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* ── Design Tokens ── */
+  :root {
+    --paper-white:   #ffffff;
+    --light-gray:    #E5E5E5;
+    --medium-gray:   #D4D4D4;
+    --border-gray:   #666666;
+    --dark-gray:     #2D2D2D;
+    --pure-black:    #000000;
+    --link-blue:     #057dbc;
+    --hairline:      #e2e8f0;
+    --caption-gray:  #888888;
+
+    --font-mono:     'Courier New', Courier, monospace;
+    --max-width:     860px;
+  }
+
+  body {
+    background: var(--paper-white);
+    font-family: var(--font-mono);
+    color: var(--dark-gray);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  /* ── Top Bar (Wired-style black utility strip) ── */
+  .top-bar {
+    background: var(--pure-black);
+    padding: 10px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .top-bar-brand {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--paper-white);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .top-bar-nav {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .top-bar-nav a {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--paper-white);
+    letter-spacing: 1.0px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .top-bar-nav a:hover {
+    color: var(--link-blue);
+  }
+
+  /* ── Container ── */
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* ── Hero Section ── */
+  .hero {
+    padding: 48px 28px 32px;
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .hero-kicker {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--dark-gray);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .hero-title {
+    font-family: var(--font-mono);
+    font-size: 42px;
+    font-weight: bold;
+    color: var(--dark-gray);
+    letter-spacing: -1px;
+    line-height: 1.12;
+    margin-bottom: 16px;
+  }
+
+  .hero-deck {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--caption-gray);
+    line-height: 1.7;
+    max-width: 540px;
+    margin-bottom: 12px;
+  }
+
+  .hero-timestamp {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--caption-gray);
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+  }
+
+  .hero-actions {
+    margin-top: 22px;
+  }
+
+  .hero-button {
+    display: inline-block;
+    padding: 10px 15px;
+    border: 2px solid var(--pure-black);
+    background: var(--pure-black);
+    color: var(--paper-white);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .hero-button:hover {
+    border-color: var(--link-blue);
+    background: var(--link-blue);
+  }
+
+  /* ── Hairline Rule ── */
+  .hr-hairline {
+    border: none;
+    border-top: 1px solid var(--hairline);
+    margin: 0;
+  }
+
+  .hr-dark {
+    border: none;
+    border-top: 2px solid var(--pure-black);
+    margin: 0;
+  }
+
+  /* ── Black Ribbon Section Header (Wired) ── */
+  .ribbon {
+    background: var(--pure-black);
+    padding: 11px 28px;
+  }
+
+  .ribbon-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--paper-white);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+
+  /* ── Category Cards Grid ── */
+  .categories-section {
+    padding: 32px 0;
+  }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 0 28px;
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .cat-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 2px solid var(--dark-gray);
+    padding: 20px 22px;
+    background: var(--paper-white);
+    transition: background 0.12s;
+  }
+
+  .cat-card:hover {
+    background: var(--light-gray);
+  }
+
+  .cat-card-kicker {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--link-blue);
+    letter-spacing: 0.9px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .cat-card-title {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--dark-gray);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cat-card-count {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: normal;
+    color: var(--caption-gray);
+    letter-spacing: 0.5px;
+  }
+
+  .cat-card-desc {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--border-gray);
+    line-height: 1.6;
+  }
+
+  /* ── Latest Posts ── */
+  .posts-section {
+    padding: 32px 0 48px;
+  }
+
+  .post-list {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  .post-item {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .post-item:last-child {
+    border-bottom: none;
+  }
+
+  .post-item:hover .post-title {
+    color: var(--link-blue);
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .post-kicker {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--link-blue);
+    letter-spacing: 0.9px;
+    text-transform: uppercase;
+  }
+
+  .post-date {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--caption-gray);
+    letter-spacing: 0.8px;
+  }
+
+  .post-title {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--dark-gray);
+    line-height: 1.35;
+    transition: color 0.12s;
+  }
+
+  .post-excerpt {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--border-gray);
+    margin-top: 5px;
+    line-height: 1.6;
+  }
+
+  /* ── Footer ── */
+  .site-footer {
+    background: var(--pure-black);
+    padding: 28px;
+    text-align: center;
+  }
+
+  .footer-text {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--border-gray);
+    letter-spacing: 0.8px;
+    line-height: 1.8;
+  }
+
+  .footer-text a {
+    color: var(--paper-white);
+    text-decoration: none;
+  }
+
+  .footer-text a:hover {
+    color: var(--link-blue);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .cat-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-title {
+      font-size: 28px;
+    }
+
+    .top-bar {
+      padding: 10px 16px;
+    }
+
+    .top-bar-nav {
+      gap: 14px;
+    }
+
+    .hero {
+      padding: 36px 16px 24px;
+    }
+
+    .cat-grid, .post-list {
+      padding: 0 16px;
+    }
+
+    .ribbon {
+      padding: 11px 16px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .hero-title {
+      font-size: 24px;
+    }
+
+    .post-title {
+      font-size: 15px;
+    }
+
+    .top-bar-nav a {
+      font-size: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ TOP BAR ═══════════════ -->
+<nav class="top-bar">
+  <a href="/" class="top-bar-brand">SNOWSONG.TOP</a>
+  <div class="top-bar-nav">
+    <a href="/posts/linux/">LINUX</a>
+    <a href="/posts/cpp/">C++/PY</a>
+    <a href="/posts/slam/">SLAM</a>
+    <a href="/posts/web/">WEB</a>
+    <a href="/posts/server/">SERVER</a>
+    <a href="/AgentDemo/">AGENTDEMO</a>
+    <a href="/about.html">ABOUT</a>
+  </div>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<header class="hero">
+  <div class="hero-kicker">COMPUTING · BLOG</div>
+  <h1 class="hero-title">Snowsong's<br>Learning Archive</h1>
+  <p class="hero-deck">
+    一个学生开发者的学习笔记与知识库。记录 Linux 运维、C++ 与 Python 开发、
+    视觉 SLAM 研究，以及从零开始搭建个人网站的全过程。
+  </p>
+  <span class="hero-timestamp">EST. 2026</span>
+  <div class="hero-actions">
+    <a class="hero-button" href="/AgentDemo/">OPEN AGENTDEMO &rarr;</a>
+  </div>
+</header>
+
+<hr class="hr-dark">
+
+<!-- ═══════════════ 学习方向 ═══════════════ -->
+<div class="ribbon">
+  <span class="ribbon-text">学习方向 · CATEGORIES</span>
+</div>
+
+<div class="categories-section">
+  <div class="cat-grid">
+
+    <a href="/posts/linux/" class="cat-card">
+      <div class="cat-card-kicker">CATEGORY 01</div>
+      <div class="cat-card-title">
+        Linux &amp; 服务器运维
+        <span class="cat-card-count">2 篇</span>
+      </div>
+      <div class="cat-card-desc">WSL 配置、SSH 连接、Debian 运维、Shell 脚本</div>
+    </a>
+
+    <a href="/posts/cpp/" class="cat-card">
+      <div class="cat-card-kicker">CATEGORY 02</div>
+      <div class="cat-card-title">
+        C++ / Python 开发
+        <span class="cat-card-count">1 篇</span>
+      </div>
+      <div class="cat-card-desc">编译工具链、包管理、helloworld 项目模板</div>
+    </a>
+
+    <a href="/posts/slam/" class="cat-card">
+      <div class="cat-card-kicker">CATEGORY 03</div>
+      <div class="cat-card-title">
+        SLAM &amp; 计算机视觉
+        <span class="cat-card-count">1 篇</span>
+      </div>
+      <div class="cat-card-desc">ORB-SLAM3 学习笔记、Docker 环境搭建</div>
+    </a>
+
+    <a href="/posts/web/" class="cat-card">
+      <div class="cat-card-kicker">CATEGORY 04</div>
+      <div class="cat-card-title">
+        本站建设日志
+        <span class="cat-card-count">1 篇</span>
+      </div>
+      <div class="cat-card-desc">域名注册、Nginx 部署、备案与合规记录</div>
+    </a>
+
+    <a href="/posts/server/" class="cat-card">
+      <div class="cat-card-kicker">CATEGORY 05</div>
+      <div class="cat-card-title">
+        硬件与宿舍服务器
+        <span class="cat-card-count">1 篇</span>
+      </div>
+      <div class="cat-card-desc">ThinkCentre M920q、校园网环境、frp 内网穿透</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- ═══════════════ 最新文章 ═══════════════ -->
+<div class="ribbon">
+  <span class="ribbon-text">最新文章 · LATEST POSTS</span>
+</div>
+
+<div class="posts-section">
+  <div class="post-list">
+
+    <a href="/posts/web/site-building-log.html" class="post-item">
+      <div class="post-meta">
+        <span class="post-kicker">WEB</span>
+        <span class="post-date">2026-07-15</span>
+      </div>
+      <div class="post-title">从零搭建个人博客：域名、服务器与静态站点</div>
+      <div class="post-excerpt">记录 snowsong.top 从域名注册到 Nginx 部署的全过程。</div>
+    </a>
+
+    <a href="/posts/linux/wsl-migration.html" class="post-item">
+      <div class="post-meta">
+        <span class="post-kicker">LINUX</span>
+        <span class="post-date">2026-07-11</span>
+      </div>
+      <div class="post-title">WSL 迁移经验记录</div>
+      <div class="post-excerpt">在 Windows 上使用 WSL 运行 Linux 的完整配置与踩坑记录。</div>
+    </a>
+
+    <a href="/posts/server/m920q-guide.html" class="post-item">
+      <div class="post-meta">
+        <span class="post-kicker">SERVER</span>
+        <span class="post-date">2026-07-13</span>
+      </div>
+      <div class="post-title">M920q 宿舍服务器使用指南</div>
+      <div class="post-excerpt">ThinkCentre M920q 硬件配置、校园网环境与 24/7 运行策略。</div>
+    </a>
+
+    <a href="/posts/linux/ssh-config.html" class="post-item">
+      <div class="post-meta">
+        <span class="post-kicker">LINUX</span>
+        <span class="post-date">2026-07-13</span>
+      </div>
+      <div class="post-title">SSH 连接配置：双服务器免密登录</div>
+      <div class="post-excerpt">配置 WSL 到腾讯云与宿舍服务器的 SSH 密钥认证。</div>
+    </a>
+
+    <a href="/posts/slam/orb-slam3-notes.html" class="post-item">
+      <div class="post-meta">
+        <span class="post-kicker">SLAM</span>
+        <span class="post-date">2026-07-10</span>
+      </div>
+      <div class="post-title">ORB-SLAM3 学习笔记</div>
+      <div class="post-excerpt">视觉 SLAM 入门，ORB-SLAM3 的编译配置与 Docker 化部署。</div>
+    </a>
+
+    <a href="/posts/cpp/helloworld.html" class="post-item">
+      <div class="post-meta">
+        <span class="post-kicker">C++/PY</span>
+        <span class="post-date">2026-07-09</span>
+      </div>
+      <div class="post-title">C++ 开发环境搭建：从零到 Hello World</div>
+      <div class="post-excerpt">Ubuntu 下 C++ 工具链配置，gcc/g++/cmake 入门。</div>
+    </a>
+
+  </div>
+</div>
+
+<hr class="hr-dark">
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="site-footer">
+  <p class="footer-text">
+    &copy; 2026 <a href="/">Snowsong</a> &mdash; <a href="/">snowsong.top</a><br>
+    Built with plain HTML + CSS. No JavaScript. No frameworks.<br>
+    <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">苏ICP备2026047509号</a><br>
+    <a href="/about.html">ABOUT</a> &middot;
+    <a href="https://github.com/Berries06">GITHUB</a>
+  </p>
+</footer>
+
+</body>
+</html>

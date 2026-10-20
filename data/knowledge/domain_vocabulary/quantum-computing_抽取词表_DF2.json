@@ -1,0 +1,4833 @@
+{
+ "status": "candidate_pending_human_review",
+ "status_note": "这是把机器挖的候选概念接进抽取器的实验输入，不是定下来的知识点清单；概念、别名、类型三样都要人对着证据签核。",
+ "domain_id": "quantum-computing",
+ "domain_name": "量子计算与量子信息处理",
+ "source": "data/knowledge/domain_vocabulary/quantum-computing_候选概念.json",
+ "source_status": "candidate_pending_human_review",
+ "source_generated_at": "2026-10-17",
+ "filter": {
+  "field": "document_frequency",
+  "rule": ">= 2",
+  "meaning": "document_frequency 数的是这个词出现在多少篇不同的论文里（同一篇里出现多次只算 1 篇），由 scripts/语料/挖掘领域概念.py 统计"
+ },
+ "alias_cap": 6,
+ "canonical_rule": "canonical 过判据（第三轮加 functional/短缩写两条，第四轮加通用词一条）：是常见英文功能词的丢；长度 ≤3 且全大写的只有 definitions_found 里有它的括号定义、含数字、或候选 document_frequency ≥ 5 时才留；命中 GENERIC_STRUCTURAL_TERMS 且不是已定义缩写的丢（ENTITY/TASK 这一类）；其余长度 ≥4 的实词一律留。判定顺序与别名那几道一致，一条同时符合两条时记前面那条",
+ "alias_rule": "别名取候选 surface_forms 里出现次数最多的前 alias_cap 个（挖掘脚本落盘时已按出现次数从高到低排序），**先过那几道过滤再截断**：长度 <2 的不要；是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）的不要；长度 ≤3 且全大写的缩略语只有出现在挖掘结果的 definitions_found 里、含数字、或候选的 document_frequency ≥ 5 时才留。之后去重，并去掉与 canonical 逐字完全相同的写法",
+ "alias_filters": {
+  "common_english_function_words": [
+   "a",
+   "about",
+   "above",
+   "across",
+   "after",
+   "again",
+   "all",
+   "also",
+   "although",
+   "am",
+   "an",
+   "and",
+   "any",
+   "are",
+   "as",
+   "at",
+   "be",
+   "because",
+   "been",
+   "before",
+   "being",
+   "below",
+   "between",
+   "both",
+   "but",
+   "by",
+   "can",
+   "cannot",
+   "could",
+   "did",
+   "do",
+   "does",
+   "doing",
+   "done",
+   "down",
+   "during",
+   "each",
+   "else",
+   "etc",
+   "few",
+   "for",
+   "from",
+   "further",
+   "furthermore",
+   "had",
+   "has",
+   "have",
+   "having",
+   "he",
+   "hence",
+   "her",
+   "his",
+   "how",
+   "however",
+   "if",
+   "in",
+   "into",
+   "is",
+   "it",
+   "its",
+   "may",
+   "might",
+   "more",
+   "moreover",
+   "most",
+   "must",
+   "no",
+   "nor",
+   "not",
+   "of",
+   "off",
+   "on",
+   "once",
+   "only",
+   "onto",
+   "or",
+   "other",
+   "our",
+   "out",
+   "over",
+   "own",
+   "same",
+   "shall",
+   "she",
+   "should",
+   "so",
+   "some",
+   "such",
+   "than",
+   "that",
+   "the",
+   "their",
+   "them",
+   "then",
+   "therefore",
+   "these",
+   "they",
+   "this",
+   "those",
+   "though",
+   "through",
+   "thus",
+   "to",
+   "too",
+   "under",
+   "up",
+   "us",
+   "very",
+   "was",
+   "we",
+   "were",
+   "what",
+   "when",
+   "where",
+   "whereas",
+   "which",
+   "while",
+   "who",
+   "whom",
+   "whose",
+   "why",
+   "will",
+   "with",
+   "within",
+   "without",
+   "would",
+   "you"
+  ],
+  "common_english_function_words_source": "通用英语功能词（冠词、代词、介词、连词、助动词、指示词、常见副词与限定词），不是本项目发明的；任何一本英语语法书里的 function words 都是这一批",
+  "min_short_acronym_df": 5,
+  "reasons": {
+   "too_short": "长度小于 2（单字母没有区分度，抽取器那边全是版面碎片）",
+   "common_english_word": "是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）；抽取器别名正则大小写不敏感，1–3 个字母的全大写缩略语会匹配到普通英文词上（实测 OF 匹配 of，25607 次提及）",
+   "short_acronym_without_definition": "长度 ≤3 的全大写缩略语，挖掘结果里没有它的括号定义、也不含数字，候选的 document_frequency 还不到 5；大小写不敏感匹配下会被普通英文词吃掉（NA、IT、OR 这一类）",
+   "generic_structural_term": "是描述文档结构或泛泛类别的普通英文词（GENERIC_STRUCTURAL_TERMS），不指向具体技术；这一轮只用来判 canonical，别名这一道只报数不丢（见 generic_alias_candidates）"
+  },
+  "effect": "抽取器 src/yanhai/extraction.py 的 _alias_pattern 带 IGNORECASE，1–3 个字母的全大写缩略语会匹配到普通英文词上（实测 OF 匹配 of，25607 次提及）；这几道过滤就是拦这一类别名"
+ },
+ "rejected_alias_total": 0,
+ "rejected_aliases": [],
+ "rejected_aliases_note": "rejected_aliases 只列每条被丢掉的别名（alias / reason / canonical / domain_id），最多列前 200 条；完整条数看 rejected_alias_total，按原因分的计数看 rejected_reasons",
+ "rejected_reasons": {
+  "common_english_word": 0,
+  "generic_structural_term": 0,
+  "short_acronym_without_definition": 0,
+  "too_short": 0
+ },
+ "canonical_filters": {
+  "ran": "canonical 过滤在第三轮加上，跑过的每一份词表都带这一节；rejected_canonical_total 是 0 就说明这一批候选里没有该丢的 canonical，不是这一道没跑",
+  "reasons": {
+   "common_english_word": "canonical 本身是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）；抽取器别名正则大小写不敏感，词表里一条 `OF` 会把每一句里的 `of` 都算成提及（第二轮实测主领域 25607 次），`IN`/`BY`/`OR`/`IT`/`AT`/`HE`/`HER` 同理",
+   "short_acronym_without_definition": "canonical 长度 ≤3 且全大写，挖掘结果里没有它的括号定义、也不含数字，候选的 document_frequency 还不到 5；这类名字在大小写不敏感匹配下会被普通英文词吃掉（`NA` 命中 `na`，`IT` 命中 `it`），真缩写（`KG`/`GPT`/`AI`/`GNN`/`DKT`/`CGCNN`）只要在 definitions_found 里有定义、含数字、或 DF ≥ 5，就不受这一条影响",
+   "generic_structural_term": "canonical 是描述文档结构或泛泛类别的普通英文词（GENERIC_STRUCTURAL_TERMS，例如 `ENTITY`/`TASK`/`CONTEXT`/`CLAIM`）；它们是被『长度 ≥4 一律保留』那一条放进来的，本身不指向具体技术。同时在 definitions_found 里有括号定义的（`AI` 这类真缩写）不受这一条影响"
+  },
+  "min_short_acronym_df": 5,
+  "generic_structural_terms": [
+   "accuracy",
+   "acknowledgements",
+   "acknowledgment",
+   "acknowledgments",
+   "answer",
+   "answers",
+   "appendices",
+   "appendix",
+   "application",
+   "applications",
+   "approach",
+   "approaches",
+   "author",
+   "authors",
+   "baseline",
+   "baselines",
+   "bibliographies",
+   "bibliography",
+   "case",
+   "cases",
+   "claim",
+   "claims",
+   "context",
+   "contexts",
+   "data",
+   "entities",
+   "entity",
+   "example",
+   "examples",
+   "feature",
+   "features",
+   "figure",
+   "figures",
+   "footnote",
+   "footnotes",
+   "image",
+   "images",
+   "information",
+   "input",
+   "inputs",
+   "item",
+   "items",
+   "knowledge",
+   "language",
+   "languages",
+   "level",
+   "levels",
+   "number",
+   "numbers",
+   "one",
+   "ones",
+   "output",
+   "outputs",
+   "paper",
+   "papers",
+   "paragraph",
+   "paragraphs",
+   "part",
+   "parts",
+   "performance",
+   "process",
+   "processes",
+   "quality",
+   "question",
+   "questions",
+   "reference",
+   "references",
+   "result",
+   "results",
+   "score",
+   "scores",
+   "section",
+   "sections",
+   "sentence",
+   "sentences",
+   "size",
+   "state",
+   "states",
+   "step",
+   "steps",
+   "studies",
+   "study",
+   "supplementary",
+   "system",
+   "systems",
+   "table",
+   "tables",
+   "task",
+   "tasks",
+   "text",
+   "texts",
+   "time",
+   "type",
+   "types",
+   "user",
+   "users",
+   "value",
+   "values",
+   "word",
+   "words"
+  ],
+  "generic_structural_terms_note": "**这是一条判断，不是客观标准**：收的是描述文档结构或泛泛类别、不指向具体技术的单 token 普通英文词。`model`/`method`/`dataset`/`annotation`/`metric` 故意不在表里——它们在本体里本身就是合法类型（METHOD/DATASET/METRIC），收进来会误伤真概念。（第四轮加的。第三轮记录第五、六节列出的 ENTITY/TASK/CONTEXT/CLAIM/QUESTION/OUTPUT 那一批就是这么进来的。第五轮又补进 REFERENCES/REFERENCE/BIBLIOGRAPHY/ACKNOWLEDGEMENTS/ACKNOWLEDGMENT/APPENDIX/SUPPLEMENTARY/FOOTNOTE 这一批段落标题词——`quantum::REFERENCES`（原始 DF 33）就是这么一条噪声。）",
+  "rules": [
+   "canonical 是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）→ 丢；整条名字当一个词查一次，含空格时要求每个词都是功能词",
+   "canonical 长度 ≤3 且全大写：只有 definitions_found 里有它的括号定义、含数字、或候选 document_frequency ≥ 5 时才留，否则丢（KG/GPT/AI/DKT/CGCNN 这类留，OF/IN/BY/NA/IT 丢）",
+   "canonical 命中 GENERIC_STRUCTURAL_TERMS（ENTITY/TASK/CONTEXT/CLAIM 这一类）且不是已定义缩写 → 丢；这一条拦的是『长度 ≥4 一律保留』放进来的那批",
+   "长度 ≥4 的实词一律保留（不受全大写影响，CGCNN/MEGNet/SciERC 都留）"
+  ],
+  "why": "抽取器建别名表时是 {canonical, *aliases}（src/yanhai/extraction.py 的 SchemaGuidedExtractor.__init__），canonical 也算一条别名；正则带 IGNORECASE，所以词表里一条 `OF` 会把每一句里的 `of` 都算成提及（第二轮实测主领域 25607 次，1–3 位全大写实体占提及 52.0%）。噪声坐在名字这一层，只过滤别名拦不到",
+  "note": "判定顺序：先常见英文功能词，再短全大写，最后通用/结构性词；一条同时符合两条时记前面那条，与别名那几道是同一个约定"
+ },
+ "rejected_canonical_total": 179,
+ "rejected_canonicals": [
+  {
+   "canonical": "NOT",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 16,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "OF",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 13,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "BY",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 6,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IN",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 6,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ON",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 6,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HE",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 6,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "AE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "FT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CFT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QKD",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "NV",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SW",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "UA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QRL",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RX",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SZ",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QP",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QCD",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "LR",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HL",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SAT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QV",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "NA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QNN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "LA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SUM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "KB",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RHS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IP",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "YY",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "XZ",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GB",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PQ",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RWA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TI",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HZH",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SV",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "VT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HP",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "NMR",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "UV",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "AS",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CCX",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HI",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "REFERENCES",
+   "reason": "generic_structural_term",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RESULTS",
+   "reason": "generic_structural_term",
+   "domain_id": "quantum-computing",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DQC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "AOD",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QFI",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HEP",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "BSM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "KS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "FR",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DV",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "UE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "VQC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "UL",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ECC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DNN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PBC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QR",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SHO",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "UB",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "XL",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "BV",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "STATE",
+   "reason": "generic_structural_term",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "BA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "KT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "UN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "AQC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DFS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MX",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SSB",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TL",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "XC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "XE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CSG",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CY",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DFT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HX",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IDE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "YL",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "AR",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CD",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DNA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GNN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IB",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IT",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IZZ",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MIT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MZ",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PCA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QCV",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DOF",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "FP",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HZZ",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "LLM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "LS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "OBC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RF",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "UR",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "XN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DATA",
+   "reason": "generic_structural_term",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HJC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "JL",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "KK",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "LP",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "NB",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QIS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RZZ",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "UT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ZZI",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ARO",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "AX",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ERC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "EZ",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "FN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GH",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HR",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HXH",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HZ",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ICT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MAE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MRI",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MUL",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "NY",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "OR",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QPS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ST",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "STATES",
+   "reason": "generic_structural_term",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "XH",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "YZ",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ZN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "AC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ASE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "BETWEEN",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CASE",
+   "reason": "generic_structural_term",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DOM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GUI",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IQM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ITS",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "JIT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "JN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MSE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QND",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TES",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TO",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "UC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "XOR",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "quantum-computing",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  }
+ ],
+ "rejected_canonicals_note": "rejected_canonicals 只列每条被丢掉的 canonical（canonical / reason / domain_id / document_frequency / entity_type），最多列前 500 条；完整条数看 rejected_canonical_total，按原因分的计数看 rejected_canonical_reasons",
+ "rejected_canonical_reasons": {
+  "common_english_word": 12,
+  "generic_structural_term": 6,
+  "short_acronym_without_definition": 161
+ },
+ "generic_alias_candidates": {
+  "note": "第四轮的通用/结构性词判据只落在 canonical 这一层，别名沿用原来那几道，所以这一节**只报数、不当场丢**：这些是留在词表别名里、归一后命中 GENERIC_STRUCTURAL_TERMS 的写法。要不要下一轮一起清，要人定",
+  "total": 0,
+  "items": []
+ },
+ "kept_short_uppercase": {
+  "note": "canonical 判据与别名那几道过滤都跑完之后，还留在词表里的 1–3 位全大写名字。这一节留下的分两种：挖掘结果 definitions_found 里有括号定义的，或者候选 document_frequency ≥ 5（跨论文原样出现过）的，看 kept_by 这一项。含数字的写法（GPT-4、3DG）虽然也留，但不算『全大写』这一类、不进这一节。长度 ≥4 的全大写名字（CGCNN/MEGNet/SciERC）不受判据影响，也不进这一节",
+  "canonical_count": 64,
+  "canonical_by_definition": 42,
+  "canonical_by_document_frequency": 22,
+  "alias_count": 0,
+  "items": [
+   {
+    "canonical": "QEC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "IBM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "QC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "CZ",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "QFT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "NP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "GHZ",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "CX",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "AI",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ZX",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "VQE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "MPS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "QML",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ZZ",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "QPU",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "RZ",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "ML",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "CC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "RL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "SU",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "PQC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "GKP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "RY",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "QED",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NX",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "BS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "CSS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "HHL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "EPR",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "HPC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NN",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "AB",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "RAM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "SDK",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "AP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "RSA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "SX",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NSF",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "XY",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "SVD",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "SE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "GBS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "CV",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "MPI",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "DOE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "KLM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "QPE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "QM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "QVM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "PNR",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "IR",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "KL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "QAI",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "LEO",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "MC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ESA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "MPO",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "JC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "MDP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "AWS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "GPT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "QPL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ECT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "SET",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   }
+  ]
+ },
+ "type_mapping": {
+  "accepted_entity_types": [
+   "DATASET",
+   "DOMAIN",
+   "FINDING",
+   "LIMITATION",
+   "METHOD",
+   "METRIC",
+   "TASK"
+  ],
+  "fallback": "METHOD",
+  "rule": "候选的 guess_type 只保留抽取本体 entity_types 里有的 7 类（METHOD/TASK/DATASET/METRIC/FINDING/LIMITATION/DOMAIN）；guess_type 为空、缺失或不在其中（例如猜测出的 'OTHER'、'MODEL'）一律落到 METHOD。落 METHOD 的理由：抽不出类型的候选多半是缩写词、模型名、系统名，METHOD 是其中最多的一类；METHOD 在 relation_constraints 里也几乎不受限，不会因为类型对不上把整条关系判成 schema_type_mismatch。",
+  "observed": {
+   "METHOD": 293,
+   "DOMAIN": 162,
+   "TASK": 3
+  }
+ },
+ "generated_by": "scripts/抽取/生成抽取词表.py",
+ "generated_on": "2026-10-17",
+ "schema_untouched": "data/knowledge/extraction_schema.json 未被本脚本修改；本文件是另写的一份，由 scripts/抽取/构建全文知识库.py --vocabulary 追加进抽取器。",
+ "concept_count": 458,
+ "alias_count": 307,
+ "duplicates_merged": 40,
+ "duplicates_merged_note": "挖掘脚本按 (来源类别, 归一键) 存候选，同一个词可能落成多条；这里按 canonical只留第一条（出现篇数多的在前），类型以先到的为准，别名并到一起",
+ "concepts": [
+  {
+   "canonical": "CNOT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NISQ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QEC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IBM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QUANTUM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "quantum algorithm",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the quantum algorithm",
+    "Quantum Algorithm",
+    "Quantum Algorithms"
+   ]
+  },
+  {
+   "canonical": "QC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SWAP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CZ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QFT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GHZ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "COMPUTING",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Machine learning",
+    "Machine Learning",
+    "the machine learning"
+   ]
+  },
+  {
+   "canonical": "grover algorithm",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Grover algorithm",
+    "the Grover algorithm"
+   ]
+  },
+  {
+   "canonical": "AI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ZX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QAOA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "VQE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "shor algorithm",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Shor algorithm",
+    "problem. Shor algorithm",
+    "the Shor algorithm"
+   ]
+  },
+  {
+   "canonical": "MPS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QML",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ZZ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QPUs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "quantum machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Machine Learning",
+    "Quantum machine learning",
+    "the quantum machine learning"
+   ]
+  },
+  {
+   "canonical": "CONCLUSION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QPU",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "tensor network",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Tensor network",
+    "the tensor network",
+    "Tensor Network",
+    "tensor of the network",
+    "tensor_network",
+    "Tensor Networks"
+   ]
+  },
+  {
+   "canonical": "RZ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ML",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "syndrome extraction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the syndrome extraction",
+    "Syndrome Extraction",
+    "Syndrome extraction",
+    "Syndrome extraction Architecture",
+    "The syndrome extraction"
+   ]
+  },
+  {
+   "canonical": "MHz",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FTQC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "quantum approximate optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the quantum approximate optimization algorithm",
+    "Quantum Approximate Optimization",
+    "Quantum Approximate Optimization Algorithm",
+    "the quantum approximate optimization",
+    "Quantum approximate optimization",
+    "Quantum approximate optimization algorithm"
+   ]
+  },
+  {
+   "canonical": "binary representation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the binary representation"
+   ]
+  },
+  {
+   "canonical": "SU",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PQC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "quantum computing",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Computing",
+    "Quantum Computing Architecture",
+    "quantum computing in the framework",
+    "quantum computing. In the algorithm"
+   ]
+  },
+  {
+   "canonical": "CODE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "classical machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "CLASSICAL MACHINE LEARNING",
+    "Classical Machine Learning",
+    "models. Classical machine learning"
+   ]
+  },
+  {
+   "canonical": "QASM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GHz",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GKP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RY",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QUBO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QED",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "alice and bob",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Alice and Bob"
+   ]
+  },
+  {
+   "canonical": "NX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "POVM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CSS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HHL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "EPR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "VQAs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HPC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "AB",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RAM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "noise model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the noise model",
+    "Noise model"
+   ]
+  },
+  {
+   "canonical": "SDK",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "monte carlo",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Monte Carlo"
+   ]
+  },
+  {
+   "canonical": "see fig",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "See Fig"
+   ]
+  },
+  {
+   "canonical": "AP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RSA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NSF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "XY",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CONCLUSIONS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DISCUSSION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "INTRODUCTION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PauliX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "noisy intermediate scale quantum",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Noisy Intermediate Scale Quantum",
+    "Noisy Intermediate-Scale Quantum",
+    "Noisy-intermediate-scale Quantum"
+   ]
+  },
+  {
+   "canonical": "quadratic unconstrained binary optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quadratic Unconstrained Binary Optimization"
+   ]
+  },
+  {
+   "canonical": "quantum fourier",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Fourier"
+   ]
+  },
+  {
+   "canonical": "accepted in quantum",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Accepted in Quantum",
+    "This Accepted in Quantum"
+   ]
+  },
+  {
+   "canonical": "SVD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GBS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "AdS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "Z1Z2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BB84",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QNNs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PennyLane",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "reinforcement learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Reinforcement learning",
+    "deep reinforcement learning",
+    "Deep Reinforcement Learning",
+    "the reinforcement learning",
+    "Reinforcement Learning"
+   ]
+  },
+  {
+   "canonical": "strawberry field",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Strawberry Fields"
+   ]
+  },
+  {
+   "canonical": "combinatorial optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "A. A. Combinatorial Optimization"
+   ]
+  },
+  {
+   "canonical": "standard model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the standard model",
+    "The standard model",
+    "the Standard Model",
+    "Standard Model"
+   ]
+  },
+  {
+   "canonical": "MWPM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ERROR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LetH",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GPUs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "wave system",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Wave Systems"
+   ]
+  },
+  {
+   "canonical": "CCNOT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "matrix product state",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Matrix Product State",
+    "Matrix Product States"
+   ]
+  },
+  {
+   "canonical": "quantum fourier transform",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Fourier Transform"
+   ]
+  },
+  {
+   "canonical": "APIs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BASED",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IonQ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MEASUREMENT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "department of energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Department of Energy"
+   ]
+  },
+  {
+   "canonical": "matrix representation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "The matrix representation",
+    "the matrix representation"
+   ]
+  },
+  {
+   "canonical": "quantum approximate optimization algorithm",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Quantum Approximate Optimization Algorithm",
+    "Quantum approximate optimization algorithm",
+    "The Quantum Approximate Optimization Algorithm"
+   ]
+  },
+  {
+   "canonical": "quantum circuit",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Circuit",
+    "Quantum Circuits"
+   ]
+  },
+  {
+   "canonical": "visual representation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Visual representation"
+   ]
+  },
+  {
+   "canonical": "CHALLENGES",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "OUTLOOK",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "lower energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "lowers energy",
+    "the lower energy"
+   ]
+  },
+  {
+   "canonical": "quantum network",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Quantum Network",
+    "Quantum Networks"
+   ]
+  },
+  {
+   "canonical": "quantum science and technology",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Science and Technology"
+   ]
+  },
+  {
+   "canonical": "variational quantum eigensolver",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Variational Quantum Eigensolver",
+    "The Variational Quantum Eigensolver"
+   ]
+  },
+  {
+   "canonical": "MBQC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CV",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QCNN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QECC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HamiltonianH",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FREE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MPI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PROP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CODES",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "OpenFermion",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "deutsch jozsa",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Deutsch–Jozsa algorithm",
+    "The Deutsch–Jozsa algorithm",
+    "Deutsch-Jozsa algorithm",
+    "the Deutsch-Jozsa algorithm"
+   ]
+  },
+  {
+   "canonical": "quantum computer",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Computers",
+    "Quantum Computer",
+    "The Quantum Computers"
+   ]
+  },
+  {
+   "canonical": "DOE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "POMDP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TensorFlow",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "gaussian boson sampling",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Gaussian Boson Sampling"
+   ]
+  },
+  {
+   "canonical": "quantum reinforcement learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Reinforcement Learning",
+    "Quantum reinforcement learning"
+   ]
+  },
+  {
+   "canonical": "simple graph",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "CPTP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ising model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the Ising model",
+    "Ising model",
+    "presents the Ising model"
+   ]
+  },
+  {
+   "canonical": "neural network",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Neural network",
+    "deep neural network",
+    "neural networks with the potential",
+    "the neural network",
+    "Neural Networks"
+   ]
+  },
+  {
+   "canonical": "CORRECTION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "KLM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QUBIT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "google quantum",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Google Quantum"
+   ]
+  },
+  {
+   "canonical": "quantum optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum optimization"
+   ]
+  },
+  {
+   "canonical": "supervised learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Supervised learning",
+    "tasks. Supervised learning",
+    "the supervised learning"
+   ]
+  },
+  {
+   "canonical": "QPE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "grover search",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Grover search algorithm"
+   ]
+  },
+  {
+   "canonical": "nature physic",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Nature Physics"
+   ]
+  },
+  {
+   "canonical": "potential energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the potential energy",
+    "Potential energy"
+   ]
+  },
+  {
+   "canonical": "quantum composer",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Composer"
+   ]
+  },
+  {
+   "canonical": "trapping potential",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the trapping potential",
+    "Trapping Potential"
+   ]
+  },
+  {
+   "canonical": "CPUs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QVM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "computer science",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Computer Science"
+   ]
+  },
+  {
+   "canonical": "hhl algorithm",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the HHL algorithm"
+   ]
+  },
+  {
+   "canonical": "oak ridge national laboratory",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Oak Ridge National Laboratory",
+    "Oak Ridge National Laboratories"
+   ]
+  },
+  {
+   "canonical": "quantum circuit optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Circuit Optimization",
+    "Quantum circuit optimization"
+   ]
+  },
+  {
+   "canonical": "quantum neural",
+   "entity_type": "METHOD",
+   "aliases": [
+    "quantum neural network",
+    "Quantum Neural Network",
+    "the quantum neural network"
+   ]
+  },
+  {
+   "canonical": "see appendix",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "See Appendix"
+   ]
+  },
+  {
+   "canonical": "BACKGROUND",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CLASSICAL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DISTRIBUTED",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "EVALUATION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LOCC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "OpenQASM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QRAM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "X1X2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "Z1Z2Z3",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "amazon braket",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Amazon Braket"
+   ]
+  },
+  {
+   "canonical": "cambridge university press",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Cambridge University Press"
+   ]
+  },
+  {
+   "canonical": "classical algorithm",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "computational model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the computational model"
+   ]
+  },
+  {
+   "canonical": "highlight potential",
+   "entity_type": "METHOD",
+   "aliases": [
+    "highlight the potential"
+   ]
+  },
+  {
+   "canonical": "important property",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the important property"
+   ]
+  },
+  {
+   "canonical": "in grover",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "In Grover"
+   ]
+  },
+  {
+   "canonical": "internet of thing",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Internet of Things"
+   ]
+  },
+  {
+   "canonical": "introduction quantum",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Introduction Quantum"
+   ]
+  },
+  {
+   "canonical": "linear regression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the linear regression"
+   ]
+  },
+  {
+   "canonical": "message passing interface",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Message Passing Interface"
+   ]
+  },
+  {
+   "canonical": "nielsen and chuang",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Nielsen and Chuang"
+   ]
+  },
+  {
+   "canonical": "physical review",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Physical Review"
+   ]
+  },
+  {
+   "canonical": "quantum error correction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Error Correction"
+   ]
+  },
+  {
+   "canonical": "quantum key distribution",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Key Distribution"
+   ]
+  },
+  {
+   "canonical": "quantum phase estimation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Phase Estimation"
+   ]
+  },
+  {
+   "canonical": "quantum processing unit",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Quantum Processing Units",
+    "Quantum Processing Unit"
+   ]
+  },
+  {
+   "canonical": "traveling salesman problem",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Traveling Salesman Problem"
+   ]
+  },
+  {
+   "canonical": "type network",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Types Network",
+    "type of network",
+    "types of network"
+   ]
+  },
+  {
+   "canonical": "us department energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the U.S. Department of Energy"
+   ]
+  },
+  {
+   "canonical": "LDPC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QCCD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GitHub",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TrE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CVQC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PNR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NAND",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SWAPs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TFIM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ProjectQ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CTRL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NumPy",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "POVMs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "KL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "united state",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "United States"
+   ]
+  },
+  {
+   "canonical": "MeV",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QNLP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "XZZX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LOQC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MOOC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "number of qubit",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Number of Qubits"
+   ]
+  },
+  {
+   "canonical": "JavaScript",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QSVM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TNs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FTQCs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "THEOREM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PQCs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PyZX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QAI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BERT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LEO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LOSS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LetCbe",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "POMDPs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "google sycamore",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Google Sycamore",
+    "The Google Sycamore"
+   ]
+  },
+  {
+   "canonical": "if alice",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "If Alice"
+   ]
+  },
+  {
+   "canonical": "quantum experience",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Experience"
+   ]
+  },
+  {
+   "canonical": "ESA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HSHO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IONS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LEARNING",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MPO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QuantISED",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SARS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "Z2Z3",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "closed loop optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "closed-loop optimization",
+    "Closed-loop optimization"
+   ]
+  },
+  {
+   "canonical": "of the lattice schwinger",
+   "entity_type": "METHOD",
+   "aliases": [
+    "of the lattice Schwinger model"
+   ]
+  },
+  {
+   "canonical": "qiskit terra",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Qiskit Terra"
+   ]
+  },
+  {
+   "canonical": "quantum representation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum representation",
+    "the quantum representation"
+   ]
+  },
+  {
+   "canonical": "round of syndrome extraction",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "supporting information",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Supporting Information",
+    "The Supporting Information"
+   ]
+  },
+  {
+   "canonical": "university of illinois",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "University of Illinois"
+   ]
+  },
+  {
+   "canonical": "CNOT2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DeepSeek",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "JC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LetA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MDP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MNIST",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SIMD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SPAM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "datum representation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "data representation",
+    "DATA REPRESENTATION",
+    "the data representation"
+   ]
+  },
+  {
+   "canonical": "grant no",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Grant No"
+   ]
+  },
+  {
+   "canonical": "matrix size",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Matrix Size"
+   ]
+  },
+  {
+   "canonical": "quantum annealing",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Annealing"
+   ]
+  },
+  {
+   "canonical": "quantum architecture",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Quantum architecture"
+   ]
+  },
+  {
+   "canonical": "see figure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "See Figure"
+   ]
+  },
+  {
+   "canonical": "universal property",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the universal property"
+   ]
+  },
+  {
+   "canonical": "university of calgary",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "University of Calgary"
+   ]
+  },
+  {
+   "canonical": "ALLOCATION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ANSYS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "AWS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BMBF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CFTs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CHSH",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CNOTs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CUDA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GDPR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GPT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IARPA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IEEE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LLVM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LetS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MILP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PBSs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PEPS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PSPACE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PyMatching",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QPL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SNSPD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SPACE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "STEM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "X1X2X3",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "calderbank shor steane",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Calderbank-Shor-Steane",
+    "A Calderbank-Shor-Steane"
+   ]
+  },
+  {
+   "canonical": "circuit simulator",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Circuit Simulator",
+    "Circuit Simulators"
+   ]
+  },
+  {
+   "canonical": "department energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the Department of Energy",
+    "Department of Energy"
+   ]
+  },
+  {
+   "canonical": "graph structure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the graph structure"
+   ]
+  },
+  {
+   "canonical": "hybrid quantum classical optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Hybrid Quantum-Classical Optimization",
+    "hybrid quantum-classical optimization",
+    "the hybrid quantum-classical optimization"
+   ]
+  },
+  {
+   "canonical": "interesting property",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "jayne cumming hamiltonian",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Jaynes-Cummings Hamiltonian",
+    "Jaynes-Cumming Hamiltonian"
+   ]
+  },
+  {
+   "canonical": "lov grover",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Lov Grover"
+   ]
+  },
+  {
+   "canonical": "mazyar mirrahimi",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Mazyar Mirrahimi"
+   ]
+  },
+  {
+   "canonical": "programming framework",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "qiskit aer",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Qiskit Aer"
+   ]
+  },
+  {
+   "canonical": "quantum mechanic",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Mechanics",
+    "Quantum Mechanic"
+   ]
+  },
+  {
+   "canonical": "rigetti computing",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Rigetti Computing"
+   ]
+  },
+  {
+   "canonical": "schematic representation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Schematic representation"
+   ]
+  },
+  {
+   "canonical": "see section",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "See Section"
+   ]
+  },
+  {
+   "canonical": "tanner graph",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the Tanner graph",
+    "Tanner graph"
+   ]
+  },
+  {
+   "canonical": "tensorflow quantum",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "TensorFlow Quantum"
+   ]
+  },
+  {
+   "canonical": "total energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the total energy"
+   ]
+  },
+  {
+   "canonical": "unit cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Unit cell",
+    "the ‘unit cell"
+   ]
+  },
+  {
+   "canonical": "ANSI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "APPLIED",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ASSOCIATED",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CERN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CIRCUIT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "COVID-19",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DESIGN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DiVincenzo",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ECT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ESULTS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ETHODS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FIELD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FORMALISM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FRAMEWORK",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FUTURE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GATES",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HAMIL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HBCUs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IBMQ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ISCUSSIONS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IXZZX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LLMs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LemmaA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LetF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MATERIALS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "METHOD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NSERC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ONCLUSIONS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "OPERATIONS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PauliZ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QCNNs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QUBITS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RESEARCH",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SC0019380",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SET",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SIMULA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SUMMAR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TIONS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TONIAN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TheXgate",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TheZ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "UANTUM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "UandE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "VISION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "W911NF-16",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "XIXZZ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "XZZXI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ZXIXZ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ZZZZZ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "acknowledgment we",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Acknowledgments We"
+   ]
+  },
+  {
+   "canonical": "alice to bob",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Alice to Bob"
+   ]
+  },
+  {
+   "canonical": "amazon web service",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Amazon Web Services"
+   ]
+  },
+  {
+   "canonical": "background quantum",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Background Quantum"
+   ]
+  },
+  {
+   "canonical": "bayesian optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Bayesian optimization",
+    "the Bayesian optimization"
+   ]
+  },
+  {
+   "canonical": "bloch sphere representation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Bloch sphere representation",
+    "The Bloch sphere representation"
+   ]
+  },
+  {
+   "canonical": "by lemma",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "By Lemma"
+   ]
+  },
+  {
+   "canonical": "called energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "called the energy"
+   ]
+  },
+  {
+   "canonical": "charle bennett",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Charles Bennett"
+   ]
+  },
+  {
+   "canonical": "circuit model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the circuit model"
+   ]
+  },
+  {
+   "canonical": "classical clustering",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "classical method",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the classical method"
+   ]
+  },
+  {
+   "canonical": "classical model",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "complete model",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "consider task",
+   "entity_type": "TASK",
+   "aliases": [
+    "consider the task"
+   ]
+  },
+  {
+   "canonical": "controlled z",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Controlled Z"
+   ]
+  },
+  {
+   "canonical": "cyclic property",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the cyclic property"
+   ]
+  },
+  {
+   "canonical": "daniel gottesman",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Daniel Gottesman"
+   ]
+  },
+  {
+   "canonical": "datum analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "data analysis"
+   ]
+  },
+  {
+   "canonical": "decoding algorithm",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "department of computer science",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Department of Computer Science"
+   ]
+  },
+  {
+   "canonical": "department of physic",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Department of Physics"
+   ]
+  },
+  {
+   "canonical": "design optimization",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "detail algorithm",
+   "entity_type": "METHOD",
+   "aliases": [
+    "detail below. The algorithm",
+    "details. The algorithm"
+   ]
+  },
+  {
+   "canonical": "diagonal representation",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "digital framework",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "discovery grant",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Discovery Grant"
+   ]
+  },
+  {
+   "canonical": "distributed quantum computing",
+   "entity_type": "METHOD",
+   "aliases": [
+    "distributed quantum computing framework",
+    "distributed quantum computing method",
+    "Distributed Quantum Computing"
+   ]
+  },
+  {
+   "canonical": "distributed shor",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Distributed Shor algorithm",
+    "distributed Shor algorithm",
+    "Distributed Shor"
+   ]
+  },
+  {
+   "canonical": "effective method",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "electronic structure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the electronic structure"
+   ]
+  },
+  {
+   "canonical": "essential task",
+   "entity_type": "TASK",
+   "aliases": [
+    "essential to the task"
+   ]
+  },
+  {
+   "canonical": "exploiting structure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "exploiting the structure"
+   ]
+  },
+  {
+   "canonical": "explore potential",
+   "entity_type": "METHOD",
+   "aliases": [
+    "explore the potential",
+    "explores potential"
+   ]
+  },
+  {
+   "canonical": "exploring the quantum",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Exploring the Quantum"
+   ]
+  },
+  {
+   "canonical": "figure of merit",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Figure of Merit",
+    "Figures of Merit"
+   ]
+  },
+  {
+   "canonical": "for hamiltonian",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "For Hamiltonians"
+   ]
+  },
+  {
+   "canonical": "for syndrome extraction",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "fourier transform",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Fourier Transform"
+   ]
+  },
+  {
+   "canonical": "gate model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the gate model",
+    "the gate-based model"
+   ]
+  },
+  {
+   "canonical": "gate optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Gate Optimization",
+    "Gate optimization"
+   ]
+  },
+  {
+   "canonical": "general model",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "generative model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Generative Models"
+   ]
+  },
+  {
+   "canonical": "geometric representation",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "gottesman kitaev preskill",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Gottesman-Kitaev-Preskill"
+   ]
+  },
+  {
+   "canonical": "government of canada",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Government of Canada"
+   ]
+  },
+  {
+   "canonical": "graphical representation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Graphical representation",
+    "the graphical representation"
+   ]
+  },
+  {
+   "canonical": "greenberger horne zeilinger",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Greenberger-Horne-Zeilinger"
+   ]
+  },
+  {
+   "canonical": "grover and shor",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Grover and Shor"
+   ]
+  },
+  {
+   "canonical": "hardware architecture",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the hardware architecture"
+   ]
+  },
+  {
+   "canonical": "higher energy",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "historically black college and university",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Historically Black Colleges and Universities"
+   ]
+  },
+  {
+   "canonical": "if bob",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "If Bob"
+   ]
+  },
+  {
+   "canonical": "image segmentation",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "in machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "In machine learning"
+   ]
+  },
+  {
+   "canonical": "in quantum machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "In quantum machine learning"
+   ]
+  },
+  {
+   "canonical": "in spain",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "In Spain"
+   ]
+  },
+  {
+   "canonical": "intellectual property",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Intellectual property"
+   ]
+  },
+  {
+   "canonical": "intermediate representation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the Intermediate Representation",
+    "the intermediate representation",
+    "Intermediate Representation"
+   ]
+  },
+  {
+   "canonical": "intrinsic property",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the intrinsic property"
+   ]
+  },
+  {
+   "canonical": "ising hamiltonian",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Ising Hamiltonian"
+   ]
+  },
+  {
+   "canonical": "key property",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the key property"
+   ]
+  },
+  {
+   "canonical": "linear model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the linear model"
+   ]
+  },
+  {
+   "canonical": "matrix product operator",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Matrix Product Operator"
+   ]
+  },
+  {
+   "canonical": "metaheuristic algorithm",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "minimum energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "deep minimum in the energy",
+    "the minimum energy"
+   ]
+  },
+  {
+   "canonical": "national science foundation",
+   "entity_type": "METHOD",
+   "aliases": [
+    "National Science Foundation"
+   ]
+  },
+  {
+   "canonical": "natural framework",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "natural science",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Natural Sciences"
+   ]
+  },
+  {
+   "canonical": "non convex optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "non-convex optimization"
+   ]
+  },
+  {
+   "canonical": "number potential",
+   "entity_type": "METHOD",
+   "aliases": [
+    "number of potential"
+   ]
+  },
+  {
+   "canonical": "offering potential",
+   "entity_type": "METHOD",
+   "aliases": [
+    "offering the potential"
+   ]
+  },
+  {
+   "canonical": "open source software",
+   "entity_type": "METHOD",
+   "aliases": [
+    "open -source software framework",
+    "open source software framework"
+   ]
+  },
+  {
+   "canonical": "optimization method",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the optimization method"
+   ]
+  },
+  {
+   "canonical": "oxford university press",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Oxford University Press"
+   ]
+  },
+  {
+   "canonical": "part algorithm",
+   "entity_type": "METHOD",
+   "aliases": [
+    "part of the algorithm"
+   ]
+  },
+  {
+   "canonical": "perimeter institute",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Perimeter Institute"
+   ]
+  },
+  {
+   "canonical": "peter shor",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Peter Shor"
+   ]
+  },
+  {
+   "canonical": "phase estimation",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Phase estimation algorithm",
+    "the phase estimation algorithm"
+   ]
+  },
+  {
+   "canonical": "physical model",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "pierre rouchon",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Pierre Rouchon"
+   ]
+  },
+  {
+   "canonical": "positive operator valued measure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Positive Operator-Valued Measure"
+   ]
+  },
+  {
+   "canonical": "proof of theorem",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Proof of Theorem"
+   ]
+  },
+  {
+   "canonical": "province of ontario",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Province of Ontario"
+   ]
+  },
+  {
+   "canonical": "quantitative analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantitative analysis"
+   ]
+  },
+  {
+   "canonical": "quantum convolutional neural",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Quantum convolutional neural network",
+    "The quantum convolutional neural network"
+   ]
+  },
+  {
+   "canonical": "quantum virtual machine",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Virtual Machine"
+   ]
+  },
+  {
+   "canonical": "reduce energy",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "reduces the energy"
+   ]
+  },
+  {
+   "canonical": "reformulate segmentation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "reformulates segmentation"
+   ]
+  },
+  {
+   "canonical": "richard feynman",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Richard Feynman"
+   ]
+  },
+  {
+   "canonical": "rigetti quantum virtual machine",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Rigetti Quantum Virtual Machine"
+   ]
+  },
+  {
+   "canonical": "routing optimization",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "rsa algorithm",
+   "entity_type": "METHOD",
+   "aliases": [
+    "RSA algorithm",
+    "The RSA algorithm"
+   ]
+  },
+  {
+   "canonical": "sampling task",
+   "entity_type": "TASK",
+   "aliases": []
+  },
+  {
+   "canonical": "see table",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "See Table"
+   ]
+  },
+  {
+   "canonical": "single framework",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "singular value decomposition",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Singular Value Decomposition"
+   ]
+  },
+  {
+   "canonical": "six vertex graph",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "six-vertex graph",
+    "six-vertices graph"
+   ]
+  },
+  {
+   "canonical": "solution optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "potential solution to the optimization",
+    "the solution to the optimization"
+   ]
+  },
+  {
+   "canonical": "substitute expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "substitute in the expression",
+    "substitute the expression"
+   ]
+  },
+  {
+   "canonical": "tensor network representation",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "theoretical model",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "thereby expanding",
+   "entity_type": "METHOD",
+   "aliases": [
+    "thereby expanding the model",
+    "thereby expanding the potential"
+   ]
+  },
+  {
+   "canonical": "to solve combinatorial optimization",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "toric code",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Toric Code"
+   ]
+  },
+  {
+   "canonical": "training algorithm",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the training algorithm"
+   ]
+  },
+  {
+   "canonical": "two qubit gate",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Two-qubit Gate"
+   ]
+  },
+  {
+   "canonical": "type of quantum machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "types of quantum machine learning"
+   ]
+  },
+  {
+   "canonical": "university of maryland",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "University of Maryland"
+   ]
+  },
+  {
+   "canonical": "von neumann",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Von Neumann"
+   ]
+  },
+  {
+   "canonical": "yale university",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Yale University"
+   ]
+  }
+ ]
+}

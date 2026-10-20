@@ -1,0 +1,3415 @@
+{
+ "status": "candidate_pending_human_review",
+ "status_note": "这是把机器挖的候选概念接进抽取器的实验输入，不是定下来的知识点清单；概念、别名、类型三样都要人对着证据签核。",
+ "domain_id": "scientific-ie-kg",
+ "domain_name": "科学文献信息抽取与知识图谱构建",
+ "source": "data/knowledge/domain_vocabulary/scientific-ie-kg_候选概念.json",
+ "source_status": "candidate_pending_human_review",
+ "source_generated_at": "2026-10-17",
+ "filter": {
+  "field": "document_frequency",
+  "rule": ">= 2",
+  "meaning": "document_frequency 数的是这个词出现在多少篇不同的论文里（同一篇里出现多次只算 1 篇），由 scripts/语料/挖掘领域概念.py 统计"
+ },
+ "alias_cap": 6,
+ "canonical_rule": "canonical 过判据（第三轮加 functional/短缩写两条，第四轮加通用词一条）：是常见英文功能词的丢；长度 ≤3 且全大写的只有 definitions_found 里有它的括号定义、含数字、或候选 document_frequency ≥ 5 时才留；命中 GENERIC_STRUCTURAL_TERMS 且不是已定义缩写的丢（ENTITY/TASK 这一类）；其余长度 ≥4 的实词一律留。判定顺序与别名那几道一致，一条同时符合两条时记前面那条",
+ "alias_rule": "别名取候选 surface_forms 里出现次数最多的前 alias_cap 个（挖掘脚本落盘时已按出现次数从高到低排序），**先过那几道过滤再截断**：长度 <2 的不要；是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）的不要；长度 ≤3 且全大写的缩略语只有出现在挖掘结果的 definitions_found 里、含数字、或候选的 document_frequency ≥ 5 时才留。之后去重，并去掉与 canonical 逐字完全相同的写法",
+ "alias_filters": {
+  "common_english_function_words": [
+   "a",
+   "about",
+   "above",
+   "across",
+   "after",
+   "again",
+   "all",
+   "also",
+   "although",
+   "am",
+   "an",
+   "and",
+   "any",
+   "are",
+   "as",
+   "at",
+   "be",
+   "because",
+   "been",
+   "before",
+   "being",
+   "below",
+   "between",
+   "both",
+   "but",
+   "by",
+   "can",
+   "cannot",
+   "could",
+   "did",
+   "do",
+   "does",
+   "doing",
+   "done",
+   "down",
+   "during",
+   "each",
+   "else",
+   "etc",
+   "few",
+   "for",
+   "from",
+   "further",
+   "furthermore",
+   "had",
+   "has",
+   "have",
+   "having",
+   "he",
+   "hence",
+   "her",
+   "his",
+   "how",
+   "however",
+   "if",
+   "in",
+   "into",
+   "is",
+   "it",
+   "its",
+   "may",
+   "might",
+   "more",
+   "moreover",
+   "most",
+   "must",
+   "no",
+   "nor",
+   "not",
+   "of",
+   "off",
+   "on",
+   "once",
+   "only",
+   "onto",
+   "or",
+   "other",
+   "our",
+   "out",
+   "over",
+   "own",
+   "same",
+   "shall",
+   "she",
+   "should",
+   "so",
+   "some",
+   "such",
+   "than",
+   "that",
+   "the",
+   "their",
+   "them",
+   "then",
+   "therefore",
+   "these",
+   "they",
+   "this",
+   "those",
+   "though",
+   "through",
+   "thus",
+   "to",
+   "too",
+   "under",
+   "up",
+   "us",
+   "very",
+   "was",
+   "we",
+   "were",
+   "what",
+   "when",
+   "where",
+   "whereas",
+   "which",
+   "while",
+   "who",
+   "whom",
+   "whose",
+   "why",
+   "will",
+   "with",
+   "within",
+   "without",
+   "would",
+   "you"
+  ],
+  "common_english_function_words_source": "通用英语功能词（冠词、代词、介词、连词、助动词、指示词、常见副词与限定词），不是本项目发明的；任何一本英语语法书里的 function words 都是这一批",
+  "min_short_acronym_df": 5,
+  "reasons": {
+   "too_short": "长度小于 2（单字母没有区分度，抽取器那边全是版面碎片）",
+   "common_english_word": "是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）；抽取器别名正则大小写不敏感，1–3 个字母的全大写缩略语会匹配到普通英文词上（实测 OF 匹配 of，25607 次提及）",
+   "short_acronym_without_definition": "长度 ≤3 的全大写缩略语，挖掘结果里没有它的括号定义、也不含数字，候选的 document_frequency 还不到 5；大小写不敏感匹配下会被普通英文词吃掉（NA、IT、OR 这一类）",
+   "generic_structural_term": "是描述文档结构或泛泛类别的普通英文词（GENERIC_STRUCTURAL_TERMS），不指向具体技术；这一轮只用来判 canonical，别名这一道只报数不丢（见 generic_alias_candidates）"
+  },
+  "effect": "抽取器 src/yanhai/extraction.py 的 _alias_pattern 带 IGNORECASE，1–3 个字母的全大写缩略语会匹配到普通英文词上（实测 OF 匹配 of，25607 次提及）；这几道过滤就是拦这一类别名"
+ },
+ "rejected_alias_total": 0,
+ "rejected_aliases": [],
+ "rejected_aliases_note": "rejected_aliases 只列每条被丢掉的别名（alias / reason / canonical / domain_id），最多列前 200 条；完整条数看 rejected_alias_total，按原因分的计数看 rejected_reasons",
+ "rejected_reasons": {
+  "common_english_word": 0,
+  "generic_structural_term": 0,
+  "short_acronym_without_definition": 0,
+  "too_short": 0
+ },
+ "canonical_filters": {
+  "ran": "canonical 过滤在第三轮加上，跑过的每一份词表都带这一节；rejected_canonical_total 是 0 就说明这一批候选里没有该丢的 canonical，不是这一道没跑",
+  "reasons": {
+   "common_english_word": "canonical 本身是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）；抽取器别名正则大小写不敏感，词表里一条 `OF` 会把每一句里的 `of` 都算成提及（第二轮实测主领域 25607 次），`IN`/`BY`/`OR`/`IT`/`AT`/`HE`/`HER` 同理",
+   "short_acronym_without_definition": "canonical 长度 ≤3 且全大写，挖掘结果里没有它的括号定义、也不含数字，候选的 document_frequency 还不到 5；这类名字在大小写不敏感匹配下会被普通英文词吃掉（`NA` 命中 `na`，`IT` 命中 `it`），真缩写（`KG`/`GPT`/`AI`/`GNN`/`DKT`/`CGCNN`）只要在 definitions_found 里有定义、含数字、或 DF ≥ 5，就不受这一条影响",
+   "generic_structural_term": "canonical 是描述文档结构或泛泛类别的普通英文词（GENERIC_STRUCTURAL_TERMS，例如 `ENTITY`/`TASK`/`CONTEXT`/`CLAIM`）；它们是被『长度 ≥4 一律保留』那一条放进来的，本身不指向具体技术。同时在 definitions_found 里有括号定义的（`AI` 这类真缩写）不受这一条影响"
+  },
+  "min_short_acronym_df": 5,
+  "generic_structural_terms": [
+   "accuracy",
+   "acknowledgements",
+   "acknowledgment",
+   "acknowledgments",
+   "answer",
+   "answers",
+   "appendices",
+   "appendix",
+   "application",
+   "applications",
+   "approach",
+   "approaches",
+   "author",
+   "authors",
+   "baseline",
+   "baselines",
+   "bibliographies",
+   "bibliography",
+   "case",
+   "cases",
+   "claim",
+   "claims",
+   "context",
+   "contexts",
+   "data",
+   "entities",
+   "entity",
+   "example",
+   "examples",
+   "feature",
+   "features",
+   "figure",
+   "figures",
+   "footnote",
+   "footnotes",
+   "image",
+   "images",
+   "information",
+   "input",
+   "inputs",
+   "item",
+   "items",
+   "knowledge",
+   "language",
+   "languages",
+   "level",
+   "levels",
+   "number",
+   "numbers",
+   "one",
+   "ones",
+   "output",
+   "outputs",
+   "paper",
+   "papers",
+   "paragraph",
+   "paragraphs",
+   "part",
+   "parts",
+   "performance",
+   "process",
+   "processes",
+   "quality",
+   "question",
+   "questions",
+   "reference",
+   "references",
+   "result",
+   "results",
+   "score",
+   "scores",
+   "section",
+   "sections",
+   "sentence",
+   "sentences",
+   "size",
+   "state",
+   "states",
+   "step",
+   "steps",
+   "studies",
+   "study",
+   "supplementary",
+   "system",
+   "systems",
+   "table",
+   "tables",
+   "task",
+   "tasks",
+   "text",
+   "texts",
+   "time",
+   "type",
+   "types",
+   "user",
+   "users",
+   "value",
+   "values",
+   "word",
+   "words"
+  ],
+  "generic_structural_terms_note": "**这是一条判断，不是客观标准**：收的是描述文档结构或泛泛类别、不指向具体技术的单 token 普通英文词。`model`/`method`/`dataset`/`annotation`/`metric` 故意不在表里——它们在本体里本身就是合法类型（METHOD/DATASET/METRIC），收进来会误伤真概念。（第四轮加的。第三轮记录第五、六节列出的 ENTITY/TASK/CONTEXT/CLAIM/QUESTION/OUTPUT 那一批就是这么进来的。第五轮又补进 REFERENCES/REFERENCE/BIBLIOGRAPHY/ACKNOWLEDGEMENTS/ACKNOWLEDGMENT/APPENDIX/SUPPLEMENTARY/FOOTNOTE 这一批段落标题词——`quantum::REFERENCES`（原始 DF 33）就是这么一条噪声。）",
+  "rules": [
+   "canonical 是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）→ 丢；整条名字当一个词查一次，含空格时要求每个词都是功能词",
+   "canonical 长度 ≤3 且全大写：只有 definitions_found 里有它的括号定义、含数字、或候选 document_frequency ≥ 5 时才留，否则丢（KG/GPT/AI/DKT/CGCNN 这类留，OF/IN/BY/NA/IT 丢）",
+   "canonical 命中 GENERIC_STRUCTURAL_TERMS（ENTITY/TASK/CONTEXT/CLAIM 这一类）且不是已定义缩写 → 丢；这一条拦的是『长度 ≥4 一律保留』放进来的那批",
+   "长度 ≥4 的实词一律保留（不受全大写影响，CGCNN/MEGNet/SciERC 都留）"
+  ],
+  "why": "抽取器建别名表时是 {canonical, *aliases}（src/yanhai/extraction.py 的 SchemaGuidedExtractor.__init__），canonical 也算一条别名；正则带 IGNORECASE，所以词表里一条 `OF` 会把每一句里的 `of` 都算成提及（第二轮实测主领域 25607 次，1–3 位全大写实体占提及 52.0%）。噪声坐在名字这一层，只过滤别名拦不到",
+  "note": "判定顺序：先常见英文功能词，再短全大写，最后通用/结构性词；一条同时符合两条时记前面那条，与别名那几道是同一个约定"
+ },
+ "rejected_canonical_total": 119,
+ "rejected_canonicals": [
+  {
+   "canonical": "CONTEXT",
+   "reason": "generic_structural_term",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 6,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TASK",
+   "reason": "generic_structural_term",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 5,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ENTITY",
+   "reason": "generic_structural_term",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "AUC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PL",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CLAIM",
+   "reason": "generic_structural_term",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GPE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ONLY",
+   "reason": "common_english_word",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CNN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "BY",
+   "reason": "common_english_word",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "BIO",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "OCR",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "OR",
+   "reason": "common_english_word",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "UI",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 4,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "OF",
+   "reason": "common_english_word",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "NA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ADE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "FAC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "NIL",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IT",
+   "reason": "common_english_word",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "QUESTION",
+   "reason": "generic_structural_term",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "POS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CEO",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "FR",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SNE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ERE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "OUTPUT",
+   "reason": "generic_structural_term",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "BN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "KNN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "VW",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ACE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GB",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 3,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ER",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "OOM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CWQ",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PCA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ART",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SER",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "EXAMPLE",
+   "reason": "generic_structural_term",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "EM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MRR",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "BGE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "OU",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PD",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ROC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TKG",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TAC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "LR",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SVM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TRI",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CO",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "INPUT",
+   "reason": "generic_structural_term",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PCE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PCR",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "EA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "EN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MAE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SUM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "AS",
+   "reason": "common_english_word",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "FC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "FFN",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "GT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "LANGUAGE",
+   "reason": "generic_structural_term",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "LAW",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MAX",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "NEI",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "NOT",
+   "reason": "common_english_word",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PLM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "FF",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "KBP",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "PT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TEXT",
+   "reason": "generic_structural_term",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TV",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "XVI",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "EC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "EI",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "FCC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IDF",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "LM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MLP",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "NW",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "OOD",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "VAL",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CPT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IN",
+   "reason": "common_english_word",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "KA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MAP",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ML",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "NQ",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "NUM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RBF",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "REC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RNA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "TF",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "VAE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "AT",
+   "reason": "common_english_word",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "CL",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DC",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "DNA",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HLT",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "KGG",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MRI",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MS",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "MTB",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "NME",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ONE",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RAM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "RR",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "SEM",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "UNK",
+   "reason": "short_acronym_without_definition",
+   "domain_id": "scientific-ie-kg",
+   "document_frequency": 2,
+   "entity_type": "METHOD"
+  }
+ ],
+ "rejected_canonicals_note": "rejected_canonicals 只列每条被丢掉的 canonical（canonical / reason / domain_id / document_frequency / entity_type），最多列前 500 条；完整条数看 rejected_canonical_total，按原因分的计数看 rejected_canonical_reasons",
+ "rejected_canonical_reasons": {
+  "common_english_word": 9,
+  "generic_structural_term": 10,
+  "short_acronym_without_definition": 100
+ },
+ "generic_alias_candidates": {
+  "note": "第四轮的通用/结构性词判据只落在 canonical 这一层，别名沿用原来那几道，所以这一节**只报数、不当场丢**：这些是留在词表别名里、归一后命中 GENERIC_STRUCTURAL_TERMS 的写法。要不要下一轮一起清，要人定",
+  "total": 0,
+  "items": []
+ },
+ "kept_short_uppercase": {
+  "note": "canonical 判据与别名那几道过滤都跑完之后，还留在词表里的 1–3 位全大写名字。这一节留下的分两种：挖掘结果 definitions_found 里有括号定义的，或者候选 document_frequency ≥ 5（跨论文原样出现过）的，看 kept_by 这一项。含数字的写法（GPT-4、3DG）虽然也留，但不算『全大写』这一类、不进这一节。长度 ≥4 的全大写名字（CGCNN/MEGNet/SciERC）不受判据影响，也不进这一节",
+  "canonical_count": 42,
+  "canonical_by_definition": 24,
+  "canonical_by_document_frequency": 18,
+  "alias_count": 0,
+  "items": [
+   {
+    "canonical": "LLM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NER",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "RE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "KG",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "GPT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "AI",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NLP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "QA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "EL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ID",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "KB",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "CRF",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ACL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "IE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "ORG",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "LOC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "RAG",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "RTX",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "CI",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "ES",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "PER",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "ICL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "GNN",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "GCN",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NYT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "CLS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NED",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "GAT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "KL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "CV",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "RSS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "SFT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "RL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ZSL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "EE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "OT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "OS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "PS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ARC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "FDA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ERC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "FT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   }
+  ]
+ },
+ "type_mapping": {
+  "accepted_entity_types": [
+   "DATASET",
+   "DOMAIN",
+   "FINDING",
+   "LIMITATION",
+   "METHOD",
+   "METRIC",
+   "TASK"
+  ],
+  "fallback": "METHOD",
+  "rule": "候选的 guess_type 只保留抽取本体 entity_types 里有的 7 类（METHOD/TASK/DATASET/METRIC/FINDING/LIMITATION/DOMAIN）；guess_type 为空、缺失或不在其中（例如猜测出的 'OTHER'、'MODEL'）一律落到 METHOD。落 METHOD 的理由：抽不出类型的候选多半是缩写词、模型名、系统名，METHOD 是其中最多的一类；METHOD 在 relation_constraints 里也几乎不受限，不会因为类型对不上把整条关系判成 schema_type_mismatch。",
+  "observed": {
+   "METHOD": 191,
+   "DOMAIN": 130,
+   "DATASET": 3,
+   "TASK": 2
+  }
+ },
+ "generated_by": "scripts/抽取/生成抽取词表.py",
+ "generated_on": "2026-10-17",
+ "schema_untouched": "data/knowledge/extraction_schema.json 未被本脚本修改；本文件是另写的一份，由 scripts/抽取/构建全文知识库.py --vocabulary 追加进抽取器。",
+ "concept_count": 326,
+ "alias_count": 184,
+ "duplicates_merged": 11,
+ "duplicates_merged_note": "挖掘脚本按 (来源类别, 归一键) 存候选，同一个词可能落成多条；这里按 canonical只留第一条（出现篇数多的在前），类型以先到的为准，别名并到一起",
+ "concepts": [
+  {
+   "canonical": "LLM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NER",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LLMs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BERT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "KG",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GPT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "relation extraction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Relation Extraction",
+    "the relation extraction",
+    "relation extraction dataset",
+    "Relation Extraction Benchmark",
+    "Relation Extraction... - ’Method",
+    "Relation extraction"
+   ]
+  },
+  {
+   "canonical": "AI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NLP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NVIDIA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "EL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ID",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GPT-3",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GPT-4",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "KB",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ChatGPT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ROUGE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RoBERTa",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CRF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LSTM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ACL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NAACL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ORG",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "COVID-19",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LOC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SciERC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RAG",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "OpenAI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "knowledge graph",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Knowledge Graph",
+    "the knowledge graph",
+    "Knowledge Graphs"
+   ]
+  },
+  {
+   "canonical": "GPUs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RTX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GPT3",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ES",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "united state",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "United States"
+   ]
+  },
+  {
+   "canonical": "named entity recognition",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Named Entity Recognition"
+   ]
+  },
+  {
+   "canonical": "KGs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "information extraction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Information Extraction"
+   ]
+  },
+  {
+   "canonical": "PER",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ICL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GNN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ACE05",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GCN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NYT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BioBERT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GPT4o",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DeepSeek",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "association for computational linguistic",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Association for Computational Linguistics"
+   ]
+  },
+  {
+   "canonical": "precision recall",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Precision Recall"
+   ]
+  },
+  {
+   "canonical": "CLS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CoRR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "comparative analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Comparative Analysis",
+    "Comparative analysis"
+   ]
+  },
+  {
+   "canonical": "entity linking",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Entity Linking"
+   ]
+  },
+  {
+   "canonical": "CoT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "INST",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FewRel",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HGERE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "UMLS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FACTKG",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BLEU",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BM25",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GPT-5",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IDs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "weight decay",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Weight Decay"
+   ]
+  },
+  {
+   "canonical": "DBpedia",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "neural network",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "bert model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "BERT-based model",
+    "BERT model",
+    "the BERT model"
+   ]
+  },
+  {
+   "canonical": "natural language processing",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Natural Language Processing"
+   ]
+  },
+  {
+   "canonical": "NLTK",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "acknowledgment this",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Acknowledgment This",
+    "Acknowledgments This"
+   ]
+  },
+  {
+   "canonical": "annotation guideline",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Annotation Guideline",
+    "Annotation Guidelines"
+   ]
+  },
+  {
+   "canonical": "even for commonly",
+   "entity_type": "DATASET",
+   "aliases": [
+    "Even for commonly-used benchmark"
+   ]
+  },
+  {
+   "canonical": "for relation extraction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "For relation extraction"
+   ]
+  },
+  {
+   "canonical": "help model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "helps the model",
+    "help the model"
+   ]
+  },
+  {
+   "canonical": "performance analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Performance Analysis"
+   ]
+  },
+  {
+   "canonical": "trained model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "trained 40 models. Model",
+    "trained the model",
+    "trained to model"
+   ]
+  },
+  {
+   "canonical": "DocRED",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "WebQSP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BiLSTM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NED",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ROUGE-1",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PERSON",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GAT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "KBs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "KL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "AdamW",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GPT4",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BART",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FEVER",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GEAR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BERTbase",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "learning rate",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Learning Rate"
+   ]
+  },
+  {
+   "canonical": "WIKI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "AIDA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SciBERT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SemEval",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TFIDF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "entity extraction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Entity Extraction"
+   ]
+  },
+  {
+   "canonical": "CV",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GitHub",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "OntoNotes",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "united state of america",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "United States of America"
+   ]
+  },
+  {
+   "canonical": "EMNLP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RSS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "batch size",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Batch Size"
+   ]
+  },
+  {
+   "canonical": "hugging face",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Hugging Face",
+    "Using the Hugging-Face"
+   ]
+  },
+  {
+   "canonical": "language model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the language model"
+   ]
+  },
+  {
+   "canonical": "COVID",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HuggingFace",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MacBook",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ReLU",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "macbook pro",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "MacBook Pro"
+   ]
+  },
+  {
+   "canonical": "text generation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Text Generation",
+    "text_generation"
+   ]
+  },
+  {
+   "canonical": "case study figure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Case Study Figure"
+   ]
+  },
+  {
+   "canonical": "error analysis we",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Error Analysis We"
+   ]
+  },
+  {
+   "canonical": "hannaneh hajishirzi",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Hannaneh Hajishirzi"
+   ]
+  },
+  {
+   "canonical": "in context learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "In-Context Learning",
+    "in-context learning"
+   ]
+  },
+  {
+   "canonical": "kenton lee",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Kenton Lee"
+   ]
+  },
+  {
+   "canonical": "limitation the",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Limitations The"
+   ]
+  },
+  {
+   "canonical": "matt gardner",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Matt Gardner"
+   ]
+  },
+  {
+   "canonical": "output format",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Output Format"
+   ]
+  },
+  {
+   "canonical": "token classification",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Token Classification"
+   ]
+  },
+  {
+   "canonical": "NAME",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MATCH",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SFT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SQuAD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FLAN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ACE2005",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "WORK",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PROPERTY",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MatSciBERT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ROUGE-2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "EVENT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ZSL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "REFUTED",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PRODUCT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TAIL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SUPPORTED",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "in proc",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "In Proc"
+   ]
+  },
+  {
+   "canonical": "GRAPH",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LABEL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "EE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "VeriTeC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "training epoch",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Training Epochs"
+   ]
+  },
+  {
+   "canonical": "SciFact",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NORP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PURE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "computational linguistic",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Computational Linguistics"
+   ]
+  },
+  {
+   "canonical": "semantic alignment",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Semantic Alignment",
+    "the semantic alignment"
+   ]
+  },
+  {
+   "canonical": "stem cell",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "BC5CDR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DeBERTa",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LLaMA-2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "McNemar",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MeSH",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "OT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PDFs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PubMedQA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SciREX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "prompt model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "prompt the model"
+   ]
+  },
+  {
+   "canonical": "ABSTRACT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GLiNER",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PubMed",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "final prediction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Final Prediction",
+    "the final prediction"
+   ]
+  },
+  {
+   "canonical": "ACE2004",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BlueBERT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CoNLL03",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MULTI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "OS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PC71BM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "REBEL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ROUGE1",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RoBERTalarge",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SARS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SUPPORT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "analysis reasoning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Analysis & Reasoning",
+    "Analysis of Reasoning"
+   ]
+  },
+  {
+   "canonical": "donald trump",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Donald Trump"
+   ]
+  },
+  {
+   "canonical": "evidence retrieval",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Evidence Retrieval"
+   ]
+  },
+  {
+   "canonical": "graph structure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the graph structure",
+    "Graph Structure"
+   ]
+  },
+  {
+   "canonical": "AAAI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ARC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BLINK",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CONTRADICT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CoV-2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NASA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PCNN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PROMPT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SubTask",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ZSRC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "barack obama",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Barack Obama"
+   ]
+  },
+  {
+   "canonical": "event extraction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Event Extraction"
+   ]
+  },
+  {
+   "canonical": "explanation the",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Explanation The"
+   ]
+  },
+  {
+   "canonical": "ground truth",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Ground Truth",
+    "ground-truth dataset",
+    "the ground-truth model"
+   ]
+  },
+  {
+   "canonical": "image segmentation",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "knowledge extraction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the knowledge extraction"
+   ]
+  },
+  {
+   "canonical": "original query",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Original Query"
+   ]
+  },
+  {
+   "canonical": "recall precision",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Recall Precision"
+   ]
+  },
+  {
+   "canonical": "retrieval augmented generation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "retrieval-augmented generation",
+    "retrieval-augmented generation framework"
+   ]
+  },
+  {
+   "canonical": "see figure",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "See Figure"
+   ]
+  },
+  {
+   "canonical": "speech recognition",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Speech Recognition"
+   ]
+  },
+  {
+   "canonical": "CITE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CORENLP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CoNLL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FDA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GPa",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LIST",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LUMO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MODEL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "McCallum",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MiniLM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NILs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TransE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "WebQuestions",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "alfredo zitarrosa",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Alfredo Zitarrosa"
+   ]
+  },
+  {
+   "canonical": "best model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the best model"
+   ]
+  },
+  {
+   "canonical": "bo xu",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Bo Xu"
+   ]
+  },
+  {
+   "canonical": "canceled route",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Canceled Route"
+   ]
+  },
+  {
+   "canonical": "citation graph",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the citation graph"
+   ]
+  },
+  {
+   "canonical": "detailed analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "detailed analysis of the model"
+   ]
+  },
+  {
+   "canonical": "end to end re",
+   "entity_type": "TASK",
+   "aliases": [
+    "the end-to-end RE task",
+    "end-to-end RE model"
+   ]
+  },
+  {
+   "canonical": "end to end relation extraction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "End-to-end relation extraction",
+    "end-to-end relation extraction",
+    "end-to-end relation extraction model"
+   ]
+  },
+  {
+   "canonical": "evaluation metric",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Evaluation Metric",
+    "Evaluation Metrics"
+   ]
+  },
+  {
+   "canonical": "evidence extraction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "evidence extraction model"
+   ]
+  },
+  {
+   "canonical": "failure case",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Failure Case"
+   ]
+  },
+  {
+   "canonical": "kullback leibler",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Kullback-Leibler"
+   ]
+  },
+  {
+   "canonical": "label smoothing",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Label Smoothing"
+   ]
+  },
+  {
+   "canonical": "llm reasoning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "LLM-based reasoning",
+    "LLM Reasoning"
+   ]
+  },
+  {
+   "canonical": "multi task learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "multi-task learning",
+    "multi-task learning network"
+   ]
+  },
+  {
+   "canonical": "number of node",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Number of Nodes"
+   ]
+  },
+  {
+   "canonical": "pope benedict",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Pope Benedict"
+   ]
+  },
+  {
+   "canonical": "prompt prompt",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Prompts Prompt"
+   ]
+  },
+  {
+   "canonical": "semantic scholar",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Semantic Scholar"
+   ]
+  },
+  {
+   "canonical": "semi supervised",
+   "entity_type": "METHOD",
+   "aliases": [
+    "semi-supervised algorithm",
+    "semi-supervised method"
+   ]
+  },
+  {
+   "canonical": "sensitivity analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Sensitivity Analysis",
+    "Sensitivity analysis"
+   ]
+  },
+  {
+   "canonical": "south korea",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "South Korea"
+   ]
+  },
+  {
+   "canonical": "text extraction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Text Extraction",
+    "text-only extraction"
+   ]
+  },
+  {
+   "canonical": "token embedding",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Token embedding"
+   ]
+  },
+  {
+   "canonical": "training step",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Training Steps"
+   ]
+  },
+  {
+   "canonical": "united kingdom",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "United Kingdom"
+   ]
+  },
+  {
+   "canonical": "warmup step",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Warmup Steps"
+   ]
+  },
+  {
+   "canonical": "DSRE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "EHRs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ERC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "EXACTLY",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GNNs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GeForce",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "INSTRUCTIONS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "KGQA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NIHR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ODQA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PCBM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PLMs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SOTA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TeX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "WordNet",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "acknowledgment we",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Acknowledgments We"
+   ]
+  },
+  {
+   "canonical": "african american",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "African American",
+    "African Americans"
+   ]
+  },
+  {
+   "canonical": "analysis we",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Analysis We"
+   ]
+  },
+  {
+   "canonical": "andrea vlacho",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Andreas Vlachos"
+   ]
+  },
+  {
+   "canonical": "arpit mittal",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Arpit Mittal"
+   ]
+  },
+  {
+   "canonical": "attention model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "attention-based model"
+   ]
+  },
+  {
+   "canonical": "best performing",
+   "entity_type": "METHOD",
+   "aliases": [
+    "best-performing model"
+   ]
+  },
+  {
+   "canonical": "canceled stop",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Canceled Stop"
+   ]
+  },
+  {
+   "canonical": "case study to",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Case Studies To",
+    "Case Study To"
+   ]
+  },
+  {
+   "canonical": "challenging dataset",
+   "entity_type": "DATASET",
+   "aliases": []
+  },
+  {
+   "canonical": "christo christodoulopoulo",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Christos Christodoulopoulos"
+   ]
+  },
+  {
+   "canonical": "christopher clark",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Christopher Clark"
+   ]
+  },
+  {
+   "canonical": "code analysis",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "comparison inference",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Comparison of inference",
+    "comparison of inference"
+   ]
+  },
+  {
+   "canonical": "deeper analysis",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "different reasoning",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "distant supervision for relation extraction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Distant supervision for relation extraction"
+   ]
+  },
+  {
+   "canonical": "entity recognition",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "entities recognition"
+   ]
+  },
+  {
+   "canonical": "entity representation",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "ethic statement",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Ethics Statement"
+   ]
+  },
+  {
+   "canonical": "european union horizon",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "European Union Horizon"
+   ]
+  },
+  {
+   "canonical": "example output",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Example Output",
+    "Example Outputs"
+   ]
+  },
+  {
+   "canonical": "few shot learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "few-shot learning"
+   ]
+  },
+  {
+   "canonical": "for named entity recognition",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "architecture for Named Entity Recognition",
+    "dataset for named entity recognition"
+   ]
+  },
+  {
+   "canonical": "full model",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "hongyun bao",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Hongyun Bao"
+   ]
+  },
+  {
+   "canonical": "jame thorne",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "James Thorne"
+   ]
+  },
+  {
+   "canonical": "joint inference",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Joint Inference",
+    "Joint inference"
+   ]
+  },
+  {
+   "canonical": "kristina toutanova",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Kristina Toutanova"
+   ]
+  },
+  {
+   "canonical": "limitation our",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Limitations Our"
+   ]
+  },
+  {
+   "canonical": "limitation while",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Limitation While",
+    "Limitations While"
+   ]
+  },
+  {
+   "canonical": "logical reasoning",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "luke zettlemoyer",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Luke Zettlemoyer"
+   ]
+  },
+  {
+   "canonical": "machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "mark neumann",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Mark Neumann"
+   ]
+  },
+  {
+   "canonical": "max sequence length",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Max Sequence Length"
+   ]
+  },
+  {
+   "canonical": "mohit iyyer",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Mohit Iyyer"
+   ]
+  },
+  {
+   "canonical": "multi hop reasoning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "multi-hop reasoning"
+   ]
+  },
+  {
+   "canonical": "multimodal model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the multimodal model"
+   ]
+  },
+  {
+   "canonical": "node degree",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Node Degree"
+   ]
+  },
+  {
+   "canonical": "output in",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Output In",
+    "Outputs In"
+   ]
+  },
+  {
+   "canonical": "peng zhou",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Peng Zhou"
+   ]
+  },
+  {
+   "canonical": "performance on the re",
+   "entity_type": "TASK",
+   "aliases": [
+    "performance on the RE task"
+   ]
+  },
+  {
+   "canonical": "pontus stenetorp",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Pontus Stenetorp"
+   ]
+  },
+  {
+   "canonical": "pre trained",
+   "entity_type": "METHOD",
+   "aliases": [
+    "pre-trained model",
+    "pre-trained on dataset"
+   ]
+  },
+  {
+   "canonical": "qualitative analysis",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "rail replacement service",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Rail Replacement Service"
+   ]
+  },
+  {
+   "canonical": "reasoning type",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Reasoning Type"
+   ]
+  },
+  {
+   "canonical": "reduce annotation",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "reimer and gurevych",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Reimers and Gurevych"
+   ]
+  },
+  {
+   "canonical": "relation prediction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the relation prediction"
+   ]
+  },
+  {
+   "canonical": "respond with true",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Respond with True"
+   ]
+  },
+  {
+   "canonical": "san francisco",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "San Francisco"
+   ]
+  },
+  {
+   "canonical": "see appendix",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "See Appendix"
+   ]
+  },
+  {
+   "canonical": "sentiment analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Sentiment Analysis"
+   ]
+  },
+  {
+   "canonical": "size dataset",
+   "entity_type": "DATASET",
+   "aliases": [
+    "The size of the dataset",
+    "the size of the dataset"
+   ]
+  },
+  {
+   "canonical": "suncong zheng",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Suncong Zheng"
+   ]
+  },
+  {
+   "canonical": "support prediction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "support the prediction"
+   ]
+  },
+  {
+   "canonical": "synthetic datum generation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "SYNTHETIC DATA GENERATION",
+    "synthetic data generation"
+   ]
+  },
+  {
+   "canonical": "task description",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Task Description",
+    "Task Descriptions"
+   ]
+  },
+  {
+   "canonical": "text classification",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Text Classification"
+   ]
+  },
+  {
+   "canonical": "text generation query",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Text Generation Query"
+   ]
+  },
+  {
+   "canonical": "to select the best",
+   "entity_type": "METHOD",
+   "aliases": [
+    "to select the best model"
+   ]
+  },
+  {
+   "canonical": "wen tau yih",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Wen Tau Yih",
+    "Wen-tau Yih"
+   ]
+  }
+ ]
+}

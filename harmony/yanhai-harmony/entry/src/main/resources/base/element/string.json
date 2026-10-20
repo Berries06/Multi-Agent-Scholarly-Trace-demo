@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "研海寻踪鸿蒙客户端"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "研海寻踪"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "研海寻踪"
+    }
+  ]
+}

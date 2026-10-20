@@ -1,0 +1,28 @@
+{
+  "recorded_at": "YYYY-MM-DDTHH:MM:SS+08:00",
+  "account_owner_confirmed": false,
+  "region": "replace-from-purchase-page",
+  "availability_zone": "replace-from-purchase-page",
+  "instance": {
+    "family": "GN7",
+    "gpu": "1x NVIDIA T4 16 GiB",
+    "vcpu": 8,
+    "memory_gib": 32,
+    "billing": "pay-as-you-go",
+    "hourly_price_cny": null
+  },
+  "system_disk": {
+    "type": "replace-from-purchase-page",
+    "size_gib": 100,
+    "hourly_price_cny": null
+  },
+  "public_network": {
+    "billing": "replace-from-purchase-page",
+    "unit_price_cny": null,
+    "unit": "replace-from-purchase-page"
+  },
+  "stop_charging_eligible": null,
+  "monthly_warning_hours": 80,
+  "evidence": "attach-purchase-page-screenshot-or-export-path",
+  "approved_by": "replace-with-account-owner"
+}

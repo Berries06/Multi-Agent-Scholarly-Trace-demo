@@ -1,0 +1,3050 @@
+{
+ "status": "candidate_pending_human_review",
+ "status_note": "这是把机器挖的候选概念接进抽取器的实验输入，不是定下来的知识点清单；概念、别名、类型三样都要人对着证据签核。",
+ "domain_id": "single-cell-transcriptomics",
+ "domain_name": "单细胞转录组数据分析",
+ "source": "data/knowledge/domain_vocabulary/single-cell-transcriptomics_候选概念.json",
+ "source_status": "candidate_pending_human_review",
+ "source_generated_at": "2026-10-17",
+ "filter": {
+  "field": "document_frequency",
+  "rule": ">= 5",
+  "meaning": "document_frequency 数的是这个词出现在多少篇不同的论文里（同一篇里出现多次只算 1 篇），由 scripts/语料/挖掘领域概念.py 统计"
+ },
+ "alias_cap": 6,
+ "canonical_rule": "canonical 过判据（第三轮加 functional/短缩写两条，第四轮加通用词一条）：是常见英文功能词的丢；长度 ≤3 且全大写的只有 definitions_found 里有它的括号定义、含数字、或候选 document_frequency ≥ 5 时才留；命中 GENERIC_STRUCTURAL_TERMS 且不是已定义缩写的丢（ENTITY/TASK 这一类）；其余长度 ≥4 的实词一律留。判定顺序与别名那几道一致，一条同时符合两条时记前面那条",
+ "alias_rule": "别名取候选 surface_forms 里出现次数最多的前 alias_cap 个（挖掘脚本落盘时已按出现次数从高到低排序），**先过那几道过滤再截断**：长度 <2 的不要；是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）的不要；长度 ≤3 且全大写的缩略语只有出现在挖掘结果的 definitions_found 里、含数字、或候选的 document_frequency ≥ 5 时才留。之后去重，并去掉与 canonical 逐字完全相同的写法",
+ "alias_filters": {
+  "common_english_function_words": [
+   "a",
+   "about",
+   "above",
+   "across",
+   "after",
+   "again",
+   "all",
+   "also",
+   "although",
+   "am",
+   "an",
+   "and",
+   "any",
+   "are",
+   "as",
+   "at",
+   "be",
+   "because",
+   "been",
+   "before",
+   "being",
+   "below",
+   "between",
+   "both",
+   "but",
+   "by",
+   "can",
+   "cannot",
+   "could",
+   "did",
+   "do",
+   "does",
+   "doing",
+   "done",
+   "down",
+   "during",
+   "each",
+   "else",
+   "etc",
+   "few",
+   "for",
+   "from",
+   "further",
+   "furthermore",
+   "had",
+   "has",
+   "have",
+   "having",
+   "he",
+   "hence",
+   "her",
+   "his",
+   "how",
+   "however",
+   "if",
+   "in",
+   "into",
+   "is",
+   "it",
+   "its",
+   "may",
+   "might",
+   "more",
+   "moreover",
+   "most",
+   "must",
+   "no",
+   "nor",
+   "not",
+   "of",
+   "off",
+   "on",
+   "once",
+   "only",
+   "onto",
+   "or",
+   "other",
+   "our",
+   "out",
+   "over",
+   "own",
+   "same",
+   "shall",
+   "she",
+   "should",
+   "so",
+   "some",
+   "such",
+   "than",
+   "that",
+   "the",
+   "their",
+   "them",
+   "then",
+   "therefore",
+   "these",
+   "they",
+   "this",
+   "those",
+   "though",
+   "through",
+   "thus",
+   "to",
+   "too",
+   "under",
+   "up",
+   "us",
+   "very",
+   "was",
+   "we",
+   "were",
+   "what",
+   "when",
+   "where",
+   "whereas",
+   "which",
+   "while",
+   "who",
+   "whom",
+   "whose",
+   "why",
+   "will",
+   "with",
+   "within",
+   "without",
+   "would",
+   "you"
+  ],
+  "common_english_function_words_source": "通用英语功能词（冠词、代词、介词、连词、助动词、指示词、常见副词与限定词），不是本项目发明的；任何一本英语语法书里的 function words 都是这一批",
+  "min_short_acronym_df": 5,
+  "reasons": {
+   "too_short": "长度小于 2（单字母没有区分度，抽取器那边全是版面碎片）",
+   "common_english_word": "是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）；抽取器别名正则大小写不敏感，1–3 个字母的全大写缩略语会匹配到普通英文词上（实测 OF 匹配 of，25607 次提及）",
+   "short_acronym_without_definition": "长度 ≤3 的全大写缩略语，挖掘结果里没有它的括号定义、也不含数字，候选的 document_frequency 还不到 5；大小写不敏感匹配下会被普通英文词吃掉（NA、IT、OR 这一类）",
+   "generic_structural_term": "是描述文档结构或泛泛类别的普通英文词（GENERIC_STRUCTURAL_TERMS），不指向具体技术；这一轮只用来判 canonical，别名这一道只报数不丢（见 generic_alias_candidates）"
+  },
+  "effect": "抽取器 src/yanhai/extraction.py 的 _alias_pattern 带 IGNORECASE，1–3 个字母的全大写缩略语会匹配到普通英文词上（实测 OF 匹配 of，25607 次提及）；这几道过滤就是拦这一类别名"
+ },
+ "rejected_alias_total": 0,
+ "rejected_aliases": [],
+ "rejected_aliases_note": "rejected_aliases 只列每条被丢掉的别名（alias / reason / canonical / domain_id），最多列前 200 条；完整条数看 rejected_alias_total，按原因分的计数看 rejected_reasons",
+ "rejected_reasons": {
+  "common_english_word": 0,
+  "generic_structural_term": 0,
+  "short_acronym_without_definition": 0,
+  "too_short": 0
+ },
+ "canonical_filters": {
+  "ran": "canonical 过滤在第三轮加上，跑过的每一份词表都带这一节；rejected_canonical_total 是 0 就说明这一批候选里没有该丢的 canonical，不是这一道没跑",
+  "reasons": {
+   "common_english_word": "canonical 本身是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）；抽取器别名正则大小写不敏感，词表里一条 `OF` 会把每一句里的 `of` 都算成提及（第二轮实测主领域 25607 次），`IN`/`BY`/`OR`/`IT`/`AT`/`HE`/`HER` 同理",
+   "short_acronym_without_definition": "canonical 长度 ≤3 且全大写，挖掘结果里没有它的括号定义、也不含数字，候选的 document_frequency 还不到 5；这类名字在大小写不敏感匹配下会被普通英文词吃掉（`NA` 命中 `na`，`IT` 命中 `it`），真缩写（`KG`/`GPT`/`AI`/`GNN`/`DKT`/`CGCNN`）只要在 definitions_found 里有定义、含数字、或 DF ≥ 5，就不受这一条影响",
+   "generic_structural_term": "canonical 是描述文档结构或泛泛类别的普通英文词（GENERIC_STRUCTURAL_TERMS，例如 `ENTITY`/`TASK`/`CONTEXT`/`CLAIM`）；它们是被『长度 ≥4 一律保留』那一条放进来的，本身不指向具体技术。同时在 definitions_found 里有括号定义的（`AI` 这类真缩写）不受这一条影响"
+  },
+  "min_short_acronym_df": 5,
+  "generic_structural_terms": [
+   "accuracy",
+   "acknowledgements",
+   "acknowledgment",
+   "acknowledgments",
+   "answer",
+   "answers",
+   "appendices",
+   "appendix",
+   "application",
+   "applications",
+   "approach",
+   "approaches",
+   "author",
+   "authors",
+   "baseline",
+   "baselines",
+   "bibliographies",
+   "bibliography",
+   "case",
+   "cases",
+   "claim",
+   "claims",
+   "context",
+   "contexts",
+   "data",
+   "entities",
+   "entity",
+   "example",
+   "examples",
+   "feature",
+   "features",
+   "figure",
+   "figures",
+   "footnote",
+   "footnotes",
+   "image",
+   "images",
+   "information",
+   "input",
+   "inputs",
+   "item",
+   "items",
+   "knowledge",
+   "language",
+   "languages",
+   "level",
+   "levels",
+   "number",
+   "numbers",
+   "one",
+   "ones",
+   "output",
+   "outputs",
+   "paper",
+   "papers",
+   "paragraph",
+   "paragraphs",
+   "part",
+   "parts",
+   "performance",
+   "process",
+   "processes",
+   "quality",
+   "question",
+   "questions",
+   "reference",
+   "references",
+   "result",
+   "results",
+   "score",
+   "scores",
+   "section",
+   "sections",
+   "sentence",
+   "sentences",
+   "size",
+   "state",
+   "states",
+   "step",
+   "steps",
+   "studies",
+   "study",
+   "supplementary",
+   "system",
+   "systems",
+   "table",
+   "tables",
+   "task",
+   "tasks",
+   "text",
+   "texts",
+   "time",
+   "type",
+   "types",
+   "user",
+   "users",
+   "value",
+   "values",
+   "word",
+   "words"
+  ],
+  "generic_structural_terms_note": "**这是一条判断，不是客观标准**：收的是描述文档结构或泛泛类别、不指向具体技术的单 token 普通英文词。`model`/`method`/`dataset`/`annotation`/`metric` 故意不在表里——它们在本体里本身就是合法类型（METHOD/DATASET/METRIC），收进来会误伤真概念。（第四轮加的。第三轮记录第五、六节列出的 ENTITY/TASK/CONTEXT/CLAIM/QUESTION/OUTPUT 那一批就是这么进来的。第五轮又补进 REFERENCES/REFERENCE/BIBLIOGRAPHY/ACKNOWLEDGEMENTS/ACKNOWLEDGMENT/APPENDIX/SUPPLEMENTARY/FOOTNOTE 这一批段落标题词——`quantum::REFERENCES`（原始 DF 33）就是这么一条噪声。）",
+  "rules": [
+   "canonical 是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）→ 丢；整条名字当一个词查一次，含空格时要求每个词都是功能词",
+   "canonical 长度 ≤3 且全大写：只有 definitions_found 里有它的括号定义、含数字、或候选 document_frequency ≥ 5 时才留，否则丢（KG/GPT/AI/DKT/CGCNN 这类留，OF/IN/BY/NA/IT 丢）",
+   "canonical 命中 GENERIC_STRUCTURAL_TERMS（ENTITY/TASK/CONTEXT/CLAIM 这一类）且不是已定义缩写 → 丢；这一条拦的是『长度 ≥4 一律保留』放进来的那批",
+   "长度 ≥4 的实词一律保留（不受全大写影响，CGCNN/MEGNet/SciERC 都留）"
+  ],
+  "why": "抽取器建别名表时是 {canonical, *aliases}（src/yanhai/extraction.py 的 SchemaGuidedExtractor.__init__），canonical 也算一条别名；正则带 IGNORECASE，所以词表里一条 `OF` 会把每一句里的 `of` 都算成提及（第二轮实测主领域 25607 次，1–3 位全大写实体占提及 52.0%）。噪声坐在名字这一层，只过滤别名拦不到",
+  "note": "判定顺序：先常见英文功能词，再短全大写，最后通用/结构性词；一条同时符合两条时记前面那条，与别名那几道是同一个约定"
+ },
+ "rejected_canonical_total": 1,
+ "rejected_canonicals": [
+  {
+   "canonical": "AT",
+   "reason": "common_english_word",
+   "domain_id": "single-cell-transcriptomics",
+   "document_frequency": 5,
+   "entity_type": "METHOD"
+  }
+ ],
+ "rejected_canonicals_note": "rejected_canonicals 只列每条被丢掉的 canonical（canonical / reason / domain_id / document_frequency / entity_type），最多列前 500 条；完整条数看 rejected_canonical_total，按原因分的计数看 rejected_canonical_reasons",
+ "rejected_canonical_reasons": {
+  "common_english_word": 1,
+  "generic_structural_term": 0,
+  "short_acronym_without_definition": 0
+ },
+ "generic_alias_candidates": {
+  "note": "第四轮的通用/结构性词判据只落在 canonical 这一层，别名沿用原来那几道，所以这一节**只报数、不当场丢**：这些是留在词表别名里、归一后命中 GENERIC_STRUCTURAL_TERMS 的写法。要不要下一轮一起清，要人定",
+  "total": 0,
+  "items": []
+ },
+ "kept_short_uppercase": {
+  "note": "canonical 判据与别名那几道过滤都跑完之后，还留在词表里的 1–3 位全大写名字。这一节留下的分两种：挖掘结果 definitions_found 里有括号定义的，或者候选 document_frequency ≥ 5（跨论文原样出现过）的，看 kept_by 这一项。含数字的写法（GPT-4、3DG）虽然也留，但不算『全大写』这一类、不进这一节。长度 ≥4 的全大写名字（CGCNN/MEGNet/SciERC）不受判据影响，也不进这一节",
+  "canonical_count": 87,
+  "canonical_by_definition": 20,
+  "canonical_by_document_frequency": 67,
+  "alias_count": 0,
+  "items": [
+   {
+    "canonical": "RNA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "PCA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "UMI",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "DNA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "PCR",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "GO",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "SNE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "FDR",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "PBS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "DE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NK",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "RT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "CA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "TF",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "QC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "PC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "TPM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "AUC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "GEO",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "DEG",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "FBS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "BD",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "DC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "FC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "SNN",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "EM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ARI",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "CCA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "PE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NEB",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "BSA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "CO",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "TGF",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "ROC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "GC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "HLA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "ID",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NMF",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ECM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "GFP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "IHC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "EMT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "GB",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "APC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "CEL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "DTT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "ER",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "EC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "BAM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "MHC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "SD",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "RAM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "XP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "CV",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NIH",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "DR",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "TME",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NB",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NMI",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "MT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "KL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "VIM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "CC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "BC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "TSO",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "TNF",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "TSS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "WT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "HC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "PD",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "AD",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NGS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "ICA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "IFN",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "ISH",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "MST",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "PR",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "MNN",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "FP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "WNT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "SEM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "YL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "CM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "TM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "BIC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "LYZ",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "RPM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   }
+  ]
+ },
+ "type_mapping": {
+  "accepted_entity_types": [
+   "DATASET",
+   "DOMAIN",
+   "FINDING",
+   "LIMITATION",
+   "METHOD",
+   "METRIC",
+   "TASK"
+  ],
+  "fallback": "METHOD",
+  "rule": "候选的 guess_type 只保留抽取本体 entity_types 里有的 7 类（METHOD/TASK/DATASET/METRIC/FINDING/LIMITATION/DOMAIN）；guess_type 为空、缺失或不在其中（例如猜测出的 'OTHER'、'MODEL'）一律落到 METHOD。落 METHOD 的理由：抽不出类型的候选多半是缩写词、模型名、系统名，METHOD 是其中最多的一类；METHOD 在 relation_constraints 里也几乎不受限，不会因为类型对不上把整条关系判成 schema_type_mismatch。",
+  "observed": {
+   "METHOD": 227,
+   "DOMAIN": 116,
+   "DATASET": 1
+  }
+ },
+ "generated_by": "scripts/抽取/生成抽取词表.py",
+ "generated_on": "2026-10-17",
+ "schema_untouched": "data/knowledge/extraction_schema.json 未被本脚本修改；本文件是另写的一份，由 scripts/抽取/构建全文知识库.py --vocabulary 追加进抽取器。",
+ "concept_count": 344,
+ "alias_count": 264,
+ "duplicates_merged": 9,
+ "duplicates_merged_note": "挖掘脚本按 (来源类别, 归一键) 存候选，同一个词可能落成多条；这里按 canonical只留第一条（出现篇数多的在前），类型以先到的为准，别名并到一起",
+ "concepts": [
+  {
+   "canonical": "RNA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "gene expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the gene expression",
+    "Gene expression",
+    "the Gene Expression",
+    "Gene Expression",
+    "genes with expression",
+    "The gene expression"
+   ]
+  },
+  {
+   "canonical": "single cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Single cell",
+    "the single cell",
+    "Single Cell",
+    "The single cell",
+    "the Single Cell",
+    "single-cell dataset"
+   ]
+  },
+  {
+   "canonical": "PCA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "UMI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DNA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PCR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SNE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "UMIs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "differential expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Differential expression",
+    "the differential expression",
+    "Differential Expression"
+   ]
+  },
+  {
+   "canonical": "single cell rna sequencing",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "single-cell RNA sequencing",
+    "Single-cell RNA sequencing",
+    "the single-cell RNA sequencing",
+    "The single-cell RNA sequencing",
+    "single-cell RNA-sequencing method"
+   ]
+  },
+  {
+   "canonical": "FDR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "UMAP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "reference associated datum supplementary",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "References Associated Data Supplementary"
+   ]
+  },
+  {
+   "canonical": "CD8",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CD4",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PBS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "material datum availability statement",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Materials Data Availability Statement"
+   ]
+  },
+  {
+   "canonical": "DEGs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "different cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the different cell"
+   ]
+  },
+  {
+   "canonical": "principal component analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Principal component analysis",
+    "The principal component analysis",
+    "The principal component analysis algorithm",
+    "principal components analysis",
+    "Principal Component Analysis"
+   ]
+  },
+  {
+   "canonical": "DE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PCs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FACS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "specific cell",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "NK",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PBMC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "hierarchical clustering",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Hierarchical clustering",
+    "hierarchical clustering algorithm",
+    "the hierarchical clustering",
+    "The hierarchical clustering",
+    "the hierarchical clustering algorithm"
+   ]
+  },
+  {
+   "canonical": "DAPI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "average expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the average expression",
+    "The average expression",
+    "Average expression"
+   ]
+  },
+  {
+   "canonical": "high expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the high expression",
+    "High expression"
+   ]
+  },
+  {
+   "canonical": "TF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CD14",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "KEGG",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TPM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "scrna seq analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "scRNA-seq analysis",
+    "scRNA-Seq analysis",
+    "the scRNA-seq analysis"
+   ]
+  },
+  {
+   "canonical": "individual cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the individual cell"
+   ]
+  },
+  {
+   "canonical": "discussion in",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Discussion In"
+   ]
+  },
+  {
+   "canonical": "PBMCs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "AUC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GEO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "immune cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Immune cell",
+    "The immune cell",
+    "the immune cell"
+   ]
+  },
+  {
+   "canonical": "rare cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the rare cell",
+    "Rare cell",
+    "The rare cell"
+   ]
+  },
+  {
+   "canonical": "DEG",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FBS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "gene ontology",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Gene Ontology",
+    "The Gene Ontology"
+   ]
+  },
+  {
+   "canonical": "TFs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ERCC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CD45",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "gene set enrichment analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Gene set enrichment analysis",
+    "Gene Set Enrichment Analysis",
+    "the gene set enrichment analysis"
+   ]
+  },
+  {
+   "canonical": "funding this",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Funding This"
+   ]
+  },
+  {
+   "canonical": "major cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the major cell",
+    "Major cell"
+   ]
+  },
+  {
+   "canonical": "cell ranger",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Cell Ranger",
+    "The Cell Ranger",
+    "Using Cell Ranger"
+   ]
+  },
+  {
+   "canonical": "distinct cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Distinct cell",
+    "the distinct cell"
+   ]
+  },
+  {
+   "canonical": "nature research reporting summary",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Nature Research Reporting Summary"
+   ]
+  },
+  {
+   "canonical": "MAST",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HVGs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SNN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "gene expression omnibus",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Gene Expression Omnibus"
+   ]
+  },
+  {
+   "canonical": "EM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NCBI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "EDTA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MSigDB",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "low expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the low expression",
+    "low expression in the dataset"
+   ]
+  },
+  {
+   "canonical": "national natural science foundation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "National Natural Science Foundation"
+   ]
+  },
+  {
+   "canonical": "differential gene expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Differential gene expression",
+    "the differential gene expression"
+   ]
+  },
+  {
+   "canonical": "to identify cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "to identify the cell",
+    "To identify cell",
+    "To identify the cell",
+    "to identify various cell"
+   ]
+  },
+  {
+   "canonical": "increased expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Increased expression",
+    "the increased expression"
+   ]
+  },
+  {
+   "canonical": "ARI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CCA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ANOVA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ScRNA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "higher expression",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "cell type annotation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Cell type annotation",
+    "cell-type annotation",
+    "Cell-type Annotation"
+   ]
+  },
+  {
+   "canonical": "NEB",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BSA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "clustering analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Clustering analysis"
+   ]
+  },
+  {
+   "canonical": "CO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "single cell analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "single-cell analysis",
+    "Single-cell analysis",
+    "Single-Cell Analysis"
+   ]
+  },
+  {
+   "canonical": "chromium single cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Chromium Single Cell",
+    "Chromium Single-Cell",
+    "The Chromium Single Cell",
+    "the Chromium Single Cell"
+   ]
+  },
+  {
+   "canonical": "TSCAN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GSEA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ATAC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DESeq2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RNAs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SCDE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "type annotation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "types annotation"
+   ]
+  },
+  {
+   "canonical": "TGF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "STAR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ROC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HLA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MKI67",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RNase",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "illumina hiseq",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Illumina HiSeq",
+    "Illumina Hiseq"
+   ]
+  },
+  {
+   "canonical": "unsupervised clustering",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Unsupervised clustering",
+    "the unsupervised clustering",
+    "unsupervised clustering algorithm",
+    "unsupervised clustering method"
+   ]
+  },
+  {
+   "canonical": "FASTQ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DMEM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ID",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "mean expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the mean expression",
+    "Mean expression"
+   ]
+  },
+  {
+   "canonical": "number cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the number of cell",
+    "number of cell"
+   ]
+  },
+  {
+   "canonical": "human cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the Human Cell",
+    "Human Cell",
+    "The Human Cell",
+    "the human cell"
+   ]
+  },
+  {
+   "canonical": "human cell atla",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Human Cell Atlas",
+    "The Human Cell Atlas"
+   ]
+  },
+  {
+   "canonical": "national institute of health",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "National Institutes of Health"
+   ]
+  },
+  {
+   "canonical": "RNeasy",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "kyoto encyclopedia of gene and genome",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Kyoto Encyclopedia of Genes and Genomes"
+   ]
+  },
+  {
+   "canonical": "FindMarkers",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "fluorescence activated cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "fluorescence-activated cell",
+    "Fluorescence activated cell",
+    "Fluorescence-activated cell",
+    "The fluorescence-activated cell"
+   ]
+  },
+  {
+   "canonical": "known cell",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "ZINB",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NMF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ECM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GFP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IHC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "EMT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GB",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "pseudotime analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Pseudotime analysis",
+    "Pseudotime Analysis",
+    "The pseudotime analysis",
+    "pseudotime-based analysis"
+   ]
+  },
+  {
+   "canonical": "SMART",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PC1",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HiSeq",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "C57BL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "APC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Machine learning",
+    "machine learning algorithm"
+   ]
+  },
+  {
+   "canonical": "CEL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "go analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "GO analysis",
+    "the GO analysis",
+    "The GO analysis"
+   ]
+  },
+  {
+   "canonical": "datum analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "data analysis"
+   ]
+  },
+  {
+   "canonical": "GHz",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "S1A",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "linear regression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the linear regression",
+    "Linear regression",
+    "the linear regression method"
+   ]
+  },
+  {
+   "canonical": "statistical analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Statistical analysis",
+    "the statistical analysis"
+   ]
+  },
+  {
+   "canonical": "relative expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the relative expression",
+    "Relative expression",
+    "The relative expression"
+   ]
+  },
+  {
+   "canonical": "scrna seq",
+   "entity_type": "DATASET",
+   "aliases": [
+    "scRNA-seq dataset",
+    "scRNA-Seq dataset",
+    "the scRNA-seq dataset"
+   ]
+  },
+  {
+   "canonical": "FindClusters",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GraphPad",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "S1B",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DTT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "UCSC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "applied biosystem",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Applied Biosystems"
+   ]
+  },
+  {
+   "canonical": "discussion the",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Discussion The"
+   ]
+  },
+  {
+   "canonical": "rna sequencing",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "RNA sequencing"
+   ]
+  },
+  {
+   "canonical": "FPKM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CD44",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ER",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "supplementary note",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Supplementary Note",
+    "Supplementary Notes"
+   ]
+  },
+  {
+   "canonical": "CD3",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "EC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "cell clustering",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Cell clustering",
+    "the cell clustering",
+    "Cell Clustering"
+   ]
+  },
+  {
+   "canonical": "SC3",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BAM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CellChat",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GSVA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SingleR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MHC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "trajectory inference",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Trajectory inference",
+    "the trajectory inference"
+   ]
+  },
+  {
+   "canonical": "RAM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "enrichment analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Enrichment analysis"
+   ]
+  },
+  {
+   "canonical": "XP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ACTA2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CV",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CCL5",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NIH",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "low dimensional representation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "low-dimensional representation",
+    "the low-dimensional representation",
+    "Low-dimensional representation"
+   ]
+  },
+  {
+   "canonical": "single cell gene expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "single-cell gene expression",
+    "the single-cell gene expression",
+    "Single-cell gene expression",
+    "Single Cell Gene Expression"
+   ]
+  },
+  {
+   "canonical": "CellPhoneDB",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SuperScript",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "normalized expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the normalized expression",
+    "Normalized expression",
+    "The normalized expression",
+    "normalized the expression"
+   ]
+  },
+  {
+   "canonical": "GEMs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SCTransform",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "life technology",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Life Technologies"
+   ]
+  },
+  {
+   "canonical": "NextSeq",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "analyzed expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "analyzed the expression",
+    "analyzed for the expression"
+   ]
+  },
+  {
+   "canonical": "canonical correlation analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Canonical correlation analysis",
+    "the canonical correlation analysis",
+    "the canonical correlation analysis framework"
+   ]
+  },
+  {
+   "canonical": "difference in gene expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the differences in gene expression",
+    "differences in gene expression",
+    "Differences in gene expression",
+    "the difference in gene expression"
+   ]
+  },
+  {
+   "canonical": "per cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the per cell"
+   ]
+  },
+  {
+   "canonical": "raw sequencing",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "The raw sequencing",
+    "the raw sequencing",
+    "Raw sequencing"
+   ]
+  },
+  {
+   "canonical": "identified cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "identified 10 cell",
+    "identified 12 cell",
+    "identified 24 cell",
+    "identified 6 cell",
+    "identified 8 cell",
+    "identified the main cell"
+   ]
+  },
+  {
+   "canonical": "specific expression",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "DR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "AUCell",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TME",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NB",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SCENIC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NMI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DCs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TCGA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ZIFA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "KL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IgG",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "VIM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GENCODE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CCR7",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CD16",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GZMB",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "COL3A1",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FITC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TSO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TNF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CD3D",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NEBNext",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PC2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "beckman coulter",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Beckman Coulter"
+   ]
+  },
+  {
+   "canonical": "single cell sequencing",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "single-cell sequencing",
+    "Single-cell sequencing",
+    "Single-Cell Sequencing"
+   ]
+  },
+  {
+   "canonical": "supplementary material",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Supplementary Material",
+    "Supplementary Materials",
+    "Other Supplementary Material"
+   ]
+  },
+  {
+   "canonical": "CD19",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IL7R",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TOP2A",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TSS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "on gene expression",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "particular cell",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "GRCm38",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HiFi",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "KAPA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PDGFRA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "downstream analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Downstream analysis",
+    "the downstream analysis"
+   ]
+  },
+  {
+   "canonical": "heatmap showing expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Heatmap showing the expression",
+    "Heatmap showing expression",
+    "Heatmaps showing the expression",
+    "The heatmap showing expression"
+   ]
+  },
+  {
+   "canonical": "linear model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the linear model"
+   ]
+  },
+  {
+   "canonical": "FCGR3A",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RPMI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "S2A",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "S3A",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "S4B",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SYBR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "clustering algorithm",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the clustering algorithm"
+   ]
+  },
+  {
+   "canonical": "FACSAria",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "S5A",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "S5B",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "gene set variation analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Gene Set Variation Analysis",
+    "Gene set variation analysis",
+    "the gene set variation analysis"
+   ]
+  },
+  {
+   "canonical": "multiple cell",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "of single cell rna sequencing",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "of single-cell RNA sequencing",
+    "of singLe-cell RNA sequencing"
+   ]
+  },
+  {
+   "canonical": "FlowJo",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MgCl",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "S4A",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "S5C",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "STRT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ethic committee",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Ethics Committee"
+   ]
+  },
+  {
+   "canonical": "footnote supplementary",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Footnotes Supplementary"
+   ]
+  },
+  {
+   "canonical": "introduction single cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Introduction Single-cell"
+   ]
+  },
+  {
+   "canonical": "molecular signature database",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Molecular Signatures Database",
+    "The Molecular Signature Database",
+    "The Molecular Signatures Database"
+   ]
+  },
+  {
+   "canonical": "WT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "AD",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NGS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ICA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IFN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ISH",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MST",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SAVER",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GitHub",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LIGER",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SPP1",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SINCERA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BioLegend",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RNAseq",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ComBat",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CD163",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GRNs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MNN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CD11b",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "WNT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PDCD1",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "pathway analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Pathway analysis",
+    "pathway-based analysis"
+   ]
+  },
+  {
+   "canonical": "CellRanger",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SEM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "source datum",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Source Data"
+   ]
+  },
+  {
+   "canonical": "YL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "cell type specific gene expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "cell-type-specific gene expression",
+    "cell type-specific gene expression"
+   ]
+  },
+  {
+   "canonical": "CD34",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NKG7",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "jackson laboratory",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Jackson Laboratories",
+    "The Jackson Laboratory",
+    "Jackson Laboratory"
+   ]
+  },
+  {
+   "canonical": "statistical method",
+   "entity_type": "METHOD",
+   "aliases": [
+    "The statistical method",
+    "the statistical method"
+   ]
+  },
+  {
+   "canonical": "CD68",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CITE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CCL2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CDK1",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FN1",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QIAGEN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "lineage tracing",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the lineage tracing",
+    "Lineage tracing"
+   ]
+  },
+  {
+   "canonical": "predicted cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the predicted cell",
+    "Predicted cell",
+    "predicted the cell"
+   ]
+  },
+  {
+   "canonical": "ChIP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RSEM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "examined expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "examined the expression"
+   ]
+  },
+  {
+   "canonical": "zero inflated factor analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "zero-inflated factor analysis",
+    "Zero-Inflated Factor Analysis",
+    "Zero-Inflated Factor Analysis model",
+    "methods. Zero-inflated factor analysis"
+   ]
+  },
+  {
+   "canonical": "BIC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RefSeq",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "single cell rna seq analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "single-cell RNA-seq analysis",
+    "single-cell RNA-Seq analysis",
+    "the single-cell RNA-seq analysis",
+    "Single-cell RNA-seq analysis",
+    "The single-cell RNA-seq analysis"
+   ]
+  },
+  {
+   "canonical": "C1QA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "C1QB",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CD79A",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "COL1A2",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "LYZ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "MARS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RPM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "control consortium",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Controls Consortium",
+    "Control Consortium"
+   ]
+  },
+  {
+   "canonical": "similar expression",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "statistical framework",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DDRTree",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "functional enrichment analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Functional enrichment analysis",
+    "Functional Enrichment Analysis"
+   ]
+  },
+  {
+   "canonical": "intel xeon",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Intel Xeon"
+   ]
+  },
+  {
+   "canonical": "mini kit",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Mini Kit"
+   ]
+  },
+  {
+   "canonical": "monte carlo",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Monte Carlo"
+   ]
+  },
+  {
+   "canonical": "DMSO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GRCh38",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HotStart",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IACUC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "S2C",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SPSS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "computational analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Computational analysis",
+    "The computational analysis"
+   ]
+  },
+  {
+   "canonical": "endothelial cell",
+   "entity_type": "DOMAIN",
+   "aliases": []
+  },
+  {
+   "canonical": "external rna control consortium",
+   "entity_type": "METHOD",
+   "aliases": [
+    "External RNA Controls Consortium",
+    "External RNA Control Consortium"
+   ]
+  },
+  {
+   "canonical": "for differential expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "dataset. For differential expression"
+   ]
+  },
+  {
+   "canonical": "identification cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the identification of cell",
+    "Identification of cell",
+    "Identification of the cell",
+    "identification of cell",
+    "identification of the cell"
+   ]
+  },
+  {
+   "canonical": "performed cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "performed for cell"
+   ]
+  },
+  {
+   "canonical": "trajectory analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Trajectory analysis",
+    "The trajectory analysis"
+   ]
+  },
+  {
+   "canonical": "uniform manifold approximation and projection",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Uniform Manifold Approximation and Projection"
+   ]
+  },
+  {
+   "canonical": "CD8A",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "acknowledgment we",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Acknowledgments We"
+   ]
+  },
+  {
+   "canonical": "assay kit",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Assay Kit",
+    "Assay Kits"
+   ]
+  },
+  {
+   "canonical": "assigned cell",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "assigned to cell",
+    "assigned the cell",
+    "assigned to the cell"
+   ]
+  },
+  {
+   "canonical": "bioinformatic analysis",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "bioinformatics analysis",
+    "Bioinformatic analysis",
+    "Bioinformatics analysis"
+   ]
+  },
+  {
+   "canonical": "conflict of interest the",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Conflict of Interest The",
+    "Conflicts of Interest The"
+   ]
+  },
+  {
+   "canonical": "graphpad prism",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "GraphPad Prism",
+    "Graphpad Prism"
+   ]
+  },
+  {
+   "canonical": "nature portfolio reporting summary",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Nature Portfolio Reporting Summary"
+   ]
+  },
+  {
+   "canonical": "publisher note springer nature",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Publisher Note Springer Nature"
+   ]
+  },
+  {
+   "canonical": "result overview",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Results Overview"
+   ]
+  },
+  {
+   "canonical": "seurat findallmarker",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Seurat FindAllMarkers",
+    "The Seurat FindAllMarkers"
+   ]
+  },
+  {
+   "canonical": "single cell expression",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "single-cell expression",
+    "Single-cell expression"
+   ]
+  }
+ ]
+}

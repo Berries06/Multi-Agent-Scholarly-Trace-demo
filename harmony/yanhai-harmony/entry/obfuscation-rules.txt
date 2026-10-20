@@ -1,0 +1,3 @@
+# 混淆规则。产品界面是 Web 壳，只有入口 Ability 与一个页面，
+# 这一版不开混淆（build-profile.json5 里 ruleOptions.enable = false）。
+# 真要开启时，先确认 ArkWeb 相关类没有被重命名。

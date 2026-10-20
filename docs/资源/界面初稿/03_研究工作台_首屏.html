@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>初稿 · 研究工作台（首屏装得下整张表单）</title>
+<style>
+  :root {
+    --accent: #b21f2d;
+    --ink: #20201e;
+    --ink-muted: #686761;
+    --ink-faint: #6f6d66;
+    --paper: #f6f3ec;
+    --surface: #fbfaf6;
+    --white: #ffffff;
+    --rule: #d8d4ca;
+    --rule-soft: #e7e2d8;
+    --font-serif: Georgia, "Noto Serif SC", "Songti SC", serif;
+    --font-mono: "Cascadia Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Inter, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+         font-size: 13px; line-height: 1.5; }
+
+  /* ── 外壳 ───────────────────────────────────── */
+  .shell { min-height: 100vh; display: flex; flex-direction: column; }
+  .masthead { display: flex; align-items: center; gap: 16px; padding: 14px 24px 10px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand img, .brand .mark {
+    width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-serif); font-weight: 900; font-size: 20px; color: var(--accent);
+    border: 1px solid var(--rule); background: var(--white); border-radius: 4px;
+  }
+  .brand__title { font-family: var(--font-serif); font-size: 30px; font-weight: 700; letter-spacing: .02em; line-height: 1; }
+  .brand__sub { font-size: 11px; color: var(--ink-muted); letter-spacing: .1em; margin-top: 3px; }
+  .masthead__right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+
+  .workspace-nav { display: flex; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  .workspace-nav button {
+    flex: 1; border: 0; border-right: 1px solid var(--rule); background: none; cursor: pointer;
+    padding: 9px 12px; text-align: left; color: var(--ink);
+  }
+  .workspace-nav button:last-child { border-right: 0; }
+  .workspace-nav button.is-active { background: var(--ink); color: #f6f3ec; }
+  .workspace-nav .idx { font-family: var(--font-mono); font-size: 10px; color: var(--ink-muted); display: block; }
+  .workspace-nav button.is-active .idx { color: #c9c6be; }
+  .workspace-nav strong { display: block; font-size: 14px; }
+  .workspace-nav small { display: block; font-size: 10px; color: var(--ink-muted); }
+  .workspace-nav button.is-active small { color: #c9c6be; }
+
+  main { flex: 1; width: min(1320px, calc(100% - 48px)); margin: 0 auto; }
+
+  /* ── 标题区：原来占掉约 240px，现在压到 110px 左右 ── */
+  .lede { padding: 22px 0 14px; border-bottom: 1px solid var(--rule); margin-bottom: 16px; }
+  .lede h1 { font-family: var(--font-serif); font-size: 40px; margin: 0 0 6px; letter-spacing: -.015em; }
+  .lede p { margin: 0; color: var(--ink-muted); font-size: 13px; }
+
+  /* ── 研究卡片 ─────────────────────────────────── */
+  .card { background: var(--white); border: 1px solid var(--rule); border-radius: 2px; }
+  .card__head { display: flex; align-items: flex-start; gap: 16px; padding: 14px 16px; border-bottom: 1px solid var(--rule-soft); }
+  .eyebrow { font-size: 10px; letter-spacing: .16em; color: var(--accent); font-weight: 700; display: block; margin-bottom: 5px; }
+  .card__head h2 { font-family: var(--font-serif); font-size: 22px; margin: 0 0 4px; }
+  .card__head p { margin: 0; color: var(--ink-muted); font-size: 12px; }
+  .flow { margin-left: auto; display: flex; gap: 6px; flex-shrink: 0; }
+  .flow span { border: 1px solid var(--rule); padding: 4px 10px; font-size: 11px; color: var(--ink-muted); background: var(--surface); }
+  .flow b { font-family: var(--font-mono); color: var(--accent); margin-right: 4px; }
+
+  .field { padding: 14px 16px; border-bottom: 1px solid var(--rule-soft); }
+  .field__label { display: flex; gap: 8px; align-items: baseline; margin-bottom: 8px; }
+  .field__label b { font-family: var(--font-mono); font-size: 11px; color: var(--accent); }
+  .field__label strong { font-size: 13px; }
+  .field__label small { color: var(--ink-muted); font-size: 11px; }
+  textarea {
+    width: 100%; min-height: 96px; resize: vertical; padding: 12px; font: inherit; font-size: 15px;
+    border: 1px solid var(--rule); background: var(--white); color: var(--ink); border-radius: 2px;
+  }
+  .field__foot { display: flex; justify-content: space-between; margin-top: 7px; font-size: 11px; color: var(--ink-muted); }
+
+  .config { padding: 12px 16px 14px; }
+  .config__head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+  .config__head b { font-family: var(--font-mono); font-size: 11px; color: var(--accent); }
+  .config__head small { margin-left: auto; color: var(--ink-muted); font-size: 11px; }
+  .config__grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+  .field-block label { display: block; font-size: 11px; color: var(--ink-muted); margin-bottom: 5px; }
+  .select {
+    min-height: 38px; border: 1px solid var(--rule); background: var(--white); color: var(--ink);
+    display: flex; align-items: center; justify-content: space-between; padding: 0 10px; font-size: 13px; cursor: pointer;
+  }
+  .select span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .select i { color: var(--ink-muted); font-style: normal; }
+
+  /* ── 底部操作条 ─────────────────────────────── */
+  .actionbar {
+    position: sticky; bottom: 0; display: flex; align-items: center; gap: 12px;
+    background: var(--ink); color: #e8e2d8; padding: 11px 16px; margin-top: 16px;
+  }
+  .actionbar .mode { display: flex; flex-direction: column; gap: 2px; }
+  .actionbar .mode strong { font-size: 13px; }
+  .actionbar .mode small { font-size: 11px; color: #b8b0a4; }
+  .actionbar .spacer { flex: 1; }
+  button.ghost-light {
+    background: none; border: 1px solid #56504a; color: #e8e2d8; padding: 9px 16px;
+    font-size: 13px; cursor: pointer; border-radius: 2px; min-height: 42px;
+  }
+  button.ghost-light:hover { background: #2e2c28; }
+  button.primary {
+    background: var(--accent); border: 1px solid var(--accent); color: #fff; padding: 9px 22px;
+    font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 2px; min-height: 42px;
+  }
+  button.primary:hover { background: #9a1a26; }
+
+  /* ── 页脚：原来两段贴在一起，这里用 flex + gap ── */
+  .footer {
+    display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+    width: min(1320px, calc(100% - 48px)); margin: 0 auto;
+    padding: 18px 0 26px; border-top: 1px solid var(--ink);
+    color: var(--ink-muted); font-size: 11px; letter-spacing: .06em;
+  }
+  .footer span + span::before { content: "·"; margin-right: 16px; color: var(--rule); }
+
+  @media (max-width: 980px) {
+    .config__grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  }
+  @media (max-width: 760px) {
+    .masthead { padding: 12px 16px 8px; }
+    .brand__title { font-size: 24px; }
+    main { width: calc(100% - 24px); }
+    .lede h1 { font-size: 30px; }
+    .workspace-nav { flex-wrap: wrap; }
+    .workspace-nav button { flex: 1 1 50%; border-bottom: 1px solid var(--rule); min-height: 56px; }
+    .config__grid { grid-template-columns: minmax(0,1fr); }
+    .card__head { flex-wrap: wrap; }   /* 不加这句，流程条设了 width:100% 也换不到下一行 */
+    .flow { width: 100%; margin: 10px 0 0; }
+    .actionbar { flex-wrap: wrap; gap: 8px; }
+    .actionbar .mode { width: 100%; }
+    .actionbar .spacer { display: none; }
+    .actionbar button { flex: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="masthead">
+    <div class="brand">
+      <div class="mark">研</div>
+      <div>
+        <div class="brand__title">研海寻踪</div>
+        <div class="brand__sub">循证科研与个性化训练</div>
+      </div>
+    </div>
+    <div class="masthead__right">
+      <span style="font-size:12px;color:var(--ink-muted)">● 系统可用</span>
+      <button class="ghost-light" style="background:var(--white);border-color:var(--rule);color:var(--ink)">视觉验收</button>
+    </div>
+  </header>
+
+  <nav class="workspace-nav">
+    <button class="is-active"><span class="idx">01</span><strong>研究工作台</strong><small>问题、证据与裁决</small></button>
+    <button><span class="idx">02</span><strong>论文摄入</strong><small>抽取、复核与入图</small></button>
+    <button><span class="idx">03</span><strong>证据图谱</strong><small>联动阅读 · 5 领域 290 篇</small></button>
+    <button><span class="idx">04</span><strong>实验记录</strong><small>协议、运行与对比</small></button>
+  </nav>
+
+  <main>
+    <!-- 标题区压缩：原来 240px，现在约 110px -->
+    <div class="lede">
+      <h1>从证据到判断</h1>
+      <p>检索、质疑、裁决，每条结论都可回溯到论文和证据 ID。</p>
+    </div>
+
+    <div class="card">
+      <div class="card__head">
+        <div>
+          <span class="eyebrow">新建研究</span>
+          <h2>提出研究问题</h2>
+          <p>写清要验证的问题，再选领域、画像和模型。</p>
+        </div>
+        <div class="flow">
+          <span><b>01</b>检索</span>
+          <span><b>02</b>质疑</span>
+          <span><b>03</b>裁决</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field__label">
+          <b>01</b><strong>研究问题</strong><small>描述希望验证的关系、机制或工程判断</small>
+        </div>
+        <textarea>如何从科学论文中抽取可追溯知识图谱，并利用图谱理解技术脉络和生成研究想法？</textarea>
+        <div class="field__foot">
+          <span>37 字</span>
+          <span>结论将绑定论文来源与证据 ID</span>
+        </div>
+      </div>
+
+      <div class="config">
+        <div class="config__head">
+          <b>02</b><strong>运行配置</strong>
+          <small>这些选项决定检索范围、资源难度和模型调用方式</small>
+        </div>
+        <div class="config__grid">
+          <div class="field-block">
+            <label>垂直领域</label>
+            <div class="select"><span>科学文献信息抽取与知识图谱构建</span><i>▾</i></div>
+          </div>
+          <div class="field-block">
+            <label>学习者画像</label>
+            <div class="select"><span>我的画像</span><i>▾</i></div>
+          </div>
+          <div class="field-block">
+            <label>推理服务</label>
+            <div class="select"><span>离线规则</span><i>▾</i></div>
+          </div>
+          <div class="field-block">
+            <label>模型</label>
+            <div class="select"><span>offline-rules</span><i>▾</i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actionbar">
+        <div class="mode">
+          <strong>离线规则</strong>
+          <small>科学文献信息抽取与知识图谱构建 · 我的画像</small>
+        </div>
+        <div class="spacer"></div>
+        <button class="ghost-light">测试连接</button>
+        <button class="primary">开始循证研究</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- 页脚：flex + gap，两段不再贴在一起 -->
+  <footer class="footer">
+    <span>研海寻踪 · YANHAI TRACE</span>
+    <span>证据先于断言，测量先于主张</span>
+  </footer>
+</div>
+</body>
+</html>

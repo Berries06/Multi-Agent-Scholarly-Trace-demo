@@ -1,0 +1,206 @@
+{
+  "schema_version": "1.0.0",
+  "frozen_at": "2026-08-21",
+  "run_id": "R006",
+  "protocol": "hand-computable counterfactual events; static provenance vs EASG replay; toy/dev; simulation_only",
+  "config_hash": "r006-toy-v1",
+  "policy": "src/yanhai/easg.py module docstring is the single source of truth; gold states below were hand-computed from that policy.",
+  "claims": [
+    {"claim_id": "R1", "semantic_strength": "plain", "condition": null},
+    {"claim_id": "R2", "semantic_strength": "plain", "condition": null}
+  ],
+  "cases": [
+    {
+      "case_id": "C01",
+      "name": "delete_pivotal",
+      "event_type": "delete_evidence",
+      "rationale": "删除两个独立支持之一后，EASG 重算为 needs_review（仅剩单一来源）；静态基线不重算，保持 accepted（陈旧）。",
+      "focus_claim": "R1",
+      "initial_events": [
+        {"event_id": "e1", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 1, "config_hash": "r006-toy-v1", "evidence_id": "eA", "evidence_span": "spanA", "source": "paperA", "publication_time": "2020-01-01", "semantic_strength": "plain"},
+        {"event_id": "e2", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 2, "config_hash": "r006-toy-v1", "evidence_id": "eB", "evidence_span": "spanB", "source": "paperB", "publication_time": "2020-01-01", "semantic_strength": "plain"}
+      ],
+      "target_event": {"event_id": "t1", "claim_id": "R1", "event_type": "delete_evidence", "actor": "retraction_notice", "seq": 3, "config_hash": "r006-toy-v1", "evidence_id": "eA"},
+      "gold": {
+        "easg": {"admission_status": "needs_review", "superseded_by": null},
+        "static": {"admission_status": "accepted"}
+      }
+    },
+    {
+      "case_id": "C02",
+      "name": "delete_last_support",
+      "event_type": "delete_evidence",
+      "rationale": "唯一支持被删除后，EASG 硬护栏强制 rejected（无有效证据）；静态基线保持 needs_review（陈旧）。",
+      "focus_claim": "R1",
+      "initial_events": [
+        {"event_id": "e1", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 1, "config_hash": "r006-toy-v1", "evidence_id": "eA", "evidence_span": "spanA", "source": "paperA", "publication_time": "2020-01-01", "semantic_strength": "plain"}
+      ],
+      "target_event": {"event_id": "t1", "claim_id": "R1", "event_type": "delete_evidence", "actor": "retraction_notice", "seq": 2, "config_hash": "r006-toy-v1", "evidence_id": "eA"},
+      "gold": {
+        "easg": {"admission_status": "rejected", "superseded_by": null},
+        "static": {"admission_status": "needs_review"}
+      }
+    },
+    {
+      "case_id": "C03",
+      "name": "refute_later",
+      "event_type": "add_refute",
+      "rationale": "更晚的反驳证据出现后，EASG 转入 contested/needs_review；静态基线不建模反驳，保持 accepted。",
+      "focus_claim": "R1",
+      "initial_events": [
+        {"event_id": "e1", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 1, "config_hash": "r006-toy-v1", "evidence_id": "eA", "evidence_span": "spanA", "source": "paperA", "publication_time": "2020-01-01", "semantic_strength": "plain"},
+        {"event_id": "e2", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 2, "config_hash": "r006-toy-v1", "evidence_id": "eB", "evidence_span": "spanB", "source": "paperB", "publication_time": "2020-01-01", "semantic_strength": "plain"}
+      ],
+      "target_event": {"event_id": "t1", "claim_id": "R1", "event_type": "add_refute", "actor": "critic", "seq": 3, "config_hash": "r006-toy-v1", "evidence_id": "eR", "evidence_span": "spanR", "source": "paperC", "publication_time": "2024-01-01", "semantic_strength": "plain"},
+      "gold": {
+        "easg": {"admission_status": "needs_review", "superseded_by": null},
+        "static": {"admission_status": "accepted"}
+      }
+    },
+    {
+      "case_id": "C04",
+      "name": "refute_only",
+      "event_type": "add_refute",
+      "rationale": "候选仅有反驳证据时，EASG 判 refuted→rejected；静态基线不建模反驳，停在 candidate。",
+      "focus_claim": "R1",
+      "initial_events": [],
+      "target_event": {"event_id": "t1", "claim_id": "R1", "event_type": "add_refute", "actor": "critic", "seq": 1, "config_hash": "r006-toy-v1", "evidence_id": "eR", "evidence_span": "spanR", "source": "paperC", "publication_time": "2024-01-01", "semantic_strength": "plain"},
+      "gold": {
+        "easg": {"admission_status": "rejected", "superseded_by": null},
+        "static": {"admission_status": "candidate"}
+      }
+    },
+    {
+      "case_id": "C05",
+      "name": "replace_span_invalid",
+      "event_type": "replace_span",
+      "rationale": "原证据跨度被替换为无效跨度（等价删除）后，EASG 重算为 needs_review；静态基线只换 id 不重算，保持 accepted。",
+      "focus_claim": "R1",
+      "initial_events": [
+        {"event_id": "e1", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 1, "config_hash": "r006-toy-v1", "evidence_id": "eA", "evidence_span": "spanA", "source": "paperA", "publication_time": "2020-01-01", "semantic_strength": "plain"},
+        {"event_id": "e2", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 2, "config_hash": "r006-toy-v1", "evidence_id": "eB", "evidence_span": "spanB", "source": "paperB", "publication_time": "2020-01-01", "semantic_strength": "plain"}
+      ],
+      "target_event": {"event_id": "t1", "claim_id": "R1", "event_type": "replace_span", "actor": "retraction_notice", "seq": 3, "config_hash": "r006-toy-v1", "evidence_id": "eA", "evidence_span": "spanA-invalid", "source": "paperA", "replace_valid": false},
+      "gold": {
+        "easg": {"admission_status": "needs_review", "superseded_by": null},
+        "static": {"admission_status": "accepted"}
+      }
+    },
+    {
+      "case_id": "C06",
+      "name": "add_support_after_override",
+      "event_type": "add_support",
+      "rationale": "人工覆核后的新证据事件触发重算：EASG 从 override 状态回到 accepted；静态基线覆核后不重算，保持 rejected。",
+      "focus_claim": "R1",
+      "initial_events": [
+        {"event_id": "e1", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 1, "config_hash": "r006-toy-v1", "evidence_id": "eA", "evidence_span": "spanA", "source": "paperA", "publication_time": "2020-01-01", "semantic_strength": "plain"},
+        {"event_id": "e2", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 2, "config_hash": "r006-toy-v1", "evidence_id": "eB", "evidence_span": "spanB", "source": "paperB", "publication_time": "2020-01-01", "semantic_strength": "plain"},
+        {"event_id": "e3", "claim_id": "R1", "event_type": "human_override", "actor": "human", "seq": 3, "config_hash": "r006-toy-v1", "override_status": "rejected"}
+      ],
+      "target_event": {"event_id": "t1", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 4, "config_hash": "r006-toy-v1", "evidence_id": "eC", "evidence_span": "spanC", "source": "paperC", "publication_time": "2025-01-01", "semantic_strength": "plain"},
+      "gold": {
+        "easg": {"admission_status": "accepted", "superseded_by": null},
+        "static": {"admission_status": "rejected"}
+      }
+    },
+    {
+      "case_id": "C07",
+      "name": "supersede_then_retract_successor",
+      "event_type": "delete_evidence",
+      "rationale": "取代事件之后，后继主张的证据被删除：EASG 判定取代无效并重算回 accepted；静态基线停留在 superseded（陈旧）。",
+      "focus_claim": "R1",
+      "initial_events": [
+        {"event_id": "e1", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 1, "config_hash": "r006-toy-v1", "evidence_id": "eA", "evidence_span": "spanA", "source": "paperA", "publication_time": "2020-01-01", "semantic_strength": "plain"},
+        {"event_id": "e2", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 2, "config_hash": "r006-toy-v1", "evidence_id": "eB", "evidence_span": "spanB", "source": "paperB", "publication_time": "2020-01-01", "semantic_strength": "plain"},
+        {"event_id": "e3", "claim_id": "R2", "event_type": "add_support", "actor": "proposer", "seq": 3, "config_hash": "r006-toy-v1", "evidence_id": "eC", "evidence_span": "spanC", "source": "paperC", "publication_time": "2024-01-01", "semantic_strength": "plain"},
+        {"event_id": "e4", "claim_id": "R1", "event_type": "add_superseding", "actor": "judge", "seq": 4, "config_hash": "r006-toy-v1", "superseded_by": "R2"}
+      ],
+      "target_event": {"event_id": "t1", "claim_id": "R2", "event_type": "delete_evidence", "actor": "retraction_notice", "seq": 5, "config_hash": "r006-toy-v1", "evidence_id": "eC"},
+      "gold": {
+        "easg": {"admission_status": "accepted", "superseded_by": null},
+        "static": {"admission_status": "superseded"}
+      }
+    },
+    {
+      "case_id": "C08",
+      "name": "supersede_valid",
+      "event_type": "add_superseding",
+      "rationale": "公平对照：后继主张证据有效时，两种系统都正确转入 superseded（静态在状态上正确，但无理由/审计历史——见 audit_gap）。",
+      "focus_claim": "R1",
+      "initial_events": [
+        {"event_id": "e1", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 1, "config_hash": "r006-toy-v1", "evidence_id": "eA", "evidence_span": "spanA", "source": "paperA", "publication_time": "2020-01-01", "semantic_strength": "plain"},
+        {"event_id": "e2", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 2, "config_hash": "r006-toy-v1", "evidence_id": "eB", "evidence_span": "spanB", "source": "paperB", "publication_time": "2020-01-01", "semantic_strength": "plain"},
+        {"event_id": "e3", "claim_id": "R2", "event_type": "add_support", "actor": "proposer", "seq": 3, "config_hash": "r006-toy-v1", "evidence_id": "eC", "evidence_span": "spanC", "source": "paperC", "publication_time": "2024-01-01", "semantic_strength": "plain"}
+      ],
+      "target_event": {"event_id": "t1", "claim_id": "R1", "event_type": "add_superseding", "actor": "judge", "seq": 4, "config_hash": "r006-toy-v1", "superseded_by": "R2"},
+      "gold": {
+        "easg": {"admission_status": "superseded", "superseded_by": "R2"},
+        "static": {"admission_status": "superseded"}
+      }
+    },
+    {
+      "case_id": "C09",
+      "name": "delete_nonpivotal",
+      "event_type": "delete_evidence",
+      "rationale": "公平对照：三个独立支持删除一个后仍有 ≥2 独立来源，两种系统都保持 accepted。",
+      "focus_claim": "R1",
+      "initial_events": [
+        {"event_id": "e1", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 1, "config_hash": "r006-toy-v1", "evidence_id": "eA", "evidence_span": "spanA", "source": "paperA", "publication_time": "2020-01-01", "semantic_strength": "plain"},
+        {"event_id": "e2", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 2, "config_hash": "r006-toy-v1", "evidence_id": "eB", "evidence_span": "spanB", "source": "paperB", "publication_time": "2020-01-01", "semantic_strength": "plain"},
+        {"event_id": "e3", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 3, "config_hash": "r006-toy-v1", "evidence_id": "eC", "evidence_span": "spanC", "source": "paperC", "publication_time": "2020-01-01", "semantic_strength": "plain"}
+      ],
+      "target_event": {"event_id": "t1", "claim_id": "R1", "event_type": "delete_evidence", "actor": "retraction_notice", "seq": 4, "config_hash": "r006-toy-v1", "evidence_id": "eC"},
+      "gold": {
+        "easg": {"admission_status": "accepted", "superseded_by": null},
+        "static": {"admission_status": "accepted"}
+      }
+    },
+    {
+      "case_id": "C10",
+      "name": "refute_then_late_support",
+      "event_type": "add_support",
+      "rationale": "反驳之后出现的支持不能自动解除争议：EASG 保持 needs_review（contested 需人工解决）；静态基线在 build 时按 refute-only 规则冻结为 rejected，之后不再重算。",
+      "focus_claim": "R1",
+      "initial_events": [
+        {"event_id": "e1", "claim_id": "R1", "event_type": "add_refute", "actor": "critic", "seq": 1, "config_hash": "r006-toy-v1", "evidence_id": "eR", "evidence_span": "spanR", "source": "paperC", "publication_time": "2023-01-01", "semantic_strength": "plain"}
+      ],
+      "target_event": {"event_id": "t1", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 2, "config_hash": "r006-toy-v1", "evidence_id": "eA", "evidence_span": "spanA", "source": "paperA", "publication_time": "2024-01-01", "semantic_strength": "plain"},
+      "gold": {
+        "easg": {"admission_status": "needs_review", "superseded_by": null},
+        "static": {"admission_status": "rejected"}
+      }
+    },
+    {
+      "case_id": "C11",
+      "name": "absolute_second_source",
+      "event_type": "add_support",
+      "rationale": "绝对化主张的硬护栏：<2 独立来源时 rejected；第二个独立来源到达后 EASG 重算为 accepted，静态基线保持 rejected（状态冻结）。",
+      "focus_claim": "R1",
+      "claim_override": {"semantic_strength": "absolute"},
+      "initial_events": [
+        {"event_id": "e1", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 1, "config_hash": "r006-toy-v1", "evidence_id": "eA", "evidence_span": "spanA", "source": "paperA", "publication_time": "2020-01-01", "semantic_strength": "plain"}
+      ],
+      "target_event": {"event_id": "t1", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 2, "config_hash": "r006-toy-v1", "evidence_id": "eB", "evidence_span": "spanB", "source": "paperB", "publication_time": "2025-01-01", "semantic_strength": "plain"},
+      "gold": {
+        "easg": {"admission_status": "accepted", "superseded_by": null},
+        "static": {"admission_status": "rejected"}
+      }
+    },
+    {
+      "case_id": "C12",
+      "name": "replace_span_valid",
+      "event_type": "replace_span",
+      "rationale": "公平对照：有效跨度替换不改变证据充分性，两种系统都保持 accepted。",
+      "focus_claim": "R1",
+      "initial_events": [
+        {"event_id": "e1", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 1, "config_hash": "r006-toy-v1", "evidence_id": "eA", "evidence_span": "spanA", "source": "paperA", "publication_time": "2020-01-01", "semantic_strength": "plain"},
+        {"event_id": "e2", "claim_id": "R1", "event_type": "add_support", "actor": "proposer", "seq": 2, "config_hash": "r006-toy-v1", "evidence_id": "eB", "evidence_span": "spanB", "source": "paperB", "publication_time": "2020-01-01", "semantic_strength": "plain"}
+      ],
+      "target_event": {"event_id": "t1", "claim_id": "R1", "event_type": "replace_span", "actor": "human", "seq": 3, "config_hash": "r006-toy-v1", "evidence_id": "eA", "evidence_span": "spanA-corrected", "source": "paperA", "replace_valid": true},
+      "gold": {
+        "easg": {"admission_status": "accepted", "superseded_by": null},
+        "static": {"admission_status": "accepted"}
+      }
+    }
+  ]
+}

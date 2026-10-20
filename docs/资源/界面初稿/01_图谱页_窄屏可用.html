@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>初稿 · 证据图谱（窄屏可用的三栏）</title>
+<style>
+  /* 用的是项目现有变量：atlas.css 里的纸色/墨色/学术红，没有另起一套 */
+  :root {
+    --nature-red: #a51931;
+    --ink: #1a1815;
+    --ink-soft: #3d3833;
+    --ink-muted: #6b655d;
+    --ink-faint: #6b655d;   /* 原 #9a938a 只有 2.77，不能用于文字。改后的实测：米色底 5.25 / 白底 5.76 / 暖白底 4.94 */
+    --paper: #f7f4ee;
+    --paper-warm: #f2ede4;
+    --surface: #ffffff;
+    --border: #ddd6ca;
+    --border-strong: #c8c0b2;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+    --font-mono: "Cascadia Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: Inter, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-size: 13px; line-height: 1.5;
+  }
+
+  /* 顶栏：原来单行 flex 不换行，窄屏把标题裁掉；现在允许换行，副标题窄屏隐藏 */
+  .masthead { background: var(--surface); border-bottom: 2px solid var(--ink); }
+  .masthead__inner {
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 20px; min-height: 56px; flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .brand__logo {
+    width: 34px; height: 34px; background: var(--nature-red); color: #fff;
+    font-family: var(--font-serif); font-size: 19px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .brand__title { font-family: var(--font-serif); font-size: 19px; font-weight: 800; letter-spacing: .04em; }
+  .brand__sub { font-size: 10px; letter-spacing: .18em; color: var(--ink-muted); text-transform: uppercase; }
+  .masthead__spacer { flex: 1; }
+  .ghost-btn {
+    border: 1px solid var(--border-strong); background: var(--surface); color: var(--ink-soft);
+    padding: 7px 14px; font-size: 12px; cursor: pointer; border-radius: 2px; min-height: 34px;
+  }
+  .ghost-btn:hover { background: var(--paper-warm); }
+
+  /* 领域切换：宽屏是横排标签，窄屏换成下拉，避免 5 个标签挤在 390px 里只剩一个能看见 */
+  .domains { display: flex; align-items: center; gap: 2px; padding: 0 20px;
+             border-bottom: 1px solid var(--border); background: var(--paper-warm); }
+  .domains__tabs { display: flex; gap: 2px; flex: 1; overflow-x: auto; }
+  .domain-tab {
+    border: 0; background: none; cursor: pointer; text-align: left; white-space: nowrap;
+    padding: 8px 12px; border-bottom: 2px solid transparent; color: var(--ink-muted);
+  }
+  .domain-tab:hover { color: var(--ink); background: rgba(255,255,255,.6); }
+  .domain-tab.is-active { color: var(--nature-red); border-bottom-color: var(--nature-red); }
+  .domain-tab__name { display: block; font-weight: 600; font-size: 12px; }
+  .domain-tab__count { font-size: 11px; color: var(--ink-faint); }  /* 原来是 9px，提到 11px */
+  .domain-select { display: none; flex: 1; min-height: 40px; font-size: 13px;
+                   border: 1px solid var(--border-strong); background: var(--surface); color: var(--ink); padding: 0 8px; }
+  .view-toggle { display: flex; border: 1px solid var(--border-strong); flex-shrink: 0; background: var(--surface); }
+  .view-toggle button { border: 0; background: none; padding: 8px 14px; font-size: 12px;
+                        color: var(--ink-muted); cursor: pointer; min-height: 40px; }
+  .view-toggle button.is-active { background: var(--ink); color: #f6f3ec; }
+
+  /* 窄屏分段切换：一次只显示一栏，替掉"三栏硬挤" */
+  .segmented { display: none; gap: 0; padding: 10px 16px 0; background: var(--paper); }
+  .segmented button {
+    flex: 1; min-height: 44px; border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--ink-muted); font-size: 13px; cursor: pointer;
+  }
+  .segmented button + button { border-left: 0; }
+  .segmented button.is-active { background: var(--ink); color: #f6f3ec; font-weight: 600; }
+
+  .workspace { display: grid; grid-template-columns: 264px minmax(0,1fr) 304px; min-height: 560px; }
+  .panel { background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; min-width: 0; }
+  .panel:last-child { border-right: 0; border-left: 1px solid var(--border); }
+  .panel__head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; border-bottom: 1px solid var(--border);
+    font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--ink-muted);
+  }
+
+  .filters { padding: 12px; border-bottom: 1px solid var(--border); }
+  .filters label { display: block; font-size: 11px; color: var(--ink-muted); margin: 0 0 6px; }
+  .filters input, .filters select {
+    width: 100%; min-height: 38px; padding: 0 8px; font-size: 13px;
+    border: 1px solid var(--border-strong); background: var(--surface); color: var(--ink); margin-bottom: 10px;
+  }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+  .chip { border: 1px solid var(--border-strong); background: var(--paper-warm);
+          padding: 5px 9px; font-size: 11px; color: var(--ink-soft); border-radius: 2px; }
+
+  .paper-list { list-style: none; margin: 0; padding: 0; overflow-y: auto; }
+  .paper-item { padding: 11px 12px; border-bottom: 1px solid var(--border); cursor: pointer; }
+  .paper-item:hover { background: #fdf9f3; }
+  .paper-item.is-active { background: #fdf0f2; border-left: 3px solid var(--nature-red); padding-left: 9px; }
+  .paper-item__title { font-size: 13px; font-weight: 600; line-height: 1.35; margin-bottom: 5px; }
+  .paper-item__meta { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--ink-muted); }
+  .paper-item__cites { margin-left: auto; font-family: var(--font-mono); color: var(--ink-faint); }
+  .tier { font-size: 10px; padding: 2px 6px; border-radius: 2px; }
+  .tier--card { background: #e8f0eb; color: #2d6a4f; }
+  .tier--meta { background: var(--paper-warm); color: var(--ink-muted); border: 1px solid var(--border); }
+
+  .graph-area { position: relative; background: var(--paper); min-height: 420px; }
+  .graph-hint { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+                color: var(--ink-muted); font-size: 12px; }
+  .graph-legend {
+    position: absolute; left: 12px; bottom: 12px; background: rgba(255,255,255,.94);
+    border: 1px solid var(--border); padding: 8px 10px; display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; color: var(--ink-soft); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; }
+
+  .detail { padding: 14px; }
+  .detail h3 { font-family: var(--font-serif); font-size: 15px; margin: 0 0 10px; line-height: 1.4; }
+  .detail dl { margin: 0; font-size: 12px; line-height: 1.8; }
+  .detail dt { color: var(--ink-faint); float: left; width: 56px; clear: left; }
+  .detail dd { margin: 0 0 4px 56px; color: var(--ink-soft); }
+  .evidence { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 10px; }
+  .evidence p { font-size: 12px; color: var(--ink-soft); margin: 0 0 6px; }
+  .evidence code { font-family: var(--font-mono); font-size: 11px; color: var(--ink-muted); }
+
+  /* 底部状态栏：原来右侧 #7a7468 on #1a1815 只有 3.82，这里提到 4.5 以上 */
+  .statusbar {
+    display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+    background: var(--ink); color: #b8b0a4; font-size: 11px; padding: 8px 16px;
+  }
+  .statusbar__right { margin-left: auto; color: #cfc7ba; }
+
+  @media (max-width: 1023px) {
+    .workspace { grid-template-columns: 220px minmax(0,1fr); }
+    .panel--detail { display: none; }        /* 平板：详情先收起来，点节点再出抽屉 */
+  }
+  @media (max-width: 760px) {
+    .brand__sub { display: none; }
+    .domains__tabs { display: none; }
+    .domain-select { display: block; }
+    .segmented { display: flex; }
+    .workspace { display: block; min-height: 0; }
+    .panel { border-right: 0; border-left: 0; border-bottom: 1px solid var(--border); }
+    .panel[data-panel] { display: none; }     /* 一次只显示一栏 */
+    .panel.is-shown { display: flex; }
+    .graph-area { min-height: 340px; }
+    .statusbar { font-size: 11px; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead__inner">
+    <button class="ghost-btn">← 返回</button>
+    <div class="brand">
+      <div class="brand__logo">研</div>
+      <div>
+        <div class="brand__title">研海寻踪</div>
+        <div class="brand__sub">证据优先的科研知识图谱</div>
+      </div>
+    </div>
+    <div class="masthead__spacer"></div>
+    <div class="view-toggle">
+      <button class="is-active">力导向图</button>
+      <button>时间轴</button>
+    </div>
+  </div>
+  <div class="domains">
+    <div class="domains__tabs">
+      <button class="domain-tab"><span class="domain-tab__name">科学文献信息抽取与知识图谱构建</span><span class="domain-tab__count">100 篇 · 43 实体 · 115 关系</span></button>
+      <button class="domain-tab is-active"><span class="domain-tab__name">量子计算与量子信息处理</span><span class="domain-tab__count">100 篇 · 43 实体 · 115 关系</span></button>
+      <button class="domain-tab"><span class="domain-tab__name">材料发现与图神经网络</span><span class="domain-tab__count">90 篇 · 38 实体 · 96 关系</span></button>
+      <button class="domain-tab"><span class="domain-tab__name">教育知识追踪与个性化学习</span><span class="domain-tab__count">95 篇 · 41 实体 · 102 关系</span></button>
+      <button class="domain-tab"><span class="domain-tab__name">单细胞转录组学</span><span class="domain-tab__count">80 篇 · 33 实体 · 88 关系</span></button>
+    </div>
+    <select class="domain-select">
+      <option>量子计算与量子信息处理</option>
+      <option>科学文献信息抽取与知识图谱构建</option>
+      <option>材料发现与图神经网络</option>
+      <option>教育知识追踪与个性化学习</option>
+      <option>单细胞转录组学</option>
+    </select>
+  </div>
+</header>
+
+<!-- 窄屏才出现：一次显示一栏，替掉三栏硬挤 -->
+<nav class="segmented">
+  <button data-goto="list">文献索引</button>
+  <button data-goto="graph" class="is-active">图谱</button>
+  <button data-goto="detail">详情</button>
+</nav>
+
+<main class="workspace">
+  <section class="panel" data-panel="list">
+    <div class="panel__head"><span>文献索引</span><span>100</span></div>
+    <div class="filters">
+      <label>搜索标题、作者或方法</label>
+      <input placeholder="例如：quantum supremacy" />
+      <label>年份</label>
+      <input placeholder="2015 — 2026" />
+      <div class="chips">
+        <span class="chip">证据卡 84</span>
+        <span class="chip">元数据 16</span>
+      </div>
+    </div>
+    <ul class="paper-list">
+      <li class="paper-item is-active">
+        <div class="paper-item__title">Quantum supremacy using a programmable superconducting processor</div>
+        <div class="paper-item__meta"><span class="tier tier--card">证据卡</span><span>Nature 2019</span><span class="paper-item__cites">7150</span></div>
+      </li>
+      <li class="paper-item">
+        <div class="paper-item__title">Variational quantum algorithms</div>
+        <div class="paper-item__meta"><span class="tier tier--meta">元数据</span><span>Nature Reviews Physics 2021</span><span class="paper-item__cites">3194</span></div>
+      </li>
+      <li class="paper-item">
+        <div class="paper-item__title">Hardware-efficient variational quantum eigensolver for small molecules and quantum magnets</div>
+        <div class="paper-item__meta"><span class="tier tier--meta">元数据</span><span>Nature 2017</span><span class="paper-item__cites">3112</span></div>
+      </li>
+      <li class="paper-item">
+        <div class="paper-item__title">Barren plateau in quantum neural network training landscapes</div>
+        <div class="paper-item__meta"><span class="tier tier--card">证据卡</span><span>Nature Communications 2018</span><span class="paper-item__cites">2256</span></div>
+      </li>
+      <li class="paper-item">
+        <div class="paper-item__title">Quantum computational advantage using photons</div>
+        <div class="paper-item__meta"><span class="tier tier--card">证据卡</span><span>Science 2020</span><span class="paper-item__cites">1860</span></div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="panel" data-panel="graph">
+    <div class="panel__head"><span>证据图谱</span><span>节点 43 · 关系 115</span></div>
+    <div class="graph-area">
+      <div class="graph-hint">力导向图渲染区（ECharts 实例）</div>
+      <div class="graph-legend">
+        <span class="legend-item"><i class="dot" style="background:#a51931"></i>方法</span>
+        <span class="legend-item"><i class="dot" style="background:#1f4e79"></i>任务</span>
+        <span class="legend-item"><i class="dot" style="background:#2d6a4f"></i>数据集</span>
+        <span class="legend-item"><i class="dot" style="background:#b8860b"></i>指标</span>
+        <span class="legend-item"><i class="dot" style="background:#7d776e"></i>局限</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel panel--detail" data-panel="detail">
+    <div class="panel__head"><span>详情</span><span>1 条选中</span></div>
+    <div class="detail">
+      <h3>Quantum supremacy using a programmable superconducting processor</h3>
+      <dl>
+        <dt>作者</dt><dd>Arute 等</dd>
+        <dt>期刊</dt><dd>Nature</dd>
+        <dt>年份</dt><dd>2019</dd>
+        <dt>层级</dt><dd>证据卡（基于公开摘要释义）</dd>
+      </dl>
+      <div class="evidence">
+        <p>该工作把超导量子处理器与经典模拟的采样时间作对比，作为量子优越性的判据。</p>
+        <code>D18-1360 · 字符跨度 0-142</code>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="statusbar">
+  <span>节点 43</span>
+  <span>关系 115</span>
+  <span>证据跨度 118</span>
+  <span class="statusbar__right">研海寻踪 · 证据先于断言</span>
+</footer>
+
+<script>
+  // 窄屏分段切换（真实实现里跟 App.tsx 的工作区导航同一套交互）
+  const panels = document.querySelectorAll('.panel[data-panel]');
+  const buttons = document.querySelectorAll('.segmented button');
+  function show(target) {
+    panels.forEach((p) => p.classList.toggle('is-shown', p.dataset.panel === target));
+    buttons.forEach((b) => b.classList.toggle('is-active', b.dataset.goto === target));
+  }
+  buttons.forEach((b) => b.addEventListener('click', () => show(b.dataset.goto)));
+  // 宽屏时三栏都显示，这里给窄屏一个默认
+  if (window.matchMedia('(max-width: 760px)').matches) show('graph');
+  else panels.forEach((p) => p.classList.add('is-shown'));
+</script>
+</body>
+</html>

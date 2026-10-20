@@ -1,0 +1,19 @@
+# SCENIC: single-cell regulatory network inference and clustering
+
+## 书目信息
+
+- 作者：Sara Aibar, Carmen Bravo González‐Blas, Thomas Moerman, Vân Anh Huynh‐Thu, Hana Imrichová, Gert Hulselmans, Florian Rambow, Jean‐Christophe Marine, Pierre Geurts, Jan Aerts, Joost van den Oord, Zeynep Kalender Atak
+- 年份：2017
+- 来源：Nature Methods
+- DOI：10.1038/nmeth.4463
+- 检索时引用量快照：7194
+
+## 收录范围
+
+本记录经 OpenAlex 元数据筛选纳入“单细胞转录组数据分析”扩展检索层，仅用于题名、作者、来源和主题检索。项目尚未在本地持有或解析该论文全文，因此本卡片不声明论文采用了何种方法、取得了何种实验结果，也不能作为知识图谱关系的证据。
+
+## 溯源与待办
+
+- DOI 来源：https://doi.org/10.1038/nmeth.4463
+- 元数据提供方：OpenAlex REST API
+- 待办：合法取得全文后执行结构解析、实体关系抽取和人工证据复核；通过前不得提升为证据层。

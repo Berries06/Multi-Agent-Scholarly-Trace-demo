@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>初稿 · 实验记录（从卡片堆改成可扫的表）</title>
+<style>
+  :root {
+    --accent: #b21f2d;
+    --ink: #20201e;
+    --ink-muted: #686761;
+    --ink-faint: #6f6d66;
+    --paper: #f6f3ec;
+    --surface: #fbfaf6;
+    --white: #ffffff;
+    --rule: #d8d4ca;
+    --rule-soft: #e7e2d8;
+    --success: #2f6b53;
+    --font-serif: Georgia, "Noto Serif SC", "Songti SC", serif;
+    --font-mono: "Cascadia Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Inter, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+         font-size: 13px; line-height: 1.5; }
+  .page { width: min(1320px, calc(100% - 48px)); margin: 0 auto; padding: 26px 0 40px; }
+
+  .lede { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; border-bottom: 1px solid var(--ink); padding-bottom: 12px; }
+  .lede h1 { font-family: var(--font-serif); font-size: 30px; margin: 0; letter-spacing: -.01em; }
+  .lede p { margin: 0; color: var(--ink-muted); font-size: 13px; }
+
+  /* 一行汇总替掉原来顶部的说明段 */
+  .summary { display: flex; gap: 26px; flex-wrap: wrap; padding: 14px 0 4px; }
+  .summary div { display: flex; align-items: baseline; gap: 7px; }
+  .summary b { font-family: var(--font-mono); font-size: 19px; font-weight: 600; }
+  .summary span { color: var(--ink-muted); font-size: 12px; }
+
+  h2 { font-family: var(--font-serif); font-size: 18px; margin: 26px 0 10px; }
+  .card { background: var(--white); border: 1px solid var(--rule); border-radius: 2px; }
+  .card__head { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid var(--rule-soft); }
+
+  /* 复现命令：长命令不再撑破，可以横向滚动，右侧固定放按钮 */
+  .cmd { display: flex; align-items: center; gap: 10px; background: #262521; color: #e8e2d8;
+         padding: 9px 12px; border-radius: 2px; margin: 14px; }
+  .cmd code { font-family: var(--font-mono); font-size: 11px; white-space: nowrap; overflow-x: auto; flex: 1; min-width: 0; }
+  .cmd button { flex-shrink: 0; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 11px; letter-spacing: .08em; color: var(--ink-muted);
+       font-weight: 600; padding: 9px 14px; border-bottom: 1px solid var(--rule); background: var(--surface); }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--rule-soft); vertical-align: top; }
+  tr.run-row { cursor: pointer; }
+  tr.run-row:hover td { background: #fdfbf6; }
+  tr.run-row.is-open td { background: #fdf7f8; border-bottom-color: transparent; }
+  .num { font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); white-space: nowrap; }
+  .name { font-weight: 600; }
+  .name small { display: block; font-weight: 400; color: var(--ink-muted); font-size: 11px; margin-top: 2px; }
+
+  .tag { display: inline-block; font-size: 11px; padding: 2px 7px; border-radius: 2px; border: 1px solid transparent; white-space: nowrap; }
+  .tag--ok { background: #e8f0eb; color: var(--success); }
+  .tag--wait { background: #f6efe0; color: #8a6414; }
+  .tag--none { background: var(--surface); color: var(--ink-muted); border-color: var(--rule); }
+
+  /* 长产物路径：按技能的 High 级规则处理，不换行只截断 + 可展开 + 可复制 */
+  .path { font-family: var(--font-mono); font-size: 11px; color: var(--ink-muted);
+          max-width: 420px; overflow-wrap: anywhere; }
+  .path__clamp { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+  .path__more { color: var(--accent); cursor: pointer; font-size: 11px; }
+
+  .detail-row td { background: #fdfbf6; padding: 0 14px 16px; }
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px 22px; padding-top: 6px; }
+  .detail-grid dt { font-size: 11px; color: var(--ink-muted); margin-bottom: 3px; }
+  .detail-grid dd { margin: 0; font-size: 12px; }
+  .detail-grid dd.mono { font-family: var(--font-mono); overflow-wrap: anywhere; }
+
+  button.copy, button.ghost {
+    border: 1px solid var(--rule); background: var(--white); color: var(--ink-muted);
+    font-size: 11px; padding: 5px 10px; border-radius: 2px; cursor: pointer; min-height: 30px;
+  }
+  button.copy:hover, button.ghost:hover { background: var(--surface); color: var(--ink); }
+  .primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .primary:hover { background: #9a1a26; color: #fff; }
+
+  /* 窄屏把 td 设成 block 之后会盖掉 hidden 属性，这里显式兜住 */
+  [hidden] { display: none !important; }
+
+  @media (max-width: 760px) {
+    .page { width: calc(100% - 24px); padding-top: 16px; }
+    .lede h1 { font-size: 23px; }
+    .summary { gap: 16px; }
+    /* 窄屏把表格改成每条一块，省掉横向滚动 */
+    thead { display: none; }
+    table, tbody, tr, td { display: block; width: 100%; }
+    tr.run-row td { border-bottom: 0; padding: 6px 12px; }
+    tr.run-row { border-bottom: 1px solid var(--rule-soft); padding: 8px 0; }
+    td::before { content: attr(data-label); display: block; font-size: 10px; letter-spacing: .08em;
+                 color: var(--ink-muted); margin-bottom: 2px; }
+    .path { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="lede">
+    <h1>实验记录</h1>
+    <p>协议、运行状态和结果入口</p>
+  </div>
+
+  <!-- 原来这里只有一句说明，现在把数字提到最上面 -->
+  <div class="summary">
+    <div><b>6</b><span>套协议</span></div>
+    <div><b>15</b><span>次运行</span></div>
+    <div><b>12</b><span>已独立复核</span></div>
+    <div><b>3</b><span>待复核</span></div>
+    <div><b>2026-08-28</b><span>最近一次</span></div>
+  </div>
+
+  <h2>协议</h2>
+  <div class="card">
+    <table>
+      <thead><tr><th style="width:44px">编号</th><th>协议</th><th style="width:110px">变体</th><th style="width:120px">最近结果</th><th style="width:130px">状态</th></tr></thead>
+      <tbody>
+        <tr><td class="num" data-label="编号">01</td><td data-label="协议">核心消融对比</td><td class="num" data-label="变体">4 种</td><td class="num" data-label="最近结果">2026-06-07</td><td data-label="状态"><span class="tag tag--ok">已完成</span></td></tr>
+        <tr><td class="num" data-label="编号">02</td><td data-label="协议">证据来源与篡改检测</td><td class="num" data-label="变体">2 种</td><td class="num" data-label="最近结果">2026-06-07</td><td data-label="状态"><span class="tag tag--ok">已完成</span></td></tr>
+        <tr><td class="num" data-label="编号">03</td><td data-label="协议">动态知识更新</td><td class="num" data-label="变体">3 种</td><td class="num" data-label="最近结果">2026-06-06</td><td data-label="状态"><span class="tag tag--ok">已完成</span></td></tr>
+        <tr><td class="num" data-label="编号">04</td><td data-label="协议">查询鲁棒性</td><td class="num" data-label="变体">3 种</td><td class="num" data-label="最近结果">2026-06-06</td><td data-label="状态"><span class="tag tag--ok">已完成</span></td></tr>
+        <tr><td class="num" data-label="编号">05</td><td data-label="协议">离线工作负载扩展</td><td class="num" data-label="变体">4 种</td><td class="num" data-label="最近结果">2026-06-06</td><td data-label="状态"><span class="tag tag--wait">待复核</span></td></tr>
+        <tr><td class="num" data-label="编号">06</td><td data-label="协议">端到端回归</td><td class="num" data-label="变体">2 种</td><td class="num" data-label="最近结果">2026-06-04</td><td data-label="状态"><span class="tag tag--ok">已完成</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>运行记录</h2>
+  <div class="card">
+    <div class="card__head">
+      <strong>15 次运行</strong>
+      <span style="color:var(--ink-muted);font-size:12px">按时间从新到旧</span>
+      <span style="margin-left:auto;display:flex;gap:8px">
+        <button class="ghost">只看待复核</button>
+        <button class="primary">打开 MLflow</button>
+      </span>
+    </div>
+    <div class="cmd">
+      <code>\.venv\Scripts\python.exe -m tests.experiments.run_all --repetitions 1</code>
+      <button class="copy">复制</button>
+    </div>
+    <table>
+      <thead><tr><th style="width:78px">运行</th><th>名称</th><th style="width:120px">生成时间</th><th style="width:110px">状态</th><th style="width:460px">产物</th></tr></thead>
+      <tbody>
+        <tr class="run-row" data-open="r006-2">
+          <td class="num" data-label="运行">R006</td>
+          <td data-label="名称"><span class="name">手算反事实状态迁移<small>static provenance 对照 EASG</small></span></td>
+          <td class="num" data-label="生成时间">2026-06-07 02:04</td>
+          <td data-label="状态"><span class="tag tag--ok">已复核</span></td>
+          <td data-label="产物"><div class="path"><span class="path__clamp">outputs\experiments\easg_r006\20260823T091952Z</span><span class="path__more">展开</span></div></td>
+        </tr>
+        <tr class="detail-row" id="r006-2" hidden>
+          <td colspan="5">
+            <dl class="detail-grid">
+              <div><dt>运行目录</dt><dd class="mono">outputs\experiments\easg_r006\20260823T091952Z</dd></div>
+              <div><dt>协议版本</dt><dd class="mono">easg_r006_cases.json · 12 条</dd></div>
+              <div><dt>复核</dt><dd>verification.json 已签发</dd></div>
+              <div><dt>产物清单</dt><dd class="mono">run_config.json / raw_results.json / cases.csv / summary.json / REPORT.md</dd></div>
+            </dl>
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <button class="copy">复制路径</button>
+              <button class="ghost">打开报告</button>
+              <button class="ghost">打开 MLflow</button>
+            </div>
+          </td>
+        </tr>
+        <tr class="run-row" data-open="r006-1">
+          <td class="num" data-label="运行">R006</td>
+          <td data-label="名称"><span class="name">手算反事实状态迁移<small>历史版本，已被上面那次取代</small></span></td>
+          <td class="num" data-label="生成时间">2026-06-07 01:53</td>
+          <td data-label="状态"><span class="tag tag--none">已取代</span></td>
+          <td data-label="产物"><div class="path"><span class="path__clamp">outputs\experiments\easg_r006\20260821T155122Z</span><span class="path__more">展开</span></div></td>
+        </tr>
+        <tr class="detail-row" id="r006-1" hidden>
+          <td colspan="5">
+            <dl class="detail-grid">
+              <div><dt>运行目录</dt><dd class="mono">outputs\experiments\easg_r006\20260821T155122Z</dd></div>
+              <div><dt>说明</dt><dd>自签版本，验证章不是按真实比对签发</dd></div>
+            </dl>
+          </td>
+        </tr>
+        <tr class="run-row" data-open="r06">
+          <td class="num" data-label="运行">06</td>
+          <td data-label="名称"><span class="name">端到端回归<small>三智能体全画像全案例</small></span></td>
+          <td class="num" data-label="生成时间">2026-06-04 22:12</td>
+          <td data-label="状态"><span class="tag tag--ok">已复核</span></td>
+          <td data-label="产物"><div class="path"><span class="path__clamp">outputs\experiments\06_end_to_end_regression\20260804T032433Z-355972</span><span class="path__more">展开</span></div></td>
+        </tr>
+        <tr class="detail-row" id="r06" hidden>
+          <td colspan="5">
+            <dl class="detail-grid">
+              <div><dt>运行目录</dt><dd class="mono">outputs\experiments\06_end_to_end_regression\20260804T032433Z-355972</dd></div>
+              <div><dt>覆盖</dt><dd>3 画像 × 全案例</dd></div>
+            </dl>
+          </td>
+        </tr>
+        <tr class="run-row" data-open="r04">
+          <td class="num" data-label="运行">04</td>
+          <td data-label="名称"><span class="name">查询鲁棒性<small>查询覆盖与对抗检索</small></span></td>
+          <td class="num" data-label="生成时间">2026-06-04 22:12</td>
+          <td data-label="状态"><span class="tag tag--wait">待复核</span></td>
+          <td data-label="产物"><div class="path"><span class="path__clamp">outputs\experiments\04_query_robustness\20260804T032042Z-526842</span><span class="path__more">展开</span></div></td>
+        </tr>
+        <tr class="detail-row" id="r04" hidden>
+          <td colspan="5">
+            <dl class="detail-grid">
+              <div><dt>运行目录</dt><dd class="mono">outputs\experiments\04_query_robustness\20260804T032042Z-526842</dd></div>
+              <div><dt>待办</dt><dd>等独立复核后签发 verification.json</dd></div>
+            </dl>
+          </td>
+        </tr>
+        <tr class="run-row" data-open="r05">
+          <td class="num" data-label="运行">05</td>
+          <td data-label="名称"><span class="name">离线工作负载扩展<small>并发与耗时</small></span></td>
+          <td class="num" data-label="生成时间">2026-06-06 12:21</td>
+          <td data-label="状态"><span class="tag tag--wait">待复核</span></td>
+          <td data-label="产物"><div class="path"><span class="path__clamp">outputs\experiments\05_workload_scaling\20260804T033433Z-344422</span><span class="path__more">展开</span></div></td>
+        </tr>
+        <tr class="detail-row" id="r05" hidden>
+          <td colspan="5">
+            <dl class="detail-grid">
+              <div><dt>运行目录</dt><dd class="mono">outputs\experiments\05_workload_scaling\20260804T033433Z-344422</dd></div>
+            </dl>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="padding:12px 14px;color:var(--ink-muted);font-size:12px">
+      还有 10 次更早的运行，<a href="#" style="color:var(--accent)">展开全部</a>
+    </div>
+  </div>
+
+</div>
+<script>
+  // 点一行展开该次详情；长路径点"展开"才铺满
+  document.querySelectorAll('tr.run-row').forEach((row) => {
+    row.addEventListener('click', (event) => {
+      if (event.target.classList.contains('path__more')) return;
+      const target = document.getElementById(row.dataset.open);
+      const open = !target.hidden;
+      target.hidden = open;
+      row.classList.toggle('is-open', !open);
+    });
+  });
+  document.querySelectorAll('.path__more').forEach((more) => {
+    more.addEventListener('click', () => {
+      const clamp = more.previousElementSibling;
+      const folded = clamp.classList.toggle('path__clamp');
+      more.textContent = folded ? '展开' : '收起';
+    });
+  });
+  document.querySelectorAll('button.copy').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const text = btn.parentElement.querySelector('code, .mono')?.textContent?.trim() ?? '';
+      navigator.clipboard?.writeText(text);
+      const old = btn.textContent;
+      btn.textContent = '已复制';
+      setTimeout(() => { btn.textContent = old; }, 1200);
+    });
+  });
+</script>
+</body>
+</html>

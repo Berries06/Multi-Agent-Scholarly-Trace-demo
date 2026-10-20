@@ -1,0 +1,1104 @@
+{
+ "status": "candidate_pending_human_review",
+ "status_note": "这是把机器挖的候选概念接进抽取器的实验输入，不是定下来的知识点清单；概念、别名、类型三样都要人对着证据签核。",
+ "domain_id": "quantum-computing",
+ "domain_name": "量子计算与量子信息处理",
+ "source": "data/knowledge/domain_vocabulary/quantum-computing_候选概念.json",
+ "source_status": "candidate_pending_human_review",
+ "source_generated_at": "2026-10-17",
+ "filter": {
+  "field": "document_frequency",
+  "rule": ">= 5",
+  "meaning": "document_frequency 数的是这个词出现在多少篇不同的论文里（同一篇里出现多次只算 1 篇），由 scripts/语料/挖掘领域概念.py 统计"
+ },
+ "alias_cap": 6,
+ "canonical_rule": "canonical 过判据（第三轮加 functional/短缩写两条，第四轮加通用词一条）：是常见英文功能词的丢；长度 ≤3 且全大写的只有 definitions_found 里有它的括号定义、含数字、或候选 document_frequency ≥ 5 时才留；命中 GENERIC_STRUCTURAL_TERMS 且不是已定义缩写的丢（ENTITY/TASK 这一类）；其余长度 ≥4 的实词一律留。判定顺序与别名那几道一致，一条同时符合两条时记前面那条",
+ "alias_rule": "别名取候选 surface_forms 里出现次数最多的前 alias_cap 个（挖掘脚本落盘时已按出现次数从高到低排序），**先过那几道过滤再截断**：长度 <2 的不要；是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）的不要；长度 ≤3 且全大写的缩略语只有出现在挖掘结果的 definitions_found 里、含数字、或候选的 document_frequency ≥ 5 时才留。之后去重，并去掉与 canonical 逐字完全相同的写法",
+ "alias_filters": {
+  "common_english_function_words": [
+   "a",
+   "about",
+   "above",
+   "across",
+   "after",
+   "again",
+   "all",
+   "also",
+   "although",
+   "am",
+   "an",
+   "and",
+   "any",
+   "are",
+   "as",
+   "at",
+   "be",
+   "because",
+   "been",
+   "before",
+   "being",
+   "below",
+   "between",
+   "both",
+   "but",
+   "by",
+   "can",
+   "cannot",
+   "could",
+   "did",
+   "do",
+   "does",
+   "doing",
+   "done",
+   "down",
+   "during",
+   "each",
+   "else",
+   "etc",
+   "few",
+   "for",
+   "from",
+   "further",
+   "furthermore",
+   "had",
+   "has",
+   "have",
+   "having",
+   "he",
+   "hence",
+   "her",
+   "his",
+   "how",
+   "however",
+   "if",
+   "in",
+   "into",
+   "is",
+   "it",
+   "its",
+   "may",
+   "might",
+   "more",
+   "moreover",
+   "most",
+   "must",
+   "no",
+   "nor",
+   "not",
+   "of",
+   "off",
+   "on",
+   "once",
+   "only",
+   "onto",
+   "or",
+   "other",
+   "our",
+   "out",
+   "over",
+   "own",
+   "same",
+   "shall",
+   "she",
+   "should",
+   "so",
+   "some",
+   "such",
+   "than",
+   "that",
+   "the",
+   "their",
+   "them",
+   "then",
+   "therefore",
+   "these",
+   "they",
+   "this",
+   "those",
+   "though",
+   "through",
+   "thus",
+   "to",
+   "too",
+   "under",
+   "up",
+   "us",
+   "very",
+   "was",
+   "we",
+   "were",
+   "what",
+   "when",
+   "where",
+   "whereas",
+   "which",
+   "while",
+   "who",
+   "whom",
+   "whose",
+   "why",
+   "will",
+   "with",
+   "within",
+   "without",
+   "would",
+   "you"
+  ],
+  "common_english_function_words_source": "通用英语功能词（冠词、代词、介词、连词、助动词、指示词、常见副词与限定词），不是本项目发明的；任何一本英语语法书里的 function words 都是这一批",
+  "min_short_acronym_df": 5,
+  "reasons": {
+   "too_short": "长度小于 2（单字母没有区分度，抽取器那边全是版面碎片）",
+   "common_english_word": "是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）；抽取器别名正则大小写不敏感，1–3 个字母的全大写缩略语会匹配到普通英文词上（实测 OF 匹配 of，25607 次提及）",
+   "short_acronym_without_definition": "长度 ≤3 的全大写缩略语，挖掘结果里没有它的括号定义、也不含数字，候选的 document_frequency 还不到 5；大小写不敏感匹配下会被普通英文词吃掉（NA、IT、OR 这一类）",
+   "generic_structural_term": "是描述文档结构或泛泛类别的普通英文词（GENERIC_STRUCTURAL_TERMS），不指向具体技术；这一轮只用来判 canonical，别名这一道只报数不丢（见 generic_alias_candidates）"
+  },
+  "effect": "抽取器 src/yanhai/extraction.py 的 _alias_pattern 带 IGNORECASE，1–3 个字母的全大写缩略语会匹配到普通英文词上（实测 OF 匹配 of，25607 次提及）；这几道过滤就是拦这一类别名"
+ },
+ "rejected_alias_total": 0,
+ "rejected_aliases": [],
+ "rejected_aliases_note": "rejected_aliases 只列每条被丢掉的别名（alias / reason / canonical / domain_id），最多列前 200 条；完整条数看 rejected_alias_total，按原因分的计数看 rejected_reasons",
+ "rejected_reasons": {
+  "common_english_word": 0,
+  "generic_structural_term": 0,
+  "short_acronym_without_definition": 0,
+  "too_short": 0
+ },
+ "canonical_filters": {
+  "ran": "canonical 过滤在第三轮加上，跑过的每一份词表都带这一节；rejected_canonical_total 是 0 就说明这一批候选里没有该丢的 canonical，不是这一道没跑",
+  "reasons": {
+   "common_english_word": "canonical 本身是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）；抽取器别名正则大小写不敏感，词表里一条 `OF` 会把每一句里的 `of` 都算成提及（第二轮实测主领域 25607 次），`IN`/`BY`/`OR`/`IT`/`AT`/`HE`/`HER` 同理",
+   "short_acronym_without_definition": "canonical 长度 ≤3 且全大写，挖掘结果里没有它的括号定义、也不含数字，候选的 document_frequency 还不到 5；这类名字在大小写不敏感匹配下会被普通英文词吃掉（`NA` 命中 `na`，`IT` 命中 `it`），真缩写（`KG`/`GPT`/`AI`/`GNN`/`DKT`/`CGCNN`）只要在 definitions_found 里有定义、含数字、或 DF ≥ 5，就不受这一条影响",
+   "generic_structural_term": "canonical 是描述文档结构或泛泛类别的普通英文词（GENERIC_STRUCTURAL_TERMS，例如 `ENTITY`/`TASK`/`CONTEXT`/`CLAIM`）；它们是被『长度 ≥4 一律保留』那一条放进来的，本身不指向具体技术。同时在 definitions_found 里有括号定义的（`AI` 这类真缩写）不受这一条影响"
+  },
+  "min_short_acronym_df": 5,
+  "generic_structural_terms": [
+   "accuracy",
+   "acknowledgements",
+   "acknowledgment",
+   "acknowledgments",
+   "answer",
+   "answers",
+   "appendices",
+   "appendix",
+   "application",
+   "applications",
+   "approach",
+   "approaches",
+   "author",
+   "authors",
+   "baseline",
+   "baselines",
+   "bibliographies",
+   "bibliography",
+   "case",
+   "cases",
+   "claim",
+   "claims",
+   "context",
+   "contexts",
+   "data",
+   "entities",
+   "entity",
+   "example",
+   "examples",
+   "feature",
+   "features",
+   "figure",
+   "figures",
+   "footnote",
+   "footnotes",
+   "image",
+   "images",
+   "information",
+   "input",
+   "inputs",
+   "item",
+   "items",
+   "knowledge",
+   "language",
+   "languages",
+   "level",
+   "levels",
+   "number",
+   "numbers",
+   "one",
+   "ones",
+   "output",
+   "outputs",
+   "paper",
+   "papers",
+   "paragraph",
+   "paragraphs",
+   "part",
+   "parts",
+   "performance",
+   "process",
+   "processes",
+   "quality",
+   "question",
+   "questions",
+   "reference",
+   "references",
+   "result",
+   "results",
+   "score",
+   "scores",
+   "section",
+   "sections",
+   "sentence",
+   "sentences",
+   "size",
+   "state",
+   "states",
+   "step",
+   "steps",
+   "studies",
+   "study",
+   "supplementary",
+   "system",
+   "systems",
+   "table",
+   "tables",
+   "task",
+   "tasks",
+   "text",
+   "texts",
+   "time",
+   "type",
+   "types",
+   "user",
+   "users",
+   "value",
+   "values",
+   "word",
+   "words"
+  ],
+  "generic_structural_terms_note": "**这是一条判断，不是客观标准**：收的是描述文档结构或泛泛类别、不指向具体技术的单 token 普通英文词。`model`/`method`/`dataset`/`annotation`/`metric` 故意不在表里——它们在本体里本身就是合法类型（METHOD/DATASET/METRIC），收进来会误伤真概念。（第四轮加的。第三轮记录第五、六节列出的 ENTITY/TASK/CONTEXT/CLAIM/QUESTION/OUTPUT 那一批就是这么进来的。第五轮又补进 REFERENCES/REFERENCE/BIBLIOGRAPHY/ACKNOWLEDGEMENTS/ACKNOWLEDGMENT/APPENDIX/SUPPLEMENTARY/FOOTNOTE 这一批段落标题词——`quantum::REFERENCES`（原始 DF 33）就是这么一条噪声。）",
+  "rules": [
+   "canonical 是常见英文功能词（COMMON_ENGLISH_FUNCTION_WORDS）→ 丢；整条名字当一个词查一次，含空格时要求每个词都是功能词",
+   "canonical 长度 ≤3 且全大写：只有 definitions_found 里有它的括号定义、含数字、或候选 document_frequency ≥ 5 时才留，否则丢（KG/GPT/AI/DKT/CGCNN 这类留，OF/IN/BY/NA/IT 丢）",
+   "canonical 命中 GENERIC_STRUCTURAL_TERMS（ENTITY/TASK/CONTEXT/CLAIM 这一类）且不是已定义缩写 → 丢；这一条拦的是『长度 ≥4 一律保留』放进来的那批",
+   "长度 ≥4 的实词一律保留（不受全大写影响，CGCNN/MEGNet/SciERC 都留）"
+  ],
+  "why": "抽取器建别名表时是 {canonical, *aliases}（src/yanhai/extraction.py 的 SchemaGuidedExtractor.__init__），canonical 也算一条别名；正则带 IGNORECASE，所以词表里一条 `OF` 会把每一句里的 `of` 都算成提及（第二轮实测主领域 25607 次，1–3 位全大写实体占提及 52.0%）。噪声坐在名字这一层，只过滤别名拦不到",
+  "note": "判定顺序：先常见英文功能词，再短全大写，最后通用/结构性词；一条同时符合两条时记前面那条，与别名那几道是同一个约定"
+ },
+ "rejected_canonical_total": 6,
+ "rejected_canonicals": [
+  {
+   "canonical": "NOT",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 16,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "OF",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 13,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "BY",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 6,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "IN",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 6,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "ON",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 6,
+   "entity_type": "METHOD"
+  },
+  {
+   "canonical": "HE",
+   "reason": "common_english_word",
+   "domain_id": "quantum-computing",
+   "document_frequency": 6,
+   "entity_type": "METHOD"
+  }
+ ],
+ "rejected_canonicals_note": "rejected_canonicals 只列每条被丢掉的 canonical（canonical / reason / domain_id / document_frequency / entity_type），最多列前 500 条；完整条数看 rejected_canonical_total，按原因分的计数看 rejected_canonical_reasons",
+ "rejected_canonical_reasons": {
+  "common_english_word": 6,
+  "generic_structural_term": 0,
+  "short_acronym_without_definition": 0
+ },
+ "generic_alias_candidates": {
+  "note": "第四轮的通用/结构性词判据只落在 canonical 这一层，别名沿用原来那几道，所以这一节**只报数、不当场丢**：这些是留在词表别名里、归一后命中 GENERIC_STRUCTURAL_TERMS 的写法。要不要下一轮一起清，要人定",
+  "total": 0,
+  "items": []
+ },
+ "kept_short_uppercase": {
+  "note": "canonical 判据与别名那几道过滤都跑完之后，还留在词表里的 1–3 位全大写名字。这一节留下的分两种：挖掘结果 definitions_found 里有括号定义的，或者候选 document_frequency ≥ 5（跨论文原样出现过）的，看 kept_by 这一项。含数字的写法（GPT-4、3DG）虽然也留，但不算『全大写』这一类、不进这一节。长度 ≥4 的全大写名字（CGCNN/MEGNet/SciERC）不受判据影响，也不进这一节",
+  "canonical_count": 39,
+  "canonical_by_definition": 17,
+  "canonical_by_document_frequency": 22,
+  "alias_count": 0,
+  "items": [
+   {
+    "canonical": "QEC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "IBM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "QC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "CZ",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "QFT",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "NP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "GHZ",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "CX",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "AI",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ZX",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "VQE",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "MPS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "QML",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "ZZ",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "QPU",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "RZ",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "ML",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "CC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "RL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "SU",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "PQC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "GKP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "RY",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "QED",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NX",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "BS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "CSS",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "HHL",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "EPR",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "HPC",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NN",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "AB",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "RAM",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "SDK",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "AP",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "RSA",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "SX",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   },
+   {
+    "canonical": "NSF",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "挖掘结果 definitions_found 里有它的括号定义",
+    "kept_by": "definition"
+   },
+   {
+    "canonical": "XY",
+    "entity_type": "METHOD",
+    "via": "canonical",
+    "kept_because": "候选 document_frequency ≥ 5（跨论文原样出现过，按真缩写留）",
+    "kept_by": "document_frequency"
+   }
+  ]
+ },
+ "type_mapping": {
+  "accepted_entity_types": [
+   "DATASET",
+   "DOMAIN",
+   "FINDING",
+   "LIMITATION",
+   "METHOD",
+   "METRIC",
+   "TASK"
+  ],
+  "fallback": "METHOD",
+  "rule": "候选的 guess_type 只保留抽取本体 entity_types 里有的 7 类（METHOD/TASK/DATASET/METRIC/FINDING/LIMITATION/DOMAIN）；guess_type 为空、缺失或不在其中（例如猜测出的 'OTHER'、'MODEL'）一律落到 METHOD。落 METHOD 的理由：抽不出类型的候选多半是缩写词、模型名、系统名，METHOD 是其中最多的一类；METHOD 在 relation_constraints 里也几乎不受限，不会因为类型对不上把整条关系判成 schema_type_mismatch。",
+  "observed": {
+   "METHOD": 65,
+   "DOMAIN": 13
+  }
+ },
+ "generated_by": "scripts/抽取/生成抽取词表.py",
+ "generated_on": "2026-10-17",
+ "schema_untouched": "data/knowledge/extraction_schema.json 未被本脚本修改；本文件是另写的一份，由 scripts/抽取/构建全文知识库.py --vocabulary 追加进抽取器。",
+ "concept_count": 78,
+ "alias_count": 46,
+ "duplicates_merged": 1,
+ "duplicates_merged_note": "挖掘脚本按 (来源类别, 归一键) 存候选，同一个词可能落成多条；这里按 canonical只留第一条（出现篇数多的在前），类型以先到的为准，别名并到一起",
+ "concepts": [
+  {
+   "canonical": "CNOT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NISQ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QEC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "IBM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QUANTUM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "quantum algorithm",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the quantum algorithm",
+    "Quantum Algorithm",
+    "Quantum Algorithms"
+   ]
+  },
+  {
+   "canonical": "QC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SWAP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CZ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QFT",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GHZ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "COMPUTING",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Machine learning",
+    "Machine Learning",
+    "the machine learning"
+   ]
+  },
+  {
+   "canonical": "grover algorithm",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Grover algorithm",
+    "the Grover algorithm"
+   ]
+  },
+  {
+   "canonical": "AI",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ZX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QAOA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "VQE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "shor algorithm",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Shor algorithm",
+    "problem. Shor algorithm",
+    "the Shor algorithm"
+   ]
+  },
+  {
+   "canonical": "MPS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QML",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ZZ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QPUs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "quantum machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Machine Learning",
+    "Quantum machine learning",
+    "the quantum machine learning"
+   ]
+  },
+  {
+   "canonical": "CONCLUSION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QPU",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "tensor network",
+   "entity_type": "METHOD",
+   "aliases": [
+    "Tensor network",
+    "the tensor network",
+    "Tensor Network",
+    "tensor of the network",
+    "tensor_network",
+    "Tensor Networks"
+   ]
+  },
+  {
+   "canonical": "RZ",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "ML",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "syndrome extraction",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the syndrome extraction",
+    "Syndrome Extraction",
+    "Syndrome extraction",
+    "Syndrome extraction Architecture",
+    "The syndrome extraction"
+   ]
+  },
+  {
+   "canonical": "MHz",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "FTQC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "quantum approximate optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the quantum approximate optimization algorithm",
+    "Quantum Approximate Optimization",
+    "Quantum Approximate Optimization Algorithm",
+    "the quantum approximate optimization",
+    "Quantum approximate optimization",
+    "Quantum approximate optimization algorithm"
+   ]
+  },
+  {
+   "canonical": "binary representation",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "the binary representation"
+   ]
+  },
+  {
+   "canonical": "SU",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PQC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "quantum computing",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Computing"
+   ]
+  },
+  {
+   "canonical": "CODE",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "classical machine learning",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "CLASSICAL MACHINE LEARNING",
+    "Classical Machine Learning",
+    "models. Classical machine learning"
+   ]
+  },
+  {
+   "canonical": "QASM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GHz",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "GKP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RY",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QUBO",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "QED",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "alice and bob",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Alice and Bob"
+   ]
+  },
+  {
+   "canonical": "NX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "POVM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "BS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CSS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HHL",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "EPR",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "VQAs",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "HPC",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NN",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "AB",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RAM",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "noise model",
+   "entity_type": "METHOD",
+   "aliases": [
+    "the noise model",
+    "Noise model"
+   ]
+  },
+  {
+   "canonical": "SDK",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "monte carlo",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Monte Carlo"
+   ]
+  },
+  {
+   "canonical": "see fig",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "See Fig"
+   ]
+  },
+  {
+   "canonical": "AP",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "RSA",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "SX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "NSF",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "TION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "XY",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "CONCLUSIONS",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "DISCUSSION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "INTRODUCTION",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "PauliX",
+   "entity_type": "METHOD",
+   "aliases": []
+  },
+  {
+   "canonical": "noisy intermediate scale quantum",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Noisy Intermediate Scale Quantum",
+    "Noisy Intermediate-Scale Quantum",
+    "Noisy-intermediate-scale Quantum"
+   ]
+  },
+  {
+   "canonical": "quadratic unconstrained binary optimization",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quadratic Unconstrained Binary Optimization"
+   ]
+  },
+  {
+   "canonical": "quantum fourier",
+   "entity_type": "DOMAIN",
+   "aliases": [
+    "Quantum Fourier"
+   ]
+  }
+ ]
+}

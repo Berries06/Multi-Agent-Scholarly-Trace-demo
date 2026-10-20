@@ -1,0 +1,66 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+.coverage.*
+.venv/
+.venv-product/
+.venv-win/
+.venv-local/
+.venv-lab/
+.mlflow/
+.hf-lab-cache/
+node_modules/
+frontend/dist/
+.env
+*.env
+!*.env.example
+!deploy/*.env.example
+secret/*
+!secret/*.example
+outputs/*.json
+outputs/*.db
+outputs/*.log
+outputs/*.jsonl
+outputs/*.pid
+outputs/*.csv
+outputs/runtime/
+papers/**/*.pdf
+tmp/
+.tmp/
+.runtime/
+dist/
+outputs/experiments/
+outputs/experiment-dashboard.html
+.aris/
+outputs/domains/
+build/
+.codex/
+
+# runtime secrets & release artifacts (re-added after upstream merge)
+release/
+*.sqlite3
+outputs/runtime/
+
+# 给外部 AI 的上下文包（生成物，不入库；由 scripts/协作/生成上下文包.py 产出）
+上下文包/
+
+# Office 临时锁文件（打开 docx/pptx 时生成，勿入库）
+~$*
+
+# 演示材料校验中间产物（由演示稿校验流程生成，非交付物）
+.codex-finalizer/
+
+# 50 条盲标的程序化构造 key：ANNOTATION_PROTOCOL.md 要求标注者不得查看，
+# 入库即对能 clone 仓库的成员揭盲。本地保留，审计脚本照常可用。
+data/evaluation/human_annotation/human_annotation_internal_key_*.json
+
+# 配图联络表：供批量审阅配图用的中间件，可由 scripts/create_figure_contact_sheet.py 重新生成
+docs/申报材料/**/contact_sheet_*.png
+
+# ACL Anthology 全量题录（12 MB，可按需重新下载：scripts/语料/收集开放全文.py --refresh-bib）
+data/vertical_kb/search_cache/anthology.bib.gz
+
+# Europe PMC / arXiv 全文 XML（正文，只落 papers/<领域>/，不入库）
+papers/**/*.xml

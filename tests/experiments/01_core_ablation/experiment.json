@@ -1,0 +1,11 @@
+{
+  "slug": "01_core_ablation",
+  "title": "Track A 三智能体决策消融对比",
+  "purpose": "在同一组 24 条冻结候选命题上比较普通规则、单次判定、同质投票和提出—批判—裁判。",
+  "mode": "decision_ablation",
+  "evaluation_type": "synthetic_proxy",
+  "claim_ceiling": "仅支持固定 24 案例候选池上的确定性机制相对行为，不支持真实科研性能主张。",
+  "variants": ["rule_program", "single_pass", "homogeneous_vote", "evidence_triad"],
+  "repetitions": 2,
+  "primary_metrics": ["接受精确率", "Gold 召回", "不支持命题接受率", "证据绑定护栏（批处理耗时不用于变体间比较）"]
+}

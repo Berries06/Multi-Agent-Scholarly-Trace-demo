@@ -1,0 +1,16 @@
+services:
+  yanhai:
+    build:
+      context: .
+    ports:
+      - "127.0.0.1:8766:8766"
+    environment:
+      YANHAI_COOKIE_SECURE: "0"
+      YANHAI_ONLINE_TIMEOUT_SECONDS: "5"
+      YANHAI_ONLINE_RETRIES: "1"
+    volumes:
+      - ./outputs:/app/outputs
+      - ./secret:/app/secret:ro
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true

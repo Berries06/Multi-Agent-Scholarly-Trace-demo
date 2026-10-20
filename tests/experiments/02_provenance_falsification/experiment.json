@@ -1,0 +1,12 @@
+{
+  "slug": "02_provenance_falsification",
+  "title": "Track A 证据约束与错误类型压力测试",
+  "purpose": "聚焦缺失证据、未知证据、元数据越权、语义错配、过度声明和方向错误，比较单次判定与异质三智能体裁决。",
+  "mode": "decision_ablation",
+  "evaluation_type": "synthetic_proxy",
+  "claim_ceiling": "仅支持 11 个编写失败案例上的护栏回归，不支持真实错误率主张。",
+  "variants": ["single_pass", "evidence_triad"],
+  "error_types": ["missing_evidence", "unknown_evidence", "metadata_only_evidence", "valid_id_semantic_mismatch", "overclaim", "direction_error", "direction_and_type_error"],
+  "repetitions": 3,
+  "primary_metrics": ["错误接收数", "不支持命题接受率", "决策准确率", "证据绑定护栏"]
+}

@@ -1,0 +1,10 @@
+{
+  "modelVersion": "5.0.0",
+  "name": "yanhai-harmony",
+  "version": "3.1.0",
+  "description": "研海寻踪鸿蒙客户端（Web 壳，加载同一套产品界面）",
+  "main": "",
+  "author": "",
+  "license": "",
+  "dependencies": {}
+}

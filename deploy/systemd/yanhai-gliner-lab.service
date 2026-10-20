@@ -1,0 +1,45 @@
+[Unit]
+Description=Yanhai GLiNER GPU entity experiment lab
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=yanhai-gliner
+Group=yanhai-gliner
+WorkingDirectory=/opt/yanhai-gliner/current
+EnvironmentFile=/etc/yanhai-gliner-lab.env
+Environment=HOME=/var/lib/yanhai-gliner
+Environment=HF_HOME=/var/lib/yanhai-gliner/huggingface
+Environment=CUDA_VISIBLE_DEVICES=0
+Environment=OMP_NUM_THREADS=8
+Environment=MKL_NUM_THREADS=8
+Environment=OPENBLAS_NUM_THREADS=8
+Environment=TOKENIZERS_PARALLELISM=false
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONUNBUFFERED=1
+Environment=STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+ExecStart=/opt/yanhai-gliner/venv/bin/python -m streamlit run /opt/yanhai-gliner/current/gliner_entity_lab.py --global.developmentMode false --server.address 127.0.0.1 --server.port 8502 --server.baseUrlPath AgentDemo/lab/gliner
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=900
+TimeoutStopSec=30
+
+StateDirectory=yanhai-gliner
+ReadWritePaths=/var/lib/yanhai-gliner
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryMax=28G
+TasksMax=256
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

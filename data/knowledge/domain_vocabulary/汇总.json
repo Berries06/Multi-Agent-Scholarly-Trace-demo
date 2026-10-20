@@ -1,0 +1,107 @@
+{
+  "status": "candidate_pending_human_review",
+  "status_note": "机器统计出来的候选概念词表总表，等人签核；不是核心知识点清单。",
+  "generated_at": "2026-10-17",
+  "generated_by": "scripts/语料/挖掘领域概念.py",
+  "parser_identity": {
+    "pdf": "pypdf 6.17.0"
+  },
+  "domains": {
+    "scientific-ie-kg": {
+      "domain_name": "科学文献信息抽取与知识图谱构建",
+      "manifest": "data/vertical_kb/manifest.json",
+      "papers_with_local_fulltext": 150,
+      "papers_parsed": 150,
+      "papers_skipped_xml": 0,
+      "records_without_local_file": 22,
+      "parse_failures": 0,
+      "candidates_total": 7267,
+      "document_frequency_ge_2": 456,
+      "document_frequency_ge_3": 165,
+      "document_frequency_eq_1": 6811,
+      "single_paper_but_repeated": 831,
+      "per_paper_candidates_df_ge_2": 3.04,
+      "output": "data/knowledge/domain_vocabulary/scientific-ie-kg_候选概念.json"
+    },
+    "educational-knowledge-tracing": {
+      "domain_name": "教育知识追踪与个性化学习",
+      "manifest": "data/vertical_kb/domains/educational-knowledge-tracing/manifest.json",
+      "papers_with_local_fulltext": 100,
+      "papers_parsed": 100,
+      "papers_skipped_xml": 0,
+      "records_without_local_file": 30,
+      "parse_failures": 0,
+      "candidates_total": 6947,
+      "document_frequency_ge_2": 483,
+      "document_frequency_ge_3": 189,
+      "document_frequency_eq_1": 6464,
+      "single_paper_but_repeated": 484,
+      "per_paper_candidates_df_ge_2": 4.83,
+      "output": "data/knowledge/domain_vocabulary/educational-knowledge-tracing_候选概念.json"
+    },
+    "materials-discovery-gnn": {
+      "domain_name": "材料发现与图神经网络",
+      "manifest": "data/vertical_kb/domains/materials-discovery-gnn/manifest.json",
+      "papers_with_local_fulltext": 100,
+      "papers_parsed": 100,
+      "papers_skipped_xml": 0,
+      "records_without_local_file": 29,
+      "parse_failures": 0,
+      "candidates_total": 12366,
+      "document_frequency_ge_2": 1073,
+      "document_frequency_ge_3": 469,
+      "document_frequency_eq_1": 11293,
+      "single_paper_but_repeated": 796,
+      "per_paper_candidates_df_ge_2": 10.73,
+      "output": "data/knowledge/domain_vocabulary/materials-discovery-gnn_候选概念.json"
+    },
+    "quantum-computing": {
+      "domain_name": "量子计算与量子信息处理",
+      "manifest": "data/vertical_kb/domains/quantum-computing/manifest.json",
+      "papers_with_local_fulltext": 80,
+      "papers_parsed": 80,
+      "papers_skipped_xml": 0,
+      "records_without_local_file": 100,
+      "parse_failures": 0,
+      "candidates_total": 7493,
+      "document_frequency_ge_2": 677,
+      "document_frequency_ge_3": 266,
+      "document_frequency_eq_1": 6816,
+      "single_paper_but_repeated": 552,
+      "per_paper_candidates_df_ge_2": 8.46,
+      "output": "data/knowledge/domain_vocabulary/quantum-computing_候选概念.json"
+    },
+    "single-cell-transcriptomics": {
+      "domain_name": "单细胞转录组数据分析",
+      "manifest": "data/vertical_kb/domains/single-cell-transcriptomics/manifest.json",
+      "papers_with_local_fulltext": 80,
+      "papers_parsed": 80,
+      "papers_skipped_xml": 0,
+      "records_without_local_file": 100,
+      "parse_failures": 0,
+      "candidates_total": 13362,
+      "document_frequency_ge_2": 1826,
+      "document_frequency_ge_3": 863,
+      "document_frequency_eq_1": 11536,
+      "single_paper_but_repeated": 892,
+      "per_paper_candidates_df_ge_2": 22.82,
+      "output": "data/knowledge/domain_vocabulary/single-cell-transcriptomics_候选概念.json"
+    }
+  },
+  "totals": {
+    "papers_parsed": 510,
+    "papers_skipped_xml": 0,
+    "candidates_total": 47435,
+    "document_frequency_ge_2": 4515,
+    "document_frequency_ge_3": 1952,
+    "document_frequency_eq_1": 42920,
+    "per_paper_candidates_df_ge_2": 8.85
+  },
+  "known_entity_hits": {
+    "scientific-ie-kg": 150,
+    "educational-knowledge-tracing": 100,
+    "materials-discovery-gnn": 100,
+    "quantum-computing": 80,
+    "single-cell-transcriptomics": 80
+  }
+}

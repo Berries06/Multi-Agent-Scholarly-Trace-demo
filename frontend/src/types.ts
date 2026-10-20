@@ -1,0 +1,717 @@
+export interface Health {
+  status: string
+  service: string
+  domain_count: number
+  profile_count: number
+  core_agents: number
+  system_agents: number
+}
+
+// —— LLM 供应商配置 ——
+
+export interface ProviderInfo {
+  id: string
+  label: string
+  default_model: string
+  models: string[]
+  requires_api_key: boolean
+  protocol: string
+  available?: boolean
+  access_mode?: string
+}
+
+export type ProviderOption = ProviderInfo
+
+export interface LlmConfig {
+  provider: string
+  model?: string
+  api_key?: string
+  timeout_seconds?: number
+}
+
+export interface ProviderTestResult {
+  ok: boolean
+  provider: string
+  model: string
+  message?: string
+  duration_ms?: number
+  usage?: Record<string, number>
+}
+
+export interface UserAccount {
+  user_id: string
+  email: string
+  nickname: string
+  status: string
+  created_at: string
+  last_login_at: string | null
+  profile_version: number
+  profile: LearnerProfile
+}
+
+export interface AuthState {
+  authenticated: boolean
+  user: UserAccount | null
+}
+
+export interface LearnerProfile {
+  profile_id: string
+  name: string
+  persona: string
+  education: string
+  role: string
+  goal: string
+  interests: string[]
+  knowledge_scores: Record<string, number>
+  preferred_style: string
+  expected_difficulty: number
+  synthetic: boolean
+  profile_kind?: 'personal' | 'demo'
+  required_concepts?: string[]
+}
+
+export interface Domain {
+  domain_id: string
+  domain_name: string
+  paper_count: number
+  evidence_paper_count: number
+  metadata_only_paper_count: number
+  query_example?: string
+  description?: string
+  /** 用户自己起的研究领域，没有公共语料。 */
+  is_custom?: boolean
+  /** 有没有可检索的公共语料；自定义领域恒为 false。 */
+  corpus_ready?: boolean
+  [key: string]: unknown
+}
+
+export interface ExperimentProtocol {
+  slug: string
+  title: string
+  purpose: string
+  mode: string
+  evaluation_type: string
+  claim_ceiling: string
+  primary_metrics: string[]
+  config_path: string
+}
+
+export interface ExperimentRun {
+  run_id: string
+  artifact_path: string
+  experiment: string
+  title: string
+  generated_at: string | null
+  status: string
+  evaluation_type: string
+  claim_ceiling: string
+  git_head: string | null
+  git_dirty: boolean | null
+  summary: Array<Record<string, unknown>>
+  error?: string
+}
+
+export interface ExperimentLedger {
+  schema_version: string
+  protocol_count: number
+  run_count: number
+  run_command: string
+  mlflow_url: string
+  protocols: ExperimentProtocol[]
+  runs: ExperimentRun[]
+}
+
+export interface AgentTraceStep {
+  agent: string
+  role: string
+  status: string
+  summary: string
+  duration_ms?: number
+  details?: Record<string, unknown>
+}
+
+export type ResearchProgressState =
+  | 'pending'
+  | 'running'
+  | 'completed'
+  | 'retrying'
+  | 'insufficient'
+  | 'degraded'
+  | 'failed'
+
+export interface ResearchProgressDetail {
+  kind: 'query' | 'question' | 'evidence' | 'claim' | 'review' | 'metric' | string
+  label: string
+  meta?: string
+  status?: string
+  reference?: string
+}
+
+export interface ResearchProgressEvent {
+  sequence: number
+  phase: string
+  state: ResearchProgressState
+  percent: number
+  title: string
+  message: string
+  content_origin?: 'system' | 'model' | 'retrieval'
+  details?: ResearchProgressDetail[]
+  elapsed_ms?: number
+  metrics?: Record<string, unknown>
+}
+
+export interface Diagnosis {
+  readiness_score: number
+  blind_spots: string[]
+  strengths: string[]
+  target_difficulty: number
+  resource_match_score: number
+  difficulty_curve: Array<{ stage: string; difficulty: number }>
+  learning_path: string[]
+}
+
+export interface Claim {
+  claim_id: string
+  source: string
+  relation: string
+  target: string
+  relation_type: string
+  status: string
+  judge_score: number
+  criticisms: string[]
+  evidence_ids: string[]
+}
+
+export interface Resources {
+  briefing: {
+    title: string
+    level: number
+    strategy: string
+    sections: unknown[]
+    citations: string[]
+  }
+  practical_guide: { title: string; estimated_minutes: number; steps: unknown[] }
+  quiz: { title: string; items: unknown[] }
+  blue_ocean: { hypothesis: string; caveat: string; evidence_ids: string[] }
+  covered_concepts: string[]
+}
+
+export interface RunResult {
+  run_id?: string
+  profile: LearnerProfile
+  diagnosis: Diagnosis
+  agent_trace: AgentTraceStep[]
+  specialist_agent_trace: AgentTraceStep[]
+  claims: Claim[]
+  resources: Resources
+  metrics: {
+    hallucination_proxy_rate: number
+    adaptation_accuracy: number
+    knowledge_coverage_rate: number
+    accepted_claims: number
+    rejected_claims: number
+  }
+  report: {
+    blind_spots: string[]
+    difficulty_curve: unknown[]
+    learning_path: string[]
+    resource_match_score: number
+  }
+  evidence_details?: Record<string, EvidenceSpan[]>
+  /** 这次运行用了谁的证据：自己导入的论文几篇、有没有算公共语料。 */
+  evidence_scope?: {
+    project_paper_count: number
+    project_papers: Array<{ paper_id: string; title: string }>
+    /** 项目库里一共有多少篇（可能远多于这次分析的篇数）。 */
+    project_library_paper_count?: number
+    /** 这次怎么挑的：query = 按研究问题，newest = 最近加入，all = 全库都进来了。 */
+    project_selection?: string
+    corpus_included: boolean
+    corpus_paper_count: number
+  }
+  ablation?: { variants: unknown[] }
+  provider_run?: {
+    provider?: string
+    provider_label?: string
+    model?: string
+    access_mode?: string
+    mode?: string
+    source_mode?: string
+    usage?: { input_tokens: number; output_tokens: number; total_tokens: number }
+    warnings?: string[]
+    api_key_persisted?: boolean
+    degraded?: boolean
+    evidence_status?: string
+    calls?: Array<{
+      role: string
+      duration_ms: number
+      finish_reason?: string | null
+      attempts?: number
+      usage: { input_tokens: number; output_tokens: number; total_tokens: number }
+    }>
+    [key: string]: unknown
+  }
+  decision_layer?: {
+    mode: string
+    provider: Record<string, unknown> | null
+    usage: Record<string, number>
+  }
+  graph_insights?: {
+    timeline?: Array<Record<string, unknown>>
+    research_ideas?: Array<Record<string, unknown>>
+    [key: string]: unknown
+  }
+  graph_retrieval?: Record<string, unknown>
+  persistence?: {
+    saved?: boolean
+    research_session_id?: string
+    ingestion_id?: string
+    source_saved?: boolean
+  }
+  observability?: {
+    duration_ms: number
+    completed_at: number
+  }
+  feedback?: { decision?: string; adjustment?: number }
+}
+
+// —— 实验台（粘贴论文）返回结构 ——
+
+export interface EntityMention {
+  mention_id: string
+  entity_id: string
+  surface_form: string
+  evidence_id: string
+  char_start: number
+  char_end: number
+}
+
+export interface ExtractedEntity {
+  entity_id: string
+  canonical_name: string
+  entity_type: string
+  aliases: string[]
+  mentions: EntityMention[]
+  confidence: number
+}
+
+export interface ExtractedRelation {
+  relation_id: string
+  source_id: string
+  target_id: string
+  relation_type: string
+  evidence_ids: string[]
+  confidence: number
+  status: string
+  criticisms: string[]
+  extraction_method: string
+}
+
+export interface EvidenceSpan {
+  evidence_id: string
+  paper_id: string
+  section_id: string
+  sentence_index: number
+  text: string
+  char_start: number
+  char_end: number
+}
+
+export interface ExtractionResult {
+  schema_version: string
+  papers: unknown[]
+  entities: ExtractedEntity[]
+  relations: ExtractedRelation[]
+  evidence: EvidenceSpan[]
+  communities: unknown[]
+  audit: Record<string, unknown>
+  graph: { nodes: unknown[]; edges: unknown[] }
+}
+
+export interface DecisionClaim {
+  claim_id: string
+  source: string
+  relation: string
+  target: string
+  relation_type: string
+  base_confidence: number
+  source_type: string
+  target_type: string
+  evidence_ids: string[]
+  criticisms: string[]
+  proposal_reason: string
+  judge_reason: string
+  judge_score: number
+  status: string
+}
+
+export interface IngestSummary {
+  entity_count: number
+  candidate_relation_count: number
+  claim_count: number
+  accepted_count: number
+  rejected_count: number
+  needs_review_count: number
+  accepted_without_evidence_count: number
+  /** 这次用的抽取器：`schema-guided-pattern`，或论文不在内置词表里时的 `generic-pattern`。 */
+  extractor?: string
+}
+
+export interface IngestResult {
+  fingerprint: {
+    paper_id: string
+    title: string
+    text_char_count: number
+    accept_threshold: number
+    profile_id: string
+    schema_version: string
+  }
+  document: { paper_id: string; title: string; sections: Record<string, string> }
+  extraction: ExtractionResult
+  diagnosis: Diagnosis
+  proposed_claims: DecisionClaim[]
+  critiqued_claims: DecisionClaim[]
+  adjudicated_claims: DecisionClaim[]
+  agent_trace: AgentTraceStep[]
+  specialist_agent_trace: AgentTraceStep[]
+  resources: Resources
+  summary: IngestSummary
+  /** 落库结果。`project_candidate_count` 是**真正写进课题**的候选关系条数，
+   *  与 `summary.candidate_relation_count`（抽取出的候选）不是一回事：
+   *  证据不在这篇论文里的候选会被丢掉，所以后者通常更大。 */
+  persistence?: {
+    saved?: boolean
+    ingestion_id?: string
+    source_saved?: boolean
+    project_id?: string | null
+    project_candidate_count?: number
+  }
+  decision_layer?: {
+    mode: string
+    provider: Record<string, unknown> | null
+    usage: Record<string, number>
+  }
+}
+
+// —— 证据知识图谱（/api/extracted-graph）——
+
+export interface GraphNode {
+  id: string
+  label: string
+  kind: string
+  confidence?: number
+  source_url?: string
+  paper_id?: string
+  section_id?: string
+  char_start?: number
+  char_end?: number
+}
+
+export interface GraphEdge {
+  id: string
+  source: string
+  target: string
+  label: string
+  status?: string
+  confidence?: number
+  evidence_ids?: string[]
+}
+
+export interface GraphData {
+  nodes: GraphNode[]
+  edges: GraphEdge[]
+}
+
+// —— 证据图谱工作区（/api/atlas）——
+
+export interface AtlasDomainSummary {
+  domain_id: string
+  domain_name: string
+  description: string
+  query_example: string
+  paper_count: number
+  evidence_paper_count: number
+  metadata_only_count: number
+  entity_count: number
+  relation_count: number
+}
+
+export interface AtlasPaper {
+  paper_id: string
+  title: string
+  authors: string[]
+  year: number
+  venue: string
+  doi: string
+  source_url: string
+  citation_count: number
+  evidence_tier: 'evidence_card' | 'metadata_only'
+  summary: string
+  concepts: string[]
+}
+
+export interface AtlasEntity {
+  entity_id: string
+  canonical_name: string
+  entity_type: string
+  confidence: number
+  mention_count: number
+  aliases: string[]
+}
+
+export interface AtlasRelation {
+  relation_id: string
+  source_id: string
+  target_id: string
+  source_name: string
+  target_name: string
+  source_type: string
+  target_type: string
+  relation_type: string
+  confidence: number
+  status: string
+  evidence_ids: string[]
+}
+
+export interface AtlasEvidence {
+  evidence_id: string
+  paper_id: string
+  section_id: string
+  text: string
+  char_start: number
+  char_end: number
+}
+
+export interface AtlasDomainData {
+  domain_id: string
+  domain_name: string
+  description: string
+  query_example: string
+  papers: AtlasPaper[]
+  entities: AtlasEntity[]
+  relations: AtlasRelation[]
+  evidence: AtlasEvidence[]
+  paper_entities: Record<string, string[]>
+  cards: Record<string, string>
+}
+
+// —— 项目与个人图谱（SCHEMA_VERSION 4）——
+
+export interface Project {
+  project_id: string
+  name: string
+  description: string
+  archived_at?: string | null
+  created_at: string
+  updated_at: string
+  paper_count?: number
+  relation_count?: number
+  decided_count?: number
+  included_count?: number
+  lead_count?: number
+}
+
+/** 用户对一条关系的审阅决定。与 machine_status 永远分开，不合并。 */
+export type RelationDecision = 'include' | 'defer' | 'exclude'
+
+export interface ProjectRelation {
+  relation_id: string
+  source_name: string
+  target_name: string
+  relation_type: string
+  source_type: string
+  target_type: string
+  machine_status: string
+  confidence: number
+  paper_id: string
+  decision: RelationDecision | null
+  decided_at: string | null
+  note: string | null
+  evidence_count: number
+}
+
+export interface ProjectEvidenceRef {
+  evidence_id: string
+  paper_id: string
+  section_id: string
+  char_start: number
+  char_end: number
+  /** 未授权保存原文时为 null：只存引用，正文回语料里现取。 */
+  text: string | null
+}
+
+export interface ProjectGraphNode {
+  id: string
+  label: string
+  kind: string
+  relations: number
+}
+
+export interface ProjectGraphCounts {
+  relations: number
+  included: number
+  defer: number
+  exclude: number
+  undecided: number
+  nodes: number
+  edges: number
+}
+
+export interface ProjectGraph {
+  project: Project
+  nodes: ProjectGraphNode[]
+  edges: ProjectRelation[]
+  evidence: Record<string, ProjectEvidenceRef[]>
+  counts: ProjectGraphCounts
+}
+
+export interface ProjectGraphVersion {
+  version_id: string
+  version: number
+  counts: ProjectGraphCounts
+  created_at: string
+}
+
+export interface ProjectPaper {
+  paper_id: string
+  title: string
+  source_kind: string
+  ingestion_id: string | null
+  added_at: string
+}
+
+export interface IngestionSummaryRow {
+  ingestion_id: string
+  project_id: string | null
+  paper_id: string
+  title: string
+  source_kind: string
+  source_saved: boolean
+  created_at: string
+}
+
+// —— 其余后端能力的返回结构（2026-10-18 接入时补的）——
+
+export interface ReadinessReport {
+  status: string
+  checks: Record<string, boolean>
+}
+
+export interface AuthStatus {
+  registration_open: boolean
+  registration_mode: string
+  has_users: boolean
+}
+
+export interface SystemAccess {
+  lan_enabled: boolean
+  bind_host: string
+  port: number
+  addresses: string[]
+  install_hint: string
+  /** 服务端真实的导入上限；界面按它显示与拦截，不在前端另写一份数字。 */
+  upload?: {
+    max_pdf_bytes: number
+    max_batch_papers: number
+  }
+}
+
+export interface SkillEntry {
+  id: string
+  name: string
+  description: string
+  endpoints: string
+}
+
+export interface DiagnoseReport {
+  diagnosis: Record<string, unknown>
+  quality_gate: Record<string, unknown>
+}
+
+export interface HumanizeReport {
+  original: string
+  revised: string
+  intensity: string
+  before_score: number
+  after_score: number
+  improvement: number
+}
+
+export interface ExtractedGraphPayload {
+  schema_version?: string
+  domain?: Record<string, unknown>
+  papers?: Array<Record<string, unknown>>
+  entities?: Array<Record<string, unknown>>
+  relations?: Array<Record<string, unknown>>
+  evidence?: Array<Record<string, unknown>>
+  graph?: GraphData
+  audit?: Record<string, unknown>
+}
+
+export interface GraphInsightPayload {
+  domain: Record<string, unknown>
+  timeline: Array<Record<string, unknown>>
+  research_ideas: Array<Record<string, unknown>>
+  graph_context?: Record<string, unknown>
+  warnings?: string[]
+}
+
+export interface OnlineRagPayload {
+  query?: string
+  results?: Array<Record<string, unknown>>
+  papers?: Array<Record<string, unknown>>
+  answer?: string
+  mode?: string
+  note?: string
+  [key: string]: unknown
+}
+
+// —— AI 组会（提出者 / 批判者 / 裁判 的对话） ——
+
+export interface PanelMessage {
+  seq: number
+  agent: string
+  kind: string
+  text: string
+  relation_id: string
+  status: string
+  confidence: number
+  evidence_id: string
+  paper_id: string
+  section_id: string
+  char_start: number
+  char_end: number
+  evidence_text: string
+  checks: string[]
+  score: Record<string, number>
+  truncated: boolean
+}
+
+export interface PanelVerdict {
+  relation_id: string
+  status: string
+  verdict: string
+  judge_score: number
+  source: string
+  relation_type: string
+  target: string
+  confidence: number
+  evidence_count: number
+  paper_id: string
+}
+
+export interface PanelCounts {
+  processed: number
+  remaining: number
+  accepted: number
+  needs_review: number
+  rejected: number
+}
+
+export interface PanelResult {
+  mode: string
+  mode_label: string
+  messages: PanelMessage[]
+  verdicts: PanelVerdict[]
+  counts: PanelCounts
+}

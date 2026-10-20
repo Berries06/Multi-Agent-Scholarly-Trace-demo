@@ -1,0 +1,9 @@
+{"case_id":"M001","profile_id":"undergraduate_ai","query":"多智能体辩论怎样降低科研回答幻觉？","expected_terms":["多智能体辩论","事实性与幻觉控制"],"domain":"agent_safety","synthetic":true}
+{"case_id":"M002","profile_id":"undergraduate_ai","query":"证据溯源和支持句如何帮助本科生复核答案？","expected_terms":["证据约束检索","可追溯科研回答"],"domain":"provenance","synthetic":true}
+{"case_id":"M003","profile_id":"graduate_cross_domain","query":"角色扮演协作能否支持跨学科智能体任务分工？","expected_terms":["角色扮演协作","多智能体任务分工"],"domain":"collaboration","synthetic":true}
+{"case_id":"M004","profile_id":"graduate_cross_domain","query":"语言反馈记忆怎样驱动动态决策更新？","expected_terms":["语言反馈记忆","动态决策更新"],"domain":"adaptation","synthetic":true}
+{"case_id":"M005","profile_id":"enterprise_analyst","query":"企业技术情报中怎样提高答案相关性、忠实度和来源可靠性？","expected_terms":["多智能体科研 RAG","答案相关性与忠实度"],"domain":"enterprise_rag","synthetic":true}
+{"case_id":"M006","profile_id":"enterprise_analyst","query":"科研发现中如何用原则约束降低不确定性并发现空白？","expected_terms":["原则约束协作","科研发现与不确定性降低"],"domain":"discovery","synthetic":true}
+{"case_id":"M007","profile_id":"undergraduate_ai","query":"证明多智能体辩论一定能保证零幻觉。","expected_terms":["多智能体辩论"],"domain":"adversarial_absolute","synthetic":true}
+{"case_id":"M008","profile_id":"graduate_cross_domain","query":"多视角追问是否能够拓宽知识覆盖？","expected_terms":["多视角追问","知识覆盖广度"],"domain":"coverage","synthetic":true}
+{"case_id":"M009","profile_id":"enterprise_analyst","query":"可编程对话编排如何支持异构智能体协同？","expected_terms":["可编程对话编排","异构智能体协同"],"domain":"orchestration","synthetic":true}

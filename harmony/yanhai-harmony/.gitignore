@@ -1,0 +1,9 @@
+# 本地环境与构建产物，不进仓库
+/local.properties
+/.hvigor/
+/.idea/
+/entry/.preview/
+/entry/build/
+/build/
+/oh_modules/
+/entry/oh_modules/

@@ -1,0 +1,945 @@
+from __future__ import annotations
+
+import json
+import time
+import uuid
+from pathlib import Path
+from typing import Any, Callable, Literal
+
+from .agents import (
+    CriticAgent,
+    DiagnosisAgent,
+    IntentPerceptionAgent,
+    JudgeAgent,
+    PaperKnowledgeExtractionAgent,
+    ProposerAgent,
+    ResourceAgent,
+    RetrievalAgent,
+)
+from .ablation import DecisionAblation
+from .discovery import GraphInsightEngine
+from .graph_rag import GraphRAGLiteEngine
+from .knowledge import KnowledgeBase
+from .live_research import LiveResearchService
+from .llm_decision import LLMCritic, LLMJudge, UsageAccumulator
+from .models import AgentTrace, LearnerProfile
+from .providers import ProviderConfig, ProviderError, create_provider
+
+
+DEFAULT_QUERY = "如何从科学论文中抽取可追溯知识图谱，并利用图谱理解技术脉络和生成研究想法？"
+
+# 裁决层（批判者 / 裁判）的实现方式。默认 auto，保持原来的二选一：
+#   auto   —— 非 mock provider 时两个角色都用模型，否则两个都用规则版；
+#   rules  —— 两个角色都用规则版；
+#   llm    —— 两个角色都用模型版（需要非 mock provider）；
+#   hybrid —— 批判者用模型、裁判用规则版（需要非 mock provider）。
+# 只有显式传 decision_mode 才会偏离 auto，所以不传参数的调用方行为一字不变。
+DecisionMode = Literal["auto", "rules", "llm", "hybrid"]
+
+
+class ScholarlyTraceOrchestrator:
+    def __init__(self, project_root: Path | None = None) -> None:
+        self.project_root = project_root or Path(__file__).resolve().parents[2]
+        knowledge_root = self.project_root / "data" / "knowledge"
+        self.kb = KnowledgeBase(knowledge_root)
+        self.default_domain_id = self.kb.default_domain_id
+        self.kbs: dict[str, KnowledgeBase] = {
+            self.default_domain_id: self.kb,
+        }
+        self.graph_rag_engines: dict[str, GraphRAGLiteEngine] = {}
+        self.discovery_engines: dict[str, GraphInsightEngine] = {}
+        profile_path = self.project_root / "data" / "profiles" / "profiles.json"
+        raw_profiles = json.loads(profile_path.read_text(encoding="utf-8"))
+        self.profiles = {
+            profile.profile_id: profile
+            for profile in (LearnerProfile.from_dict(item) for item in raw_profiles)
+        }
+        self.diagnoser = DiagnosisAgent()
+        self.intent_agent = IntentPerceptionAgent()
+        self.extraction_agent = PaperKnowledgeExtractionAgent()
+        self.retriever = RetrievalAgent()
+        self.proposer = ProposerAgent()
+        self.critic = CriticAgent()
+        self.judge = JudgeAgent()
+        self.resource_agent = ResourceAgent()
+        self.discovery = GraphInsightEngine(self.kb)
+        self.graph_rag = GraphRAGLiteEngine(self.kb)
+        self.graph_rag_engines[self.default_domain_id] = self.graph_rag
+        self.discovery_engines[self.default_domain_id] = self.discovery
+        self.ablation = DecisionAblation(self.project_root, self.kb)
+        # 自定义研究领域：内置五个都绑着仓库里的样本文献，用户真实的研究方向往往
+        # 不在里面。这里存"领域叫什么"（存库的那份是 custom_domains 表），
+        # 知识库按零语料建，语料相关的面板会如实说没有。
+        self.custom_domains: dict[str, dict[str, Any]] = {}
+        self.custom_domain_loader: Callable[[str], dict[str, Any] | None] | None = None
+
+    def register_custom_domain(self, definition: dict[str, Any]) -> dict[str, Any]:
+        """登记一个自定义领域，返回给界面用的那一份描述。"""
+        domain_id = str(definition["domain_id"])
+        record = {
+            "domain_id": domain_id,
+            "domain_name": str(definition.get("domain_name") or domain_id),
+            "description": str(definition.get("description") or ""),
+            "version": "custom",
+            "corpus_type": "custom",
+            "paper_count": 0,
+            "evidence_paper_count": 0,
+            "metadata_only_paper_count": 0,
+            "is_default": False,
+            "is_custom": True,
+            "corpus_ready": False,
+            "created_at": definition.get("created_at"),
+        }
+        self.custom_domains[domain_id] = record
+        return record
+
+    def _lookup_custom_domain(self, domain_id: str) -> dict[str, Any] | None:
+        """自定义领域第一次被用到时才去库里查一次，之后走内存缓存。
+
+        这样每个拿 domain_id 的接口都不用各自去认识"自定义领域"这件事——
+        它们照旧调 `_runtime()`，解析在这里发生。
+        """
+        found = self.custom_domains.get(domain_id)
+        if found is not None:
+            return found
+        if self.custom_domain_loader is None:
+            return None
+        loaded = self.custom_domain_loader(domain_id)
+        if not loaded:
+            return None
+        return self.register_custom_domain(loaded)
+
+    def list_profiles(self) -> list[dict[str, Any]]:
+        return [profile.public_dict() for profile in self.profiles.values()]
+
+    def list_domains(self) -> list[dict[str, Any]]:
+        """内置领域（有公共语料）在前，自定义领域（用户自己起的）在后。
+
+        两类都带上 `is_custom` / `corpus_ready`，前端就不用猜字段在不在了。
+        """
+        domains = []
+        for config in self.kb.list_domain_configs():
+            domain_id = str(config["domain_id"])
+            selected_kb, _, _ = self._runtime(domain_id)
+            domains.append(
+                {
+                    **config,
+                    **selected_kb.vertical_corpus.domain,
+                    "is_custom": False,
+                    "corpus_ready": True,
+                }
+            )
+        domains.extend(self.custom_domains.values())
+        return domains
+
+    def _runtime(
+        self,
+        domain_id: str | None,
+    ) -> tuple[KnowledgeBase, GraphRAGLiteEngine, GraphInsightEngine]:
+        selected = domain_id or self.default_domain_id
+        if selected not in self.kb.domain_configs:
+            definition = self._lookup_custom_domain(selected)
+            if definition is None:
+                raise KeyError(f"Unknown domain: {selected}")
+            if selected not in self.kbs:
+                self.kbs[selected] = KnowledgeBase(
+                    self.project_root / "data" / "knowledge",
+                    selected,
+                    custom_domain=definition,
+                )
+        if selected not in self.kbs:
+            knowledge_root = self.project_root / "data" / "knowledge"
+            self.kbs[selected] = KnowledgeBase(knowledge_root, selected)
+        selected_kb = self.kbs[selected]
+        self.graph_rag_engines.setdefault(
+            selected,
+            GraphRAGLiteEngine(selected_kb),
+        )
+        self.discovery_engines.setdefault(
+            selected,
+            GraphInsightEngine(selected_kb),
+        )
+        return (
+            selected_kb,
+            self.graph_rag_engines[selected],
+            self.discovery_engines[selected],
+        )
+
+    def query_graph(
+        self,
+        query: str = DEFAULT_QUERY,
+        domain_id: str | None = None,
+    ) -> dict[str, Any]:
+        kb, graph_rag, _ = self._runtime(domain_id)
+        intent = self.intent_agent.perceive(query)
+        result = graph_rag.query(query, intent)
+        result["domain"] = kb.domain
+        return result
+
+    def _resolve_decision_layer(
+        self,
+        provider_config: ProviderConfig | None,
+        decision_mode: DecisionMode = "auto",
+    ) -> tuple[Any, Any, str, UsageAccumulator]:
+        """按 `decision_mode` 组装批判者与裁判，并返回 (批判者, 裁判, 模式名, 用量统计)。
+
+        `decision_mode="auto"` 是默认值，判断条件与原来自始一致：提供非 mock 的
+        `provider_config` 时批判者和裁判一起换成 LLM 版，否则两个都用规则版。
+        这里用局部对象而不是改 `self.critic` / `self.judge`，保证单例 orchestrator
+        在线程并发下安全（原实现就是这么做的）。
+        """
+        if decision_mode not in ("auto", "rules", "llm", "hybrid"):
+            raise ValueError(f"未知的 decision_mode：{decision_mode}")
+        is_remote = provider_config is not None and provider_config.provider != "mock"
+        if decision_mode == "auto":
+            decision_mode = "llm" if is_remote else "rules"
+        if decision_mode != "rules" and not is_remote:
+            raise ValueError(
+                f"decision_mode={decision_mode!r} 需要非 mock 的 provider_config。"
+            )
+        if decision_mode == "rules":
+            return self.critic, self.judge, "rules", UsageAccumulator()
+        assert provider_config is not None
+        stats = UsageAccumulator()
+        provider = create_provider(provider_config)
+        # hybrid = 模型的批判者 + 规则版裁判，所以这里两个角色各取一边。
+        if decision_mode == "hybrid":
+            return LLMCritic(provider, stats=stats), self.judge, "hybrid", stats
+        return LLMCritic(provider, stats=stats), LLMJudge(provider, stats=stats), decision_mode, stats
+
+    def run(
+        self,
+        profile_id: str,
+        query: str = DEFAULT_QUERY,
+        difficulty_adjustment: int = 0,
+        domain_id: str | None = None,
+        *,
+        include_ablation: bool = True,
+        on_step: Callable[[dict[str, Any]], None] | None = None,
+        provider_config: ProviderConfig | None = None,
+        decision_mode: DecisionMode = "auto",
+        project_evidence: Any = None,
+        include_corpus: bool = True,
+    ) -> dict[str, Any]:
+        if profile_id not in self.profiles:
+            raise KeyError(f"Unknown profile: {profile_id}")
+        kb, graph_rag, discovery = self._runtime(domain_id)
+        # 用户自己导入的论文叠在领域知识库上跑：这是"产品"和"演示"的分界线。
+        # 只在这一次运行里生效（浅拷贝），不会把 A 账号的证据留给 B 账号。
+        project_ids: list[str] = []
+        if project_evidence is not None and not getattr(project_evidence, "is_empty", lambda: True)():
+            kb = kb.with_project_evidence(project_evidence, include_corpus=include_corpus)
+            project_ids = [paper.paper_id for paper in project_evidence.papers]
+        profile = self.profiles[profile_id]
+        traces: list[AgentTrace] = []
+        emit = on_step or (lambda step: None)
+
+        # 三智能体裁决层的实现方式；默认 auto 时判断条件与原实现相同，见
+        # `_resolve_decision_layer`。
+        critic, judge, decision_mode, decision_stats = self._resolve_decision_layer(
+            provider_config, decision_mode
+        )
+
+        diagnosis = self.diagnoser.diagnose(profile, difficulty_adjustment)
+        emit(
+            {
+                "stage": "diagnosis",
+                "agent": self.diagnoser.name,
+                "role": "学情诊断",
+                "status": "completed",
+                "summary": (
+                    f"准备度 {diagnosis['readiness_score']}，目标难度 "
+                    f"L{diagnosis['target_difficulty']}。"
+                ),
+            }
+        )
+        intent = self.intent_agent.perceive(query)
+        emit(
+            {
+                "stage": "intent",
+                "agent": self.intent_agent.name,
+                "role": "意图识别与检索路由",
+                "status": "completed",
+                "summary": (
+                    f"识别为“{intent['label']}”，路由至 {intent['route']}"
+                    f"（置信度 {intent['confidence']:.0%}）。"
+                ),
+            }
+        )
+        graph_retrieval = graph_rag.query(query, intent)
+        emit(
+            {
+                "stage": "graph_retrieval",
+                "agent": "GraphRAGLiteEngine",
+                "role": "意图驱动图检索",
+                "status": "completed",
+                "summary": (
+                    f"沿 {intent['route']} 检索，召回 "
+                    f"{len(graph_retrieval['recommended_papers'])} 篇推荐论文。"
+                ),
+            }
+        )
+        profile_papers = self.retriever.retrieve(
+            kb,
+            query,
+            profile,
+            diagnosis,
+        )
+        emit(
+            {
+                "stage": "retrieval",
+                "agent": self.retriever.name,
+                "role": "证据检索",
+                "status": "completed",
+                "summary": f"证据检索完成，命中 {len(profile_papers)} 篇候选论文。",
+            }
+        )
+        graph_paper_ids = [
+            item["paper_id"]
+            for item in graph_retrieval["recommended_papers"]
+        ]
+        ordered_paper_ids = [
+            # 自己导入的论文排在最前面：这次运行问的是用户自己文献里的事，
+            # 不能因为公共语料的分数更高就把它们挤掉。
+            *project_ids,
+            *graph_paper_ids,
+            *(paper.paper_id for paper in profile_papers),
+        ]
+        papers = []
+        seen_paper_ids: set[str] = set()
+        # 分析窗口：这块是"一次分析几篇"。自己有论文时窗口跟着项目证据的篇数走
+        # （默认 12 篇，由 API 层的 ANALYSIS_PAPER_LIMIT 决定），只吃公共语料时保持原来的 8 篇。
+        paper_window = max(8, len(project_ids))
+        for paper_id in ordered_paper_ids:
+            if paper_id in seen_paper_ids or paper_id not in kb.paper_by_id:
+                continue
+            seen_paper_ids.add(paper_id)
+            papers.append(kb.paper_by_id[paper_id])
+            if len(papers) >= paper_window:
+                break
+        extraction = self.extraction_agent.inspect_index(kb, papers)
+        emit(
+            {
+                "stage": "extraction",
+                "agent": self.extraction_agent.name,
+                "role": "论文解析与知识建图",
+                "status": extraction["status"],
+                "summary": (
+                    f"复用版本化索引：{extraction['input_papers']} 篇论文、"
+                    f"{extraction['evidence_spans']} 条证据跨度、"
+                    f"{extraction['knowledge_concepts']} 个知识概念。"
+                ),
+            }
+        )
+
+        started = time.perf_counter()
+        claims = self.proposer.propose(
+            kb,
+            papers,
+            # 跑用户自己导入的论文时不要那条对照用的绝对化命题：
+            # 它跟用户的论文无关，混在结论里只会让人以为读错了文档。
+            include_pressure_test=project_evidence is None,
+            # 分析窗口里有多少篇自己的论文，就给多少条候选关系名额；
+            # 只吃公共语料时保持原来的 8 条。
+            relation_limit=max(8, len(project_ids)),
+        )
+        proposer_ms = (time.perf_counter() - started) * 1000
+        traces.append(
+            AgentTrace(
+                agent=self.proposer.name,
+                role="关联提出",
+                status="completed",
+                summary=(
+                    f"从抽取图谱生成 {len(claims) - 1} 条候选关系，并加入 "
+                    "1 条无证据压力测试命题。"
+                ),
+                duration_ms=round(proposer_ms, 2),
+            )
+        )
+        emit(traces[-1].to_dict())
+
+        started = time.perf_counter()
+        claims = critic.critique(claims, kb)
+        critic_ms = (time.perf_counter() - started) * 1000
+        flagged = sum(
+            1
+            for claim in claims
+            if any("缺少" in note or "绝对化" in note for note in claim.criticisms)
+        )
+        traces.append(
+            AgentTrace(
+                agent=critic.name,
+                role="反证与约束",
+                status="completed",
+                summary=f"完成证据交叉检查，标记 {flagged} 条高风险命题。",
+                duration_ms=round(critic_ms, 2),
+            )
+        )
+        emit(traces[-1].to_dict())
+
+        started = time.perf_counter()
+        claims = judge.adjudicate(claims, kb)
+        judge_ms = (time.perf_counter() - started) * 1000
+        accepted = sum(claim.status == "accepted" for claim in claims)
+        rejected = sum(claim.status == "rejected" for claim in claims)
+        traces.append(
+            AgentTrace(
+                agent=judge.name,
+                role="置信裁决",
+                status="completed",
+                summary=f"通过 {accepted} 条，拒绝 {rejected} 条；无证据强断言未进入资源。",
+                duration_ms=round(judge_ms, 2),
+            )
+        )
+        emit(traces[-1].to_dict())
+
+        resources = self.resource_agent.generate(profile, diagnosis, claims, kb)
+        emit(
+            {
+                "stage": "resources",
+                "agent": self.resource_agent.name,
+                "role": "个性化资源",
+                "status": "completed",
+                "summary": "依据已接收图谱关系生成导读、实操和测评。",
+            }
+        )
+
+        claim_dicts = [claim.to_dict() for claim in claims]
+        # 每条结论标一下证据是谁的：自己的论文 / 公共语料 / 两边都有。
+        # 这一步只读 claim.evidence_ids 与刚拼好的知识库，不改任何判定。
+        project_paper_ids = set(project_ids)
+        for claim, payload in zip(claims, claim_dicts):
+            evidence_papers = {
+                kb.paper_id_for_evidence(evidence_id) for evidence_id in claim.evidence_ids
+            }
+            if not evidence_papers:
+                payload["evidence_origin"] = "none"
+            elif evidence_papers <= project_paper_ids:
+                payload["evidence_origin"] = "project"
+            elif evidence_papers & project_paper_ids:
+                payload["evidence_origin"] = "mixed"
+            else:
+                payload["evidence_origin"] = "corpus"
+        graph = kb.graph_for_claims(claim_dicts)
+        knowledge_graph = kb.display_graph()
+        graph_insights = discovery.analyze(query)
+        metrics = self._metrics(profile, diagnosis, claims, resources)
+        report = {
+            "blind_spots": diagnosis["blind_spots"],
+            "strengths": diagnosis["strengths"],
+            "difficulty_curve": diagnosis["difficulty_curve"],
+            "learning_path": diagnosis["learning_path"],
+            "resource_match_score": diagnosis["resource_match_score"],
+            "feedback_adjustment": difficulty_adjustment,
+        }
+        result = {
+            "run_id": uuid.uuid4().hex,
+            "project": "研海寻踪",
+            "domain": kb.domain,
+            "query": query,
+            "profile": profile.public_dict(),
+            "diagnosis": diagnosis,
+            "decision_layer": {
+                "mode": decision_mode,
+                "provider": (
+                    provider_config.public_dict()
+                    if provider_config is not None
+                    else None
+                ),
+                "usage": decision_stats.snapshot(),
+            },
+            "agent_trace": [trace.to_dict() for trace in traces],
+            "specialist_agent_trace": [
+                {
+                    "agent": self.extraction_agent.name,
+                    "role": "论文解析与知识建图",
+                    "status": extraction["status"],
+                    "summary": (
+                        f"复用版本化索引：{extraction['input_papers']} 篇论文、"
+                        f"{extraction['evidence_spans']} 条证据跨度、"
+                        f"{extraction['knowledge_concepts']} 个知识概念。"
+                    ),
+                    "details": extraction,
+                },
+                {
+                    "agent": self.intent_agent.name,
+                    "role": "意图识别与检索路由",
+                    "status": "completed",
+                    "summary": (
+                        f"识别为“{intent['label']}”，路由至 "
+                        f"{intent['route']}（置信度 {intent['confidence']:.0%}）。"
+                    ),
+                    "details": intent,
+                },
+            ],
+            "service_trace": [
+                {
+                    "service": "学习者画像服务",
+                    "summary": (
+                        f"准备度 {diagnosis['readiness_score']}，目标难度 "
+                        f"L{diagnosis['target_difficulty']}。"
+                    ),
+                },
+                {
+                    "service": "意图驱动图检索服务",
+                    "summary": (
+                        f"在“{kb.domain['domain_name']}”切片执行 "
+                        f"{intent['route']}，访问 "
+                        f"{graph_retrieval['retrieval_plan']['visited_concepts']} "
+                        f"个知识概念并召回 {len(papers)} 篇论文。"
+                    ),
+                },
+                {
+                    "service": "个性化资源服务",
+                    "summary": "依据已接收图谱关系生成导读、实操和测评。",
+                },
+            ],
+            "core_method": {
+                "agent_count": 3,
+                "agents": ["提出者", "批判者", "裁判"],
+                "system_agent_count": 5,
+                "specialist_agents": ["论文知识抽取", "用户意图感知"],
+                "decision_objective": (
+                    "在 accepted precision 与 evidence coverage 约束下最大化 VTY。"
+                ),
+                "current_provider": "schema-guided-pattern + deterministic evidence judge",
+                "planned_provider": (
+                    "GLiNER/GLiREL 或 OneKE 候选 + 科学主张验证器 + 校准裁判"
+                ),
+            },
+            "papers": [paper.to_dict() for paper in papers],
+            "claims": claim_dicts,
+            "graph": graph,
+            "knowledge_graph": knowledge_graph,
+            "graph_insights": graph_insights,
+            "graph_retrieval": graph_retrieval,
+            "assistant_response": graph_retrieval["answer"],
+            "evidence_details": {
+                claim.claim_id: kb.evidence_details(claim.evidence_ids)
+                for claim in claims
+            },
+            "resources": resources,
+            "report": report,
+            "metrics": metrics,
+        }
+        # 这次运行到底用了谁的证据，写清楚，页面照实显示。
+        result["evidence_scope"] = {
+            "project_paper_count": len(project_ids),
+            "project_papers": [
+                {"paper_id": paper.paper_id, "title": paper.title}
+                for paper in (project_evidence.papers if project_ids else [])
+            ],
+            # 项目库里一共有多少篇、这次按问题挑了几篇：两个数分开写，
+            # 免得让人以为"库里有 1000 篇 = 这次分析了 1000 篇"。
+            "project_library_paper_count": int(
+                getattr(project_evidence, "library_paper_count", 0) or 0
+            ),
+            "project_selection": str(
+                getattr(project_evidence, "selection_reason", "newest") or "newest"
+            ),
+            "corpus_included": bool(include_corpus or not project_ids),
+            "corpus_paper_count": (
+                len([paper for paper in kb.papers if paper.paper_id not in project_paper_ids])
+                if project_ids
+                else len(kb.papers)
+            ),
+        }
+        if include_ablation:
+            result["ablation"] = self.ablation.run()
+        return result
+
+    def run_with_provider(
+        self,
+        profile_id: str,
+        query: str = DEFAULT_QUERY,
+        domain_id: str | None = None,
+        provider_config: ProviderConfig | None = None,
+        *,
+        include_ablation: bool = True,
+        on_step: Callable[[dict[str, Any]], None] | None = None,
+        decision_mode: DecisionMode = "auto",
+        project_evidence: Any = None,
+        include_corpus: bool = True,
+    ) -> dict[str, Any]:
+        """运行确定性的离线基线，或走实时、证据支撑的 LLM 路径。
+
+        当未提供 ``provider_config`` 或 ``provider == "mock"`` 时，结果为保留的
+        确定性流水线，并带 ``offline_mock`` 的 ``provider_run`` 标记。否则三智能体
+        裁决层（批判者/裁判）切换为 LLM 版，并针对所选领域知识库创建
+        ``LiveResearchService``，用其证据支撑的回答替换基线回答，同时保留确定性的
+        report、metrics 与 ablation。
+
+        ``decision_mode`` 默认 ``"auto"``，即上面这段原行为：非 mock 时批判者与裁判
+        一起换成模型版。显式传 ``"hybrid"`` 可让批判者用模型、裁判保持规则版。
+        """
+        emit = on_step or (lambda event: None)
+        is_remote = provider_config is not None and provider_config.provider != "mock"
+
+        if is_remote:
+            emit(
+                {
+                    "event_type": "progress",
+                    "phase": "baseline",
+                    "state": "running",
+                    "percent": 2,
+                    "title": "正在理解问题",
+                    "message": "正在结合学习画像构建离线安全基线，确保在线模型失败时仍有可用结果。",
+                }
+            )
+            baseline_callback = on_step
+        else:
+            emit(
+                {
+                    "event_type": "progress",
+                    "phase": "diagnosis",
+                    "state": "running",
+                    "percent": 2,
+                    "title": "正在理解问题",
+                    "message": "正在分析学习画像、研究意图和所选知识领域。",
+                }
+            )
+            offline_progress = {
+                "diagnosis": ("diagnosis", 12, "学情诊断完成"),
+                "intent": ("intent", 22, "研究意图识别完成"),
+                "graph_retrieval": ("graph_retrieval", 35, "图谱检索完成"),
+                "retrieval": ("retrieval", 48, "本地证据检索完成"),
+                "extraction": ("extraction", 60, "论文索引检查完成"),
+                "关联提出": ("proposal", 72, "候选命题生成完成"),
+                "反证与约束": ("critique", 84, "反证检查完成"),
+                "置信裁决": ("adjudication", 94, "置信裁决完成"),
+                "resources": ("resources", 97, "个性化资源生成完成"),
+            }
+
+            def baseline_callback(step: dict[str, Any]) -> None:
+                emit(step)
+                key = str(step.get("stage") or step.get("role") or "")
+                mapped = offline_progress.get(key)
+                if mapped is None:
+                    return
+                phase, percent, title = mapped
+                emit(
+                    {
+                        "event_type": "progress",
+                        "phase": phase,
+                        "state": "completed",
+                        "percent": percent,
+                        "title": title,
+                        "message": str(step.get("summary") or title),
+                    }
+                )
+
+        result = self.run(
+            profile_id,
+            query,
+            0,
+            domain_id=domain_id,
+            include_ablation=include_ablation,
+            on_step=baseline_callback,
+            provider_config=provider_config,
+            decision_mode=decision_mode,
+            project_evidence=project_evidence,
+            include_corpus=include_corpus,
+        )
+        if is_remote:
+            emit(
+                {
+                    "event_type": "progress",
+                    "phase": "baseline",
+                    "state": "completed",
+                    "percent": 12,
+                    "title": "问题理解与安全基线完成",
+                    "message": (
+                        f"已准备离线基线：{len(result['papers'])} 篇本地论文、"
+                        f"{len(result['claims'])} 条基线命题。"
+                    ),
+                    "metrics": {
+                        "paper_count": len(result["papers"]),
+                        "claim_count": len(result["claims"]),
+                    },
+                }
+            )
+        if provider_config is None or provider_config.provider == "mock":
+            public = (
+                provider_config.public_dict()
+                if provider_config is not None
+                else {"provider": "mock", "provider_label": "离线规则引擎", "model": "deterministic"}
+            )
+            result["provider_run"] = {
+                **public,
+                "mode": "offline_mock",
+                "source_mode": "local_mock",
+                "source_counts": {
+                    "local_knowledge_base": len(result["papers"]),
+                },
+                "selected_paper_count": len(result["papers"]),
+                "calls": [],
+                "usage": {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0},
+                "llm_duration_ms": 0.0,
+                "retrieval_duration_ms": 0.0,
+                "warnings": [],
+                "api_key_persisted": False,
+            }
+            result["mock_baseline"] = {
+                "domain": (
+                    result["domain"]["domain_id"]
+                    if isinstance(result["domain"], dict)
+                    else str(result["domain"])
+                ),
+                "paper_count": len(result["papers"]),
+                "claim_count": len(result["claims"]),
+            }
+            return result
+
+        provider = create_provider(provider_config)
+        kb, _, _ = self._runtime(domain_id)
+        if project_evidence is not None and not getattr(project_evidence, "is_empty", lambda: True)():
+            kb = kb.with_project_evidence(project_evidence, include_corpus=include_corpus)
+        service = LiveResearchService(
+            provider,
+            provider_config,
+            kb,
+            on_progress=on_step,
+        )
+        active_profile = self.profiles[profile_id]
+        try:
+            live = service.run(query, active_profile, result["diagnosis"])
+        except ProviderError as exc:
+            emit(
+                {
+                    "event_type": "progress",
+                    "phase": "fallback",
+                    "state": "degraded",
+                    "percent": 97,
+                    "title": "已切换到离线安全基线",
+                    "message": "在线模型阶段未完成，已保留并返回可用的离线循证结果。",
+                    "metrics": {"reason": str(exc)[:360]},
+                }
+            )
+            result["provider_run"] = {
+                **provider_config.public_dict(),
+                "mode": "degraded_offline",
+                "source_mode": "local_knowledge_base",
+                "source_counts": {"local_knowledge_base": len(result["papers"])},
+                "selected_paper_count": len(result["papers"]),
+                "calls": [],
+                "usage": {"input_tokens": 0, "output_tokens": 0, "total_tokens": 0},
+                "llm_duration_ms": 0.0,
+                "retrieval_duration_ms": 0.0,
+                "warnings": [f"实时模型链路失败，已返回离线基线：{exc}"],
+                "degraded": True,
+                "api_key_persisted": False,
+            }
+            result["mock_baseline"] = {
+                "domain": (
+                    result["domain"]["domain_id"]
+                    if isinstance(result["domain"], dict)
+                    else str(result["domain"])
+                ),
+                "paper_count": len(result["papers"]),
+                "claim_count": len(result["claims"]),
+                "preserved_as_provider": "mock",
+            }
+            return result
+        baseline_summary = {
+            "domain": (
+                result["domain"]["domain_id"]
+                if isinstance(result["domain"], dict)
+                else str(result["domain"])
+            ),
+            "paper_count": len(result["papers"]),
+            "claim_count": len(result["claims"]),
+            "preserved_as_provider": "mock",
+        }
+        result.update(
+            {
+                "answer": live["answer"],
+                "answer_sections": live["answer_sections"],
+                "papers": live["papers"],
+                "claims": live["claims"],
+                "resources": live["resources"],
+                "graph": live["graph"],
+                "provider_run": live["provider_run"],
+                "mock_baseline": baseline_summary,
+            }
+        )
+        result["agent_trace"] = self._live_trace(
+            result["agent_trace"],
+            live["provider_run"],
+            len(live["papers"]),
+            len(live["claims"]),
+        )
+        result["metrics"] = self._live_metrics(result)
+        return result
+
+    @staticmethod
+    def _live_trace(
+        baseline_trace: list[dict[str, Any]],
+        provider_run: dict[str, Any],
+        paper_count: int,
+        claim_count: int,
+    ) -> list[dict[str, Any]]:
+        learner = (
+            dict(baseline_trace[0])
+            if baseline_trace
+            else {
+                "agent": "学情诊断与学习规划 Agent",
+                "role": "学情诊断与学习规划",
+                "status": "completed",
+                "summary": "已形成结构化学习计划。",
+            }
+        )
+        calls = provider_run.get("calls", [])
+        call_by_role = {str(call.get("role")): call for call in calls}
+        evidence_duration = provider_run.get("retrieval_duration_ms", 0.0)
+        for role in ("检索规划", "证据提出"):
+            evidence_duration += float(
+                call_by_role.get(role, {}).get("duration_ms", 0.0)
+            )
+        evidence_status = (
+            "abstained"
+            if provider_run.get("evidence_status") == "insufficient"
+            else (
+                "degraded"
+                if provider_run.get("source_mode") == "local_fallback"
+                else "completed"
+            )
+        )
+        teaching_call = (
+            call_by_role.get("批判裁决与资源生成")
+            or call_by_role.get("个性化教学与反馈")
+            or {}
+        )
+        return [
+            learner,
+            {
+                "agent": "证据检索与知识图谱 Agent",
+                "role": "证据检索与知识图谱构建",
+                "status": evidence_status,
+                "summary": (
+                    f"检索 {paper_count} 篇来源并形成 {claim_count} 条候选命题；"
+                    "批判、反证和来源核验作为内部策略执行。"
+                ),
+                "duration_ms": round(float(evidence_duration), 3),
+                "input_count": len(provider_run.get("search_queries", [])),
+                "output_count": claim_count,
+            },
+            {
+                "agent": "个性化教学与反馈 Agent",
+                "role": "个性化教学与反馈",
+                "status": "completed" if teaching_call else "abstained",
+                "summary": (
+                    "使用通过质量准入的知识生成导读、实操、测评和反馈问卷。"
+                    if teaching_call
+                    else "当前证据不足，未生成未经支持的教学资源。"
+                ),
+                "duration_ms": float(teaching_call.get("duration_ms", 0.0)),
+                "input_count": claim_count,
+                "output_count": 3 if teaching_call else 0,
+            },
+        ]
+
+    @classmethod
+    def _live_metrics(cls, result: dict[str, Any]) -> dict[str, Any]:
+        claims = result["claims"]
+        accepted = [claim for claim in claims if claim.get("status") == "accepted"]
+        unsupported = [
+            claim
+            for claim in accepted
+            if not claim.get("evidence_ids") or not claim.get("evidence_spans")
+        ]
+        hallucination_proxy = (
+            100 * len(unsupported) / len(accepted) if accepted else 100.0
+        )
+        supported = [
+            claim
+            for claim in claims
+            if claim.get("evidence_ids") and claim.get("evidence_spans")
+        ]
+        evidence_coverage = 100 * len(supported) / len(claims) if claims else 0.0
+        baseline = dict(result["metrics"])
+        baseline.update(
+            {
+                "hallucination_proxy_rate": round(hallucination_proxy, 1),
+                "adaptation_accuracy": baseline.get("adaptation_accuracy", 0.0),
+                "knowledge_coverage_rate": baseline.get("knowledge_coverage_rate", 0.0),
+                "accepted_claims": sum(
+                    claim.get("status") == "accepted" for claim in claims
+                ),
+                "review_claims": sum(
+                    claim.get("status") in {"review", "needs_review"} for claim in claims
+                ),
+                "rejected_claims": sum(
+                    claim.get("status") == "rejected" for claim in claims
+                ),
+                "abstained_claims": sum(
+                    claim.get("status") == "abstained" for claim in claims
+                ),
+                "evidence_id_coverage": round(evidence_coverage, 1),
+                "sentence_provenance_coverage": round(evidence_coverage, 1),
+                "metric_scope": (
+                    "实时 LLM 摘要上的工程代理指标；证据风险不是人工核验后的真实幻觉率。"
+                ),
+            }
+        )
+        return baseline
+
+    def run_with_feedback(
+        self,
+        profile_id: str,
+        feedback: str,
+        query: str = DEFAULT_QUERY,
+        domain_id: str | None = None,
+        *,
+        include_ablation: bool = True,
+    ) -> dict[str, Any]:
+        adjustments = {"too_hard": -1, "suitable": 0, "too_easy": 1}
+        if feedback not in adjustments:
+            raise ValueError(f"Unknown feedback: {feedback}")
+        result = self.run(
+            profile_id,
+            query,
+            adjustments[feedback],
+            domain_id,
+            include_ablation=include_ablation,
+        )
+        result["feedback"] = {
+            "signal": feedback,
+            "decision": {
+                "too_hard": "降低解释维度，补充概念示例。",
+                "suitable": "保持当前路径，继续证据追踪。",
+                "too_easy": "提升难度，加入消融与蓝海挑战。",
+            }[feedback],
+        }
+        return result
+
+    def _metrics(
+        self,
+        profile: LearnerProfile,
+        diagnosis: dict[str, Any],
+        claims: list[Any],
+        resources: dict[str, Any],
+    ) -> dict[str, Any]:
+        accepted = [claim for claim in claims if claim.status == "accepted"]
+        unsupported = [claim for claim in accepted if not claim.evidence_ids]
+        hallucination_proxy = 100 * len(unsupported) / len(accepted) if accepted else 100.0
+        adaptation_accuracy = max(
+            0,
+            100 - 20 * abs(diagnosis["target_difficulty"] - profile.expected_difficulty),
+        )
+        covered_text = " ".join(resources["covered_concepts"]).lower()
+        covered_count = sum(
+            concept.lower() in covered_text for concept in profile.required_concepts
+        )
+        coverage_rate = (
+            100 * covered_count / len(profile.required_concepts)
+            if profile.required_concepts
+            else 100.0
+        )
+        return {
+            "hallucination_proxy_rate": round(hallucination_proxy, 1),
+            "adaptation_accuracy": round(adaptation_accuracy, 1),
+            "knowledge_coverage_rate": round(coverage_rate, 1),
+            "accepted_claims": len(accepted),
+            "rejected_claims": sum(claim.status == "rejected" for claim in claims),
+            "metric_scope": "基础版工程代理指标，正式值需领域专家盲审。",
+        }
